@@ -1,4 +1,5 @@
 #include "tileonboard.h"
+#include "assert.h"
 
 TileOnBoard::TileOnBoard()
 {
@@ -11,89 +12,93 @@ TileOnBoard::TileOnBoard(Tile inTile, Rotation inRotation):
 }
 
 Tile::Side
-TileOnBoard::GetTop()
+TileOnBoard::getTop()
 {
     switch (mRotation)
     {
-    case cw0:
-        return mTile.GetTop();
     case cw90:
-        return mTile.GetLeft();
+        return mTile.getLeft();
     case cw180:
-        return mTile.GetBottom();
+        return mTile.getBottom();
     case cw270:
-        return mTile.GetRight();
+        return mTile.getRight();
+    case cw0:
+    default:
+        return mTile.getTop();
     }
 }
 
 Tile::Side
-TileOnBoard::GetRight()
+TileOnBoard::getRight()
 {
     switch (mRotation)
     {
-    case cw0:
-        return mTile.GetRight();
     case cw90:
-        return mTile.GetTop();
+        return mTile.getTop();
     case cw180:
-        return mTile.GetLeft();
+        return mTile.getLeft();
     case cw270:
-        return mTile.GetBottom();
+        return mTile.getBottom();
+    case cw0:
+    default:
+        return mTile.getRight();
     }
 }
 
 Tile::Side
-TileOnBoard::GetBottom()
+TileOnBoard::getBottom()
 {
     switch (mRotation)
     {
-    case cw0:
-        return mTile.GetBottom();
     case cw90:
-        return mTile.GetRight();
+        return mTile.getRight();
     case cw180:
-        return mTile.GetTop();
+        return mTile.getTop();
     case cw270:
-        return mTile.GetLeft();
+        return mTile.getLeft();
+    case cw0:
+    default:
+        return mTile.getBottom();
     }
 }
 
 Tile::Side
-TileOnBoard::GetLeft()
+TileOnBoard::getLeft()
 {
     switch (mRotation)
     {
-    case cw0:
-        return mTile.GetLeft();
     case cw90:
-        return mTile.GetBottom();
+        return mTile.getBottom();
     case cw180:
-        return mTile.GetRight();
+        return mTile.getRight();
     case cw270:
-        return mTile.GetRight();
+        return mTile.getRight();
+    case cw0:
+    default:
+        return mTile.getLeft();
     }
 }
 
 bool
-TileOnBoard::MatchesAbove(TileOnBoard inTileOnBoard)
+TileOnBoard::matchesAbove(TileOnBoard inTileOnBoard)
 {
-    return (this->GetBottom() == inTileOnBoard.GetTop());
+    return (this->getBottom() == inTileOnBoard.getTop());
 }
 
 bool
-TileOnBoard::MatchesRightOf(TileOnBoard inTileOnBoard)
+TileOnBoard::matchesRightOf(TileOnBoard inTileOnBoard)
 {
-    return (this->GetLeft() == inTileOnBoard.GetRight());
+    return (this->getLeft() == inTileOnBoard.getRight());
 }
 
 bool
-TileOnBoard::MatchesBelow(TileOnBoard inTileOnBoard)
+TileOnBoard::matchesBelow(TileOnBoard inTileOnBoard)
 {
-    return (this->GetTop() == inTileOnBoard.GetBottom());
+    return (this->getTop() == inTileOnBoard.getBottom());
 }
 
 bool
-TileOnBoard::MatchesLeftOf(TileOnBoard inTileOnBoard)
+TileOnBoard::matchesLeftOf(TileOnBoard inTileOnBoard)
 {
-    return (this->GetRight() == inTileOnBoard.GetLeft());
+    return (this->getRight() == inTileOnBoard.getLeft());
 }

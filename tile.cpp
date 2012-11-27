@@ -1,108 +1,108 @@
 #include "tile.h"
 
 Tile::Tile():
-    mTop(Meadow),
-    mRight(Meadow),
-    mBottom(Meadow),
-    mLeft(Meadow),
-    mCenter(Monastery)
+    mTop(Field),
+    mRight(Field),
+    mBottom(Field),
+    mLeft(Field),
+    mCenter(Cloister)
 {
-    mMeadows = std::vector< ContiguousMeadow >();
-    ContiguousMeadow allMeadows = std::vector< MeadowArea >();
-    allMeadows.push_back(TopLeft);
-    allMeadows.push_back(TopRight);
-    allMeadows.push_back(RightTop);
-    allMeadows.push_back(RightBottom);
-    allMeadows.push_back(BottomRight);
-    allMeadows.push_back(BottomLeft);
-    allMeadows.push_back(LeftBottom);
-    allMeadows.push_back(LeftTop);
-    mMeadows.push_back(allMeadows);
-    mRoads = std::vector< ContiguousRoadOrCastle >();
-    mCastles = std::vector< ContiguousRoadOrCastle >();
+    mFields = std::vector< ContiguousField >();
+    ContiguousField allFields = std::vector< FieldArea >();
+    allFields.push_back(TopLeft);
+    allFields.push_back(TopRight);
+    allFields.push_back(RightTop);
+    allFields.push_back(RightBottom);
+    allFields.push_back(BottomRight);
+    allFields.push_back(BottomLeft);
+    allFields.push_back(LeftBottom);
+    allFields.push_back(LeftTop);
+    mFields.push_back(allFields);
+    mRoads = std::vector< ContiguousRoadOrCity >();
+    mCities = std::vector< ContiguousRoadOrCity >();
 }
 
-Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter, std::vector< ContiguousMeadow > inMeadows, std::vector< ContiguousRoadOrCastle > inRoads, std::vector< ContiguousRoadOrCastle > inCastles):
+Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter, std::vector< ContiguousField > inFields, std::vector< ContiguousRoadOrCity > inRoads, std::vector< ContiguousRoadOrCity > inCities):
     mTop(inTop),
     mRight(inRight),
     mBottom(inBottom),
     mLeft(inLeft),
     mCenter(inCenter),
-    mMeadows(inMeadows),
+    mFields(inFields),
     mRoads(inRoads),
-    mCastles(inCastles)
+    mCities(inCities)
 {
 }
 
 Tile::Side
-Tile::GetTop()
+Tile::getTop()
 {
     return mTop;
 }
 
 Tile::Side
-Tile::GetRight()
+Tile::getRight()
 {
     return mRight;
 }
 
 Tile::Side
-Tile::GetBottom()
+Tile::getBottom()
 {
     return mBottom;
 }
 
 Tile::Side
-Tile::GetLeft()
+Tile::getLeft()
 {
     return mLeft;
 }
 
 Tile::Center
-Tile::GetCenter()
+Tile::getCenter()
 {
     return mCenter;
 }
 
-std::vector< Tile::ContiguousMeadow >
-Tile::GetContiguousMeadows()
+std::vector< Tile::ContiguousField >
+Tile::getContiguousFields()
 {
-    return mMeadows;
+    return mFields;
 }
 
-std::vector< Tile::ContiguousRoadOrCastle >
-Tile::GetContiguousRoads()
+std::vector< Tile::ContiguousRoadOrCity >
+Tile::getContiguousRoads()
 {
     return mRoads;
 }
 
-std::vector< Tile::ContiguousRoadOrCastle >
-Tile::GetContiguousCastles()
+std::vector< Tile::ContiguousRoadOrCity >
+Tile::getContiguousCities()
 {
-    return mCastles;
+    return mCities;
 }
 
 std::string
-Tile::ToString()
+Tile::toString()
 {
     std::string result;
     result.append("Top: ");
-    result.append(SideToString(this->GetTop()));
+    result.append(sideToString(this->getTop()));
     result.append("\tRight: ");
-    result.append(SideToString(this->GetRight()));
+    result.append(sideToString(this->getRight()));
     result.append("\tBottom: ");
-    result.append(SideToString(this->GetBottom()));
+    result.append(sideToString(this->getBottom()));
     result.append("\tLeft: ");
-    result.append(SideToString(this->GetLeft()));
+    result.append(sideToString(this->getLeft()));
     result.append("\tCenter: ");
-    result.append(CenterToString(this->GetCenter()));
-    result.append("\nContiguous meadows:");
-    for (unsigned int i = 0; i < mMeadows.size(); i++)
+    result.append(centerToString(this->getCenter()));
+    result.append("\nContiguous fields:");
+    for (unsigned int i = 0; i < mFields.size(); i++)
     {
         result.append("\n- ");
-        for (unsigned int j = 0; j < mMeadows[i].size(); j++)
+        for (unsigned int j = 0; j < mFields[i].size(); j++)
         {
-            result.append(MeadowAreaToString(mMeadows[i][j]));
+            result.append(fieldAreaToString(mFields[i][j]));
             result.append(" ");
         }
     }
@@ -112,17 +112,17 @@ Tile::ToString()
         result.append("\n- ");
         for (unsigned int j = 0; j < mRoads[i].size(); j++)
         {
-            result.append(RoadAndCastleAreaToString(mRoads[i][j]));
+            result.append(roadAndCityAreaToString(mRoads[i][j]));
             result.append(" ");
         }
     }
-    result.append("\nContiguous castles:");
-    for (unsigned int i = 0; i < mCastles.size(); i++)
+    result.append("\nContiguous cities:");
+    for (unsigned int i = 0; i < mCities.size(); i++)
     {
         result.append("\n- ");
-        for (unsigned int j = 0; j < mCastles[i].size(); j++)
+        for (unsigned int j = 0; j < mCities[i].size(); j++)
         {
-            result.append(RoadAndCastleAreaToString(mCastles[i][j]));
+            result.append(roadAndCityAreaToString(mCities[i][j]));
             result.append(" ");
         }
     }
@@ -131,39 +131,39 @@ Tile::ToString()
 }
 
 std::string
-Tile::SideToString(Side inSide)
+Tile::sideToString(Side inSide)
 {
     switch (inSide)
     {
-    case Meadow:
-        return "Meadow";
+    case Field:
+        return "Field";
     case Road:
         return "Road";
-    case Castle:
-        return "Castle";
+    case City:
+        return "City";
     default:
         return "No valid side";
     }
 }
 
 std::string
-Tile::CenterToString(Center inCenter)
+Tile::centerToString(Center inCenter)
 {
     switch (inCenter)
     {
     case Nothing:
         return "Nothing";
-    case Monastery:
-        return "Monastery";
+    case Cloister:
+        return "Cloister";
     default:
         return "No valid center";
     }
 }
 
 std::string
-Tile::MeadowAreaToString(MeadowArea inMeadowArea)
+Tile::fieldAreaToString(FieldArea inFieldArea)
 {
-    switch (inMeadowArea)
+    switch (inFieldArea)
     {
     case TopLeft:
         return "TopLeft";
@@ -182,14 +182,14 @@ Tile::MeadowAreaToString(MeadowArea inMeadowArea)
     case LeftTop:
         return "LeftTop";
     default:
-        return "No valid MeadowArea";
+        return "No valid FieldArea";
     }
 }
 
 std::string
-Tile::RoadAndCastleAreaToString(RoadAndCastleArea inRoadAndCastleArea)
+Tile::roadAndCityAreaToString(RoadAndCityArea inRoadAndCityArea)
 {
-    switch (inRoadAndCastleArea)
+    switch (inRoadAndCityArea)
     {
     case Top:
         return "Top";
@@ -200,6 +200,6 @@ Tile::RoadAndCastleAreaToString(RoadAndCastleArea inRoadAndCastleArea)
     case Left:
         return "Left";
     default:
-        return "No valid RoadAndCastleArea";
+        return "No valid RoadAndCityArea";
     }
 }

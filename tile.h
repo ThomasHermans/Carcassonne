@@ -9,18 +9,18 @@ class Tile
 public:
     enum Side
     {
-        Meadow,
+        Field,
         Road,
-        Castle
+        City
     };
 
     enum Center
     {
         Nothing,
-        Monastery
+        Cloister
     };
 
-    enum MeadowArea
+    enum FieldArea
     {
         TopLeft,
         TopRight,
@@ -32,7 +32,7 @@ public:
         LeftTop
     };
 
-    enum RoadAndCastleArea
+    enum RoadAndCityArea
     {
         Top,
         Right,
@@ -40,27 +40,30 @@ public:
         Left
     };
 
-    typedef std::vector< MeadowArea > ContiguousMeadow;
-    typedef std::vector< RoadAndCastleArea > ContiguousRoadOrCastle;
+    typedef std::vector< FieldArea > ContiguousField;
+    typedef std::vector< RoadAndCityArea > ContiguousRoadOrCity;
 
     Tile();
-    Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter, std::vector< ContiguousMeadow > inMeadows, std::vector< ContiguousRoadOrCastle > inRoads, std::vector< ContiguousRoadOrCastle > inCastles);
+    Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
+         std::vector< ContiguousField > inMeadows,
+         std::vector< ContiguousRoadOrCity > inRoads,
+         std::vector< ContiguousRoadOrCity > inCastles);
 
-    static std::string SideToString(Side inSide);
-    static std::string CenterToString(Center inCenter);
-    static std::string MeadowAreaToString(MeadowArea inMeadowArea);
-    static std::string RoadAndCastleAreaToString(RoadAndCastleArea inRoadAndCastleArea);
+    static std::string sideToString(Side inSide);
+    static std::string centerToString(Center inCenter);
+    static std::string fieldAreaToString(FieldArea inFieldArea);
+    static std::string roadAndCityAreaToString(RoadAndCityArea inRoadAndCityArea);
 
-    Side GetTop();
-    Side GetRight();
-    Side GetBottom();
-    Side GetLeft();
-    Center GetCenter();
-    std::vector< ContiguousMeadow > GetContiguousMeadows();
-    std::vector< ContiguousRoadOrCastle > GetContiguousRoads();
-    std::vector< ContiguousRoadOrCastle > GetContiguousCastles();
+    Side getTop();
+    Side getRight();
+    Side getBottom();
+    Side getLeft();
+    Center getCenter();
+    std::vector< ContiguousField > getContiguousFields();
+    std::vector< ContiguousRoadOrCity > getContiguousRoads();
+    std::vector< ContiguousRoadOrCity > getContiguousCities();
 
-    std::string ToString();
+    std::string toString();
 
 private:
     Side mTop;
@@ -68,9 +71,9 @@ private:
     Side mBottom;
     Side mLeft;
     Center mCenter;
-    std::vector< ContiguousMeadow > mMeadows;
-    std::vector< ContiguousRoadOrCastle > mRoads;
-    std::vector< ContiguousRoadOrCastle > mCastles;
+    std::vector< ContiguousField > mFields;
+    std::vector< ContiguousRoadOrCity > mRoads;
+    std::vector< ContiguousRoadOrCity > mCities;
 };
 
 #endif // TILE_H

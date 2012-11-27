@@ -18,22 +18,22 @@ public:
     TileOnBoard();
     TileOnBoard(Tile inTile, Rotation inRotation);
 
-    Tile::Side GetTop();
-    Tile::Side GetRight();
-    Tile::Side GetBottom();
-    Tile::Side GetLeft();
+    Tile::Side getTop();
+    Tile::Side getRight();
+    Tile::Side getBottom();
+    Tile::Side getLeft();
 
-    bool MatchesAbove(TileOnBoard inTileOnBoard);
-    bool MatchesRightOf(TileOnBoard inTileOnBoard);
-    bool MatchesBelow(TileOnBoard inTileOnBoard);
-    bool MatchesLeftOf(TileOnBoard inTileOnBoard);
+    bool matchesAbove(TileOnBoard inTileOnBoard);
+    bool matchesRightOf(TileOnBoard inTileOnBoard);
+    bool matchesBelow(TileOnBoard inTileOnBoard);
+    bool matchesLeftOf(TileOnBoard inTileOnBoard);
 
 private:
     Tile mTile;
     Rotation mRotation;
-    std::vector< Tile::ContiguousMeadow > mOccupiedMeadows;
-    std::vector< Tile::ContiguousRoadOrCastle > mOccupiedRoads;
-    std::vector< Tile::ContiguousRoadOrCastle > mOccupiedCastles;
+    std::vector< Tile::ContiguousField > mOccupiedFields;
+    std::vector< Tile::ContiguousRoadOrCity > mOccupiedRoads;
+    std::vector< Tile::ContiguousRoadOrCity > mOccupiedCities;
 };
 
 #endif // TILEONBOARD_H
