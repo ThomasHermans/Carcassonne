@@ -26,18 +26,20 @@ int main(int /*argc*/, char * /*argv[]*/)
     t1Fields.push_back(t1secondField);
 
     std::vector< Tile::ContiguousRoadOrCity > t1Roads;
-    std::vector< Tile::RoadAndCityArea > t1firstRoad;
+    std::vector< Tile::RoadOrCityArea > t1firstRoad;
     t1firstRoad.push_back(Tile::Right);
     t1firstRoad.push_back(Tile::Left);
     t1Roads.push_back(t1firstRoad);
 
     std::vector< Tile::ContiguousRoadOrCity > t1Cities;
-    std::vector< Tile::RoadAndCityArea > t1firstCity;
+    std::vector< Tile::RoadOrCityArea > t1firstCity;
     t1firstCity.push_back(Tile::Top);
     t1Cities.push_back(t1firstCity);
 
+    std::vector< Tile::RoadOrCityArea > t1Shields;
+
     Tile startTile = Tile(Tile::City, Tile::Road, Tile::Field, Tile::Road, Tile::Nothing,
-                          t1Fields, t1Roads, t1Cities);
+                          t1Fields, t1Roads, t1Cities, t1Shields);
 
     std::vector< Tile::ContiguousField > t2Fields;
     std::vector< Tile::FieldArea > t2firstField;
@@ -50,13 +52,15 @@ int main(int /*argc*/, char * /*argv[]*/)
     std::vector< Tile::ContiguousRoadOrCity > t2Roads;
 
     std::vector< Tile::ContiguousRoadOrCity > t2Cities;
-    std::vector< Tile::RoadAndCityArea > t2firstCity;
+    std::vector< Tile::RoadOrCityArea > t2firstCity;
     t2firstCity.push_back(Tile::Top);
     t2firstCity.push_back(Tile::Right);
     t2Cities.push_back(t2firstCity);
 
+    std::vector< Tile::RoadOrCityArea > t2Shields;
+
     Tile t2 = Tile(Tile::City, Tile::City, Tile::Field, Tile::Field, Tile::Nothing,
-                          t2Fields, t2Roads, t2Cities);
+                          t2Fields, t2Roads, t2Cities, t2Shields);
 
     std::cout << startTile.toString();
     std::cout << t2.toString();

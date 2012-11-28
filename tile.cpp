@@ -20,9 +20,14 @@ Tile::Tile():
     mFields.push_back(allFields);
     mRoads = std::vector< ContiguousRoadOrCity >();
     mCities = std::vector< ContiguousRoadOrCity >();
+    mShields = std::vector< RoadOrCityArea >();
 }
 
-Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter, std::vector< ContiguousField > inFields, std::vector< ContiguousRoadOrCity > inRoads, std::vector< ContiguousRoadOrCity > inCities):
+Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
+           std::vector< ContiguousField > inFields,
+           std::vector< ContiguousRoadOrCity > inRoads,
+           std::vector< ContiguousRoadOrCity > inCities,
+           std::vector< RoadOrCityArea > inShields):
     mTop(inTop),
     mRight(inRight),
     mBottom(inBottom),
@@ -30,7 +35,8 @@ Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter
     mCenter(inCenter),
     mFields(inFields),
     mRoads(inRoads),
-    mCities(inCities)
+    mCities(inCities),
+    mShields(inShields)
 {
 }
 
@@ -112,7 +118,7 @@ Tile::toString()
         result.append("\n- ");
         for (unsigned int j = 0; j < mRoads[i].size(); j++)
         {
-            result.append(roadAndCityAreaToString(mRoads[i][j]));
+            result.append(RoadOrCityAreaToString(mRoads[i][j]));
             result.append(" ");
         }
     }
@@ -122,9 +128,15 @@ Tile::toString()
         result.append("\n- ");
         for (unsigned int j = 0; j < mCities[i].size(); j++)
         {
-            result.append(roadAndCityAreaToString(mCities[i][j]));
+            result.append(RoadOrCityAreaToString(mCities[i][j]));
             result.append(" ");
         }
+    }
+    result.append("\nShields at:\n- ");
+    for (unsigned int i = 0; i < mShields.size(); i++)
+    {
+        result.append(RoadOrCityAreaToString(mShields[i]));
+        result.append(" ");
     }
     result.append("\n");
     return result;
@@ -155,6 +167,10 @@ Tile::centerToString(Center inCenter)
         return "Nothing";
     case Cloister:
         return "Cloister";
+    case Cathedral:
+        return "Cathedral";
+    case CentralField:
+        return "CentralField";
     default:
         return "No valid center";
     }
@@ -181,15 +197,17 @@ Tile::fieldAreaToString(FieldArea inFieldArea)
         return "LeftBottom";
     case LeftTop:
         return "LeftTop";
+    case Central:
+        return "Central";
     default:
         return "No valid FieldArea";
     }
 }
 
 std::string
-Tile::roadAndCityAreaToString(RoadAndCityArea inRoadAndCityArea)
+Tile::RoadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea)
 {
-    switch (inRoadAndCityArea)
+    switch (inRoadOrCityArea)
     {
     case Top:
         return "Top";
@@ -200,6 +218,6 @@ Tile::roadAndCityAreaToString(RoadAndCityArea inRoadAndCityArea)
     case Left:
         return "Left";
     default:
-        return "No valid RoadAndCityArea";
+        return "No valid RoadOrCityArea";
     }
 }

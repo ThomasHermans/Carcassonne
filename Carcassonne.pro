@@ -13,10 +13,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     tile.cpp \
-    tileonboard.cpp
+    tileonboard.cpp \
+    piece.cpp
 
 HEADERS  += mainwindow.h \
     tile.h \
-    tileonboard.h
+    tileonboard.h \
+    piece.h
 
 FORMS    += mainwindow.ui

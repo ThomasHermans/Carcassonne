@@ -17,7 +17,9 @@ public:
     enum Center
     {
         Nothing,
-        Cloister
+        Cloister,
+        Cathedral,
+        CentralField
     };
 
     enum FieldArea
@@ -29,10 +31,11 @@ public:
         BottomLeft,
         BottomRight,
         LeftBottom,
-        LeftTop
+        LeftTop,
+        Central
     };
 
-    enum RoadAndCityArea
+    enum RoadOrCityArea
     {
         Top,
         Right,
@@ -41,18 +44,19 @@ public:
     };
 
     typedef std::vector< FieldArea > ContiguousField;
-    typedef std::vector< RoadAndCityArea > ContiguousRoadOrCity;
+    typedef std::vector< RoadOrCityArea > ContiguousRoadOrCity;
 
     Tile();
     Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
          std::vector< ContiguousField > inMeadows,
          std::vector< ContiguousRoadOrCity > inRoads,
-         std::vector< ContiguousRoadOrCity > inCastles);
+         std::vector< ContiguousRoadOrCity > inCastles,
+         std::vector< RoadOrCityArea > inShields);
 
     static std::string sideToString(Side inSide);
     static std::string centerToString(Center inCenter);
     static std::string fieldAreaToString(FieldArea inFieldArea);
-    static std::string roadAndCityAreaToString(RoadAndCityArea inRoadAndCityArea);
+    static std::string RoadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea);
 
     Side getTop();
     Side getRight();
@@ -74,6 +78,7 @@ private:
     std::vector< ContiguousField > mFields;
     std::vector< ContiguousRoadOrCity > mRoads;
     std::vector< ContiguousRoadOrCity > mCities;
+    std::vector< RoadOrCityArea > mShields;
 };
 
 #endif // TILE_H
