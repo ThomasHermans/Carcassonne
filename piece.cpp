@@ -1,12 +1,14 @@
 #include "piece.h"
 
 Piece::Piece():
-    mType(Piece::Follower)
+    mType(Piece::Follower),
+    mColor(Red)
 {
 }
 
-Piece::Piece(PieceType inType):
-    mType(inType)
+Piece::Piece(PieceType inType, Color inColor):
+    mType(inType),
+    mColor(inColor)
 {
 }
 
@@ -14,6 +16,12 @@ Piece::PieceType
 Piece::getType()
 {
     return mType;
+}
+
+Color
+Piece::getColor()
+{
+    return mColor;
 }
 
 int
@@ -35,17 +43,20 @@ Piece::getPoints()
 std::string
 Piece::toString()
 {
+    std::string res = colorToString(mColor);
+    res.append(" ");
     switch (mType)
     {
     case Follower:
-        return "Follower";
+        res.append("Follower");
     case LargeFollower:
-        return "Large Follower";
+        res.append("Large Follower");
     case Builder:
-        return "Builder";
+        res.append("Builder");
     case Pig:
-        return "Pig";
+        res.append("Pig");
     default:
-        return "Not a valid Piece";
+        res.append("Not a valid Piece");
     }
+    return res;
 }

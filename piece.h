@@ -2,6 +2,7 @@
 #define PIECE_H
 
 #include <string>
+#include "color.h"
 
 class Piece
 {
@@ -16,9 +17,10 @@ public:
 
 public:
     Piece();
-    Piece(PieceType inType);
+    Piece(PieceType inType, Color inColor);
 
     PieceType getType();
+    Color getColor();
 
     int getPoints();
 
@@ -26,6 +28,7 @@ public:
 
 private:
     const PieceType mType;
+    const Color mColor;
 };
 
 #endif // PIECE_H

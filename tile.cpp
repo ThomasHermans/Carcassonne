@@ -118,7 +118,7 @@ Tile::toString()
         result.append("\n- ");
         for (unsigned int j = 0; j < mRoads[i].size(); j++)
         {
-            result.append(RoadOrCityAreaToString(mRoads[i][j]));
+            result.append(roadOrCityAreaToString(mRoads[i][j]));
             result.append(" ");
         }
     }
@@ -128,14 +128,14 @@ Tile::toString()
         result.append("\n- ");
         for (unsigned int j = 0; j < mCities[i].size(); j++)
         {
-            result.append(RoadOrCityAreaToString(mCities[i][j]));
+            result.append(roadOrCityAreaToString(mCities[i][j]));
             result.append(" ");
         }
     }
     result.append("\nShields at:\n- ");
     for (unsigned int i = 0; i < mShields.size(); i++)
     {
-        result.append(RoadOrCityAreaToString(mShields[i]));
+        result.append(roadOrCityAreaToString(mShields[i]));
         result.append(" ");
     }
     result.append("\n");
@@ -205,7 +205,7 @@ Tile::fieldAreaToString(FieldArea inFieldArea)
 }
 
 std::string
-Tile::RoadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea)
+Tile::roadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea)
 {
     switch (inRoadOrCityArea)
     {
@@ -219,5 +219,41 @@ Tile::RoadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea)
         return "Left";
     default:
         return "No valid RoadOrCityArea";
+    }
+}
+
+std::string
+Tile::areaToString(Area inArea)
+{
+    switch (inArea)
+    {
+    case AreaTopLeft:
+        return "AreaTopLeft";
+    case AreaTopRight:
+        return "AreaTopRight";
+    case AreaRightTop:
+        return "AreaRightTop";
+    case AreaRightBottom:
+        return "AreaRightBottom";
+    case AreaBottomRight:
+        return "AreaBottomRight";
+    case AreaBottomLeft:
+        return "AreaBottomLeft";
+    case AreaLeftBottom:
+        return "AreaLeftBottom";
+    case AreaLeftTop:
+        return "AreaLeftTop";
+    case AreaCentral:
+        return "AreaCentral";
+    case AreaTop:
+        return "AreaTop";
+    case AreaRight:
+        return "AreaRight";
+    case AreaBottom:
+        return "AreaBottom";
+    case AreaLeft:
+        return "AreaLeft";
+    default:
+        return "No valid Area";
     }
 }

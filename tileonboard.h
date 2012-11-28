@@ -2,6 +2,7 @@
 #define TILEONBOARD_H
 
 #include "tile.h"
+#include "color.h"
 
 class TileOnBoard
 {

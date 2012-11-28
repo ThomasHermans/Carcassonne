@@ -43,6 +43,23 @@ public:
         Left
     };
 
+    enum Area
+    {
+        AreaTopLeft,
+        AreaTopRight,
+        AreaRightTop,
+        AreaRightBottom,
+        AreaBottomLeft,
+        AreaBottomRight,
+        AreaLeftBottom,
+        AreaLeftTop,
+        AreaCentral,
+        AreaTop,
+        AreaRight,
+        AreaBottom,
+        AreaLeft
+    };
+
     typedef std::vector< FieldArea > ContiguousField;
     typedef std::vector< RoadOrCityArea > ContiguousRoadOrCity;
 
@@ -56,7 +73,8 @@ public:
     static std::string sideToString(Side inSide);
     static std::string centerToString(Center inCenter);
     static std::string fieldAreaToString(FieldArea inFieldArea);
-    static std::string RoadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea);
+    static std::string roadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea);
+    static std::string areaToString(Area inArea);
 
     Side getTop();
     Side getRight();

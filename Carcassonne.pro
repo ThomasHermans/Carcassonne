@@ -14,11 +14,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     tile.cpp \
     tileonboard.cpp \
-    piece.cpp
+    piece.cpp \
+    placedpiece.cpp \
+    color.cpp
 
 HEADERS  += mainwindow.h \
     tile.h \
     tileonboard.h \
-    piece.h
+    piece.h \
+    color.h \
+    placedpiece.h
 
 FORMS    += mainwindow.ui
