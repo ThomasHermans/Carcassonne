@@ -3,16 +3,19 @@
 
 #include <string>
 
-enum Color
+namespace Color
 {
-    Red,
-    Green,
-    Blue,
-    Yellow,
-    Black,
-    Gray
-};
+    enum Color
+    {
+        Red,
+        Green,
+        Blue,
+        Yellow,
+        Black,
+        Gray
+    };
 
-std::string colorToString(Color inColor);
+    std::string colorToString(Color inColor);
+}
 
 #endif // COLOR_H

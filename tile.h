@@ -4,6 +4,59 @@
 #include <vector>
 #include <string>
 
+namespace FieldArea
+{
+    enum FieldArea
+    {
+        TopLeft = 0,
+        TopRight = 2,
+        RightTop = 3,
+        RightBottom = 5,
+        BottomRight = 6,
+        BottomLeft = 8,
+        LeftBottom = 9,
+        LeftTop = 11,
+        Central = 12
+    };
+
+    std::string fieldAreaToString(FieldArea inFieldArea);
+}
+
+namespace RoadOrCityArea
+{
+    enum RoadOrCityArea
+    {
+        Top = 1,
+        Right = 4,
+        Bottom = 7,
+        Left = 10
+    };
+
+    std::string roadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea);
+}
+
+namespace Area
+{
+    enum Area
+    {
+        TopLeft = 0,
+        Top = 1,
+        TopRight = 2,
+        RightTop = 3,
+        Right = 4,
+        RightBottom = 5,
+        BottomRight = 6,
+        Bottom = 7,
+        BottomLeft = 8,
+        LeftBottom = 9,
+        Left = 10,
+        LeftTop = 11,
+        Central = 12
+    };
+
+    std::string areaToString(Area inArea);
+}
+
 class Tile
 {
 public:
@@ -22,59 +75,25 @@ public:
         CentralField
     };
 
-    enum FieldArea
-    {
-        TopLeft,
-        TopRight,
-        RightTop,
-        RightBottom,
-        BottomLeft,
-        BottomRight,
-        LeftBottom,
-        LeftTop,
-        Central
-    };
-
-    enum RoadOrCityArea
-    {
-        Top,
-        Right,
-        Bottom,
-        Left
-    };
-
-    enum Area
-    {
-        AreaTopLeft,
-        AreaTopRight,
-        AreaRightTop,
-        AreaRightBottom,
-        AreaBottomLeft,
-        AreaBottomRight,
-        AreaLeftBottom,
-        AreaLeftTop,
-        AreaCentral,
-        AreaTop,
-        AreaRight,
-        AreaBottom,
-        AreaLeft
-    };
-
-    typedef std::vector< FieldArea > ContiguousField;
-    typedef std::vector< RoadOrCityArea > ContiguousRoadOrCity;
+    typedef std::vector< FieldArea::FieldArea > ContiguousField;
+    typedef std::vector< RoadOrCityArea::RoadOrCityArea > ContiguousRoadOrCity;
 
     Tile();
     Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
          std::vector< ContiguousField > inMeadows,
          std::vector< ContiguousRoadOrCity > inRoads,
          std::vector< ContiguousRoadOrCity > inCastles,
-         std::vector< RoadOrCityArea > inShields);
+         std::vector< RoadOrCityArea::RoadOrCityArea > inShields);
+    Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
+         std::vector< ContiguousField > inMeadows,
+         std::vector< ContiguousRoadOrCity > inRoads,
+         std::vector< ContiguousRoadOrCity > inCastles,
+         std::vector< RoadOrCityArea::RoadOrCityArea > inShields,
+         std::vector< RoadOrCityArea::RoadOrCityArea > inInns);
+
 
     static std::string sideToString(Side inSide);
     static std::string centerToString(Center inCenter);
-    static std::string fieldAreaToString(FieldArea inFieldArea);
-    static std::string roadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea);
-    static std::string areaToString(Area inArea);
 
     Side getTop();
     Side getRight();
@@ -84,6 +103,8 @@ public:
     std::vector< ContiguousField > getContiguousFields();
     std::vector< ContiguousRoadOrCity > getContiguousRoads();
     std::vector< ContiguousRoadOrCity > getContiguousCities();
+    std::vector< RoadOrCityArea::RoadOrCityArea > getShields();
+    std::vector< RoadOrCityArea::RoadOrCityArea > getInns();
 
     std::string toString();
 
@@ -96,7 +117,8 @@ private:
     std::vector< ContiguousField > mFields;
     std::vector< ContiguousRoadOrCity > mRoads;
     std::vector< ContiguousRoadOrCity > mCities;
-    std::vector< RoadOrCityArea > mShields;
+    std::vector< RoadOrCityArea::RoadOrCityArea > mShields;
+    std::vector< RoadOrCityArea::RoadOrCityArea > mInns;
 };
 
 #endif // TILE_H

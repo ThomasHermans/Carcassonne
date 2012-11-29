@@ -14,50 +14,50 @@ int main(int /*argc*/, char * /*argv[]*/)
     
 //    return a.exec();
     std::vector< Tile::ContiguousField > t1Fields;
-    std::vector< Tile::FieldArea > t1firstField;
-    t1firstField.push_back(Tile::RightTop);
-    t1firstField.push_back(Tile::LeftTop);
-    std::vector< Tile::FieldArea > t1secondField;
-    t1secondField.push_back(Tile::RightBottom);
-    t1secondField.push_back(Tile::BottomRight);
-    t1secondField.push_back(Tile::BottomLeft);
-    t1secondField.push_back(Tile::LeftBottom);
+    std::vector< FieldArea::FieldArea > t1firstField;
+    t1firstField.push_back(FieldArea::RightTop);
+    t1firstField.push_back(FieldArea::LeftTop);
+    std::vector< FieldArea::FieldArea > t1secondField;
+    t1secondField.push_back(FieldArea::RightBottom);
+    t1secondField.push_back(FieldArea::BottomRight);
+    t1secondField.push_back(FieldArea::BottomLeft);
+    t1secondField.push_back(FieldArea::LeftBottom);
     t1Fields.push_back(t1firstField);
     t1Fields.push_back(t1secondField);
 
     std::vector< Tile::ContiguousRoadOrCity > t1Roads;
-    std::vector< Tile::RoadOrCityArea > t1firstRoad;
-    t1firstRoad.push_back(Tile::Right);
-    t1firstRoad.push_back(Tile::Left);
+    std::vector< RoadOrCityArea::RoadOrCityArea > t1firstRoad;
+    t1firstRoad.push_back(RoadOrCityArea::Right);
+    t1firstRoad.push_back(RoadOrCityArea::Left);
     t1Roads.push_back(t1firstRoad);
 
     std::vector< Tile::ContiguousRoadOrCity > t1Cities;
-    std::vector< Tile::RoadOrCityArea > t1firstCity;
-    t1firstCity.push_back(Tile::Top);
+    std::vector< RoadOrCityArea::RoadOrCityArea > t1firstCity;
+    t1firstCity.push_back(RoadOrCityArea::Top);
     t1Cities.push_back(t1firstCity);
 
-    std::vector< Tile::RoadOrCityArea > t1Shields;
+    std::vector< RoadOrCityArea::RoadOrCityArea > t1Shields;
 
     Tile startTile = Tile(Tile::City, Tile::Road, Tile::Field, Tile::Road, Tile::Nothing,
                           t1Fields, t1Roads, t1Cities, t1Shields);
 
     std::vector< Tile::ContiguousField > t2Fields;
-    std::vector< Tile::FieldArea > t2firstField;
-    t2firstField.push_back(Tile::BottomRight);
-    t2firstField.push_back(Tile::BottomLeft);
-    t2firstField.push_back(Tile::LeftBottom);
-    t2firstField.push_back(Tile::LeftTop);
+    std::vector< FieldArea::FieldArea > t2firstField;
+    t2firstField.push_back(FieldArea::BottomRight);
+    t2firstField.push_back(FieldArea::BottomLeft);
+    t2firstField.push_back(FieldArea::LeftBottom);
+    t2firstField.push_back(FieldArea::LeftTop);
     t2Fields.push_back(t2firstField);
 
     std::vector< Tile::ContiguousRoadOrCity > t2Roads;
 
     std::vector< Tile::ContiguousRoadOrCity > t2Cities;
-    std::vector< Tile::RoadOrCityArea > t2firstCity;
-    t2firstCity.push_back(Tile::Top);
-    t2firstCity.push_back(Tile::Right);
+    std::vector< RoadOrCityArea::RoadOrCityArea > t2firstCity;
+    t2firstCity.push_back(RoadOrCityArea::Top);
+    t2firstCity.push_back(RoadOrCityArea::Right);
     t2Cities.push_back(t2firstCity);
 
-    std::vector< Tile::RoadOrCityArea > t2Shields;
+    std::vector< RoadOrCityArea::RoadOrCityArea > t2Shields;
 
     Tile t2 = Tile(Tile::City, Tile::City, Tile::Field, Tile::Field, Tile::Nothing,
                           t2Fields, t2Roads, t2Cities, t2Shields);
@@ -67,6 +67,9 @@ int main(int /*argc*/, char * /*argv[]*/)
 
     TileOnBoard t1ob = TileOnBoard(startTile, TileOnBoard::cw0);
     TileOnBoard t2ob = TileOnBoard(t2, TileOnBoard::cw90);
+
+    std::cout << t1ob.toString();
+    std::cout << t2ob.toString();
 
     if (t2ob.matchesAbove(t1ob))
         std::cout << "Matches on top" << std::endl;

@@ -1,6 +1,7 @@
 #include "color.h"
 
-std::string colorToString(Color inColor)
+std::string
+Color::colorToString(Color inColor)
 {
     std::string res = "";
     switch (inColor)

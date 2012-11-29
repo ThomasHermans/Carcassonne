@@ -10,16 +10,16 @@ class PlacedPiece
 {
 public:
     PlacedPiece();
-    PlacedPiece(Piece inPiece, Tile::Area mLocation);
+    PlacedPiece(Piece inPiece, Area::Area mLocation);
 
     Piece getPiece();
-    Tile::Area getLocation();
+    Area::Area getLocation();
 
     std::string toString();
 
 private:
     Piece mPiece;
-    Tile::Area mLocation;
+    Area::Area mLocation;
 };
 
 #endif // PLACEDPIECE_H

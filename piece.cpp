@@ -2,30 +2,47 @@
 
 Piece::Piece():
     mType(Piece::Follower),
-    mColor(Red)
+    mColor(Color::Red)
 {
 }
 
-Piece::Piece(PieceType inType, Color inColor):
+Piece::Piece(const Piece & inPiece):
+    mType(inPiece.getType()),
+    mColor(inPiece.getColor())
+{
+}
+
+Piece::Piece(PieceType inType, Color::Color inColor):
     mType(inType),
     mColor(inColor)
 {
 }
 
+Piece&
+Piece::operator=(const Piece & rhs)
+{
+    if(this != &rhs)
+    {
+        this->mType = rhs.getType();
+        this->mColor = rhs.getColor();
+    }
+    return *this;
+}
+
 Piece::PieceType
-Piece::getType()
+Piece::getType() const
 {
     return mType;
 }
 
-Color
-Piece::getColor()
+Color::Color
+Piece::getColor() const
 {
     return mColor;
 }
 
 int
-Piece::getPoints()
+Piece::getPoints() const
 {
     switch (mType)
     {
@@ -41,9 +58,9 @@ Piece::getPoints()
 }
 
 std::string
-Piece::toString()
+Piece::toString() const
 {
-    std::string res = colorToString(mColor);
+    std::string res = Color::colorToString(mColor);
     res.append(" ");
     switch (mType)
     {

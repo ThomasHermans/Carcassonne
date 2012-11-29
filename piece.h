@@ -17,18 +17,19 @@ public:
 
 public:
     Piece();
-    Piece(PieceType inType, Color inColor);
+    Piece(const Piece & inPiece);
+    Piece(PieceType inType, Color::Color inColor);
+    Piece & operator=(const Piece & inPiece);
 
-    PieceType getType();
-    Color getColor();
+    PieceType getType() const;
+    Color::Color getColor() const;
+    int getPoints() const;
 
-    int getPoints();
-
-    std::string toString();
+    std::string toString() const;
 
 private:
-    const PieceType mType;
-    const Color mColor;
+    PieceType mType;
+    Color::Color mColor;
 };
 
 #endif // PIECE_H
