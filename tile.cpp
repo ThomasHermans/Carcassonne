@@ -1,5 +1,7 @@
 #include "tile.h"
 
+#include <algorithm>
+
 std::string
 FieldArea::fieldAreaToString(FieldArea inFieldArea)
 {
@@ -203,6 +205,69 @@ Tile::getInns()
     return mInns;
 }
 
+Tile::ContiguousField
+Tile::getContiguousField(FieldArea::FieldArea inFieldArea)
+{
+    unsigned int i = 0;
+    for (; i < mFields.size(); ++i)
+    {
+        if ( std::find(mFields[i].begin(), mFields[i].end(), inFieldArea) != mFields[i].end() )
+        {
+            break;
+        }
+    }
+    if (i < mFields.size())
+    {
+        return mFields[i];
+    }
+    else
+    {
+        return Tile::ContiguousField();
+    }
+}
+
+Tile::ContiguousRoadOrCity
+Tile::getContiguousRoad(RoadOrCityArea::RoadOrCityArea inRoadArea)
+{
+    unsigned int i = 0;
+    for (; i < mRoads.size(); ++i)
+    {
+        if ( std::find(mRoads[i].begin(), mRoads[i].end(), inRoadArea) != mRoads[i].end() )
+        {
+            break;
+        }
+    }
+    if (i < mRoads.size())
+    {
+        return mRoads[i];
+    }
+    else
+    {
+        return Tile::ContiguousRoadOrCity();
+    }
+}
+
+Tile::ContiguousRoadOrCity
+Tile::getContiguousCity(RoadOrCityArea::RoadOrCityArea inCityArea)
+{
+    unsigned int i = 0;
+    for (; i < mCities.size(); ++i)
+    {
+        if ( std::find(mCities[i].begin(), mCities[i].end(), inCityArea) != mCities[i].end() )
+        {
+            break;
+        }
+    }
+    if (i < mCities.size())
+    {
+        return mCities[i];
+    }
+    else
+    {
+        return Tile::ContiguousRoadOrCity();
+    }
+}
+
 std::string
 Tile::toString()
 {
@@ -222,7 +287,7 @@ Tile::toString()
         result.append("\nContiguous fields:");
         for (unsigned int i = 0; i < mFields.size(); i++)
         {
-            result.append("\n- ");
+            result.append("\n\t- ");
             for (unsigned int j = 0; j < mFields[i].size(); j++)
             {
                 result.append(FieldArea::fieldAreaToString(mFields[i][j]));
@@ -235,7 +300,7 @@ Tile::toString()
         result.append("\nContiguous roads:");
         for (unsigned int i = 0; i < mRoads.size(); i++)
         {
-            result.append("\n- ");
+            result.append("\n\t- ");
             for (unsigned int j = 0; j < mRoads[i].size(); j++)
             {
                 result.append(RoadOrCityArea::roadOrCityAreaToString(mRoads[i][j]));
@@ -248,7 +313,7 @@ Tile::toString()
         result.append("\nContiguous cities:");
         for (unsigned int i = 0; i < mCities.size(); i++)
         {
-            result.append("\n- ");
+            result.append("\n\t- ");
             for (unsigned int j = 0; j < mCities[i].size(); j++)
             {
                 result.append(RoadOrCityArea::roadOrCityAreaToString(mCities[i][j]));
@@ -258,7 +323,7 @@ Tile::toString()
     }
     if (!mShields.empty())
     {
-        result.append("\nShields at:\n- ");
+        result.append("\nShields at:\n\t- ");
         for (unsigned int i = 0; i < mShields.size(); i++)
         {
             result.append(RoadOrCityArea::roadOrCityAreaToString(mShields[i]));
@@ -267,7 +332,7 @@ Tile::toString()
     }
     if (!mInns.empty())
     {
-        result.append("\nInns at:\n- ");
+        result.append("\nInns at:\n\t- ");
         for (unsigned int i = 0; i < mInns.size(); i++)
         {
             result.append(RoadOrCityArea::roadOrCityAreaToString(mInns[i]));

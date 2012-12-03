@@ -106,6 +106,10 @@ public:
     std::vector< RoadOrCityArea::RoadOrCityArea > getShields();
     std::vector< RoadOrCityArea::RoadOrCityArea > getInns();
 
+    ContiguousField getContiguousField(FieldArea::FieldArea inFieldArea);
+    ContiguousRoadOrCity getContiguousRoad(RoadOrCityArea::RoadOrCityArea inRoadArea);
+    ContiguousRoadOrCity getContiguousCity(RoadOrCityArea::RoadOrCityArea inCityArea);
+
     std::string toString();
 
 private:
