@@ -16,13 +16,17 @@ SOURCES += main.cpp\
     tileonboard.cpp \
     piece.cpp \
     placedpiece.cpp \
-    color.cpp
+    color.cpp \
+    board.cpp
 
 HEADERS  += mainwindow.h \
     tile.h \
     tileonboard.h \
     piece.h \
     color.h \
-    placedpiece.h
+    placedpiece.h \
+    board.h
+
+INCLUDEPATH += "C:\Program Files\boost\boost_1_52_0"
 
 FORMS    += mainwindow.ui
