@@ -6,13 +6,8 @@
 #include "tile.h"
 #include "tileonboard.h"
 
-int main(int /*argc*/, char * /*argv[]*/)
+int main(int argc, char * argv[])
 {
-//    QApplication a(argc, argv);
-//    MainWindow w;
-//    w.show();
-    
-//    return a.exec();
     std::vector< Tile::ContiguousField > t1Fields;
     std::vector< FieldArea::FieldArea > t1firstField;
     t1firstField.push_back(FieldArea::RightTop);
@@ -80,4 +75,9 @@ int main(int /*argc*/, char * /*argv[]*/)
     if (t2ob.matchesLeftOf(t1ob))
         std::cout << "Matches to the left of" << std::endl;
 
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+
+    return a.exec();
 }

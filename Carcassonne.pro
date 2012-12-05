@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     piece.cpp \
     placedpiece.cpp \
     color.cpp \
-    board.cpp
+    board.cpp \
+    boardwidget.cpp
 
 HEADERS  += mainwindow.h \
     tile.h \
@@ -25,8 +26,11 @@ HEADERS  += mainwindow.h \
     piece.h \
     color.h \
     placedpiece.h \
-    board.h
+    board.h \
+    boardwidget.h
 
 INCLUDEPATH += "C:\Program Files\boost\boost_1_52_0"
 
 FORMS    += mainwindow.ui
+
+RESOURCES +=
