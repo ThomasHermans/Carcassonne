@@ -2,6 +2,7 @@
 
 #include <QGridLayout>
 #include <QLabel>
+#include "tilewidget.h"
 
 BoardWidget::BoardWidget(QWidget *parent) :
     QWidget(parent)
@@ -13,23 +14,9 @@ BoardWidget::BoardWidget(QWidget *parent) :
     QGridLayout * gridLayout = new QGridLayout(this);
     for (unsigned int i = 0; i < mTiles.size(); ++i)
     {
-        QLabel * theLabel = new QLabel(this);
+        TileWidget * theLabel = new TileWidget(this);
         int row = i / mNrCols;
         int col = i % mNrCols;
-        if (row == 2 && col == 2)
-        {
-            QTransform transform;
-            QTransform transf = transform.rotate(90);
-            theLabel->setPixmap(QPixmap(QString::fromUtf8("startTile.png")).transformed(transf));
-        }
-        else
-        {
-            QString text;
-            text.setNum(10*row + col);
-            theLabel->setText(text);
-        }
-        theLabel->setMinimumSize(QSize(100, 100));
-        theLabel->setAlignment(Qt::AlignCenter);
         theLabel->show();
         gridLayout->addWidget(theLabel, row, col);
     }

@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     placedpiece.cpp \
     color.cpp \
     board.cpp \
-    boardwidget.cpp
+    boardwidget.cpp \
+    tilewidget.cpp
 
 HEADERS  += mainwindow.h \
     tile.h \
@@ -27,10 +28,12 @@ HEADERS  += mainwindow.h \
     color.h \
     placedpiece.h \
     board.h \
-    boardwidget.h
+    boardwidget.h \
+    tilewidget.h
 
 INCLUDEPATH += "C:\Program Files\boost\boost_1_52_0"
 
 FORMS    += mainwindow.ui
 
-RESOURCES +=
+RESOURCES += \
+    tiles.qrc
