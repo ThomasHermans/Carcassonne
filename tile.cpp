@@ -339,7 +339,6 @@ Tile::toString()
             result.append(" ");
         }
     }
-    result.append("\n");
     return result;
 }
 
