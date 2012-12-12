@@ -115,6 +115,15 @@ Backup*/
 UpgradeLog*.XML
 
 
+############
+## Qt
+############
+
+*.pro
+*.pro.user
+*.pro.user.*
+
+
 
 ############
 ## Windows
