@@ -27,6 +27,7 @@ public:
     Tile::Side getBottom();
     Tile::Side getLeft();
     Tile::Center getCenter();
+    std::string getID();
 
     bool matchesAbove(TileOnBoard inTileOnBoard);
     bool matchesRightOf(TileOnBoard inTileOnBoard);
@@ -36,6 +37,8 @@ public:
     std::vector< Tile::ContiguousField > getContiguousFields();
     std::vector< Tile::ContiguousRoadOrCity > getContiguousRoads();
     std::vector< Tile::ContiguousRoadOrCity > getContiguousCities();
+
+    std::vector< Tile::ContiguousRoadOrCity > getCitiesPerField(FieldArea::FieldArea inFieldArea);
 
     std::vector< Tile::ContiguousRoadOrCity > getFinishedRoads();
     std::vector< Tile::ContiguousRoadOrCity > getFinishedCities();

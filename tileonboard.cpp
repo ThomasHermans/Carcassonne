@@ -130,6 +130,12 @@ TileOnBoard::getCenter()
     return mTile.getCenter();
 }
 
+std::string
+TileOnBoard::getID()
+{
+    return mTile.getID();
+}
+
 bool
 TileOnBoard::matchesAbove(TileOnBoard inTileOnBoard)
 {
@@ -206,6 +212,25 @@ TileOnBoard::getContiguousCities()
         res.push_back(restemp);
     }
     return res;
+}
+
+std::vector< Tile::ContiguousRoadOrCity >
+TileOnBoard::getCitiesPerField(FieldArea::FieldArea inFieldArea)
+{
+    FieldArea::FieldArea tileFieldArea = turn(inFieldArea, TileOnBoard::Rotation((mRotation + 9) % 12));
+    std::vector< Tile::ContiguousRoadOrCity > tileCities = mTile.getCitiesPerField(tileFieldArea);
+    std::vector< Tile::ContiguousRoadOrCity > cities;
+    for (unsigned int i = 0; i < tileCities.size(); ++i)
+    {
+        Tile::ContiguousRoadOrCity cityTemp;
+        Tile::ContiguousRoadOrCity tileCityTemp = tileCities[i];
+        for (unsigned int j = 0; j < tileCityTemp.size(); ++j)
+        {
+            cityTemp.push_back(turn(tileCityTemp[j], mRotation));
+        }
+        cities.push_back(cityTemp);
+    }
+    return cities;
 }
 
 std::vector< Tile::ContiguousRoadOrCity >

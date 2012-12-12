@@ -89,7 +89,8 @@ Tile::Tile():
     mRight(Field),
     mBottom(Field),
     mLeft(Field),
-    mCenter(Cloister)
+    mCenter(Cloister),
+    mID("B")
 {
     mFields = std::vector< ContiguousField >();
     ContiguousField allFields = std::vector< FieldArea::FieldArea >();
@@ -104,32 +105,39 @@ Tile::Tile():
     mFields.push_back(allFields);
     mRoads = std::vector< ContiguousRoadOrCity >();
     mCities = std::vector< ContiguousRoadOrCity >();
+    mCitiesPerField = std::map< ContiguousField, std::vector< ContiguousRoadOrCity > >();
     mShields = std::vector< RoadOrCityArea::RoadOrCityArea >();
     mInns = std::vector< RoadOrCityArea::RoadOrCityArea >();
 }
 
 Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
+           std::string inID,
            std::vector< ContiguousField > inFields,
            std::vector< ContiguousRoadOrCity > inRoads,
            std::vector< ContiguousRoadOrCity > inCities,
+           std::map< ContiguousField, std::vector< ContiguousRoadOrCity > > inCitiesPerField,
            std::vector< RoadOrCityArea::RoadOrCityArea > inShields):
     mTop(inTop),
     mRight(inRight),
     mBottom(inBottom),
     mLeft(inLeft),
     mCenter(inCenter),
+    mID(inID),
     mFields(inFields),
     mRoads(inRoads),
     mCities(inCities),
+    mCitiesPerField(inCitiesPerField),
     mShields(inShields)
 {
     mInns = std::vector< RoadOrCityArea::RoadOrCityArea >();
 }
 
 Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
+           std::string inID,
            std::vector< ContiguousField > inFields,
            std::vector< ContiguousRoadOrCity > inRoads,
            std::vector< ContiguousRoadOrCity > inCities,
+           std::map< ContiguousField, std::vector< ContiguousRoadOrCity > > inCitiesPerField,
            std::vector< RoadOrCityArea::RoadOrCityArea > inShields,
            std::vector< RoadOrCityArea::RoadOrCityArea > inInns):
     mTop(inTop),
@@ -137,9 +145,11 @@ Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter
     mBottom(inBottom),
     mLeft(inLeft),
     mCenter(inCenter),
+    mID(inID),
     mFields(inFields),
     mRoads(inRoads),
     mCities(inCities),
+    mCitiesPerField(inCitiesPerField),
     mShields(inShields),
     mInns(inInns)
 {
@@ -175,6 +185,12 @@ Tile::getCenter()
     return mCenter;
 }
 
+std::string
+Tile::getID()
+{
+    return mID;
+}
+
 std::vector< Tile::ContiguousField >
 Tile::getContiguousFields()
 {
@@ -191,6 +207,19 @@ std::vector< Tile::ContiguousRoadOrCity >
 Tile::getContiguousCities()
 {
     return mCities;
+}
+
+std::vector< Tile::ContiguousRoadOrCity >
+Tile::getCitiesPerField(ContiguousField inContiguousField)
+{
+    return mCitiesPerField.at(inContiguousField);
+}
+
+std::vector< Tile::ContiguousRoadOrCity >
+Tile::getCitiesPerField(FieldArea::FieldArea inFieldArea)
+{
+    ContiguousField cf = getContiguousField(inFieldArea);
+    return mCitiesPerField.at(cf);
 }
 
 std::vector< RoadOrCityArea::RoadOrCityArea >
