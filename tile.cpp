@@ -3,7 +3,7 @@
 #include <algorithm>
 
 std::string
-FieldArea::fieldAreaToString(FieldArea inFieldArea)
+FRCArea::fieldAreaToString(FieldArea inFieldArea)
 {
     switch (inFieldArea)
     {
@@ -31,9 +31,9 @@ FieldArea::fieldAreaToString(FieldArea inFieldArea)
 }
 
 std::string
-RoadOrCityArea::roadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea)
+FRCArea::roadAreaToString(RoadArea inRoadArea)
 {
-    switch (inRoadOrCityArea)
+    switch (inRoadArea)
     {
     case Top:
         return "Top";
@@ -44,8 +44,14 @@ RoadOrCityArea::roadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea)
     case Left:
         return "Left";
     default:
-        return "No valid RoadOrCityArea";
+        return "No valid Area";
     }
+}
+
+std::string
+FRCArea::cityAreaToString(CityArea inCityArea)
+{
+    return roadAreaToString(inCityArea);
 }
 
 std::string
@@ -93,30 +99,30 @@ Tile::Tile():
     mID("B")
 {
     mFields = std::vector< ContiguousField >();
-    ContiguousField allFields = std::vector< FieldArea::FieldArea >();
-    allFields.push_back(FieldArea::TopLeft);
-    allFields.push_back(FieldArea::TopRight);
-    allFields.push_back(FieldArea::RightTop);
-    allFields.push_back(FieldArea::RightBottom);
-    allFields.push_back(FieldArea::BottomRight);
-    allFields.push_back(FieldArea::BottomLeft);
-    allFields.push_back(FieldArea::LeftBottom);
-    allFields.push_back(FieldArea::LeftTop);
+    ContiguousField allFields = std::vector< FRCArea::FieldArea >();
+    allFields.push_back(FRCArea::TopLeft);
+    allFields.push_back(FRCArea::TopRight);
+    allFields.push_back(FRCArea::RightTop);
+    allFields.push_back(FRCArea::RightBottom);
+    allFields.push_back(FRCArea::BottomRight);
+    allFields.push_back(FRCArea::BottomLeft);
+    allFields.push_back(FRCArea::LeftBottom);
+    allFields.push_back(FRCArea::LeftTop);
     mFields.push_back(allFields);
-    mRoads = std::vector< ContiguousRoadOrCity >();
-    mCities = std::vector< ContiguousRoadOrCity >();
-    mCitiesPerField = std::map< ContiguousField, std::vector< ContiguousRoadOrCity > >();
-    mShields = std::vector< RoadOrCityArea::RoadOrCityArea >();
-    mInns = std::vector< RoadOrCityArea::RoadOrCityArea >();
+    mRoads = std::vector< ContiguousRoad >();
+    mCities = std::vector< ContiguousCity >();
+    mCitiesPerField = std::map< ContiguousField, std::vector< ContiguousCity > >();
+    mShields = std::vector< FRCArea::CityArea >();
+    mInns = std::vector< FRCArea::RoadArea >();
 }
 
 Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
            std::string inID,
            std::vector< ContiguousField > inFields,
-           std::vector< ContiguousRoadOrCity > inRoads,
-           std::vector< ContiguousRoadOrCity > inCities,
-           std::map< ContiguousField, std::vector< ContiguousRoadOrCity > > inCitiesPerField,
-           std::vector< RoadOrCityArea::RoadOrCityArea > inShields):
+           std::vector< ContiguousRoad > inRoads,
+           std::vector< ContiguousCity > inCities,
+           std::map< ContiguousField, std::vector< ContiguousCity > > inCitiesPerField,
+           std::vector< FRCArea::CityArea > inShields):
     mTop(inTop),
     mRight(inRight),
     mBottom(inBottom),
@@ -129,17 +135,17 @@ Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter
     mCitiesPerField(inCitiesPerField),
     mShields(inShields)
 {
-    mInns = std::vector< RoadOrCityArea::RoadOrCityArea >();
+    mInns = std::vector< FRCArea::RoadArea >();
 }
 
 Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
            std::string inID,
            std::vector< ContiguousField > inFields,
-           std::vector< ContiguousRoadOrCity > inRoads,
-           std::vector< ContiguousRoadOrCity > inCities,
-           std::map< ContiguousField, std::vector< ContiguousRoadOrCity > > inCitiesPerField,
-           std::vector< RoadOrCityArea::RoadOrCityArea > inShields,
-           std::vector< RoadOrCityArea::RoadOrCityArea > inInns):
+           std::vector< ContiguousRoad > inRoads,
+           std::vector< ContiguousCity > inCities,
+           std::map< ContiguousField, std::vector< ContiguousCity > > inCitiesPerField,
+           std::vector< FRCArea::CityArea > inShields,
+           std::vector< FRCArea::RoadArea > inInns):
     mTop(inTop),
     mRight(inRight),
     mBottom(inBottom),
@@ -197,45 +203,45 @@ Tile::getContiguousFields()
     return mFields;
 }
 
-std::vector< Tile::ContiguousRoadOrCity >
+std::vector< Tile::ContiguousRoad >
 Tile::getContiguousRoads()
 {
     return mRoads;
 }
 
-std::vector< Tile::ContiguousRoadOrCity >
+std::vector< Tile::ContiguousCity >
 Tile::getContiguousCities()
 {
     return mCities;
 }
 
-std::vector< Tile::ContiguousRoadOrCity >
+std::vector< Tile::ContiguousCity >
 Tile::getCitiesPerField(ContiguousField inContiguousField)
 {
     return mCitiesPerField.at(inContiguousField);
 }
 
-std::vector< Tile::ContiguousRoadOrCity >
-Tile::getCitiesPerField(FieldArea::FieldArea inFieldArea)
+std::vector< Tile::ContiguousCity >
+Tile::getCitiesPerField(FRCArea::FieldArea inFieldArea)
 {
     ContiguousField cf = getContiguousField(inFieldArea);
     return mCitiesPerField.at(cf);
 }
 
-std::vector< RoadOrCityArea::RoadOrCityArea >
+std::vector< FRCArea::CityArea >
 Tile::getShields()
 {
     return mShields;
 }
 
-std::vector< RoadOrCityArea::RoadOrCityArea >
+std::vector< FRCArea::RoadArea >
 Tile::getInns()
 {
     return mInns;
 }
 
 Tile::ContiguousField
-Tile::getContiguousField(FieldArea::FieldArea inFieldArea)
+Tile::getContiguousField(FRCArea::FieldArea inFieldArea)
 {
     unsigned int i = 0;
     for (; i < mFields.size(); ++i)
@@ -255,8 +261,8 @@ Tile::getContiguousField(FieldArea::FieldArea inFieldArea)
     }
 }
 
-Tile::ContiguousRoadOrCity
-Tile::getContiguousRoad(RoadOrCityArea::RoadOrCityArea inRoadArea)
+Tile::ContiguousRoad
+Tile::getContiguousRoad(FRCArea::RoadArea inRoadArea)
 {
     unsigned int i = 0;
     for (; i < mRoads.size(); ++i)
@@ -272,12 +278,12 @@ Tile::getContiguousRoad(RoadOrCityArea::RoadOrCityArea inRoadArea)
     }
     else
     {
-        return Tile::ContiguousRoadOrCity();
+        return Tile::ContiguousRoad();
     }
 }
 
-Tile::ContiguousRoadOrCity
-Tile::getContiguousCity(RoadOrCityArea::RoadOrCityArea inCityArea)
+Tile::ContiguousCity
+Tile::getContiguousCity(FRCArea::CityArea inCityArea)
 {
     unsigned int i = 0;
     for (; i < mCities.size(); ++i)
@@ -293,7 +299,7 @@ Tile::getContiguousCity(RoadOrCityArea::RoadOrCityArea inCityArea)
     }
     else
     {
-        return Tile::ContiguousRoadOrCity();
+        return Tile::ContiguousCity();
     }
 }
 
@@ -319,7 +325,7 @@ Tile::toString()
             result.append("\n\t- ");
             for (unsigned int j = 0; j < mFields[i].size(); j++)
             {
-                result.append(FieldArea::fieldAreaToString(mFields[i][j]));
+                result.append(FRCArea::fieldAreaToString(mFields[i][j]));
                 result.append(" ");
             }
         }
@@ -332,7 +338,7 @@ Tile::toString()
             result.append("\n\t- ");
             for (unsigned int j = 0; j < mRoads[i].size(); j++)
             {
-                result.append(RoadOrCityArea::roadOrCityAreaToString(mRoads[i][j]));
+                result.append(FRCArea::roadAreaToString(mRoads[i][j]));
                 result.append(" ");
             }
         }
@@ -345,7 +351,7 @@ Tile::toString()
             result.append("\n\t- ");
             for (unsigned int j = 0; j < mCities[i].size(); j++)
             {
-                result.append(RoadOrCityArea::roadOrCityAreaToString(mCities[i][j]));
+                result.append(FRCArea::cityAreaToString(mCities[i][j]));
                 result.append(" ");
             }
         }
@@ -355,7 +361,7 @@ Tile::toString()
         result.append("\nShields at:\n\t- ");
         for (unsigned int i = 0; i < mShields.size(); i++)
         {
-            result.append(RoadOrCityArea::roadOrCityAreaToString(mShields[i]));
+            result.append(FRCArea::cityAreaToString(mShields[i]));
             result.append(" ");
         }
     }
@@ -364,7 +370,7 @@ Tile::toString()
         result.append("\nInns at:\n\t- ");
         for (unsigned int i = 0; i < mInns.size(); i++)
         {
-            result.append(RoadOrCityArea::roadOrCityAreaToString(mInns[i]));
+            result.append(FRCArea::roadAreaToString(mInns[i]));
             result.append(" ");
         }
     }

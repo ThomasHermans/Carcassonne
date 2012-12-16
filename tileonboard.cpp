@@ -13,17 +13,17 @@ bool isValid(TileOnBoard inTile, PlacedPiece inPlacedPiece)
     return true;
 }
 
-FieldArea::FieldArea turn(FieldArea::FieldArea inFieldArea, TileOnBoard::Rotation inRotation)
+FRCArea::FieldArea turn(FRCArea::FieldArea inFieldArea, TileOnBoard::Rotation inRotation)
 {
-    if (inFieldArea == FieldArea::Central)
-        return FieldArea::Central;
+    if (inFieldArea == FRCArea::Central)
+        return FRCArea::Central;
     else
-        return FieldArea::FieldArea((inFieldArea + inRotation) % 12);
+        return FRCArea::FieldArea((inFieldArea + inRotation) % 12);
 }
 
-RoadOrCityArea::RoadOrCityArea turn(RoadOrCityArea::RoadOrCityArea inRoadOrCityArea, TileOnBoard::Rotation inRotation)
+FRCArea::RoadArea turn(FRCArea::RoadArea inRoadArea, TileOnBoard::Rotation inRotation)
 {
-    return RoadOrCityArea::RoadOrCityArea((inRoadOrCityArea + inRotation) % 12);
+    return FRCArea::RoadArea((inRoadArea + inRotation) % 12);
 }
 }
 
@@ -32,8 +32,8 @@ TileOnBoard::TileOnBoard():
     mRotation(TileOnBoard::cw0)
 {
     mOccupiedFields = std::vector< Tile::ContiguousField >();
-    mOccupiedRoads = std::vector< Tile::ContiguousRoadOrCity >();
-    mOccupiedCities = std::vector< Tile::ContiguousRoadOrCity >();
+    mOccupiedRoads = std::vector< Tile::ContiguousRoad >();
+    mOccupiedCities = std::vector< Tile::ContiguousCity >();
     mPlacedPieces = std::vector< PlacedPiece >();
 }
 
@@ -42,8 +42,8 @@ TileOnBoard::TileOnBoard(Tile inTile, Rotation inRotation):
     mRotation(inRotation)
 {
     mOccupiedFields = std::vector< Tile::ContiguousField >();
-    mOccupiedRoads = std::vector< Tile::ContiguousRoadOrCity >();
-    mOccupiedCities = std::vector< Tile::ContiguousRoadOrCity >();
+    mOccupiedRoads = std::vector< Tile::ContiguousRoad >();
+    mOccupiedCities = std::vector< Tile::ContiguousCity >();
     mPlacedPieces = std::vector< PlacedPiece >();
 }
 
@@ -178,15 +178,15 @@ TileOnBoard::getContiguousFields()
     return res;
 }
 
-std::vector< Tile::ContiguousRoadOrCity >
+std::vector< Tile::ContiguousRoad >
 TileOnBoard::getContiguousRoads()
 {
-    std::vector< Tile::ContiguousRoadOrCity > res;
-    std::vector< Tile::ContiguousRoadOrCity > orig = mTile.getContiguousRoads();
+    std::vector< Tile::ContiguousRoad > res;
+    std::vector< Tile::ContiguousRoad > orig = mTile.getContiguousRoads();
     for (unsigned int i = 0; i < orig.size(); ++i)
     {
-        Tile::ContiguousRoadOrCity restemp;
-        Tile::ContiguousRoadOrCity origtemp = orig[i];
+        Tile::ContiguousRoad restemp;
+        Tile::ContiguousRoad origtemp = orig[i];
         for (unsigned int j = 0; j < origtemp.size(); ++j)
         {
             restemp.push_back(turn(origtemp[j], mRotation));
@@ -196,15 +196,15 @@ TileOnBoard::getContiguousRoads()
     return res;
 }
 
-std::vector< Tile::ContiguousRoadOrCity >
+std::vector< Tile::ContiguousCity >
 TileOnBoard::getContiguousCities()
 {
-    std::vector< Tile::ContiguousRoadOrCity > res;
-    std::vector< Tile::ContiguousRoadOrCity > orig = mTile.getContiguousCities();
+    std::vector< Tile::ContiguousCity > res;
+    std::vector< Tile::ContiguousCity > orig = mTile.getContiguousCities();
     for (unsigned int i = 0; i < orig.size(); ++i)
     {
-        Tile::ContiguousRoadOrCity restemp;
-        Tile::ContiguousRoadOrCity origtemp = orig[i];
+        Tile::ContiguousCity restemp;
+        Tile::ContiguousCity origtemp = orig[i];
         for (unsigned int j = 0; j < origtemp.size(); ++j)
         {
             restemp.push_back(turn(origtemp[j], mRotation));
@@ -214,16 +214,16 @@ TileOnBoard::getContiguousCities()
     return res;
 }
 
-std::vector< Tile::ContiguousRoadOrCity >
-TileOnBoard::getCitiesPerField(FieldArea::FieldArea inFieldArea)
+std::vector< Tile::ContiguousCity >
+TileOnBoard::getCitiesPerField(FRCArea::FieldArea inFieldArea)
 {
-    FieldArea::FieldArea tileFieldArea = turn(inFieldArea, TileOnBoard::Rotation((mRotation + 9) % 12));
-    std::vector< Tile::ContiguousRoadOrCity > tileCities = mTile.getCitiesPerField(tileFieldArea);
-    std::vector< Tile::ContiguousRoadOrCity > cities;
+    FRCArea::FieldArea tileFieldArea = turn(inFieldArea, TileOnBoard::Rotation((mRotation + 9) % 12));
+    std::vector< Tile::ContiguousCity > tileCities = mTile.getCitiesPerField(tileFieldArea);
+    std::vector< Tile::ContiguousCity > cities;
     for (unsigned int i = 0; i < tileCities.size(); ++i)
     {
-        Tile::ContiguousRoadOrCity cityTemp;
-        Tile::ContiguousRoadOrCity tileCityTemp = tileCities[i];
+        Tile::ContiguousCity cityTemp;
+        Tile::ContiguousCity tileCityTemp = tileCities[i];
         for (unsigned int j = 0; j < tileCityTemp.size(); ++j)
         {
             cityTemp.push_back(turn(tileCityTemp[j], mRotation));
@@ -233,23 +233,23 @@ TileOnBoard::getCitiesPerField(FieldArea::FieldArea inFieldArea)
     return cities;
 }
 
-std::vector< Tile::ContiguousRoadOrCity >
+std::vector< Tile::ContiguousRoad >
 TileOnBoard::getFinishedRoads()
 {
     return mFinishedRoads;
 }
 
-std::vector< Tile::ContiguousRoadOrCity >
+std::vector< Tile::ContiguousCity >
 TileOnBoard::getFinishedCities()
 {
     return mFinishedCities;
 }
 
-std::vector< RoadOrCityArea::RoadOrCityArea >
+std::vector< FRCArea::CityArea >
 TileOnBoard::getShields()
 {
-    std::vector< RoadOrCityArea::RoadOrCityArea > res;
-    std::vector< RoadOrCityArea::RoadOrCityArea > orig = mTile.getShields();
+    std::vector< FRCArea::CityArea > res;
+    std::vector< FRCArea::CityArea > orig = mTile.getShields();
     for (unsigned int i = 0; i < orig.size(); ++i)
     {
         res.push_back(turn(orig[i], mRotation));
@@ -257,11 +257,11 @@ TileOnBoard::getShields()
     return res;
 }
 
-std::vector< RoadOrCityArea::RoadOrCityArea >
+std::vector< FRCArea::RoadArea >
 TileOnBoard::getInns()
 {
-    std::vector< RoadOrCityArea::RoadOrCityArea > res;
-    std::vector< RoadOrCityArea::RoadOrCityArea > orig = mTile.getInns();
+    std::vector< FRCArea::RoadArea > res;
+    std::vector< FRCArea::RoadArea > orig = mTile.getInns();
     for (unsigned int i = 0; i < orig.size(); ++i)
     {
         res.push_back(turn(orig[i], mRotation));
@@ -270,7 +270,7 @@ TileOnBoard::getInns()
 }
 
 bool
-TileOnBoard::isFieldOccupied(FieldArea::FieldArea inFieldArea)
+TileOnBoard::isFieldOccupied(FRCArea::FieldArea inFieldArea)
 {
     bool occupied = false;
     for (unsigned int i = 0; i < mOccupiedFields.size(); ++i)
@@ -285,7 +285,7 @@ TileOnBoard::isFieldOccupied(FieldArea::FieldArea inFieldArea)
 }
 
 bool
-TileOnBoard::isRoadOccupied(RoadOrCityArea::RoadOrCityArea inRoadArea)
+TileOnBoard::isRoadOccupied(FRCArea::RoadArea inRoadArea)
 {
     bool occupied = false;
     for (unsigned int i = 0; i < mOccupiedRoads.size(); ++i)
@@ -300,7 +300,7 @@ TileOnBoard::isRoadOccupied(RoadOrCityArea::RoadOrCityArea inRoadArea)
 }
 
 bool
-TileOnBoard::isCityOccupied(RoadOrCityArea::RoadOrCityArea inCityArea)
+TileOnBoard::isCityOccupied(FRCArea::CityArea inCityArea)
 {
     bool occupied = false;
     for (unsigned int i = 0; i < mOccupiedCities.size(); ++i)
@@ -315,7 +315,7 @@ TileOnBoard::isCityOccupied(RoadOrCityArea::RoadOrCityArea inCityArea)
 }
 
 bool
-TileOnBoard::isRoadFinished(RoadOrCityArea::RoadOrCityArea inRoadArea)
+TileOnBoard::isRoadFinished(FRCArea::RoadArea inRoadArea)
 {
     bool finished = false;
     for (unsigned int i = 0; i < mFinishedRoads.size(); ++i)
@@ -330,7 +330,7 @@ TileOnBoard::isRoadFinished(RoadOrCityArea::RoadOrCityArea inRoadArea)
 }
 
 bool
-TileOnBoard::isCityFinished(RoadOrCityArea::RoadOrCityArea inCityArea)
+TileOnBoard::isCityFinished(FRCArea::CityArea inCityArea)
 {
     bool finished = false;
     for (unsigned int i = 0; i < mFinishedCities.size(); ++i)
@@ -345,7 +345,7 @@ TileOnBoard::isCityFinished(RoadOrCityArea::RoadOrCityArea inCityArea)
 }
 
 void
-TileOnBoard::occupyField(FieldArea::FieldArea inFieldArea)
+TileOnBoard::occupyField(FRCArea::FieldArea inFieldArea)
 {
     if (!isFieldOccupied(inFieldArea))
     {
@@ -367,11 +367,11 @@ TileOnBoard::occupyField(FieldArea::FieldArea inFieldArea)
 }
 
 void
-TileOnBoard::occupyRoad(RoadOrCityArea::RoadOrCityArea inRoadArea)
+TileOnBoard::occupyRoad(FRCArea::RoadArea inRoadArea)
 {
     if (!isRoadOccupied(inRoadArea))
     {
-        std::vector< Tile::ContiguousRoadOrCity > contiguousRoads = getContiguousRoads();
+        std::vector< Tile::ContiguousRoad > contiguousRoads = getContiguousRoads();
         unsigned int i = 0;
         for (; i < contiguousRoads.size(); ++i)
         {
@@ -382,18 +382,18 @@ TileOnBoard::occupyRoad(RoadOrCityArea::RoadOrCityArea inRoadArea)
         }
         if ( i < contiguousRoads.size() )
         {
-            Tile::ContiguousRoadOrCity occupiedRoad = contiguousRoads[i];
+            Tile::ContiguousRoad occupiedRoad = contiguousRoads[i];
             mOccupiedRoads.push_back(occupiedRoad);
         }
     }
 }
 
 void
-TileOnBoard::occupyCity(RoadOrCityArea::RoadOrCityArea inCityArea)
+TileOnBoard::occupyCity(FRCArea::CityArea inCityArea)
 {
     if (!isCityOccupied(inCityArea))
     {
-        std::vector< Tile::ContiguousRoadOrCity > contiguousCities = getContiguousCities();
+        std::vector< Tile::ContiguousCity > contiguousCities = getContiguousCities();
         unsigned int i = 0;
         for (; i < contiguousCities.size(); ++i)
         {
@@ -404,18 +404,18 @@ TileOnBoard::occupyCity(RoadOrCityArea::RoadOrCityArea inCityArea)
         }
         if ( i < contiguousCities.size() )
         {
-            Tile::ContiguousRoadOrCity occupiedCity = contiguousCities[i];
+            Tile::ContiguousCity occupiedCity = contiguousCities[i];
             mOccupiedCities.push_back(occupiedCity);
         }
     }
 }
 
 void
-TileOnBoard::finishRoad(RoadOrCityArea::RoadOrCityArea inRoadArea)
+TileOnBoard::finishRoad(FRCArea::RoadArea inRoadArea)
 {
     if (!isRoadFinished(inRoadArea))
     {
-        std::vector< Tile::ContiguousRoadOrCity > contiguousRoads = getContiguousRoads();
+        std::vector< Tile::ContiguousRoad > contiguousRoads = getContiguousRoads();
         unsigned int i = 0;
         for (; i < contiguousRoads.size(); ++i)
         {
@@ -426,18 +426,18 @@ TileOnBoard::finishRoad(RoadOrCityArea::RoadOrCityArea inRoadArea)
         }
         if ( i < contiguousRoads.size() )
         {
-            Tile::ContiguousRoadOrCity finishedRoad = contiguousRoads[i];
+            Tile::ContiguousRoad finishedRoad = contiguousRoads[i];
             mFinishedRoads.push_back(finishedRoad);
         }
     }
 }
 
 void
-TileOnBoard::finishCity(RoadOrCityArea::RoadOrCityArea inCityArea)
+TileOnBoard::finishCity(FRCArea::CityArea inCityArea)
 {
     if (!isCityFinished(inCityArea))
     {
-        std::vector< Tile::ContiguousRoadOrCity > contiguousCities = getContiguousCities();
+        std::vector< Tile::ContiguousCity > contiguousCities = getContiguousCities();
         unsigned int i = 0;
         for (; i < contiguousCities.size(); ++i)
         {
@@ -448,7 +448,7 @@ TileOnBoard::finishCity(RoadOrCityArea::RoadOrCityArea inCityArea)
         }
         if ( i < contiguousCities.size() )
         {
-            Tile::ContiguousRoadOrCity finishedCity = contiguousCities[i];
+            Tile::ContiguousCity finishedCity = contiguousCities[i];
             mFinishedCities.push_back(finishedCity);
         }
     }
@@ -477,12 +477,12 @@ TileOnBoard::toString()
             result.append("\n\t- ");
             for (unsigned int j = 0; j < fields[i].size(); j++)
             {
-                result.append(FieldArea::fieldAreaToString(fields[i][j]));
+                result.append(FRCArea::fieldAreaToString(fields[i][j]));
                 result.append(" ");
             }
         }
     }
-    std::vector< Tile::ContiguousRoadOrCity > roads = this->getContiguousRoads();
+    std::vector< Tile::ContiguousRoad > roads = this->getContiguousRoads();
     if (!roads.empty())
     {
         result.append("\nContiguous roads:");
@@ -491,12 +491,12 @@ TileOnBoard::toString()
             result.append("\n\t- ");
             for (unsigned int j = 0; j < roads[i].size(); j++)
             {
-                result.append(RoadOrCityArea::roadOrCityAreaToString(roads[i][j]));
+                result.append(FRCArea::roadAreaToString(roads[i][j]));
                 result.append(" ");
             }
         }
     }
-    std::vector< Tile::ContiguousRoadOrCity > cities = this->getContiguousCities();
+    std::vector< Tile::ContiguousCity > cities = this->getContiguousCities();
     if (!cities.empty())
     {
         result.append("\nContiguous cities:");
@@ -505,28 +505,28 @@ TileOnBoard::toString()
             result.append("\n\t- ");
             for (unsigned int j = 0; j < cities[i].size(); j++)
             {
-                result.append(RoadOrCityArea::roadOrCityAreaToString(cities[i][j]));
+                result.append(FRCArea::cityAreaToString(cities[i][j]));
                 result.append(" ");
             }
         }
     }
-    std::vector< RoadOrCityArea::RoadOrCityArea > shields = this->getShields();
+    std::vector< FRCArea::CityArea > shields = this->getShields();
     if (!shields.empty())
     {
         result.append("\nShields at:\n\t- ");
         for (unsigned int i = 0; i < shields.size(); i++)
         {
-            result.append(RoadOrCityArea::roadOrCityAreaToString(shields[i]));
+            result.append(FRCArea::cityAreaToString(shields[i]));
             result.append(" ");
         }
     }
-    std::vector< RoadOrCityArea::RoadOrCityArea > inns = this->getInns();
+    std::vector< FRCArea::RoadArea > inns = this->getInns();
     if (!inns.empty())
     {
         result.append("\nInns at:\n\t- ");
         for (unsigned int i = 0; i < inns.size(); i++)
         {
-            result.append(RoadOrCityArea::roadOrCityAreaToString(inns[i]));
+            result.append(FRCArea::roadAreaToString(inns[i]));
             result.append(" ");
         }
     }

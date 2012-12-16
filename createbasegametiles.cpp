@@ -9,28 +9,28 @@ createTile_A()
 {
     std::vector< Tile::ContiguousField > fields;
     Tile::ContiguousField firstField;
-    firstField.push_back(FieldArea::TopLeft);
-    firstField.push_back(FieldArea::TopRight);
-    firstField.push_back(FieldArea::RightTop);
-    firstField.push_back(FieldArea::RightBottom);
-    firstField.push_back(FieldArea::BottomRight);
-    firstField.push_back(FieldArea::BottomLeft);
-    firstField.push_back(FieldArea::LeftBottom);
-    firstField.push_back(FieldArea::LeftTop);
+    firstField.push_back(FRCArea::TopLeft);
+    firstField.push_back(FRCArea::TopRight);
+    firstField.push_back(FRCArea::RightTop);
+    firstField.push_back(FRCArea::RightBottom);
+    firstField.push_back(FRCArea::BottomRight);
+    firstField.push_back(FRCArea::BottomLeft);
+    firstField.push_back(FRCArea::LeftBottom);
+    firstField.push_back(FRCArea::LeftTop);
     fields.push_back(firstField);
 
-    std::vector< Tile::ContiguousRoadOrCity > roads;
-    Tile::ContiguousRoadOrCity firstRoad;
-    firstRoad.push_back(RoadOrCityArea::Bottom);
+    std::vector< Tile::ContiguousRoad > roads;
+    Tile::ContiguousRoad firstRoad;
+    firstRoad.push_back(FRCArea::Bottom);
     roads.push_back(firstRoad);
 
-    std::vector< Tile::ContiguousRoadOrCity > cities;
+    std::vector< Tile::ContiguousCity > cities;
 
-    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > > citiesPerField;
-    std::vector< Tile::ContiguousRoadOrCity > firstFieldCities;
-    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > >(firstField, firstFieldCities));
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
 
-    std::vector< RoadOrCityArea::RoadOrCityArea > shields;
+    std::vector< FRCArea::CityArea > shields;
 
     Tile tile_A = Tile(Tile::Field, Tile::Field, Tile::Road, Tile::Field, Tile::Cloister, "A",
                           fields, roads, cities, citiesPerField, shields);
@@ -39,40 +39,96 @@ createTile_A()
 }
 
 Tile
+createTile_B()
+{
+    std::vector< Tile::ContiguousField > fields;
+    Tile::ContiguousField firstField;
+    firstField.push_back(FRCArea::TopLeft);
+    firstField.push_back(FRCArea::TopRight);
+    firstField.push_back(FRCArea::RightTop);
+    firstField.push_back(FRCArea::RightBottom);
+    firstField.push_back(FRCArea::BottomRight);
+    firstField.push_back(FRCArea::BottomLeft);
+    firstField.push_back(FRCArea::LeftBottom);
+    firstField.push_back(FRCArea::LeftTop);
+    fields.push_back(firstField);
+
+    std::vector< Tile::ContiguousRoad > roads;
+
+    std::vector< Tile::ContiguousCity > cities;
+
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
+
+    std::vector< FRCArea::CityArea > shields;
+
+    Tile tile_B = Tile(Tile::Field, Tile::Field, Tile::Field, Tile::Field, Tile::Cloister, "B",
+                          fields, roads, cities, citiesPerField, shields);
+
+    return tile_B;
+}
+
+Tile
+createTile_C()
+{
+    std::vector< Tile::ContiguousField > fields;
+
+    std::vector< Tile::ContiguousRoad > roads;
+
+    std::vector< Tile::ContiguousCity > cities;
+    Tile::ContiguousCity city;
+    city.push_back(FRCArea::Top);
+    city.push_back(FRCArea::Right);
+    city.push_back(FRCArea::Bottom);
+    city.push_back(FRCArea::Left);
+
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+
+    std::vector< FRCArea::CityArea > shields;
+    shields.push_back(FRCArea::Top);
+
+    Tile tile_C = Tile(Tile::City, Tile::City, Tile::City, Tile::City, Tile::Nothing, "C",
+                          fields, roads, cities, citiesPerField, shields);
+
+    return tile_C;
+}
+
+Tile
 createTile_D()
 {
     std::vector< Tile::ContiguousField > fields;
-    std::vector< FieldArea::FieldArea > firstField;
-    firstField.push_back(FieldArea::TopRight);
-    firstField.push_back(FieldArea::BottomRight);
-    std::vector< FieldArea::FieldArea > secondField;
-    secondField.push_back(FieldArea::BottomLeft);
-    secondField.push_back(FieldArea::LeftBottom);
-    secondField.push_back(FieldArea::LeftTop);
-    secondField.push_back(FieldArea::TopLeft);
+    std::vector< FRCArea::FieldArea > firstField;
+    firstField.push_back(FRCArea::TopRight);
+    firstField.push_back(FRCArea::BottomRight);
+    std::vector< FRCArea::FieldArea > secondField;
+    secondField.push_back(FRCArea::BottomLeft);
+    secondField.push_back(FRCArea::LeftBottom);
+    secondField.push_back(FRCArea::LeftTop);
+    secondField.push_back(FRCArea::TopLeft);
     fields.push_back(firstField);
     fields.push_back(secondField);
 
-    std::vector< Tile::ContiguousRoadOrCity > roads;
-    std::vector< RoadOrCityArea::RoadOrCityArea > firstRoad;
-    firstRoad.push_back(RoadOrCityArea::Top);
-    firstRoad.push_back(RoadOrCityArea::Bottom);
+    std::vector< Tile::ContiguousRoad > roads;
+    std::vector< FRCArea::RoadArea > firstRoad;
+    firstRoad.push_back(FRCArea::Top);
+    firstRoad.push_back(FRCArea::Bottom);
     roads.push_back(firstRoad);
 
-    std::vector< Tile::ContiguousRoadOrCity > cities;
-    std::vector< RoadOrCityArea::RoadOrCityArea > firstCity;
-    firstCity.push_back(RoadOrCityArea::Right);
+    std::vector< Tile::ContiguousCity > cities;
+    std::vector< FRCArea::CityArea > firstCity;
+    firstCity.push_back(FRCArea::Right);
     cities.push_back(firstCity);
 
-    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > > citiesPerField;
-    std::vector< Tile::ContiguousRoadOrCity > firstFieldCities;
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
     firstFieldCities.push_back( firstCity );
-    std::vector< Tile::ContiguousRoadOrCity > secondFieldCities;
+    std::vector< Tile::ContiguousCity > secondFieldCities;
 
-    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > >(firstField, firstFieldCities));
-    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > >(secondField, secondFieldCities));
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(secondField, secondFieldCities));
 
-    std::vector< RoadOrCityArea::RoadOrCityArea > shields;
+    std::vector< FRCArea::CityArea > shields;
 
     Tile tile_D = Tile(Tile::City, Tile::Road, Tile::Field, Tile::Road, Tile::Nothing, "D",
                           fields, roads, cities, citiesPerField, shields);
@@ -83,47 +139,47 @@ createTile_D()
 Tile
 createTile_L()
 {
-    std::vector< Tile::ContiguousRoadOrCity > cities;
-    std::vector< RoadOrCityArea::RoadOrCityArea > firstCity;
-    firstCity.push_back(RoadOrCityArea::Right);
+    std::vector< Tile::ContiguousCity > cities;
+    std::vector< FRCArea::CityArea > firstCity;
+    firstCity.push_back(FRCArea::Right);
     cities.push_back(firstCity);
 
-    std::vector< RoadOrCityArea::RoadOrCityArea > shields;
+    std::vector< FRCArea::CityArea > shields;
 
-    std::vector< Tile::ContiguousRoadOrCity > roads;
-    std::vector< RoadOrCityArea::RoadOrCityArea > firstRoad;
-    firstRoad.push_back(RoadOrCityArea::Bottom);
-    std::vector< RoadOrCityArea::RoadOrCityArea > secondRoad;
-    secondRoad.push_back(RoadOrCityArea::Left);
-    std::vector< RoadOrCityArea::RoadOrCityArea > thirdRoad;
-    thirdRoad.push_back(RoadOrCityArea::Top);
+    std::vector< Tile::ContiguousRoad > roads;
+    std::vector< FRCArea::RoadArea > firstRoad;
+    firstRoad.push_back(FRCArea::Bottom);
+    std::vector< FRCArea::RoadArea > secondRoad;
+    secondRoad.push_back(FRCArea::Left);
+    std::vector< FRCArea::RoadArea > thirdRoad;
+    thirdRoad.push_back(FRCArea::Top);
     roads.push_back(firstRoad);
     roads.push_back(secondRoad);
     roads.push_back(thirdRoad);
 
     std::vector< Tile::ContiguousField > fields;
-    std::vector< FieldArea::FieldArea > firstField;
-    firstField.push_back(FieldArea::TopRight);
-    firstField.push_back(FieldArea::BottomRight);
-    std::vector< FieldArea::FieldArea > secondField;
-    secondField.push_back(FieldArea::BottomLeft);
-    secondField.push_back(FieldArea::LeftBottom);
-    std::vector< FieldArea::FieldArea > thirdField;
-    thirdField.push_back(FieldArea::LeftTop);
-    thirdField.push_back(FieldArea::TopLeft);
+    std::vector< FRCArea::FieldArea > firstField;
+    firstField.push_back(FRCArea::TopRight);
+    firstField.push_back(FRCArea::BottomRight);
+    std::vector< FRCArea::FieldArea > secondField;
+    secondField.push_back(FRCArea::BottomLeft);
+    secondField.push_back(FRCArea::LeftBottom);
+    std::vector< FRCArea::FieldArea > thirdField;
+    thirdField.push_back(FRCArea::LeftTop);
+    thirdField.push_back(FRCArea::TopLeft);
     fields.push_back(firstField);
     fields.push_back(secondField);
     fields.push_back(thirdField);
 
-    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > > citiesPerField;
-    std::vector< Tile::ContiguousRoadOrCity > firstFieldCities;
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
     firstFieldCities.push_back( firstCity );
-    std::vector< Tile::ContiguousRoadOrCity > secondFieldCities;
-    std::vector< Tile::ContiguousRoadOrCity > thirdFieldCities;
+    std::vector< Tile::ContiguousCity > secondFieldCities;
+    std::vector< Tile::ContiguousCity > thirdFieldCities;
 
-    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > >(firstField, firstFieldCities));
-    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > >(secondField, secondFieldCities));
-    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > >(thirdField, thirdFieldCities));
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(secondField, secondFieldCities));
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(thirdField, thirdFieldCities));
 
     Tile tile_L = Tile(Tile::City, Tile::Road, Tile::Road, Tile::Road, Tile::Nothing, "L",
                           fields, roads, cities, citiesPerField, shields);
@@ -135,28 +191,28 @@ Tile
 createTile_N()
 {
     std::vector< Tile::ContiguousField > fields;
-    std::vector< FieldArea::FieldArea > firstField;
-    firstField.push_back(FieldArea::RightTop);
-    firstField.push_back(FieldArea::RightBottom);
-    firstField.push_back(FieldArea::BottomRight);
-    firstField.push_back(FieldArea::BottomLeft);
+    std::vector< FRCArea::FieldArea > firstField;
+    firstField.push_back(FRCArea::RightTop);
+    firstField.push_back(FRCArea::RightBottom);
+    firstField.push_back(FRCArea::BottomRight);
+    firstField.push_back(FRCArea::BottomLeft);
     fields.push_back(firstField);
 
-    std::vector< Tile::ContiguousRoadOrCity > roads;
+    std::vector< Tile::ContiguousRoad > roads;
 
-    std::vector< Tile::ContiguousRoadOrCity > cities;
-    std::vector< RoadOrCityArea::RoadOrCityArea > firstCity;
-    firstCity.push_back(RoadOrCityArea::Top);
-    firstCity.push_back(RoadOrCityArea::Left);
+    std::vector< Tile::ContiguousCity > cities;
+    std::vector< FRCArea::CityArea > firstCity;
+    firstCity.push_back(FRCArea::Top);
+    firstCity.push_back(FRCArea::Left);
     cities.push_back(firstCity);
 
-    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > > citiesPerField;
-    std::vector< Tile::ContiguousRoadOrCity > firstFieldCities;
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
     firstFieldCities.push_back( firstCity );
 
-    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousRoadOrCity > >(firstField, firstFieldCities));
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
 
-    std::vector< RoadOrCityArea::RoadOrCityArea > shields;
+    std::vector< FRCArea::CityArea > shields;
 
     Tile tile_N = Tile(Tile::City, Tile::City, Tile::Field, Tile::Field, Tile::Nothing, "N",
                           fields, roads, cities, citiesPerField, shields);

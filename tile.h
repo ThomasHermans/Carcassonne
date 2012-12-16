@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace FieldArea
+namespace FRCArea
 {
     enum FieldArea
     {
@@ -21,11 +21,8 @@ namespace FieldArea
     };
 
     std::string fieldAreaToString(FieldArea inFieldArea);
-}
 
-namespace RoadOrCityArea
-{
-    enum RoadOrCityArea
+    enum RoadArea
     {
         Top = 1,
         Right = 4,
@@ -33,9 +30,11 @@ namespace RoadOrCityArea
         Left = 10
     };
 
-    std::string roadOrCityAreaToString(RoadOrCityArea inRoadOrCityArea);
-}
+    typedef RoadArea CityArea;
 
+    std::string roadAreaToString(RoadArea inRoadArea);
+    std::string cityAreaToString(CityArea inCityArea);
+}
 namespace Area
 {
     enum Area
@@ -76,25 +75,26 @@ public:
         CentralField
     };
 
-    typedef std::vector< FieldArea::FieldArea > ContiguousField;
-    typedef std::vector< RoadOrCityArea::RoadOrCityArea > ContiguousRoadOrCity;
+    typedef std::vector< FRCArea::FieldArea > ContiguousField;
+    typedef std::vector< FRCArea::RoadArea > ContiguousRoad;
+    typedef std::vector< FRCArea::CityArea > ContiguousCity;
 
     Tile();
     Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
          std::string inID,
          std::vector< ContiguousField > inMeadows,
-         std::vector< ContiguousRoadOrCity > inRoads,
-         std::vector< ContiguousRoadOrCity > inCities,
-         std::map< ContiguousField, std::vector< ContiguousRoadOrCity > > inCitiesPerField,
-         std::vector< RoadOrCityArea::RoadOrCityArea > inShields);
+         std::vector< ContiguousRoad > inRoads,
+         std::vector< ContiguousCity > inCities,
+         std::map< ContiguousField, std::vector< ContiguousCity > > inCitiesPerField,
+         std::vector< FRCArea::CityArea > inShields);
     Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
          std::string inID,
          std::vector< ContiguousField > inMeadows,
-         std::vector< ContiguousRoadOrCity > inRoads,
-         std::vector< ContiguousRoadOrCity > inCities,
-         std::map< ContiguousField, std::vector< ContiguousRoadOrCity > > inCitiesPerField,
-         std::vector< RoadOrCityArea::RoadOrCityArea > inShields,
-         std::vector< RoadOrCityArea::RoadOrCityArea > inInns);
+         std::vector< ContiguousRoad > inRoads,
+         std::vector< ContiguousCity > inCities,
+         std::map< ContiguousField, std::vector< ContiguousCity > > inCitiesPerField,
+         std::vector< FRCArea::CityArea > inShields,
+         std::vector< FRCArea::RoadArea > inInns);
 
 
     static std::string sideToString(Side inSide);
@@ -107,16 +107,16 @@ public:
     Center getCenter();
     std::string getID();
     std::vector< ContiguousField > getContiguousFields();
-    std::vector< ContiguousRoadOrCity > getContiguousRoads();
-    std::vector< ContiguousRoadOrCity > getContiguousCities();
-    std::vector< ContiguousRoadOrCity > getCitiesPerField(ContiguousField inContiguousField);
-    std::vector< ContiguousRoadOrCity > getCitiesPerField(FieldArea::FieldArea inFieldArea);
-    std::vector< RoadOrCityArea::RoadOrCityArea > getShields();
-    std::vector< RoadOrCityArea::RoadOrCityArea > getInns();
+    std::vector< ContiguousRoad > getContiguousRoads();
+    std::vector< ContiguousCity > getContiguousCities();
+    std::vector< ContiguousCity > getCitiesPerField(ContiguousField inContiguousField);
+    std::vector< ContiguousCity > getCitiesPerField(FRCArea::FieldArea inFieldArea);
+    std::vector< FRCArea::CityArea > getShields();
+    std::vector< FRCArea::RoadArea > getInns();
 
-    ContiguousField getContiguousField(FieldArea::FieldArea inFieldArea);
-    ContiguousRoadOrCity getContiguousRoad(RoadOrCityArea::RoadOrCityArea inRoadArea);
-    ContiguousRoadOrCity getContiguousCity(RoadOrCityArea::RoadOrCityArea inCityArea);
+    ContiguousField getContiguousField(FRCArea::FieldArea inFieldArea);
+    ContiguousRoad getContiguousRoad(FRCArea::RoadArea inRoadArea);
+    ContiguousCity getContiguousCity(FRCArea::CityArea inCityArea);
 
     std::string toString();
 
@@ -128,11 +128,11 @@ private:
     Side mLeft;
     Center mCenter;
     std::vector< ContiguousField > mFields;
-    std::vector< ContiguousRoadOrCity > mRoads;
-    std::vector< ContiguousRoadOrCity > mCities;
-    std::map< ContiguousField, std::vector< ContiguousRoadOrCity > > mCitiesPerField;
-    std::vector< RoadOrCityArea::RoadOrCityArea > mShields;
-    std::vector< RoadOrCityArea::RoadOrCityArea > mInns;
+    std::vector< ContiguousRoad > mRoads;
+    std::vector< ContiguousCity > mCities;
+    std::map< ContiguousField, std::vector< ContiguousCity > > mCitiesPerField;
+    std::vector< FRCArea::CityArea > mShields;
+    std::vector< FRCArea::RoadArea > mInns;
 };
 
 #endif // TILE_H

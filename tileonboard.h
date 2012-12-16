@@ -35,30 +35,30 @@ public:
     bool matchesLeftOf(TileOnBoard inTileOnBoard);
 
     std::vector< Tile::ContiguousField > getContiguousFields();
-    std::vector< Tile::ContiguousRoadOrCity > getContiguousRoads();
-    std::vector< Tile::ContiguousRoadOrCity > getContiguousCities();
+    std::vector< Tile::ContiguousRoad > getContiguousRoads();
+    std::vector< Tile::ContiguousCity > getContiguousCities();
 
-    std::vector< Tile::ContiguousRoadOrCity > getCitiesPerField(FieldArea::FieldArea inFieldArea);
+    std::vector< Tile::ContiguousCity > getCitiesPerField(FRCArea::FieldArea inFieldArea);
 
-    std::vector< Tile::ContiguousRoadOrCity > getFinishedRoads();
-    std::vector< Tile::ContiguousRoadOrCity > getFinishedCities();
+    std::vector< Tile::ContiguousRoad > getFinishedRoads();
+    std::vector< Tile::ContiguousCity > getFinishedCities();
 
-    std::vector< RoadOrCityArea::RoadOrCityArea > getShields();
-    std::vector< RoadOrCityArea::RoadOrCityArea > getInns();
+    std::vector< FRCArea::CityArea > getShields();
+    std::vector< FRCArea::RoadArea > getInns();
 
-    bool isFieldOccupied(FieldArea::FieldArea inFieldArea);
-    bool isRoadOccupied(RoadOrCityArea::RoadOrCityArea inRoadArea);
-    bool isCityOccupied(RoadOrCityArea::RoadOrCityArea inCityArea);
+    bool isFieldOccupied(FRCArea::FieldArea inFieldArea);
+    bool isRoadOccupied(FRCArea::RoadArea inRoadArea);
+    bool isCityOccupied(FRCArea::CityArea inCityArea);
 
-    bool isRoadFinished(RoadOrCityArea::RoadOrCityArea inRoadArea);
-    bool isCityFinished(RoadOrCityArea::RoadOrCityArea inCityArea);
+    bool isRoadFinished(FRCArea::RoadArea inRoadArea);
+    bool isCityFinished(FRCArea::CityArea inCityArea);
 
-    void occupyField(FieldArea::FieldArea inFieldArea);
-    void occupyRoad(RoadOrCityArea::RoadOrCityArea inRoadArea);
-    void occupyCity(RoadOrCityArea::RoadOrCityArea inCityArea);
+    void occupyField(FRCArea::FieldArea inFieldArea);
+    void occupyRoad(FRCArea::RoadArea inRoadArea);
+    void occupyCity(FRCArea::CityArea inCityArea);
 
-    void finishRoad(RoadOrCityArea::RoadOrCityArea inRoadArea);
-    void finishCity(RoadOrCityArea::RoadOrCityArea inCityArea);
+    void finishRoad(FRCArea::RoadArea inRoadArea);
+    void finishCity(FRCArea::CityArea inCityArea);
 
     std::string toString();
 
@@ -66,10 +66,10 @@ private:
     Tile mTile;
     Rotation mRotation;
     std::vector< Tile::ContiguousField > mOccupiedFields;
-    std::vector< Tile::ContiguousRoadOrCity > mOccupiedRoads;
-    std::vector< Tile::ContiguousRoadOrCity > mFinishedRoads;
-    std::vector< Tile::ContiguousRoadOrCity > mOccupiedCities;
-    std::vector< Tile::ContiguousRoadOrCity > mFinishedCities;
+    std::vector< Tile::ContiguousRoad > mOccupiedRoads;
+    std::vector< Tile::ContiguousRoad > mFinishedRoads;
+    std::vector< Tile::ContiguousCity > mOccupiedCities;
+    std::vector< Tile::ContiguousCity > mFinishedCities;
     std::vector< PlacedPiece > mPlacedPieces;
 };
 
