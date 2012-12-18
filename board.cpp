@@ -27,7 +27,10 @@ Board::AddColsLeft(int inNrOfCols)
     std::vector< boost::optional< TileOnBoard > >::iterator it = mBoard.begin();
     for(int i = 0; i < mNrRows; ++i)
     {
-        it = mBoard.insert(it, inNrOfCols, boost::optional< TileOnBoard >());
+        for (int j = 0; j < inNrOfCols; ++j)
+        {
+            it = mBoard.insert(it, boost::optional< TileOnBoard >());
+        }
         ++it;
         for (int j = 0; j < mNrCols; ++j)
         {
@@ -47,9 +50,11 @@ Board::AddColsRight(int inNrOfCols)
         {
             ++it;
         }
-        it = mBoard.insert(it, inNrOfCols, boost::optional< TileOnBoard >());
+        for (int j = 0; j < inNrOfCols; ++j)
+        {
+            it = mBoard.insert(it, boost::optional< TileOnBoard >());
+        }
         ++it;
-
     }
     mNrCols += inNrOfCols;
 }
@@ -93,25 +98,25 @@ Board::isValidTilePlacement(const TileOnBoard &inTile, int inCol, int inRow) con
     // Check if sides match with four neighbors
     if ((inRow > 0)
             && mBoard[(inRow - 1) * mNrCols + inCol]
-            && !inTile.matchesBelow(mBoard[(inRow - 1) * mNrCols + inCol]))
+            && !inTile.matchesBelow(*mBoard[(inRow - 1) * mNrCols + inCol]))
     {
         valid = false;
     }
     if ((inRow + 1 < mNrCols)
             && mBoard[(inRow + 1) * mNrCols + inCol]
-            && !inTile.matchesAbove(mBoard[(inRow + 1) * mNrCols + inCol]))
+            && !inTile.matchesAbove(*mBoard[(inRow + 1) * mNrCols + inCol]))
     {
         valid = false;
     }
     if ((inCol > 0)
             && mBoard[inRow * mNrCols + inCol - 1]
-            && !inTile.matchesRightOf(mBoard[inRow * mNrCols + inCol - 1]))
+            && !inTile.matchesRightOf(*mBoard[inRow * mNrCols + inCol - 1]))
     {
         valid = false;
     }
     if ((inCol + 1 < mNrCols)
             && mBoard[inRow * mNrCols + inCol + 1]
-            && !inTile.matchesLeftOf(mBoard[inRow * mNrCols + inCol + 1]))
+            && !inTile.matchesLeftOf(*mBoard[inRow * mNrCols + inCol + 1]))
     {
         valid = false;
     }
