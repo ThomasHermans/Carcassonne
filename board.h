@@ -9,6 +9,11 @@ class Board
 public:
     Board();
 
+    void AddRowsOnTop(int inNrOfRows);
+    void AddRowsBelow(int inNrOfRows);
+    void AddColsLeft(int inNrOfCols);
+    void AddColsRight(int inNrOfCols);
+
     bool isValidTilePlacement(const TileOnBoard & inTile, int inCol, int inRow) const;
     bool placeValidTile(const TileOnBoard & inTile, int inCol, int inRow);
 
