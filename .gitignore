@@ -1,3 +1,11 @@
+##custom##
+*Makefile*
+*.Debug
+*.Release
+Makefile.Debug
+Makefile.Release
+
+
 #################
 ## Eclipse
 #################
