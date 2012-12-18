@@ -10,12 +10,12 @@ class PlacedPiece
 {
 public:
     PlacedPiece();
-    PlacedPiece(Piece inPiece, Area::Area mLocation);
+    PlacedPiece(const Piece & inPiece, Area::Area mLocation);
 
-    Piece getPiece();
-    Area::Area getLocation();
+    Piece getPiece() const;
+    Area::Area getLocation() const;
 
-    std::string toString();
+    std::string toString() const;
 
 private:
     Piece mPiece;

@@ -37,7 +37,7 @@ TileOnBoard::TileOnBoard():
     mPlacedPieces = std::vector< PlacedPiece >();
 }
 
-TileOnBoard::TileOnBoard(Tile inTile, Rotation inRotation):
+TileOnBoard::TileOnBoard(const Tile &inTile, Rotation inRotation):
     mTile(inTile),
     mRotation(inRotation)
 {
@@ -48,7 +48,7 @@ TileOnBoard::TileOnBoard(Tile inTile, Rotation inRotation):
 }
 
 bool
-TileOnBoard::placePiece(PlacedPiece inPlacedPiece)
+TileOnBoard::placePiece(const PlacedPiece & inPlacedPiece)
 {
     // TODO: check isValid(*this, inPlacedPiece) (from anonymous namespace above)
     // if valid, add inPlacedPiece to mPlacedPieces, return true
@@ -57,7 +57,7 @@ TileOnBoard::placePiece(PlacedPiece inPlacedPiece)
 }
 
 Tile::Side
-TileOnBoard::getTop()
+TileOnBoard::getTop() const
 {
     switch (mRotation)
     {
@@ -74,7 +74,7 @@ TileOnBoard::getTop()
 }
 
 Tile::Side
-TileOnBoard::getRight()
+TileOnBoard::getRight() const
 {
     switch (mRotation)
     {
@@ -91,7 +91,7 @@ TileOnBoard::getRight()
 }
 
 Tile::Side
-TileOnBoard::getBottom()
+TileOnBoard::getBottom() const
 {
     switch (mRotation)
     {
@@ -108,7 +108,7 @@ TileOnBoard::getBottom()
 }
 
 Tile::Side
-TileOnBoard::getLeft()
+TileOnBoard::getLeft() const
 {
     switch (mRotation)
     {
@@ -125,43 +125,43 @@ TileOnBoard::getLeft()
 }
 
 Tile::Center
-TileOnBoard::getCenter()
+TileOnBoard::getCenter() const
 {
     return mTile.getCenter();
 }
 
 std::string
-TileOnBoard::getID()
+TileOnBoard::getID() const
 {
     return mTile.getID();
 }
 
 bool
-TileOnBoard::matchesAbove(TileOnBoard inTileOnBoard)
+TileOnBoard::matchesAbove(const TileOnBoard & inTileOnBoard) const
 {
     return (this->getBottom() == inTileOnBoard.getTop());
 }
 
 bool
-TileOnBoard::matchesRightOf(TileOnBoard inTileOnBoard)
+TileOnBoard::matchesRightOf(const TileOnBoard & inTileOnBoard) const
 {
     return (this->getLeft() == inTileOnBoard.getRight());
 }
 
 bool
-TileOnBoard::matchesBelow(TileOnBoard inTileOnBoard)
+TileOnBoard::matchesBelow(const TileOnBoard & inTileOnBoard) const
 {
     return (this->getTop() == inTileOnBoard.getBottom());
 }
 
 bool
-TileOnBoard::matchesLeftOf(TileOnBoard inTileOnBoard)
+TileOnBoard::matchesLeftOf(const TileOnBoard & inTileOnBoard) const
 {
     return (this->getRight() == inTileOnBoard.getLeft());
 }
 
 std::vector< Tile::ContiguousField >
-TileOnBoard::getContiguousFields()
+TileOnBoard::getContiguousFields() const
 {
     std::vector< Tile::ContiguousField > res;
     std::vector< Tile::ContiguousField > orig = mTile.getContiguousFields();
@@ -179,7 +179,7 @@ TileOnBoard::getContiguousFields()
 }
 
 std::vector< Tile::ContiguousRoad >
-TileOnBoard::getContiguousRoads()
+TileOnBoard::getContiguousRoads() const
 {
     std::vector< Tile::ContiguousRoad > res;
     std::vector< Tile::ContiguousRoad > orig = mTile.getContiguousRoads();
@@ -197,7 +197,7 @@ TileOnBoard::getContiguousRoads()
 }
 
 std::vector< Tile::ContiguousCity >
-TileOnBoard::getContiguousCities()
+TileOnBoard::getContiguousCities() const
 {
     std::vector< Tile::ContiguousCity > res;
     std::vector< Tile::ContiguousCity > orig = mTile.getContiguousCities();
@@ -215,7 +215,7 @@ TileOnBoard::getContiguousCities()
 }
 
 std::vector< Tile::ContiguousCity >
-TileOnBoard::getCitiesPerField(FRCArea::FieldArea inFieldArea)
+TileOnBoard::getCitiesPerField(FRCArea::FieldArea inFieldArea) const
 {
     FRCArea::FieldArea tileFieldArea = turn(inFieldArea, TileOnBoard::Rotation((mRotation + 9) % 12));
     std::vector< Tile::ContiguousCity > tileCities = mTile.getCitiesPerField(tileFieldArea);
@@ -234,19 +234,19 @@ TileOnBoard::getCitiesPerField(FRCArea::FieldArea inFieldArea)
 }
 
 std::vector< Tile::ContiguousRoad >
-TileOnBoard::getFinishedRoads()
+TileOnBoard::getFinishedRoads() const
 {
     return mFinishedRoads;
 }
 
 std::vector< Tile::ContiguousCity >
-TileOnBoard::getFinishedCities()
+TileOnBoard::getFinishedCities() const
 {
     return mFinishedCities;
 }
 
 std::vector< FRCArea::CityArea >
-TileOnBoard::getShields()
+TileOnBoard::getShields() const
 {
     std::vector< FRCArea::CityArea > res;
     std::vector< FRCArea::CityArea > orig = mTile.getShields();
@@ -258,7 +258,7 @@ TileOnBoard::getShields()
 }
 
 std::vector< FRCArea::RoadArea >
-TileOnBoard::getInns()
+TileOnBoard::getInns() const
 {
     std::vector< FRCArea::RoadArea > res;
     std::vector< FRCArea::RoadArea > orig = mTile.getInns();
@@ -270,7 +270,7 @@ TileOnBoard::getInns()
 }
 
 bool
-TileOnBoard::isFieldOccupied(FRCArea::FieldArea inFieldArea)
+TileOnBoard::isFieldOccupied(FRCArea::FieldArea inFieldArea) const
 {
     bool occupied = false;
     for (unsigned int i = 0; i < mOccupiedFields.size(); ++i)
@@ -285,7 +285,7 @@ TileOnBoard::isFieldOccupied(FRCArea::FieldArea inFieldArea)
 }
 
 bool
-TileOnBoard::isRoadOccupied(FRCArea::RoadArea inRoadArea)
+TileOnBoard::isRoadOccupied(FRCArea::RoadArea inRoadArea) const
 {
     bool occupied = false;
     for (unsigned int i = 0; i < mOccupiedRoads.size(); ++i)
@@ -300,7 +300,7 @@ TileOnBoard::isRoadOccupied(FRCArea::RoadArea inRoadArea)
 }
 
 bool
-TileOnBoard::isCityOccupied(FRCArea::CityArea inCityArea)
+TileOnBoard::isCityOccupied(FRCArea::CityArea inCityArea) const
 {
     bool occupied = false;
     for (unsigned int i = 0; i < mOccupiedCities.size(); ++i)
@@ -315,7 +315,7 @@ TileOnBoard::isCityOccupied(FRCArea::CityArea inCityArea)
 }
 
 bool
-TileOnBoard::isRoadFinished(FRCArea::RoadArea inRoadArea)
+TileOnBoard::isRoadFinished(FRCArea::RoadArea inRoadArea) const
 {
     bool finished = false;
     for (unsigned int i = 0; i < mFinishedRoads.size(); ++i)
@@ -330,7 +330,7 @@ TileOnBoard::isRoadFinished(FRCArea::RoadArea inRoadArea)
 }
 
 bool
-TileOnBoard::isCityFinished(FRCArea::CityArea inCityArea)
+TileOnBoard::isCityFinished(FRCArea::CityArea inCityArea) const
 {
     bool finished = false;
     for (unsigned int i = 0; i < mFinishedCities.size(); ++i)
@@ -455,7 +455,7 @@ TileOnBoard::finishCity(FRCArea::CityArea inCityArea)
 }
 
 std::string
-TileOnBoard::toString()
+TileOnBoard::toString() const
 {
     std::string result;
     result.append("Top: ");

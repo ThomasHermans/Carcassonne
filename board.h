@@ -9,11 +9,11 @@ class Board
 public:
     Board();
 
-    bool isValidTilePlacement(TileOnBoard inTile, int col, int row);
-    bool placeValidTile(TileOnBoard inTile, int col, int row);
+    bool isValidTilePlacement(const TileOnBoard & inTile, int inCol, int inRow) const;
+    bool placeValidTile(const TileOnBoard & inTile, int inCol, int inRow);
 
 private:
-    bool placeTile(TileOnBoard inTile, int col, int row);
+    bool placeTile(const TileOnBoard & inTile, int inCol, int inRow);
 
 private:
     std::vector< boost::optional< TileOnBoard > > mBoard; // one vector of size cols * rows might be easier to use than nested vectors

@@ -41,7 +41,7 @@ PlacedPiece::PlacedPiece():
 {
 }
 
-PlacedPiece::PlacedPiece(Piece inPiece, Area::Area inLocation):
+PlacedPiece::PlacedPiece(const Piece &inPiece, Area::Area inLocation):
     mPiece(inPiece)
 {
     if (isValid(inPiece, inLocation))
@@ -67,19 +67,19 @@ PlacedPiece::PlacedPiece(Piece inPiece, Area::Area inLocation):
 }
 
 Piece
-PlacedPiece::getPiece()
+PlacedPiece::getPiece() const
 {
     return mPiece;
 }
 
 Area::Area
-PlacedPiece::getLocation()
+PlacedPiece::getLocation() const
 {
     return mLocation;
 }
 
 std::string
-PlacedPiece::toString()
+PlacedPiece::toString() const
 {
     std::string res = mPiece.toString();
     res.append(" on ");

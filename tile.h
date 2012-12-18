@@ -81,44 +81,44 @@ public:
 
     Tile();
     Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
-         std::string inID,
-         std::vector< ContiguousField > inMeadows,
-         std::vector< ContiguousRoad > inRoads,
-         std::vector< ContiguousCity > inCities,
-         std::map< ContiguousField, std::vector< ContiguousCity > > inCitiesPerField,
-         std::vector< FRCArea::CityArea > inShields);
+         const std::string & inID,
+         const std::vector< ContiguousField > & inFields,
+         const std::vector< ContiguousRoad > & inRoads,
+         const std::vector< ContiguousCity > & inCities,
+         const std::map< ContiguousField, std::vector< ContiguousCity > > & inCitiesPerField,
+         const std::vector< FRCArea::CityArea > & inShields);
     Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
-         std::string inID,
-         std::vector< ContiguousField > inMeadows,
-         std::vector< ContiguousRoad > inRoads,
-         std::vector< ContiguousCity > inCities,
-         std::map< ContiguousField, std::vector< ContiguousCity > > inCitiesPerField,
-         std::vector< FRCArea::CityArea > inShields,
-         std::vector< FRCArea::RoadArea > inInns);
+         const std::string & inID,
+         const std::vector< ContiguousField > & inFields,
+         const std::vector< ContiguousRoad > & inRoads,
+         const std::vector< ContiguousCity > & inCities,
+         const std::map< ContiguousField, std::vector< ContiguousCity > > & inCitiesPerField,
+         const std::vector< FRCArea::CityArea > & inShields,
+         const std::vector< FRCArea::RoadArea > & inInns);
 
 
     static std::string sideToString(Side inSide);
     static std::string centerToString(Center inCenter);
 
-    Side getTop();
-    Side getRight();
-    Side getBottom();
-    Side getLeft();
-    Center getCenter();
-    std::string getID();
-    std::vector< ContiguousField > getContiguousFields();
-    std::vector< ContiguousRoad > getContiguousRoads();
-    std::vector< ContiguousCity > getContiguousCities();
-    std::vector< ContiguousCity > getCitiesPerField(ContiguousField inContiguousField);
-    std::vector< ContiguousCity > getCitiesPerField(FRCArea::FieldArea inFieldArea);
-    std::vector< FRCArea::CityArea > getShields();
-    std::vector< FRCArea::RoadArea > getInns();
+    Side getTop() const;
+    Side getRight() const;
+    Side getBottom() const;
+    Side getLeft() const;
+    Center getCenter() const;
+    std::string getID() const;
+    std::vector< ContiguousField > getContiguousFields() const;
+    std::vector< ContiguousRoad > getContiguousRoads() const;
+    std::vector< ContiguousCity > getContiguousCities() const;
+    std::vector< ContiguousCity > getCitiesPerField(const ContiguousField & inContiguousField) const;
+    std::vector< ContiguousCity > getCitiesPerField(FRCArea::FieldArea inFieldArea) const;
+    std::vector< FRCArea::CityArea > getShields() const;
+    std::vector< FRCArea::RoadArea > getInns() const;
 
-    ContiguousField getContiguousField(FRCArea::FieldArea inFieldArea);
-    ContiguousRoad getContiguousRoad(FRCArea::RoadArea inRoadArea);
-    ContiguousCity getContiguousCity(FRCArea::CityArea inCityArea);
+    ContiguousField getContiguousField(FRCArea::FieldArea inFieldArea) const;
+    ContiguousRoad getContiguousRoad(FRCArea::RoadArea inRoadArea) const;
+    ContiguousCity getContiguousCity(FRCArea::CityArea inCityArea) const;
 
-    std::string toString();
+    std::string toString() const;
 
 private:
     std::string mID;

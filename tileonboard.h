@@ -18,40 +18,40 @@ public:
 
 public:
     TileOnBoard();
-    TileOnBoard(Tile inTile, Rotation inRotation);
+    TileOnBoard(const Tile & inTile, Rotation inRotation);
 
-    bool placePiece(PlacedPiece inPlacedPiece);
+    bool placePiece(const PlacedPiece & inPlacedPiece);
 
-    Tile::Side getTop();
-    Tile::Side getRight();
-    Tile::Side getBottom();
-    Tile::Side getLeft();
-    Tile::Center getCenter();
-    std::string getID();
+    Tile::Side getTop() const;
+    Tile::Side getRight() const;
+    Tile::Side getBottom() const;
+    Tile::Side getLeft() const;
+    Tile::Center getCenter() const;
+    std::string getID() const;
 
-    bool matchesAbove(TileOnBoard inTileOnBoard);
-    bool matchesRightOf(TileOnBoard inTileOnBoard);
-    bool matchesBelow(TileOnBoard inTileOnBoard);
-    bool matchesLeftOf(TileOnBoard inTileOnBoard);
+    bool matchesAbove(const TileOnBoard & inTileOnBoard) const;
+    bool matchesRightOf(const TileOnBoard & inTileOnBoard) const;
+    bool matchesBelow(const TileOnBoard & inTileOnBoard) const;
+    bool matchesLeftOf(const TileOnBoard & inTileOnBoard) const;
 
-    std::vector< Tile::ContiguousField > getContiguousFields();
-    std::vector< Tile::ContiguousRoad > getContiguousRoads();
-    std::vector< Tile::ContiguousCity > getContiguousCities();
+    std::vector< Tile::ContiguousField > getContiguousFields() const;
+    std::vector< Tile::ContiguousRoad > getContiguousRoads() const;
+    std::vector< Tile::ContiguousCity > getContiguousCities() const;
 
-    std::vector< Tile::ContiguousCity > getCitiesPerField(FRCArea::FieldArea inFieldArea);
+    std::vector< Tile::ContiguousCity > getCitiesPerField(FRCArea::FieldArea inFieldArea) const;
 
-    std::vector< Tile::ContiguousRoad > getFinishedRoads();
-    std::vector< Tile::ContiguousCity > getFinishedCities();
+    std::vector< Tile::ContiguousRoad > getFinishedRoads() const;
+    std::vector< Tile::ContiguousCity > getFinishedCities() const;
 
-    std::vector< FRCArea::CityArea > getShields();
-    std::vector< FRCArea::RoadArea > getInns();
+    std::vector< FRCArea::CityArea > getShields() const;
+    std::vector< FRCArea::RoadArea > getInns() const;
 
-    bool isFieldOccupied(FRCArea::FieldArea inFieldArea);
-    bool isRoadOccupied(FRCArea::RoadArea inRoadArea);
-    bool isCityOccupied(FRCArea::CityArea inCityArea);
+    bool isFieldOccupied(FRCArea::FieldArea inFieldArea) const;
+    bool isRoadOccupied(FRCArea::RoadArea inRoadArea) const;
+    bool isCityOccupied(FRCArea::CityArea inCityArea) const;
 
-    bool isRoadFinished(FRCArea::RoadArea inRoadArea);
-    bool isCityFinished(FRCArea::CityArea inCityArea);
+    bool isRoadFinished(FRCArea::RoadArea inRoadArea) const;
+    bool isCityFinished(FRCArea::CityArea inCityArea) const;
 
     void occupyField(FRCArea::FieldArea inFieldArea);
     void occupyRoad(FRCArea::RoadArea inRoadArea);
@@ -60,7 +60,7 @@ public:
     void finishRoad(FRCArea::RoadArea inRoadArea);
     void finishCity(FRCArea::CityArea inCityArea);
 
-    std::string toString();
+    std::string toString() const;
 
 private:
     Tile mTile;

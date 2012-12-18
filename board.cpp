@@ -8,12 +8,12 @@ Board::Board()
 }
 
 bool
-Board::isValidTilePlacement(TileOnBoard inTile, int col, int row)
+Board::isValidTilePlacement(const TileOnBoard &inTile, int inCol, int inRow) const
 {
     // Check if col and row are within bounds
     // Check if no tile placed there yet
     bool valid = true;
-    if (mBoard[row * mNrCols + col])
+    if (mBoard[inRow * mNrCols + inCol])
     {
         valid = false;
     }
@@ -23,11 +23,11 @@ Board::isValidTilePlacement(TileOnBoard inTile, int col, int row)
 }
 
 bool
-Board::placeValidTile(TileOnBoard inTile, int col, int row)
+Board::placeValidTile(const TileOnBoard &inTile, int inCol, int inRow)
 {
-    if (isValidTilePlacement(inTile, col, row))
+    if (isValidTilePlacement(inTile, inCol, inRow))
     {
-        return placeTile(inTile, col, row);
+        return placeTile(inTile, inCol, inRow);
     }
     else
     {
@@ -36,12 +36,12 @@ Board::placeValidTile(TileOnBoard inTile, int col, int row)
 }
 
 bool
-Board::placeTile(TileOnBoard inTile, int col, int row)
+Board::placeTile(const TileOnBoard &inTile, int inCol, int inRow)
 {
     bool placed = false;
-    if ((col >= 0) && (col < mNrCols) && (row >= 0) && (row < mNrRows))
+    if ((inCol >= 0) && (inCol < mNrCols) && (inRow >= 0) && (inRow < mNrRows))
     {
-        mBoard[row * mNrCols + col] = boost::optional< TileOnBoard >( inTile );
+        mBoard[inRow * mNrCols + inCol] = boost::optional< TileOnBoard >( inTile );
         placed = true;
     }
     return placed;
