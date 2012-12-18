@@ -1,5 +1,5 @@
 #include "board.h"
-
+//test
 Board::Board()
 {
     mNrCols = 5;
