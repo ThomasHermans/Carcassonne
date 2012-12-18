@@ -33,7 +33,7 @@ HEADERS  += mainwindow.h \
     tilewidget.h \
     createbasegametiles.h
 
-INCLUDEPATH += "C:\Program Files\boost\boost_1_52_0"
+INCLUDEPATH += "C:\\Program Files\\boost\\boost_1_52_0"
 
 FORMS    += mainwindow.ui
 

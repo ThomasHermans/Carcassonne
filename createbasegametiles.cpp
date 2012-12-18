@@ -137,6 +137,42 @@ createTile_D()
 }
 
 Tile
+createTile_E()
+{
+    //create fieldarray
+    std::vector< Tile::ContiguousField > fields;
+    std::vector< FRCArea::FieldArea > firstField;
+    //define first contigious field
+    firstField.push_back(FRCArea::TopRight);
+
+    firstField.push_back(FRCArea::BottomRight);
+
+    firstField.push_back(FRCArea::BottomLeft);
+
+    firstField.push_back(FRCArea::TopLeft);
+    fields.push_back(firstField);
+
+    //Define city
+    std::vector< Tile::ContiguousCity > cities;
+    std::vector< FRCArea::CityArea > firstCity;
+    firstCity.push_back(FRCArea::Top);
+    cities.push_back(firstCity);
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
+    firstFieldCities.push_back( firstCity );
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
+    //Empty row for shield
+    std::vector< FRCArea::CityArea > shields;
+    //Define empty road
+    std::vector< Tile::ContiguousRoad> roads;
+    //Fill contstructor
+    Tile tile_E = Tile(Tile::Field, Tile::City, Tile::Field, Tile::Field, Tile::Nothing, "E",
+                          fields, roads, cities, citiesPerField, shields);
+
+    return tile_E;
+}
+
+Tile
 createTile_L()
 {
     std::vector< Tile::ContiguousCity > cities;
