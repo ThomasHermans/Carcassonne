@@ -144,11 +144,11 @@ createTile_E()
     std::vector< FRCArea::FieldArea > firstField;
     //define first contigious field
     firstField.push_back(FRCArea::TopRight);
-
+    firstField.push_back(FRCArea::Right);
     firstField.push_back(FRCArea::BottomRight);
-
+    firstField.push_back(FRCArea::Bottom);
     firstField.push_back(FRCArea::BottomLeft);
-
+    firstField.push_back(FRCArea::Left);
     firstField.push_back(FRCArea::TopLeft);
     fields.push_back(firstField);
 
@@ -171,6 +171,8 @@ createTile_E()
 
     return tile_E;
 }
+
+
 
 Tile
 createTile_L()

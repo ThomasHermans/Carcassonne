@@ -71,6 +71,7 @@ public:
     {
         Nothing,
         Cloister,
+        //expansion
         Cathedral,
         CentralField
     };
