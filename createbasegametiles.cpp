@@ -172,8 +172,6 @@ createTile_E()
     return tile_E;
 }
 
-
-
 Tile
 createTile_F()
 {
@@ -207,6 +205,7 @@ createTile_F()
 
     Tile tile_F = Tile(Tile::Field,Tile::City,Tile::Field,Tile::City,Tile::Nothing,"F",
                        fields,roads,cities,citiesPerField,shields);
+    return tile_F;
 }
 
 Tile
@@ -302,19 +301,43 @@ createBaseGameTiles()
     {
         tiles.push_back(createTile_A());
     }
+    for (int i = 0; i < 4; ++i)
+    {
+        tiles.push_back(createTile_B());
+    }
+    for (int i = 0; i < 1; ++i)
+    {
+        tiles.push_back(createTile_C());
+    }
+    //3 instead of 4, will facilitate easy starting tile
     for (int i = 0; i < 3; ++i)
     {
         tiles.push_back(createTile_D());
     }
+    for (int i = 0; i < 5; ++i)
+    {
+        tiles.push_back(createTile_E());
+    }
+    for (int i = 0; i < 2; ++i)
+    {
+        tiles.push_back(createTile_F());
+    }
+    //...
     for (int i = 0; i < 3; ++i)
     {
         tiles.push_back(createTile_L());
     }
+    //...
     for (int i = 0; i < 3; ++i)
     {
         tiles.push_back(createTile_N());
     }
+
     std::random_shuffle(tiles.begin(), tiles.end());
+    //add starting tile
+    tiles.push_back(createTile_D());
+    std::reverse(tiles.begin(),tiles.end());
+
     Tile startTile = createTile_D();
     tiles.insert(tiles.begin(), startTile);
     return tiles;
