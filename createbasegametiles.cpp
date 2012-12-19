@@ -142,9 +142,8 @@ createTile_E()
     //create fieldarray
     std::vector< Tile::ContiguousField > fields;
     std::vector< FRCArea::FieldArea > firstField;
-    //define first contigious field
-    firstField.push_back(FRCArea::TopRight);
-
+    //define first contiguous field
+    firstField.push_back(FRCArea::RightTop);
     firstField.push_back(FRCArea::RightBottom);
     firstField.push_back(FRCArea::BottomRight);
     firstField.push_back(FRCArea::BottomLeft);
@@ -165,8 +164,8 @@ createTile_E()
     std::vector< FRCArea::CityArea > shields;
     //Define empty road
     std::vector< Tile::ContiguousRoad> roads;
-    //Fill contstructor
-    Tile tile_E = Tile(Tile::Field, Tile::City, Tile::Field, Tile::Field, Tile::Nothing, "E",
+    //Tile constructor, Top Right Bottom Left Center mId fields roads cities citiesPerField shields
+    Tile tile_E = Tile(Tile::City, Tile::Field, Tile::Field, Tile::Field, Tile::Nothing, "E",
                           fields, roads, cities, citiesPerField, shields);
 
     return tile_E;
@@ -184,23 +183,33 @@ createTile_F()
 
     std::vector<FRCArea::FieldArea> secondField;
     secondField.push_back(FRCArea::BottomRight);
-
     secondField.push_back(FRCArea::BottomLeft);
 
     fields.push_back(firstField);
     fields.push_back(secondField);
 
+    //City
     std::vector<Tile::ContiguousCity> cities;
     std::vector<FRCArea::CityArea> firstCity;
-    firstCity.push_back(FRCArea::Left);
     firstCity.push_back(FRCArea::Right);
+    firstCity.push_back(FRCArea::Left);
     cities.push_back(firstCity);
 
+    //Cities per field
     std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
+    firstFieldCities.push_back(firstCity);
+    std::vector< Tile::ContiguousCity > secondFieldCities;
+    secondFieldCities.push_back(firstCity);
 
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(secondField, secondFieldCities));
+
+    //Shield
     std::vector< FRCArea::CityArea > shields;
     shields.push_back(FRCArea::Right);
 
+    //Empty road
     std::vector< Tile::ContiguousRoad> roads;
 
     Tile tile_F = Tile(Tile::Field,Tile::City,Tile::Field,Tile::City,Tile::Nothing,"F",
