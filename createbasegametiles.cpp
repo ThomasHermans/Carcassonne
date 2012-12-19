@@ -144,12 +144,11 @@ createTile_E()
     std::vector< FRCArea::FieldArea > firstField;
     //define first contigious field
     firstField.push_back(FRCArea::TopRight);
-
+    firstField.push_back(FRCArea::RightBottom);
     firstField.push_back(FRCArea::BottomRight);
-
     firstField.push_back(FRCArea::BottomLeft);
-
-    firstField.push_back(FRCArea::TopLeft);
+    firstField.push_back(FRCArea::LeftBottom);
+    firstField.push_back(FRCArea::LeftTop);
     fields.push_back(firstField);
 
     //Define city
@@ -170,6 +169,41 @@ createTile_E()
                           fields, roads, cities, citiesPerField, shields);
 
     return tile_E;
+}
+
+Tile
+createTile_F()
+{
+    //Field
+    std::vector<Tile::ContiguousField> fields;
+
+    std::vector<FRCArea::FieldArea> firstField;
+    firstField.push_back(FRCArea::TopLeft);
+    firstField.push_back(FRCArea::TopRight);
+
+    std::vector<FRCArea::FieldArea> secondField;
+    secondField.push_back(FRCArea::BottomRight);
+
+    secondField.push_back(FRCArea::BottomLeft);
+
+    fields.push_back(firstField);
+    fields.push_back(secondField);
+
+    std::vector<Tile::ContiguousCity> cities;
+    std::vector<FRCArea::CityArea> firstCity;
+    firstCity.push_back(FRCArea::Left);
+    firstCity.push_back(FRCArea::Right);
+    cities.push_back(firstCity);
+
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+
+    std::vector< FRCArea::CityArea > shields;
+    shields.push_back(FRCArea::Right);
+
+    std::vector< Tile::ContiguousRoad> roads;
+
+    Tile tile_F = Tile(Tile::Field,Tile::City,Tile::Field,Tile::City,Tile::Nothing,"F",
+                       fields,roads,cities,citiesPerField,shields);
 }
 
 Tile
