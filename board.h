@@ -19,6 +19,15 @@ public:
 
 private:
     bool placeTile(const TileOnBoard & inTile, int inCol, int inRow);
+    void updateOccupiedRoads(int inCol, int inRow);
+    void updateOccupiedRoadsCheck(int inNeighborLocation, FRCArea::RoadArea inNeighborSide, bool& ioOccupied,
+                                  std::vector< std::pair< int, FRCArea::RoadArea > >& inQueue);
+    void updateOccupiedCities(int inCol, int inRow);
+    void updateOccupiedCitiesCheck(int inNeighborLocation, FRCArea::CityArea inNeighborSide, bool& ioOccupied,
+                                  std::vector< std::pair< int, FRCArea::CityArea > >& inQueue);
+    void updateOccupiedFields(int inCol, int inRow);
+    void updateOccupiedFieldsCheck(int inNeighborLocation, FRCArea::FieldArea inNeighborSide, bool& ioOccupied,
+                                   std::vector< std::pair< int, FRCArea::FieldArea > >& inQueue);
 
 private:
     std::vector< boost::optional< TileOnBoard > > mBoard; // one vector of size cols * rows might be easier to use than nested vectors

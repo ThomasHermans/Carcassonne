@@ -38,6 +38,10 @@ public:
     std::vector< Tile::ContiguousRoad > getContiguousRoads() const;
     std::vector< Tile::ContiguousCity > getContiguousCities() const;
 
+    Tile::ContiguousField getContiguousField(FRCArea::FieldArea inFieldArea) const;
+    Tile::ContiguousRoad getContiguousRoad(FRCArea::RoadArea inRoadArea) const;
+    Tile::ContiguousCity getContiguousCity(FRCArea::CityArea inCityArea) const;
+
     std::vector< Tile::ContiguousCity > getCitiesPerField(FRCArea::FieldArea inFieldArea) const;
 
     std::vector< Tile::ContiguousRoad > getFinishedRoads() const;
