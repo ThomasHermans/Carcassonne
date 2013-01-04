@@ -136,6 +136,18 @@ TileOnBoard::getID() const
     return mTile.getID();
 }
 
+Tile
+TileOnBoard::getTile() const
+{
+    return mTile;
+}
+
+TileOnBoard::Rotation
+TileOnBoard::getRotation() const
+{
+    return mRotation;
+}
+
 bool
 TileOnBoard::matchesAbove(const TileOnBoard & inTileOnBoard) const
 {

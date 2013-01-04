@@ -5,34 +5,53 @@ Board::Board()
     mNrCols = 5;
     mNrRows = 5;
     mBoard = std::vector< boost::optional< TileOnBoard > >(mNrCols * mNrRows, boost::optional< TileOnBoard >());
+    TileOnBoard startingTile = TileOnBoard();
+    this->placeTile(startingTile, 2, 2);
+}
+
+unsigned int Board::getNrOfRows() const
+{
+    return mNrRows;
+}
+
+unsigned int
+Board::getNrOfCols() const
+{
+    return mNrCols;
+}
+
+boost::optional< TileOnBoard >
+Board::getTile(unsigned int inCol, unsigned int inRow) const
+{
+    return mBoard[inRow * mNrCols + inCol];
 }
 
 void
-Board::AddRowsOnTop(int inNrOfRows)
+Board::addRowsOnTop(unsigned int inNrOfRows)
 {
     mBoard.insert(mBoard.begin(), mNrCols * inNrOfRows, boost::optional< TileOnBoard >());
     mNrRows += inNrOfRows;
 }
 
 void
-Board::AddRowsBelow(int inNrOfRows)
+Board::addRowsBelow(unsigned int inNrOfRows)
 {
     mBoard.insert(mBoard.end(), mNrCols * inNrOfRows, boost::optional< TileOnBoard >());
     mNrRows += inNrOfRows;
 }
 
 void
-Board::AddColsLeft(int inNrOfCols)
+Board::addColsLeft(unsigned int inNrOfCols)
 {
     std::vector< boost::optional< TileOnBoard > >::iterator it = mBoard.begin();
-    for(int i = 0; i < mNrRows; ++i)
+    for(unsigned int i = 0; i < mNrRows; ++i)
     {
-        for (int j = 0; j < inNrOfCols; ++j)
+        for (unsigned int j = 0; j < inNrOfCols; ++j)
         {
             it = mBoard.insert(it, boost::optional< TileOnBoard >());
         }
         ++it;
-        for (int j = 0; j < mNrCols; ++j)
+        for (unsigned int j = 0; j < mNrCols; ++j)
         {
             ++it;
         }
@@ -41,16 +60,16 @@ Board::AddColsLeft(int inNrOfCols)
 }
 
 void
-Board::AddColsRight(int inNrOfCols)
+Board::addColsRight(unsigned int inNrOfCols)
 {
     std::vector< boost::optional< TileOnBoard > >::iterator it = mBoard.begin();
-    for(int i = 0; i < mNrRows; ++i)
+    for(unsigned int i = 0; i < mNrRows; ++i)
     {
-        for (int j = 0; j < mNrCols; ++j)
+        for (unsigned int j = 0; j < mNrCols; ++j)
         {
             ++it;
         }
-        for (int j = 0; j < inNrOfCols; ++j)
+        for (unsigned int j = 0; j < inNrOfCols; ++j)
         {
             it = mBoard.insert(it, boost::optional< TileOnBoard >());
         }
@@ -60,10 +79,9 @@ Board::AddColsRight(int inNrOfCols)
 }
 
 bool
-Board::isValidTilePlacement(const TileOnBoard &inTile, int inCol, int inRow) const
+Board::isEmptySpot(unsigned int inCol, unsigned int inRow) const
 {
     bool valid = true;
-    // Check if col and row are within bounds
     if (inCol < 0 || inCol >= mNrCols || inRow < 0 || inRow >= mNrRows)
     {
         valid = false;
@@ -73,6 +91,24 @@ Board::isValidTilePlacement(const TileOnBoard &inTile, int inCol, int inRow) con
     {
         valid = false;
     }
+    return valid;
+}
+
+bool
+Board::isValidTilePlacement(const TileOnBoard &inTile, unsigned int inCol, unsigned int inRow) const
+{
+    bool valid = isEmptySpot(inCol, inRow);
+    if (valid)
+    {
+        valid = isValidAlternateTilePlacement(inTile, inCol, inRow);
+    }
+    return valid;
+}
+
+bool
+Board::isValidAlternateTilePlacement(const TileOnBoard &inTile, unsigned int inCol, unsigned int inRow) const
+{
+    bool valid = true;
     // Check if one of four neighbors is placed
     int nrOfNeighbors = 0;
     if ((inRow > 0) && mBoard[(inRow - 1) * mNrCols + inCol])
@@ -124,7 +160,7 @@ Board::isValidTilePlacement(const TileOnBoard &inTile, int inCol, int inRow) con
 }
 
 bool
-Board::placeValidTile(const TileOnBoard &inTile, int inCol, int inRow)
+Board::placeValidTile(const TileOnBoard &inTile, unsigned int inCol, unsigned int inRow)
 {
     if (isValidTilePlacement(inTile, inCol, inRow))
     {
@@ -140,8 +176,31 @@ Board::placeValidTile(const TileOnBoard &inTile, int inCol, int inRow)
     }
 }
 
+void
+Board::rotateTileOnBoard(unsigned int inCol, unsigned int inRow)
+{
+    boost::optional< TileOnBoard > toBeRotatedTile = mBoard[inRow * mNrCols + inCol];
+    if (toBeRotatedTile)
+    {
+        TileOnBoard::Rotation currentRotation = toBeRotatedTile->getRotation();
+        Tile tile = toBeRotatedTile->getTile();
+        TileOnBoard::Rotation newRotation = currentRotation;
+        TileOnBoard rotated = TileOnBoard(tile, newRotation);
+        for (int i = 0; i < 4; ++i)
+        {
+            newRotation = TileOnBoard::Rotation(newRotation + TileOnBoard::cw90);
+            rotated = TileOnBoard(tile, newRotation);
+            if (isValidAlternateTilePlacement(rotated, inCol, inRow))
+            {
+                break;
+            }
+        }
+        placeTile(rotated, inCol, inRow);
+    }
+}
+
 bool
-Board::placeTile(const TileOnBoard &inTile, int inCol, int inRow)
+Board::placeTile(const TileOnBoard &inTile, unsigned int inCol, unsigned int inRow)
 {
     bool placed = false;
     if ((inCol >= 0) && (inCol < mNrCols) && (inRow >= 0) && (inRow < mNrRows))
@@ -153,7 +212,7 @@ Board::placeTile(const TileOnBoard &inTile, int inCol, int inRow)
 }
 
 void
-Board::updateOccupiedRoads(int inCol, int inRow)
+Board::updateOccupiedRoads(unsigned int inCol, unsigned int inRow)
 {
     typedef std::pair< int, FRCArea::RoadArea > LocatedRoad;
     // the int gives the location of the TileOnBoard (=row * mNrCols + col)
@@ -173,7 +232,7 @@ Board::updateOccupiedRoads(int inCol, int inRow)
         {
             // Pick RoadArea i from tempQueue
             LocatedRoad current = tempQueue[i];
-            int neighborLocation = 0;
+            unsigned int neighborLocation = 0;
             switch (current.second)
             {
             case FRCArea::Top:
@@ -251,7 +310,7 @@ Board::updateOccupiedRoadsCheck(int inNeighborLocation, FRCArea::RoadArea inNeig
 }
 
 void
-Board::updateOccupiedCities(int inCol, int inRow)
+Board::updateOccupiedCities(unsigned int inCol, unsigned int inRow)
 {
     typedef std::pair< int, FRCArea::CityArea > LocatedCity;
     // the int gives the location of the TileOnBoard (=row * mNrCols + col)
@@ -271,7 +330,7 @@ Board::updateOccupiedCities(int inCol, int inRow)
         {
             // Pick CityArea i from tempQueue
             LocatedCity current = tempQueue[i];
-            int neighborLocation = 0;
+            unsigned int neighborLocation = 0;
             switch (current.second)
             {
             case FRCArea::Top:
@@ -349,7 +408,7 @@ Board::updateOccupiedCitiesCheck(int inNeighborLocation, FRCArea::CityArea inNei
 }
 
 void
-Board::updateOccupiedFields(int inCol, int inRow)
+Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
 {
     typedef std::pair< int, FRCArea::FieldArea > LocatedField;
     // the int gives the location of the TileOnBoard (=row * mNrCols + col)
@@ -369,7 +428,7 @@ Board::updateOccupiedFields(int inCol, int inRow)
         {
             // Pick FieldArea i from tempQueue
             LocatedField current = tempQueue[i];
-            int neighborLocation = 0;
+            unsigned int neighborLocation = 0;
             switch (current.second)
             {
             case FRCArea::TopLeft:

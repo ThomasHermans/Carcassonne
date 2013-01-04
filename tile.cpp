@@ -91,27 +91,34 @@ Area::areaToString(Area inArea)
 }
 
 Tile::Tile():
-    mTop(Field),
-    mRight(Field),
-    mBottom(Field),
+    mID("D"),
+    mTop(Road),
+    mRight(City),
+    mBottom(Road),
     mLeft(Field),
-    mCenter(Cloister),
-    mID("B")
+    mCenter(Nothing)
 {
     mFields = std::vector< ContiguousField >();
-    ContiguousField allFields = std::vector< FRCArea::FieldArea >();
-    allFields.push_back(FRCArea::TopLeft);
-    allFields.push_back(FRCArea::TopRight);
-    allFields.push_back(FRCArea::RightTop);
-    allFields.push_back(FRCArea::RightBottom);
-    allFields.push_back(FRCArea::BottomRight);
-    allFields.push_back(FRCArea::BottomLeft);
-    allFields.push_back(FRCArea::LeftBottom);
-    allFields.push_back(FRCArea::LeftTop);
-    mFields.push_back(allFields);
+    ContiguousField rightField = std::vector< FRCArea::FieldArea >();
+    rightField.push_back(FRCArea::TopRight);
+    rightField.push_back(FRCArea::BottomRight);
+    ContiguousField leftField = std::vector< FRCArea::FieldArea >();
+    leftField.push_back(FRCArea::BottomLeft);
+    leftField.push_back(FRCArea::LeftBottom);
+    leftField.push_back(FRCArea::LeftTop);
+    leftField.push_back(FRCArea::TopLeft);
+    mFields.push_back(rightField);
+    mFields.push_back(leftField);
     mRoads = std::vector< ContiguousRoad >();
     mCities = std::vector< ContiguousCity >();
+    ContiguousCity rightCity = std::vector< FRCArea::CityArea >();
+    rightCity.push_back(FRCArea::Right);
     mCitiesPerField = std::map< ContiguousField, std::vector< ContiguousCity > >();
+    std::vector< ContiguousCity > rightFieldCities;
+    rightFieldCities.push_back( rightCity );
+    std::vector< ContiguousCity > leftFieldCities;
+    mCitiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(rightField, rightFieldCities));
+    mCitiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(leftField, leftFieldCities));
     mShields = std::vector< FRCArea::CityArea >();
     mInns = std::vector< FRCArea::RoadArea >();
 }
@@ -123,12 +130,12 @@ Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter
            const std::vector< ContiguousCity > & inCities,
            const std::map< ContiguousField, std::vector< ContiguousCity > > & inCitiesPerField,
            const std::vector< FRCArea::CityArea > & inShields):
+    mID(inID),
     mTop(inTop),
     mRight(inRight),
     mBottom(inBottom),
     mLeft(inLeft),
     mCenter(inCenter),
-    mID(inID),
     mFields(inFields),
     mRoads(inRoads),
     mCities(inCities),
@@ -146,12 +153,12 @@ Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter
            const std::map< ContiguousField, std::vector< ContiguousCity > > & inCitiesPerField,
            const std::vector< FRCArea::CityArea > & inShields,
            const std::vector< FRCArea::RoadArea > & inInns):
+    mID(inID),
     mTop(inTop),
     mRight(inRight),
     mBottom(inBottom),
     mLeft(inLeft),
     mCenter(inCenter),
-    mID(inID),
     mFields(inFields),
     mRoads(inRoads),
     mCities(inCities),

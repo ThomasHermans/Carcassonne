@@ -352,10 +352,7 @@ createBaseGameTiles()
     {
         tiles.push_back(createTileB());
     }
-    for (int i = 0; i < 1; ++i)
-    {
-        tiles.push_back(createTileC());
-    }
+    tiles.push_back(createTileC());
     //3 instead of 4, will facilitate easy starting tile
     for (int i = 0; i < 3; ++i)
     {
@@ -369,6 +366,7 @@ createBaseGameTiles()
     {
         tiles.push_back(createTileF());
     }
+    tiles.push_back(createTileG());
     //...
     for (int i = 0; i < 3; ++i)
     {
@@ -383,9 +381,6 @@ createBaseGameTiles()
     std::random_shuffle(tiles.begin(), tiles.end());
     //add starting tile
     tiles.push_back(createTileD());
-    std::reverse(tiles.begin(),tiles.end());
 
-    Tile startTile = createTileD();
-    tiles.insert(tiles.begin(), startTile);
     return tiles;
 }

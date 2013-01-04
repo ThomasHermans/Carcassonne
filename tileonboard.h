@@ -28,6 +28,8 @@ public:
     Tile::Side getLeft() const;
     Tile::Center getCenter() const;
     std::string getID() const;
+    Tile getTile() const;
+    TileOnBoard::Rotation getRotation() const;
 
     bool matchesAbove(const TileOnBoard & inTileOnBoard) const;
     bool matchesRightOf(const TileOnBoard & inTileOnBoard) const;

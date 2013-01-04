@@ -2,20 +2,19 @@
 #define BOARDWIDGET_H
 
 #include <QWidget>
-#include <vector>
-#include <boost/optional/optional.hpp>
-#include "tileonboard.h"
+#include "board.h"
+#include "gamewindow.h"
 
 class BoardWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit BoardWidget(QWidget *parent = 0);
+    explicit BoardWidget(GameWindow *inGameWindow, QWidget *parent = 0);
 
 private:
-    int mNrCols;
-    int mNrRows;
-    std::vector< boost::optional< TileOnBoard > > mTiles;
+    GameWindow *mGameWindow;
+    Board mBoard;
     
 signals:
     

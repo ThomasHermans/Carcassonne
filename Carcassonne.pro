@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     board.cpp \
     boardwidget.cpp \
     tilewidget.cpp \
-    createbasegametiles.cpp
+    createbasegametiles.cpp \
+    game.cpp \
+    gamewindow.cpp
 
 HEADERS  += mainwindow.h \
     tile.h \
@@ -31,7 +33,9 @@ HEADERS  += mainwindow.h \
     board.h \
     boardwidget.h \
     tilewidget.h \
-    createbasegametiles.h
+    createbasegametiles.h \
+    game.h \
+    gamewindow.h
 
 INCLUDEPATH += "C:\\Program Files\\boost\\boost_1_52_0"
 
