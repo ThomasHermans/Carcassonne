@@ -7,7 +7,22 @@
         <file>tiles/E.png</file>
         <file>tiles/F.png</file>
         <file>tiles/G.png</file>
+        <file>tiles/H.png</file>
+        <file>tiles/I.png</file>
+        <file>tiles/J.png</file>
+        <file>tiles/K.png</file>
         <file>tiles/L.png</file>
+        <file>tiles/M.png</file>
         <file>tiles/N.png</file>
+        <file>tiles/O.png</file>
+        <file>tiles/P.png</file>
+        <file>tiles/Q.png</file>
+        <file>tiles/R.png</file>
+        <file>tiles/S.png</file>
+        <file>tiles/T.png</file>
+        <file>tiles/U.png</file>
+        <file>tiles/V.png</file>
+        <file>tiles/W.png</file>
+        <file>tiles/X.png</file>
     </qresource>
 </RCC>
