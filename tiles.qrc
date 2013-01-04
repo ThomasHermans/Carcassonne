@@ -1,5 +1,13 @@
 <RCC>
     <qresource prefix="/">
-        <file>tiles/CRRs.png</file>
+        <file>tiles/A.png</file>
+        <file>tiles/B.png</file>
+        <file>tiles/C.png</file>
+        <file>tiles/D.png</file>
+        <file>tiles/E.png</file>
+        <file>tiles/F.png</file>
+        <file>tiles/G.png</file>
+        <file>tiles/L.png</file>
+        <file>tiles/N.png</file>
     </qresource>
 </RCC>
