@@ -7,7 +7,6 @@
 GameWindow::GameWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    mGame = Game();
     this->resize(800, 500);
     mCentralWidget = new QWidget(this);
     mCentralWidget->setObjectName(QString::fromUtf8("mCentralWidget"));
@@ -28,10 +27,12 @@ GameWindow::GameWindow(QWidget *parent) :
     mBoardScrollArea->setBaseSize(QSize(100, 100));
     mBoardScrollArea->setWidgetResizable(true);
 
-    scrollAreaWidgetContents = new BoardWidget(this);
-    scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-    scrollAreaWidgetContents->setGeometry(QRect(0, 0, 400, 400));
-    mBoardScrollArea->setWidget(scrollAreaWidgetContents);
+    mBoardWidget = new BoardWidget();
+    mBoardWidget->setObjectName(QString::fromUtf8("mBoardWidget"));
+    mBoardWidget->setGeometry(QRect(0, 0, 400, 400));
+    mBoardScrollArea->setWidget(mBoardWidget);
+
+    connect(mBoardWidget, SIGNAL(clicked(uint, uint)), this, SLOT(onClicked(uint, uint)));
 
     mBoardAndSideBarLayout->addWidget(mBoardScrollArea);
 
@@ -41,12 +42,8 @@ GameWindow::GameWindow(QWidget *parent) :
 
     mPickedTileLabel = new QLabel(mCentralWidget);
     mPickedTileLabel->setObjectName(QString::fromUtf8("mPickedTileLabel"));
-    mPickedTileLabel->setMinimumSize(QSize(100, 100));
-    std::string id = mGame.getNextTile()->getID();
-    std::stringstream name;
-    name << ":/tiles/" << id << ".png";
-    QPixmap pm = QPixmap(QString::fromStdString(name.str()));
-    mPickedTileLabel->setPixmap(pm);
+    mPickedTileLabel->setFixedSize(QSize(100, 100));
+    mPickedTileLabel->setText(".");
     mPickedTileLabel->setAlignment(Qt::AlignCenter);
 
     mSideBarLayout->addWidget(mPickedTileLabel);
@@ -72,8 +69,24 @@ GameWindow::~GameWindow()
 {
 }
 
-Board
-GameWindow::getBoard() const
+void
+GameWindow::setTile(unsigned int inCol, unsigned int inRow, std::string inId, int inRotation)
 {
-    return mGame.getBoard();
+    mBoardWidget->setTile(inCol, inRow, inId, inRotation);
+}
+
+void
+GameWindow::setNextTile(std::string inId)
+{
+    std::stringstream sstr;
+    sstr << ":/tiles/" << inId << ".png";
+    const QPixmap pm(QString::fromStdString(sstr.str()));
+    mPickedTileLabel->setPixmap(pm);
+}
+
+void
+GameWindow::onClicked(unsigned int inCol, unsigned int inRow)
+{
+    std::cout << "GameWindow sees a click" << std::endl;
+    emit clicked(inCol, inRow);
 }

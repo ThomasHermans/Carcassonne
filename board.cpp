@@ -1,4 +1,6 @@
 #include "board.h"
+
+#include <sstream>
 //test
 Board::Board()
 {
@@ -188,15 +190,49 @@ Board::rotateTileOnBoard(unsigned int inCol, unsigned int inRow)
         TileOnBoard rotated = TileOnBoard(tile, newRotation);
         for (int i = 0; i < 4; ++i)
         {
-            newRotation = TileOnBoard::Rotation(newRotation + TileOnBoard::cw90);
+            newRotation = TileOnBoard::Rotation((newRotation + TileOnBoard::cw90) % (TileOnBoard::cw90 * 4));
             rotated = TileOnBoard(tile, newRotation);
             if (isValidAlternateTilePlacement(rotated, inCol, inRow))
             {
                 break;
             }
         }
-        placeTile(rotated, inCol, inRow);
+        if (placeTile(rotated, inCol, inRow))
+        {
+            std::cout << "Board sees a rotation, " << rotated.getRotation() * 30 << std::endl;
+            emit tileRotated(inCol, inRow, rotated.getID(), rotated.getRotation());
+        }
     }
+}
+
+std::string
+Board::toString() const
+{
+    std::stringstream res;
+    for (unsigned int r = 0; r < mNrRows; ++r)
+    {
+        for (unsigned int c = 0; c < mNrCols; ++c)
+        {
+            res << shortPrint(c, r) << "\t";
+        }
+        res << std::endl;
+    }
+    return res.str();
+}
+
+std::string
+Board::shortPrint(unsigned int inCol, unsigned int inRow) const
+{
+    std::stringstream res;
+    if (mBoard[inRow * mNrCols + inCol])
+    {
+        res << mBoard[inRow * mNrCols + inCol]->getID() << (mBoard[inRow * mNrCols + inCol]->getRotation() * 30);
+    }
+    else
+    {
+        res << "/";
+    }
+    return res.str();
 }
 
 bool

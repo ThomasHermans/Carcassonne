@@ -3,10 +3,7 @@
 
 #include <iostream>
 
-#include "createbasegametiles.h"
-#include "gamewindow.h"
-#include "tile.h"
-#include "tileonboard.h"
+#include "gamecontroller.h"
 
 int main(int argc, char * argv[])
 {
@@ -19,8 +16,7 @@ int main(int argc, char * argv[])
 //    }
 
     QApplication a(argc, argv);
-    GameWindow w;
-    w.show();
+    GameController gc;
 
     return a.exec();
 }

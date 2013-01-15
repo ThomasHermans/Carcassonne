@@ -1,11 +1,14 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include <QObject>
+
 #include "tileonboard.h"
 #include "boost/optional/optional.hpp"
 
-class Board
+class Board : public QObject
 {
+    Q_OBJECT
 public:
     Board();
 
@@ -23,6 +26,12 @@ public:
     bool isValidAlternateTilePlacement(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow) const;
     bool placeValidTile(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow);
     void rotateTileOnBoard(unsigned int inCol, unsigned int inRow);
+
+    std::string toString() const;
+    std::string shortPrint(unsigned int inCol, unsigned int inRow) const;
+
+signals:
+    void tileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
 
 private:
     bool placeTile(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow);

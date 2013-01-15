@@ -1,46 +1,47 @@
 #include "boardwidget.h"
 
-#include <QGridLayout>
-#include <QLabel>
-#include "tilewidget.h"
-
-BoardWidget::BoardWidget(QWidget *parent) :
+BoardWidget::BoardWidget(unsigned int inCols, unsigned int inRows, QWidget *parent) :
     QWidget(parent)
 {
-    mBoard = Board();
-    unsigned int cols = mBoard.getNrOfCols();
-    unsigned int rows = mBoard.getNrOfRows();
-
-    QGridLayout * gridLayout = new QGridLayout(this);
-    for (unsigned int row = 0; row < rows; ++row)
+    QGridLayout * mGridLayout = new QGridLayout(this);
+    mCols = inCols;
+    for (unsigned int row = 0; row < inRows; ++row)
     {
-        for (unsigned int col = 0; col < cols; ++col)
+        for (unsigned int col = 0; col < inCols; ++col)
         {
-            TileWidget * theLabel = new TileWidget(mBoard.getTile(col, row), this);
+            TileWidget * theLabel = new TileWidget(this);
             theLabel->show();
-            gridLayout->addWidget(theLabel, row, col);
+            mGridLayout->addWidget(theLabel, row, col);
+            mTiles.push_back(theLabel);
+            connect(theLabel, SIGNAL(clicked()), this, SLOT(onTileClicked()));
         }
     }
-    this->setLayout(gridLayout);
+    setLayout(mGridLayout);
 }
 
-BoardWidget::BoardWidget(GameWindow *inGameWindow, QWidget *parent) :
-    QWidget(parent)
+void
+BoardWidget::setTile(unsigned int inCol, unsigned int inRow, std::string inId, int inRotation)
 {
-    mGameWindow = inGameWindow;
-    mBoard = inGameWindow->getBoard();
-    unsigned int cols = mBoard.getNrOfCols();
-    unsigned int rows = mBoard.getNrOfRows();
+    mTiles[inRow * mCols + inCol]->setTile(inId, inRotation);
+}
 
-    QGridLayout * gridLayout = new QGridLayout(this);
-    for (unsigned int row = 0; row < rows; ++row)
+void
+BoardWidget::onTileClicked()
+{
+    unsigned int tileNr = (unsigned int)-1;
+    for (unsigned int i = 0; i < mTiles.size(); ++i)
     {
-        for (unsigned int col = 0; col < cols; ++col)
+        if (QObject::sender() == mTiles[i])
         {
-            TileWidget * theLabel = new TileWidget(inGameWindow, mBoard.getTile(col, row), this);
-            theLabel->show();
-            gridLayout->addWidget(theLabel, row, col);
+            tileNr = i;
+            break;
         }
     }
-    this->setLayout(gridLayout);
+    std::cout << tileNr << std::endl;
+    if (tileNr != (unsigned int)-1)
+    {
+        int row = tileNr / mCols;
+        int col = tileNr % mCols;
+        emit clicked(col, row);
+    }
 }
