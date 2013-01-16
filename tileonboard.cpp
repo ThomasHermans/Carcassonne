@@ -117,7 +117,7 @@ TileOnBoard::getLeft() const
     case cw180:
         return mTile.getRight();
     case cw270:
-        return mTile.getRight();
+        return mTile.getTop();
     case cw0:
     default:
         return mTile.getLeft();

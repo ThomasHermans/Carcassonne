@@ -47,6 +47,7 @@ Game::placeTileOnBoard(unsigned int inCol, unsigned int inRow)
         bool found = false;
         for (int i = 0; i < 4; ++i)
         {
+            toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
             if (mBoard->isValidTilePlacement(toBePlacedTile, inCol, inRow))
             {
                 found = true;
