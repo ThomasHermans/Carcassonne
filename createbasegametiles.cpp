@@ -256,6 +256,161 @@ cbgt::createTileG()
 }
 
 Tile
+cbgt::createTileH()
+{
+    std::vector< Tile::ContiguousField > fields;
+    Tile::ContiguousField firstField;
+    firstField.push_back(FRCArea::TopLeft);
+    firstField.push_back(FRCArea::TopRight);
+    firstField.push_back(FRCArea::BottomRight);
+    firstField.push_back(FRCArea::BottomLeft);
+    fields.push_back(firstField);
+
+    std::vector< Tile::ContiguousCity > cities;
+    Tile::ContiguousCity firstCity;
+    firstCity.push_back(FRCArea::Right);
+    cities.push_back(firstCity);
+    Tile::ContiguousCity secondCity;
+    secondCity.push_back(FRCArea::Left);
+    cities.push_back(secondCity);
+
+    std::vector< Tile::ContiguousRoad > roads;
+
+    std::vector< FRCArea::CityArea > shields;
+
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
+    firstFieldCities.push_back(firstCity);
+    firstFieldCities.push_back(secondCity);
+
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
+
+    Tile tileH = Tile(Tile::Field, Tile::City, Tile::Field, Tile::City, Tile::Nothing, "H",
+                      fields, roads, cities, citiesPerField, shields);
+
+    return tileH;
+}
+
+Tile
+cbgt::createTileI()
+{
+    std::vector< Tile::ContiguousField > fields;
+    Tile::ContiguousField firstField;
+    firstField.push_back(FRCArea::TopLeft);
+    firstField.push_back(FRCArea::TopRight);
+    firstField.push_back(FRCArea::LeftBottom);
+    firstField.push_back(FRCArea::LeftTop);
+    fields.push_back(firstField);
+
+    std::vector< Tile::ContiguousCity > cities;
+    Tile::ContiguousCity firstCity;
+    firstCity.push_back(FRCArea::Right);
+    cities.push_back(firstCity);
+    Tile::ContiguousCity secondCity;
+    secondCity.push_back(FRCArea::Bottom);
+    cities.push_back(secondCity);
+
+    std::vector< Tile::ContiguousRoad > roads;
+
+    std::vector< FRCArea::CityArea > shields;
+
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
+    firstFieldCities.push_back(firstCity);
+    firstFieldCities.push_back(secondCity);
+
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
+
+    Tile tileI = Tile(Tile::Field, Tile::City, Tile::City, Tile::Field, Tile::Nothing, "I",
+                      fields, roads, cities, citiesPerField, shields);
+
+    return tileI;
+}
+
+Tile
+cbgt::createTileJ()
+{
+    std::vector< Tile::ContiguousField > fields;
+    Tile::ContiguousField firstField;
+    firstField.push_back(FRCArea::RightTop);
+    firstField.push_back(FRCArea::BottomLeft);
+    firstField.push_back(FRCArea::LeftBottom);
+    firstField.push_back(FRCArea::LeftTop);
+    fields.push_back(firstField);
+    Tile::ContiguousField secondField;
+    secondField.push_back(FRCArea::RightBottom);
+    secondField.push_back(FRCArea::BottomRight);
+    fields.push_back(secondField);
+
+    std::vector< Tile::ContiguousCity > cities;
+    Tile::ContiguousCity firstCity;
+    firstCity.push_back(FRCArea::Top);
+    cities.push_back(firstCity);
+
+    std::vector< Tile::ContiguousRoad> roads;
+    Tile::ContiguousRoad firstRoad;
+    firstRoad.push_back(FRCArea::Right);
+    firstRoad.push_back(FRCArea::Bottom);
+    roads.push_back(firstRoad);
+
+    std::vector< FRCArea::CityArea > shields;
+
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
+    firstFieldCities.push_back( firstCity );
+    std::vector< Tile::ContiguousCity > secondFieldCities;
+
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(secondField, secondFieldCities));
+
+    //Tile constructor, Top Right Bottom Left Center mId fields roads cities citiesPerField shields
+    Tile tileJ = Tile(Tile::City, Tile::Road, Tile::Road, Tile::Field, Tile::Nothing, "J",
+                          fields, roads, cities, citiesPerField, shields);
+    return tileJ;
+}
+Tile
+cbgt::createTileK()
+{
+    std::vector< Tile::ContiguousCity > cities;
+    std::vector< FRCArea::CityArea > firstCity;
+    firstCity.push_back(FRCArea::Right);
+    cities.push_back(firstCity);
+
+    std::vector< FRCArea::CityArea > shields;
+
+    std::vector< Tile::ContiguousRoad > roads;
+    std::vector< FRCArea::RoadArea > firstRoad;
+    firstRoad.push_back(FRCArea::Top);
+    firstRoad.push_back(FRCArea::Left);
+    roads.push_back(firstRoad);
+
+    std::vector< Tile::ContiguousField > fields;
+    std::vector< FRCArea::FieldArea > firstField;
+    firstField.push_back(FRCArea::TopRight);
+    firstField.push_back(FRCArea::BottomRight);
+    firstField.push_back(FRCArea::BottomLeft);
+    firstField.push_back(FRCArea::LeftBottom);
+    std::vector< FRCArea::FieldArea > secondField;
+    secondField.push_back(FRCArea::LeftTop);
+    secondField.push_back(FRCArea::TopLeft);
+    fields.push_back(firstField);
+    fields.push_back(secondField);
+
+    std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
+    std::vector< Tile::ContiguousCity > firstFieldCities;
+    firstFieldCities.push_back( firstCity );
+    std::vector< Tile::ContiguousCity > secondFieldCities;
+
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(firstField, firstFieldCities));
+    citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(secondField, secondFieldCities));
+
+    Tile tileK = Tile(Tile::Road, Tile::City, Tile::Field, Tile::Road, Tile::Nothing, "K",
+                          fields, roads, cities, citiesPerField, shields);
+
+    return tileK;
+}
+
+Tile
 cbgt::createTileL()
 {
     std::vector< Tile::ContiguousCity > cities;
@@ -367,7 +522,22 @@ createBaseGameTiles()
         tiles.push_back(createTileF());
     }
     tiles.push_back(createTileG());
-    //...
+    for (int i = 0; i < 3; ++i)
+    {
+        tiles.push_back(createTileH());
+    }
+    for (int i = 0; i < 2; ++i)
+    {
+        tiles.push_back(createTileI());
+    }
+    for (int i = 0; i < 3; ++i)
+    {
+        tiles.push_back(createTileJ());
+    }
+    for (int i = 0; i < 3; ++i)
+    {
+        tiles.push_back(createTileK());
+    }
     for (int i = 0; i < 3; ++i)
     {
         tiles.push_back(createTileL());

@@ -212,6 +212,24 @@ TEST("Tile creator via id, check sides and center")
     CHECK(a.getCenter() == Tile::Cloister);
 }
 
+TEST("Tile creator via id, check id")
+{
+    CHECK(createTileA().getID() == "A");
+    CHECK(createTileB().getID() == "B");
+    CHECK(createTileC().getID() == "C");
+    CHECK(createTileD().getID() == "D");
+    CHECK(createTileE().getID() == "E");
+    CHECK(createTileF().getID() == "F");
+    CHECK(createTileG().getID() == "G");
+    CHECK(createTileH().getID() == "H");
+    CHECK(createTileI().getID() == "I");
+    CHECK(createTileJ().getID() == "J");
+    CHECK(createTileK().getID() == "K");
+    CHECK(createTileL().getID() == "L");
+
+    CHECK(createTileN().getID() == "N");
+}
+
 TEST("Tile creator via id, check no double assigned sides")
 {
     CHECK(sidesMatch(createTileA()));
@@ -221,7 +239,10 @@ TEST("Tile creator via id, check no double assigned sides")
     CHECK(sidesMatch(createTileE()));
     CHECK(sidesMatch(createTileF()));
     CHECK(sidesMatch(createTileG()));
-
+    CHECK(sidesMatch(createTileH()));
+    CHECK(sidesMatch(createTileI()));
+    CHECK(sidesMatch(createTileJ()));
+    CHECK(sidesMatch(createTileK()));
     CHECK(sidesMatch(createTileL()));
 
     CHECK(sidesMatch(createTileN()));

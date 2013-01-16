@@ -14,7 +14,10 @@ Tile createTileD();
 Tile createTileE();
 Tile createTileF();
 Tile createTileG();
-
+Tile createTileH();
+Tile createTileI();
+Tile createTileJ();
+Tile createTileK();
 Tile createTileL();
 
 Tile createTileN();
