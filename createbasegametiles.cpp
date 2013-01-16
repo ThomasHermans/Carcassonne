@@ -2,10 +2,8 @@
 
 #include <algorithm>
 
-namespace
-{
 Tile
-createTileA()
+cbgt::createTileA()
 {
     std::vector< Tile::ContiguousField > fields;
     Tile::ContiguousField firstField;
@@ -38,8 +36,9 @@ createTileA()
     return tileA;
 }
 
+
 Tile
-createTileB()
+cbgt::createTileB()
 {
     std::vector< Tile::ContiguousField > fields;
     Tile::ContiguousField firstField;
@@ -70,7 +69,7 @@ createTileB()
 }
 
 Tile
-createTileC()
+cbgt::createTileC()
 {
     std::vector< Tile::ContiguousField > fields;
 
@@ -82,6 +81,7 @@ createTileC()
     city.push_back(FRCArea::Right);
     city.push_back(FRCArea::Bottom);
     city.push_back(FRCArea::Left);
+    cities.push_back(city);
 
     std::map< Tile::ContiguousField, std::vector< Tile::ContiguousCity > > citiesPerField;
 
@@ -95,7 +95,7 @@ createTileC()
 }
 
 Tile
-createTileD()
+cbgt::createTileD()
 {
     std::vector< Tile::ContiguousField > fields;
     std::vector< FRCArea::FieldArea > firstField;
@@ -130,14 +130,14 @@ createTileD()
 
     std::vector< FRCArea::CityArea > shields;
 
-    Tile tileD = Tile(Tile::City, Tile::Road, Tile::Field, Tile::Road, Tile::Nothing, "D",
+    Tile tileD = Tile(Tile::Road, Tile::City, Tile::Road, Tile::Field, Tile::Nothing, "D",
                           fields, roads, cities, citiesPerField, shields);
 
     return tileD;
 }
 
 Tile
-createTileE()
+cbgt::createTileE()
 {
     //create fieldarray
     std::vector< Tile::ContiguousField > fields;
@@ -172,7 +172,7 @@ createTileE()
 }
 
 Tile
-createTileF()
+cbgt::createTileF()
 {
     //Field
     std::vector<Tile::ContiguousField> fields;
@@ -218,7 +218,7 @@ createTileF()
 }
 
 Tile
-createTileG()
+cbgt::createTileG()
 {
     std::vector< Tile::ContiguousField > fields;
     Tile::ContiguousField firstField;
@@ -256,7 +256,7 @@ createTileG()
 }
 
 Tile
-createTileL()
+cbgt::createTileL()
 {
     std::vector< Tile::ContiguousCity > cities;
     std::vector< FRCArea::CityArea > firstCity;
@@ -300,14 +300,14 @@ createTileL()
     citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(secondField, secondFieldCities));
     citiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(thirdField, thirdFieldCities));
 
-    Tile tileL = Tile(Tile::City, Tile::Road, Tile::Road, Tile::Road, Tile::Nothing, "L",
+    Tile tileL = Tile(Tile::Road, Tile::City, Tile::Road, Tile::Road, Tile::Nothing, "L",
                           fields, roads, cities, citiesPerField, shields);
 
     return tileL;
 }
 
 Tile
-createTileN()
+cbgt::createTileN()
 {
     std::vector< Tile::ContiguousField > fields;
     std::vector< FRCArea::FieldArea > firstField;
@@ -333,16 +333,16 @@ createTileN()
 
     std::vector< FRCArea::CityArea > shields;
 
-    Tile tileN = Tile(Tile::City, Tile::City, Tile::Field, Tile::Field, Tile::Nothing, "N",
+    Tile tileN = Tile(Tile::City, Tile::Field, Tile::Field, Tile::City, Tile::Nothing, "N",
                           fields, roads, cities, citiesPerField, shields);
 
     return tileN;
 }
-} // End of nameless namespace
 
 std::vector< Tile >
 createBaseGameTiles()
 {
+    using namespace cbgt;
     std::vector< Tile > tiles;
     for (int i = 0; i < 2; ++i)
     {
