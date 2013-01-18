@@ -21,9 +21,22 @@ FRCArea::FieldArea turn(FRCArea::FieldArea inFieldArea, TileOnBoard::Rotation in
         return FRCArea::FieldArea((inFieldArea + inRotation) % 12);
 }
 
+FRCArea::FieldArea unturn(FRCArea::FieldArea inFieldArea, TileOnBoard::Rotation inRotation)
+{
+    if (inFieldArea == FRCArea::Central)
+        return FRCArea::Central;
+    else
+        return FRCArea::FieldArea((inFieldArea + 12 - inRotation) % 12);
+}
+
 FRCArea::RoadArea turn(FRCArea::RoadArea inRoadArea, TileOnBoard::Rotation inRotation)
 {
     return FRCArea::RoadArea((inRoadArea + inRotation) % 12);
+}
+
+FRCArea::RoadArea unturn(FRCArea::RoadArea inRoadArea, TileOnBoard::Rotation inRotation)
+{
+    return FRCArea::RoadArea((inRoadArea + 12 - inRotation) % 12);
 }
 }
 
@@ -229,7 +242,7 @@ TileOnBoard::getContiguousCities() const
 Tile::ContiguousField
 TileOnBoard::getContiguousField(FRCArea::FieldArea inFieldArea) const
 {
-    FRCArea::FieldArea unRotatedArea = turn(inFieldArea, TileOnBoard::Rotation((mRotation + 9) % 12));
+    FRCArea::FieldArea unRotatedArea = unturn(inFieldArea, mRotation);
     Tile::ContiguousField unRotatedField = mTile.getContiguousField(unRotatedArea);
     Tile::ContiguousField rotatedField;
     for (unsigned int i = 0; i < unRotatedField.size(); ++i)
@@ -242,7 +255,7 @@ TileOnBoard::getContiguousField(FRCArea::FieldArea inFieldArea) const
 Tile::ContiguousRoad
 TileOnBoard::getContiguousRoad(FRCArea::RoadArea inRoadArea) const
 {
-    FRCArea::RoadArea unRotatedArea = turn(inRoadArea, TileOnBoard::Rotation((mRotation + 9) % 12));
+    FRCArea::RoadArea unRotatedArea = unturn(inRoadArea, mRotation);
     Tile::ContiguousRoad unRotatedRoad = mTile.getContiguousRoad(unRotatedArea);
     Tile::ContiguousRoad rotatedRoad;
     for (unsigned int i = 0; i < unRotatedRoad.size(); ++i)
@@ -255,7 +268,7 @@ TileOnBoard::getContiguousRoad(FRCArea::RoadArea inRoadArea) const
 Tile::ContiguousCity
 TileOnBoard::getContiguousCity(FRCArea::CityArea inCityArea) const
 {
-    FRCArea::CityArea unRotatedArea = turn(inCityArea, TileOnBoard::Rotation((mRotation + 9) % 12));
+    FRCArea::CityArea unRotatedArea = unturn(inCityArea, mRotation);
     Tile::ContiguousCity unRotatedCity = mTile.getContiguousCity(unRotatedArea);
     Tile::ContiguousCity rotatedCity;
     for (unsigned int i = 0; i < unRotatedCity.size(); ++i)

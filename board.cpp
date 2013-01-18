@@ -250,7 +250,7 @@ Board::placeTile(const TileOnBoard &inTile, unsigned int inCol, unsigned int inR
 void
 Board::updateOccupiedRoads(unsigned int inCol, unsigned int inRow)
 {
-    typedef std::pair< int, FRCArea::RoadArea > LocatedRoad;
+    typedef std::pair< unsigned int, FRCArea::RoadArea > LocatedRoad;
     // the int gives the location of the TileOnBoard (=row * mNrCols + col)
     std::vector< Tile::ContiguousRoad > toBeUpdatedRoads = mBoard[inRow * mNrCols + inCol]->getContiguousRoads();
     for (unsigned int road = 0; road < toBeUpdatedRoads.size(); ++road)
@@ -273,7 +273,7 @@ Board::updateOccupiedRoads(unsigned int inCol, unsigned int inRow)
             {
             case FRCArea::Top:
                 neighborLocation = current.first - mNrCols;
-                if ((neighborLocation >= 0) && (mBoard[neighborLocation]))
+                if ((current.first >= mNrCols) && (mBoard[neighborLocation]))
                 {
                     FRCArea::RoadArea neighborSide = FRCArea::Bottom;
                     updateOccupiedRoadsCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -281,7 +281,7 @@ Board::updateOccupiedRoads(unsigned int inCol, unsigned int inRow)
                 break;
             case FRCArea::Right:
                 neighborLocation = current.first + 1;
-                if ((current.first % mNrRows < mNrCols) && (mBoard[neighborLocation]))
+                if ((current.first % mNrRows < mNrCols - 1) && (mBoard[neighborLocation]))
                 {
                     FRCArea::RoadArea neighborSide = FRCArea::Left;
                     updateOccupiedRoadsCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -297,7 +297,7 @@ Board::updateOccupiedRoads(unsigned int inCol, unsigned int inRow)
                 break;
             case FRCArea::Left:
                 neighborLocation = current.first - 1;
-                if ((current.first % mNrRows >= 0) && (mBoard[neighborLocation]))
+                if ((current.first % mNrRows > 0) && (mBoard[neighborLocation]))
                 {
                     FRCArea::RoadArea neighborSide = FRCArea::Right;
                     updateOccupiedRoadsCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -322,10 +322,10 @@ Board::updateOccupiedRoads(unsigned int inCol, unsigned int inRow)
 }
 
 void
-Board::updateOccupiedRoadsCheck(int inNeighborLocation, FRCArea::RoadArea inNeighborSide, bool &ioOccupied,
-                                std::vector< std::pair< int, FRCArea::RoadArea > > &inQueue)
+Board::updateOccupiedRoadsCheck(unsigned int inNeighborLocation, FRCArea::RoadArea inNeighborSide, bool &ioOccupied,
+                                std::vector< std::pair< unsigned int, FRCArea::RoadArea > > &inQueue)
 {
-    typedef std::pair< int, FRCArea::RoadArea > LocatedRoad;
+    typedef std::pair< unsigned int, FRCArea::RoadArea > LocatedRoad;
     // If contination RoadArea is occupied: occupied = true, break
     if (mBoard[inNeighborLocation]->isRoadOccupied(inNeighborSide))
     {
@@ -348,7 +348,7 @@ Board::updateOccupiedRoadsCheck(int inNeighborLocation, FRCArea::RoadArea inNeig
 void
 Board::updateOccupiedCities(unsigned int inCol, unsigned int inRow)
 {
-    typedef std::pair< int, FRCArea::CityArea > LocatedCity;
+    typedef std::pair< unsigned int, FRCArea::CityArea > LocatedCity;
     // the int gives the location of the TileOnBoard (=row * mNrCols + col)
     std::vector< Tile::ContiguousCity > toBeUpdatedCities = mBoard[inRow * mNrCols + inCol]->getContiguousCities();
     for (unsigned int city = 0; city < toBeUpdatedCities.size(); ++city)
@@ -371,7 +371,7 @@ Board::updateOccupiedCities(unsigned int inCol, unsigned int inRow)
             {
             case FRCArea::Top:
                 neighborLocation = current.first - mNrCols;
-                if ((neighborLocation >= 0) && (mBoard[neighborLocation]))
+                if ((current.first >= mNrCols) && (mBoard[neighborLocation]))
                 {
                     FRCArea::CityArea neighborSide = FRCArea::Bottom;
                     updateOccupiedCitiesCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -379,7 +379,7 @@ Board::updateOccupiedCities(unsigned int inCol, unsigned int inRow)
                 break;
             case FRCArea::Right:
                 neighborLocation = current.first + 1;
-                if ((current.first % mNrRows < mNrCols) && (mBoard[neighborLocation]))
+                if ((current.first % mNrRows < mNrCols - 1) && (mBoard[neighborLocation]))
                 {
                     FRCArea::CityArea neighborSide = FRCArea::Left;
                     updateOccupiedCitiesCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -395,7 +395,7 @@ Board::updateOccupiedCities(unsigned int inCol, unsigned int inRow)
                 break;
             case FRCArea::Left:
                 neighborLocation = current.first - 1;
-                if ((current.first % mNrRows >= 0) && (mBoard[neighborLocation]))
+                if ((current.first % mNrRows > 0) && (mBoard[neighborLocation]))
                 {
                     FRCArea::CityArea neighborSide = FRCArea::Right;
                     updateOccupiedCitiesCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -420,10 +420,10 @@ Board::updateOccupiedCities(unsigned int inCol, unsigned int inRow)
 }
 
 void
-Board::updateOccupiedCitiesCheck(int inNeighborLocation, FRCArea::CityArea inNeighborSide, bool &ioOccupied,
-                                std::vector< std::pair< int, FRCArea::CityArea > > &inQueue)
+Board::updateOccupiedCitiesCheck(unsigned  int inNeighborLocation, FRCArea::CityArea inNeighborSide, bool &ioOccupied,
+                                std::vector< std::pair< unsigned int, FRCArea::CityArea > > &inQueue)
 {
-    typedef std::pair< int, FRCArea::CityArea > LocatedCity;
+    typedef std::pair< unsigned int, FRCArea::CityArea > LocatedCity;
     // If contination CityArea is occupied: occupied = true, break
     if (mBoard[inNeighborLocation]->isCityOccupied(inNeighborSide))
     {
@@ -446,7 +446,7 @@ Board::updateOccupiedCitiesCheck(int inNeighborLocation, FRCArea::CityArea inNei
 void
 Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
 {
-    typedef std::pair< int, FRCArea::FieldArea > LocatedField;
+    typedef std::pair< unsigned int, FRCArea::FieldArea > LocatedField;
     // the int gives the location of the TileOnBoard (=row * mNrCols + col)
     std::vector< Tile::ContiguousField > toBeUpdatedFields = mBoard[inRow * mNrCols + inCol]->getContiguousFields();
     for (unsigned int field = 0; field < toBeUpdatedFields.size(); ++field)
@@ -469,7 +469,7 @@ Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
             {
             case FRCArea::TopLeft:
                 neighborLocation = current.first - mNrCols;
-                if ((neighborLocation >= 0) && (mBoard[neighborLocation]))
+                if ((current.first >= mNrCols) && (mBoard[neighborLocation]))
                 {
                     FRCArea::FieldArea neighborSide = FRCArea::BottomLeft;
                     updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -477,7 +477,7 @@ Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
                 break;
             case FRCArea::TopRight:
                 neighborLocation = current.first - mNrCols;
-                if ((neighborLocation >= 0) && (mBoard[neighborLocation]))
+                if ((current.first >= mNrCols) && (mBoard[neighborLocation]))
                 {
                     FRCArea::FieldArea neighborSide = FRCArea::BottomRight;
                     updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -485,7 +485,7 @@ Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
                 break;
             case FRCArea::RightTop:
                 neighborLocation = current.first + 1;
-                if ((current.first % mNrRows < mNrCols) && (mBoard[neighborLocation]))
+                if ((current.first % mNrRows < mNrCols - 1) && (mBoard[neighborLocation]))
                 {
                     FRCArea::FieldArea neighborSide = FRCArea::LeftTop;
                     updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -493,7 +493,7 @@ Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
                 break;
             case FRCArea::RightBottom:
                 neighborLocation = current.first + 1;
-                if ((current.first % mNrRows < mNrCols) && (mBoard[neighborLocation]))
+                if ((current.first % mNrRows < mNrCols - 1) && (mBoard[neighborLocation]))
                 {
                     FRCArea::FieldArea neighborSide = FRCArea::LeftBottom;
                     updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -517,7 +517,7 @@ Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
                 break;
             case FRCArea::LeftBottom:
                 neighborLocation = current.first - 1;
-                if ((current.first % mNrRows >= 0) && (mBoard[neighborLocation]))
+                if ((current.first % mNrRows > 0) && (mBoard[neighborLocation]))
                 {
                     FRCArea::FieldArea neighborSide = FRCArea::RightBottom;
                     updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -525,7 +525,7 @@ Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
                 break;
             case FRCArea::LeftTop:
                 neighborLocation = current.first - 1;
-                if ((current.first % mNrRows >= 0) && (mBoard[neighborLocation]))
+                if ((current.first % mNrRows > 0) && (mBoard[neighborLocation]))
                 {
                     FRCArea::FieldArea neighborSide = FRCArea::RightTop;
                     updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
@@ -550,10 +550,10 @@ Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
 }
 
 void
-Board::updateOccupiedFieldsCheck(int inNeighborLocation, FRCArea::FieldArea inNeighborSide, bool &ioOccupied,
-                                std::vector< std::pair< int, FRCArea::FieldArea > > &inQueue)
+Board::updateOccupiedFieldsCheck(unsigned int inNeighborLocation, FRCArea::FieldArea inNeighborSide, bool &ioOccupied,
+                                std::vector< std::pair< unsigned int, FRCArea::FieldArea > > &inQueue)
 {
-    typedef std::pair< int, FRCArea::FieldArea > LocatedField;
+    typedef std::pair< unsigned int, FRCArea::FieldArea > LocatedField;
     // If contination FieldArea is occupied: occupied = true, break
     if (mBoard[inNeighborLocation]->isFieldOccupied(inNeighborSide))
     {
