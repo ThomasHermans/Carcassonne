@@ -17,7 +17,11 @@ signals:
 public slots:
     void placeTile(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot, std::string inNextId);
     void onClicked(unsigned int inCol, unsigned int inRow);
-    void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
+    void rotateTile(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
+    void addRowsOnTop(unsigned int inNr);
+    void addRowsBelow(unsigned int inNr);
+    void addColsLeft(unsigned int inNr);
+    void addColsRight(unsigned int inNr);
 
 private:
     Game *mGame;

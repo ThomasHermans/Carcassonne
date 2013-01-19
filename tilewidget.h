@@ -10,6 +10,9 @@ class TileWidget : public QLabel
 public:
     explicit TileWidget(QWidget *parent = 0);
 
+    static int getWidth();
+    static int getHeight();
+
 private:
     void mousePressEvent(QMouseEvent *);
     

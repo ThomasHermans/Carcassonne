@@ -9,7 +9,11 @@ GameController::GameController(QObject *parent) :
             this, SLOT(placeTile(unsigned int, unsigned int, std::string, TileOnBoard::Rotation, std::string)));
     connect(mWindow, SIGNAL(clicked(uint,uint)), this, SLOT(onClicked(uint,uint)));
     connect(mGame, SIGNAL(tileRotated(uint,uint,std::string,TileOnBoard::Rotation)),
-            this, SLOT(onTileRotated(uint,uint,std::string,TileOnBoard::Rotation)));
+            this, SLOT(rotateTile(uint,uint,std::string,TileOnBoard::Rotation)));
+    connect(mGame, SIGNAL(addedColsLeft(uint)), this, SLOT(addColsLeft(uint)));
+    connect(mGame, SIGNAL(addedColsRight(uint)), this, SLOT(addColsRight(uint)));
+    connect(mGame, SIGNAL(addedRowsBelow(uint)), this, SLOT(addRowsBelow(uint)));
+    connect(mGame, SIGNAL(addedRowsOnTop(uint)), this, SLOT(addRowsOnTop(uint)));
     mWindow->show();
     if (mGame->getNextTile())
     {
@@ -32,8 +36,32 @@ GameController::onClicked(unsigned int inCol, unsigned int inRow)
 }
 
 void
-GameController::onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
+GameController::rotateTile(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
 {
     std::cout << "GameController sees a rotation" << std::endl;
     mWindow->setTile(inCol, inRow, inId, inRot * 30);
+}
+
+void
+GameController::addRowsOnTop(unsigned int inNr)
+{
+    mWindow->addRowsOnTop(inNr);
+}
+
+void
+GameController::addRowsBelow(unsigned int inNr)
+{
+    mWindow->addRowsBelow(inNr);
+}
+
+void
+GameController::addColsLeft(unsigned int inNr)
+{
+    mWindow->addColsLeft(inNr);
+}
+
+void
+GameController::addColsRight(unsigned int inNr)
+{
+    mWindow->addColsRight(inNr);
 }

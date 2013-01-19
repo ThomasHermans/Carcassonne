@@ -1,7 +1,7 @@
 #include "board.h"
 
 #include <sstream>
-//test
+
 Board::Board()
 {
     mNrCols = 5;
@@ -51,8 +51,8 @@ Board::addColsLeft(unsigned int inNrOfCols)
         for (unsigned int j = 0; j < inNrOfCols; ++j)
         {
             it = mBoard.insert(it, boost::optional< TileOnBoard >());
+            ++it;
         }
-        ++it;
         for (unsigned int j = 0; j < mNrCols; ++j)
         {
             ++it;
@@ -74,8 +74,8 @@ Board::addColsRight(unsigned int inNrOfCols)
         for (unsigned int j = 0; j < inNrOfCols; ++j)
         {
             it = mBoard.insert(it, boost::optional< TileOnBoard >());
+            ++it;
         }
-        ++it;
     }
     mNrCols += inNrOfCols;
 }

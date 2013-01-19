@@ -70,6 +70,30 @@ GameWindow::~GameWindow()
 }
 
 void
+GameWindow::addRowsOnTop(unsigned int inNr)
+{
+    mBoardWidget->addRowsOnTop(inNr);
+}
+
+void
+GameWindow::addRowsBelow(unsigned int inNr)
+{
+    mBoardWidget->addRowsBelow(inNr);
+}
+
+void
+GameWindow::addColsLeft(unsigned int inNr)
+{
+    mBoardWidget->addColsLeft(inNr);
+}
+
+void
+GameWindow::addColsRight(unsigned int inNr)
+{
+    mBoardWidget->addColsRight(inNr);
+}
+
+void
 GameWindow::setTile(unsigned int inCol, unsigned int inRow, std::string inId, int inRotation)
 {
     mBoardWidget->setTile(inCol, inRow, inId, inRotation);

@@ -4,6 +4,11 @@
 
 #include "createbasegametiles.h"
 
+namespace
+{
+int extraRowsAndCols = 1;
+}
+
 Game::Game() :
     mBoard(new Board())
 {
@@ -60,18 +65,42 @@ Game::placeTileOnBoard(unsigned int inCol, unsigned int inRow)
         }
         if (found)
         {
-            if (mBoard->placeValidTile(toBePlacedTile, inCol, inRow))
+            unsigned int col = inCol;
+            unsigned int row = inRow;
+            if (inCol == 0)
             {
-                mLastPlacedCol = inCol;
-                mLastPlacedRow = inRow;
+                mBoard->addColsLeft( extraRowsAndCols );
+                col += extraRowsAndCols;
+                emit addedColsLeft( extraRowsAndCols );
+            }
+            else if (inCol == mBoard->getNrOfCols() - 1)
+            {
+                mBoard->addColsRight( extraRowsAndCols );
+                emit addedColsRight( extraRowsAndCols );
+            }
+            else if (inRow == 0)
+            {
+                mBoard->addRowsOnTop( extraRowsAndCols );
+                row += extraRowsAndCols;
+                emit addedRowsOnTop( extraRowsAndCols );
+            }
+            else if (inRow == mBoard->getNrOfRows() - 1)
+            {
+                mBoard->addRowsBelow( extraRowsAndCols );
+                emit addedRowsBelow( extraRowsAndCols );
+            }
+            if (mBoard->placeValidTile(toBePlacedTile, col, row))
+            {
+                mLastPlacedCol = col;
+                mLastPlacedRow = row;
                 pickNextTile();
                 if (mNextTile)
                 {
-                    emit tilePlaced(inCol, inRow, toBePlacedTile.getID(), toBePlacedTile.getRotation(), mNextTile->getID());
+                    emit tilePlaced(col, row, toBePlacedTile.getID(), toBePlacedTile.getRotation(), mNextTile->getID());
                 }
                 else
                 {
-                    emit tilePlaced(inCol, inRow, toBePlacedTile.getID(), toBePlacedTile.getRotation(), "");
+                    emit tilePlaced(col, row, toBePlacedTile.getID(), toBePlacedTile.getRotation(), "");
                 }
             }
         }

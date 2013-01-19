@@ -28,6 +28,10 @@ public slots:
 signals:
     void tileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
     void tilePlaced(unsigned int col, unsigned int row, std::string id, TileOnBoard::Rotation rot, std::string nextId);
+    void addedRowsOnTop(unsigned int inNr);
+    void addedRowsBelow(unsigned int inNr);
+    void addedColsLeft(unsigned int inNr);
+    void addedColsRight(unsigned int inNr);
 
 private:
     void pickNextTile();

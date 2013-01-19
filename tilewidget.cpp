@@ -3,13 +3,30 @@
 #include <iostream>
 #include <sstream>
 
+namespace
+{
+int kWidth = 100;
+int kHeight = 100;
+}
+
 TileWidget::TileWidget(QWidget *parent) :
     QLabel(parent)
 {
-    setMinimumSize(QSize(100, 100));
-    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    setFixedSize(kWidth, kHeight);
     setAlignment(Qt::AlignCenter);
     setText(".");
+}
+
+int
+TileWidget::getWidth()
+{
+    return kWidth;
+}
+
+int
+TileWidget::getHeight()
+{
+    return kHeight;
 }
 
 void

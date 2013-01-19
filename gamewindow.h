@@ -20,6 +20,11 @@ class GameWindow : public QMainWindow
 public:
     explicit GameWindow(QWidget *parent = 0);
     ~GameWindow();
+
+    void addRowsOnTop(unsigned int inNr);
+    void addRowsBelow(unsigned int inNr);
+    void addColsLeft(unsigned int inNr);
+    void addColsRight(unsigned int inNr);
     
 signals:
     void clicked(unsigned int inCol, unsigned int inRow);
