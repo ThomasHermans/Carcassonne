@@ -226,8 +226,18 @@ TEST("Tile creator via id, check id")
     CHECK(createTileJ().getID() == "J");
     CHECK(createTileK().getID() == "K");
     CHECK(createTileL().getID() == "L");
-
+    CHECK(createTileM().getID() == "M");
     CHECK(createTileN().getID() == "N");
+    CHECK(createTileO().getID() == "O");
+    CHECK(createTileP().getID() == "P");
+    CHECK(createTileQ().getID() == "Q");
+    CHECK(createTileR().getID() == "R");
+    CHECK(createTileS().getID() == "S");
+    CHECK(createTileT().getID() == "T");
+    CHECK(createTileU().getID() == "U");
+    CHECK(createTileV().getID() == "V");
+    CHECK(createTileW().getID() == "W");
+    CHECK(createTileX().getID() == "X");
 }
 
 TEST("Tile creator via id, check no double assigned sides")
@@ -244,6 +254,16 @@ TEST("Tile creator via id, check no double assigned sides")
     CHECK(sidesMatch(createTileJ()));
     CHECK(sidesMatch(createTileK()));
     CHECK(sidesMatch(createTileL()));
-
+    CHECK(sidesMatch(createTileM()));
     CHECK(sidesMatch(createTileN()));
+    CHECK(sidesMatch(createTileO()));
+    CHECK(sidesMatch(createTileP()));
+    CHECK(sidesMatch(createTileQ()));
+    CHECK(sidesMatch(createTileR()));
+    CHECK(sidesMatch(createTileS()));
+    CHECK(sidesMatch(createTileT()));
+    CHECK(sidesMatch(createTileU()));
+    CHECK(sidesMatch(createTileV()));
+    CHECK(sidesMatch(createTileW()));
+    CHECK(sidesMatch(createTileX()));
 }

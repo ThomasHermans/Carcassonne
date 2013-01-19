@@ -19,8 +19,18 @@ Tile createTileI();
 Tile createTileJ();
 Tile createTileK();
 Tile createTileL();
-
+Tile createTileM();
 Tile createTileN();
+Tile createTileO();
+Tile createTileP();
+Tile createTileQ();
+Tile createTileR();
+Tile createTileS();
+Tile createTileT();
+Tile createTileU();
+Tile createTileV();
+Tile createTileW();
+Tile createTileX();
 }
 
 /*
