@@ -32,6 +32,7 @@ signals:
     void addedRowsBelow(unsigned int inNr);
     void addedColsLeft(unsigned int inNr);
     void addedColsRight(unsigned int inNr);
+    void tilesLeft(unsigned int inNr);
 
 private:
     void pickNextTile();

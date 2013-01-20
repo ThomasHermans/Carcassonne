@@ -161,6 +161,7 @@ Game::pickNextTile()
     {
         mNextTile = mBag.back();
         mBag.pop_back();
+        emit tilesLeft(mBag.size());
     }
     else
     {

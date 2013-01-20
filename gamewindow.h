@@ -25,6 +25,7 @@ public:
     void addRowsBelow(unsigned int inNr);
     void addColsLeft(unsigned int inNr);
     void addColsRight(unsigned int inNr);
+    void displayTilesLeft(unsigned int inNr);
     
 signals:
     void clicked(unsigned int inCol, unsigned int inRow);
@@ -40,6 +41,7 @@ private:
     QScrollArea *mBoardScrollArea;
     BoardWidget *mBoardWidget;
     QVBoxLayout *mSideBarLayout;
+    QLabel *mTilesLeft;
     QLabel *mPickedTileLabel;
 
 //    QMenuBar *mMenuBar;

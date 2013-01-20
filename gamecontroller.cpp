@@ -14,6 +14,7 @@ GameController::GameController(QObject *parent) :
     connect(mGame, SIGNAL(addedColsRight(uint)), this, SLOT(addColsRight(uint)));
     connect(mGame, SIGNAL(addedRowsBelow(uint)), this, SLOT(addRowsBelow(uint)));
     connect(mGame, SIGNAL(addedRowsOnTop(uint)), this, SLOT(addRowsOnTop(uint)));
+    connect(mGame, SIGNAL(tilesLeft(uint)), this, SLOT(onTilesLeft(uint)));
     mWindow->show();
     if (mGame->getNextTile())
     {
@@ -64,4 +65,10 @@ void
 GameController::addColsRight(unsigned int inNr)
 {
     mWindow->addColsRight(inNr);
+}
+
+void
+GameController::onTilesLeft(unsigned int inNr)
+{
+    mWindow->displayTilesLeft(inNr);
 }

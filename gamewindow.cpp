@@ -37,8 +37,14 @@ GameWindow::GameWindow(QWidget *parent) :
     mBoardAndSideBarLayout->addWidget(mBoardScrollArea);
 
     mSideBarLayout = new QVBoxLayout();
-    mSideBarLayout->setSpacing(6);
     mSideBarLayout->setObjectName(QString::fromUtf8("mSideBarLayout"));
+    mSideBarLayout->setSpacing(6);
+
+    mTilesLeft = new QLabel(mCentralWidget);
+    mTilesLeft->setObjectName(QString::fromUtf8("mTilesLeft"));
+    mTilesLeft->setText("X tiles left");
+
+    mSideBarLayout->addWidget(mTilesLeft);
 
     mPickedTileLabel = new QLabel(mCentralWidget);
     mPickedTileLabel->setObjectName(QString::fromUtf8("mPickedTileLabel"));
@@ -47,6 +53,8 @@ GameWindow::GameWindow(QWidget *parent) :
     mPickedTileLabel->setAlignment(Qt::AlignCenter);
 
     mSideBarLayout->addWidget(mPickedTileLabel);
+
+    mSideBarLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding));
 
     mBoardAndSideBarLayout->addLayout(mSideBarLayout);
 
@@ -91,6 +99,12 @@ void
 GameWindow::addColsRight(unsigned int inNr)
 {
     mBoardWidget->addColsRight(inNr);
+}
+
+void
+GameWindow::displayTilesLeft(unsigned int inNr)
+{
+    mTilesLeft->setText(QString::number(inNr).append(" tiles left."));
 }
 
 void

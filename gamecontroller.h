@@ -22,6 +22,7 @@ public slots:
     void addRowsBelow(unsigned int inNr);
     void addColsLeft(unsigned int inNr);
     void addColsRight(unsigned int inNr);
+    void onTilesLeft(unsigned int inNr);
 
 private:
     Game *mGame;
