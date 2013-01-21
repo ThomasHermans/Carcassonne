@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+#include "tile.h"
 #include "tileonboard.h"
 #include "boost/optional/optional.hpp"
 
@@ -21,6 +22,7 @@ public:
     void addColsLeft(unsigned int inNrOfCols);
     void addColsRight(unsigned int inNrOfCols);
 
+    bool isPossibleTile(Tile inTile);
     bool isEmptySpot(unsigned int inCol, unsigned int inRow) const;
     bool isValidTilePlacement(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow) const;
     bool isValidAlternateTilePlacement(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow) const;

@@ -159,8 +159,27 @@ Game::pickNextTile()
 {
     if (!mBag.empty())
     {
-        mNextTile = mBag.back();
-        mBag.pop_back();
+        std::vector< Tile >::iterator it = mBag.end();
+        bool foundPossible = false;
+        while (!foundPossible)
+        {
+            if (it != mBag.begin())
+            {
+                --it;
+                Tile maybeNextTile = *it;
+                if (mBoard->isPossibleTile(maybeNextTile))
+                {
+                    mNextTile = maybeNextTile;
+                    mBag.erase(it);
+                    foundPossible = true;
+                }
+            }
+            else
+            {
+                // No more valid tiles to place, this should give End Of Game
+                mNextTile = mBag.back();
+            }
+        }
         emit tilesLeft(mBag.size());
     }
     else

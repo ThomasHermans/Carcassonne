@@ -81,6 +81,28 @@ Board::addColsRight(unsigned int inNrOfCols)
 }
 
 bool
+Board::isPossibleTile(Tile inTile)
+{
+    bool possible = false;
+    for (unsigned int row = 0; row < mNrRows; ++row)
+    {
+        for(unsigned int col = 0; col < mNrCols; ++col)
+        {
+            for (unsigned int rot = 0; rot < 4; ++rot)
+            {
+                TileOnBoard tileOnBoard(inTile, TileOnBoard::Rotation(rot * 3));
+                if (isValidTilePlacement(tileOnBoard, col, row))
+                {
+                    possible = true;
+                    break;
+                }
+            }
+        }
+    }
+    return possible;
+}
+
+bool
 Board::isEmptySpot(unsigned int inCol, unsigned int inRow) const
 {
     bool valid = true;
