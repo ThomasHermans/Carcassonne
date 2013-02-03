@@ -1,10 +1,9 @@
+#include "GameController_.h"
+#include "UnitTests.h"
+
 #include <QtGui/QApplication>
-#include "mainwindow.h"
 
 #include <iostream>
-
-#include "GameController.h"
-#include "UnitTests.h"
 
 int main(int argc, char * argv[])
 {

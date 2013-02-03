@@ -1,13 +1,13 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "Board_.h"
+#include "Tile_.h"
+
 #include <QObject>
 
 #include <vector>
 #include <boost/optional/optional.hpp>
-
-#include "Board.h"
-#include "tile.h"
 
 class Game : public QObject
 {

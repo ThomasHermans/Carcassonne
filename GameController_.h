@@ -1,10 +1,10 @@
 #ifndef GAMECONTROLLER_H
 #define GAMECONTROLLER_H
 
-#include <QObject>
+#include "Game_.h"
+#include "GameWindow_.h"
 
-#include "Game.h"
-#include "GameWindow.h"
+#include <QObject>
 
 class GameController : public QObject
 {

@@ -1,4 +1,5 @@
 #include <test_o_matic.hpp>
+
 #include <iostream>
 
 namespace tom

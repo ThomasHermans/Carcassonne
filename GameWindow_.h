@@ -1,6 +1,10 @@
 #ifndef GAMEWINDOW_H
 #define GAMEWINDOW_H
 
+#include "BoardView.h"
+#include "TileItem.h"
+#include "Game_.h"
+
 #include <QMainWindow>
 
 #include <QtGui/QHBoxLayout>
@@ -11,13 +15,9 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 
-#include <QGraphicsView>
 #include <QGraphicsPixmapItem>
+#include <QGraphicsView>
 #include <QGraphicsScene>
-
-#include "BoardView.h"
-#include "TileItem.h"
-#include "game.h"
 
 class GameWindow : public QMainWindow
 {

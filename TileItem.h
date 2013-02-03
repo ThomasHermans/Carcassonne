@@ -2,9 +2,8 @@
 #define TILEITEM_H
 
 #include <QGraphicsPixmapItem>
-#include <QGraphicsLayoutItem>
 
-class TileItem : public QGraphicsPixmapItem, public QGraphicsLayoutItem
+class TileItem : public QGraphicsPixmapItem
 {
 public:
     explicit TileItem(QGraphicsItem *parent = 0);
@@ -12,7 +11,6 @@ public:
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    QSizeF sizeHint( Qt::SizeHint which, const QSizeF & constraint = QSizeF() ) const;
 };
 
 #endif // TILEITEM_H

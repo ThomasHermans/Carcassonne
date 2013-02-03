@@ -11,39 +11,38 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    tile.cpp \
-    tileonboard.cpp \
-    piece.cpp \
-    placedpiece.cpp \
-    color.cpp \
-    createbasegametiles.cpp \
     test_o_matic.cpp \
     TileUnitTests.cpp \
     UnitTests.cpp \
     BoardView.cpp \
     TileItem.cpp \
-    GameWindow.cpp \
-    Game.cpp \
-    GameController.cpp \
-    Board.cpp
+    Board.cpp \
+    Color_.cpp \
+    CreateBaseGameTiles_.cpp \
+    Game_.cpp \
+    GameController_.cpp \
+    GameWindow_.cpp \
+    Piece_.cpp \
+    PlacedPiece_.cpp \
+    Tile_.cpp \
+    TileOnBoard_.cpp
 
-HEADERS  += mainwindow.h \
-    tile.h \
-    tileonboard.h \
-    piece.h \
-    color.h \
-    placedpiece.h \
-    createbasegametiles.h \
+HEADERS  += \
     test_o_matic.hpp \
     UnitTests.h \
     BoardView.h \
     TileItem.h \
-    GameWindow.h \
     GuiConstants.h \
-    Game.h \
-    GameController.h \
-    Board.h
+    Board_.h \
+    Color_.h \
+    CreateBaseGameTiles_.h \
+    Game_.h \
+    GameController_.h \
+    GameWindow_.h \
+    Piece_.h \
+    PlacedPiece_.h \
+    Tile_.h \
+    TileOnBoard_.h
 
 INCLUDEPATH += "C:\\Program Files\\boost\\boost_1_52_0"
 

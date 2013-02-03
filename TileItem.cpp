@@ -47,9 +47,3 @@ TileItem::mousePressEvent( QGraphicsSceneMouseEvent *event )
     std::cout << "TileItem clicked at [" << scenex + x << ", " << sceney + y << "] in the scene." << std::endl;
     // TODO: get position of click.
 }
-
-QSizeF
-TileItem::sizeHint( Qt::SizeHint /*which*/, const QSizeF & /*constraint*/ ) const
-{
-    return QSizeF(GuiConstants::tileWidth, GuiConstants::tileHeight);
-}

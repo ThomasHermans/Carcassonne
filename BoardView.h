@@ -1,9 +1,8 @@
 #ifndef BOARDVIEW_H
 #define BOARDVIEW_H
 
-#include <QGraphicsView>
-
 #include <QGraphicsScene>
+#include <QGraphicsView>
 #include <QWidget>
 
 class BoardView : public QGraphicsView

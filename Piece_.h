@@ -1,8 +1,9 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+#include "Color_.h"
+
 #include <string>
-#include "color.h"
 
 class Piece
 {

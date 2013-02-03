@@ -1,4 +1,4 @@
-#include "piece.h"
+#include "Piece_.h"
 
 Piece::Piece():
     mType(Piece::Follower),

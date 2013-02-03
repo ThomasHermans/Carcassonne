@@ -1,7 +1,7 @@
 #include "BoardView.h"
 
-#include <QList>
 #include <QGraphicsItem>
+#include <QList>
 #include <QMouseEvent>
 
 #include <iostream>

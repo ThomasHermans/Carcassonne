@@ -1,11 +1,12 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "Tile_.h"
+#include "TileOnBoard_.h"
+
 #include <QObject>
 
-#include "tile.h"
-#include "tileonboard.h"
-#include "boost/optional/optional.hpp"
+#include <boost/optional/optional.hpp>
 
 class Board : public QObject
 {

@@ -1,8 +1,8 @@
 #ifndef PLACEDPIECE_H
 #define PLACEDPIECE_H
 
-#include "piece.h"
-#include "tile.h"
+#include "Piece_.h"
+#include "Tile_.h"
 
 #include <string>
 
