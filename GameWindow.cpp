@@ -1,5 +1,7 @@
 #include "GameWindow.h"
 
+#include "GuiConstants.h"
+
 #include <sstream>
 
 GameWindow::GameWindow(QWidget *parent) :
@@ -93,6 +95,7 @@ GameWindow::setTile(int inX, int inY, std::string inId, int inRotation)
     item->moveBy(inX, inY);
     mTiles.push_back( item );
     mBoardScene->addItem( item );
+    updateSceneRect(inX, inY);
 }
 
 void
@@ -109,4 +112,25 @@ GameWindow::onClicked(int x, int y)
 {
     std::cout << "GameWindow sees a click" << std::endl;
     emit clicked(x, y);
+}
+
+void
+GameWindow::updateSceneRect(int inX, int inY)
+{
+    QRectF currentRect = mBoardScene->sceneRect();
+    if ((inX <= currentRect.x()) || (inX >= currentRect.x() + currentRect.width() - GuiConstants::tileWidth))
+    {
+        mBoardScene->setSceneRect(inX - GuiConstants::tileWidth,
+                                  currentRect.y(),
+                                  currentRect.width() + currentRect.x() - inX + 2 * GuiConstants::tileWidth,
+                                  currentRect.height());
+    }
+    currentRect = mBoardScene->sceneRect();
+    if ((inY <= currentRect.y()) || (inY >= currentRect.y() + currentRect.height() - GuiConstants::tileHeight))
+    {
+        mBoardScene->setSceneRect(currentRect.x(),
+                                  currentRect.y() - GuiConstants::tileHeight,
+                                  currentRect.width(),
+                                  currentRect.height() + inY - currentRect.y() + 2 * GuiConstants::tileHeight);
+    }
 }

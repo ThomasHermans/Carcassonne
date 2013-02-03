@@ -37,6 +37,9 @@ public slots:
     void onClicked(int x, int y);
 
 private:
+    void updateSceneRect(int inX, int inY);
+
+private:
     QWidget *mCentralWidget;
     QHBoxLayout *mBoardAndSideBarLayout;
     QGraphicsScene *mBoardScene;
