@@ -25,7 +25,7 @@ SOURCES += main.cpp\
     PlacedPiece.cpp \
     TileOnBoard.cpp \
     Tile.cpp \
-    Board_.cpp
+    Board.cpp
 
 HEADERS  += \
     test_o_matic.hpp \
