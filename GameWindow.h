@@ -3,7 +3,7 @@
 
 #include "BoardView.h"
 #include "TileItem.h"
-#include "Game_.h"
+#include "Game.h"
 
 #include <QMainWindow>
 

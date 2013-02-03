@@ -1,7 +1,7 @@
 #ifndef PIECE_H
 #define PIECE_H
 
-#include "Color_.h"
+#include "Color.h"
 
 #include <string>
 

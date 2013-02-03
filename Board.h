@@ -1,8 +1,8 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "Tile_.h"
-#include "TileOnBoard_.h"
+#include "Tile.h"
+#include "TileOnBoard.h"
 
 #include <QObject>
 

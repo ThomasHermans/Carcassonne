@@ -1,6 +1,6 @@
-#include "Game_.h"
+#include "Game.h"
 
-#include "CreateBaseGameTiles_.h"
+#include "CreateBaseGameTiles.h"
 
 #include <stdio.h>
 

@@ -1,4 +1,4 @@
-#include "PlacedPiece_.h"
+#include "PlacedPiece.h"
 
 namespace
 {

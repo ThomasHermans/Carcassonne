@@ -1,4 +1,4 @@
-#include "Color_.h"
+#include "Color.h"
 
 std::string
 Color::colorToString(Color inColor)

@@ -1,7 +1,7 @@
 #ifndef SETUPBASEGAME_H
 #define SETUPBASEGAME_H
 
-#include "Tile_.h"
+#include "Tile.h"
 
 #include <vector>
 

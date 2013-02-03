@@ -1,8 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Board_.h"
-#include "Tile_.h"
+#include "Board.h"
+#include "Tile.h"
 
 #include <QObject>
 
