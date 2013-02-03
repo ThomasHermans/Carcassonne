@@ -6,7 +6,7 @@
 #include <vector>
 #include <boost/optional/optional.hpp>
 
-#include "board.h"
+#include "Board.h"
 #include "tile.h"
 
 class Game : public QObject
@@ -15,9 +15,14 @@ class Game : public QObject
 public:
     Game();
 
+    unsigned int getNrOfRows() const;
+    unsigned int getNrOfCols() const;
+    unsigned int getStartRow() const;
+    unsigned int getStartCol() const;
+
     void clickTile(unsigned int inCol, unsigned int inRow);
     void placeTileOnBoard(unsigned int inCol, unsigned int inRow);
-    void placeStartTileOnBoard(unsigned int inCol, unsigned int inRow);
+    void placeStartTileOnBoard();
     void rotateTileOnBoard(unsigned int inCol, unsigned int inRow);
 
     boost::optional< Tile > getNextTile() const;
@@ -28,10 +33,6 @@ public slots:
 signals:
     void tileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
     void tilePlaced(unsigned int col, unsigned int row, std::string id, TileOnBoard::Rotation rot, std::string nextId);
-    void addedRowsOnTop(unsigned int inNr);
-    void addedRowsBelow(unsigned int inNr);
-    void addedColsLeft(unsigned int inNr);
-    void addedColsRight(unsigned int inNr);
     void tilesLeft(unsigned int inNr);
 
 private:

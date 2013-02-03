@@ -1,14 +1,14 @@
-#include "board.h"
+#include "Board.h"
 
 #include <sstream>
 
-Board::Board()
+Board::Board(unsigned int inSize)
 {
-    mNrCols = 5;
-    mNrRows = 5;
+    mNrCols = (inSize % 2 == 1) ? inSize : inSize + 1;
+    mNrRows = mNrCols;
     mBoard = std::vector< boost::optional< TileOnBoard > >(mNrCols * mNrRows, boost::optional< TileOnBoard >());
-    TileOnBoard startingTile = TileOnBoard();
-    this->placeTile(startingTile, 2, 2);
+    mStartCol = 0;
+    mStartRow = 0;
 }
 
 unsigned int Board::getNrOfRows() const
@@ -22,6 +22,18 @@ Board::getNrOfCols() const
     return mNrCols;
 }
 
+unsigned int
+Board::getStartRow() const
+{
+    return mStartRow;
+}
+
+unsigned int
+Board::getStartCol() const
+{
+    return mStartCol;
+}
+
 boost::optional< TileOnBoard >
 Board::getTile(unsigned int inCol, unsigned int inRow) const
 {
@@ -33,6 +45,7 @@ Board::addRowsOnTop(unsigned int inNrOfRows)
 {
     mBoard.insert(mBoard.begin(), mNrCols * inNrOfRows, boost::optional< TileOnBoard >());
     mNrRows += inNrOfRows;
+    mStartRow += inNrOfRows;
 }
 
 void
@@ -59,6 +72,7 @@ Board::addColsLeft(unsigned int inNrOfCols)
         }
     }
     mNrCols += inNrOfCols;
+    mStartCol += inNrOfCols;
 }
 
 void
@@ -198,6 +212,18 @@ Board::placeValidTile(const TileOnBoard &inTile, unsigned int inCol, unsigned in
     {
         return false;
     }
+}
+
+unsigned int
+Board::placeStartTile(const TileOnBoard &inTile)
+{
+    // FIXME: should check if really placing start tile (in other words, check is board is empty)
+    unsigned int col = mNrCols / 2;
+    unsigned int row = mNrRows / 2;
+    placeTile(inTile, col, row);
+    mStartCol = col;
+    mStartRow = row;
+    return row * mNrCols + col;
 }
 
 void

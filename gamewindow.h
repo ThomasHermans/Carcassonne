@@ -11,7 +11,12 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 
-#include "boardwidget.h"
+#include <QGraphicsView>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
+
+#include "BoardView.h"
+#include "TileItem.h"
 #include "game.h"
 
 class GameWindow : public QMainWindow
@@ -21,32 +26,25 @@ public:
     explicit GameWindow(QWidget *parent = 0);
     ~GameWindow();
 
-    void addRowsOnTop(unsigned int inNr);
-    void addRowsBelow(unsigned int inNr);
-    void addColsLeft(unsigned int inNr);
-    void addColsRight(unsigned int inNr);
     void displayTilesLeft(unsigned int inNr);
     
 signals:
-    void clicked(unsigned int inCol, unsigned int inRow);
+    void clicked(int x, int y);
     
 public slots:
-    void setTile(unsigned int inCol, unsigned int inRow, std::string inId, int inRotation);
+    void setTile(int inX, int inY, std::string inId, int inRotation);
     void setNextTile(std::string inId);
-    void onClicked(unsigned int inCol, unsigned int inRow);
+    void onClicked(int x, int y);
 
 private:
     QWidget *mCentralWidget;
     QHBoxLayout *mBoardAndSideBarLayout;
-    QScrollArea *mBoardScrollArea;
-    BoardWidget *mBoardWidget;
+    QGraphicsScene *mBoardScene;
+    BoardView *mBoardView;
+    std::vector< TileItem* > mTiles;
     QVBoxLayout *mSideBarLayout;
     QLabel *mTilesLeft;
     QLabel *mPickedTileLabel;
-
-//    QMenuBar *mMenuBar;
-//    QToolBar *mMainToolBar;
-//    QStatusBar *mStatusBar;
 };
 
 #endif // GAMEWINDOW_H

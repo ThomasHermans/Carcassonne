@@ -17,16 +17,16 @@ SOURCES += main.cpp\
     piece.cpp \
     placedpiece.cpp \
     color.cpp \
-    board.cpp \
-    boardwidget.cpp \
-    tilewidget.cpp \
     createbasegametiles.cpp \
-    game.cpp \
-    gamewindow.cpp \
-    gamecontroller.cpp \
     test_o_matic.cpp \
     TileUnitTests.cpp \
-    UnitTests.cpp
+    UnitTests.cpp \
+    BoardView.cpp \
+    TileItem.cpp \
+    GameWindow.cpp \
+    Game.cpp \
+    GameController.cpp \
+    Board.cpp
 
 HEADERS  += mainwindow.h \
     tile.h \
@@ -34,15 +34,16 @@ HEADERS  += mainwindow.h \
     piece.h \
     color.h \
     placedpiece.h \
-    board.h \
-    boardwidget.h \
-    tilewidget.h \
     createbasegametiles.h \
-    game.h \
-    gamewindow.h \
-    gamecontroller.h \
     test_o_matic.hpp \
-    UnitTests.h
+    UnitTests.h \
+    BoardView.h \
+    TileItem.h \
+    GameWindow.h \
+    GuiConstants.h \
+    Game.h \
+    GameController.h \
+    Board.h
 
 INCLUDEPATH += "C:\\Program Files\\boost\\boost_1_52_0"
 

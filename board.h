@@ -11,10 +11,12 @@ class Board : public QObject
 {
     Q_OBJECT
 public:
-    Board();
+    Board(unsigned int inSize = 5);
 
     unsigned int getNrOfRows() const;
     unsigned int getNrOfCols() const;
+    unsigned int getStartRow() const;
+    unsigned int getStartCol() const;
     boost::optional< TileOnBoard > getTile(unsigned int inCol, unsigned int inRow) const;
 
     void addRowsOnTop(unsigned int inNrOfRows);
@@ -27,6 +29,7 @@ public:
     bool isValidTilePlacement(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow) const;
     bool isValidAlternateTilePlacement(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow) const;
     bool placeValidTile(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow);
+    unsigned int placeStartTile(const TileOnBoard & inTile);
     void rotateTileOnBoard(unsigned int inCol, unsigned int inRow);
 
     std::string toString() const;
@@ -48,9 +51,11 @@ private:
                                    std::vector< std::pair< unsigned int, FRCArea::FieldArea > >& inQueue);
 
 private:
-    std::vector< boost::optional< TileOnBoard > > mBoard; // one vector of size cols * rows might be easier to use than nested vectors
     unsigned int mNrRows;
     unsigned int mNrCols;
+    std::vector< boost::optional< TileOnBoard > > mBoard; // one vector of size cols * rows might be easier to use than nested vectors
+    unsigned int mStartRow;
+    unsigned int mStartCol;
 };
 
 #endif // BOARD_H

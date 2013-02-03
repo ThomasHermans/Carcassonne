@@ -1,8 +1,6 @@
-#include "gamewindow.h"
+#include "GameWindow.h"
 
 #include <sstream>
-
-#include "boardwidget.h"
 
 GameWindow::GameWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -15,26 +13,31 @@ GameWindow::GameWindow(QWidget *parent) :
     mBoardAndSideBarLayout->setSpacing(6);
     mBoardAndSideBarLayout->setObjectName(QString::fromUtf8("mBoardAndSideBarLayout"));
 
-    mBoardScrollArea = new QScrollArea(mCentralWidget);
-    mBoardScrollArea->setObjectName(QString::fromUtf8("mBoardScrollArea"));
+    mBoardScene = new QGraphicsScene( mCentralWidget );
+    mBoardScene->setObjectName( QString::fromUtf8("mBoardScene") );
 
-    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
-    sizePolicy.setHeightForWidth(mBoardScrollArea->sizePolicy().hasHeightForWidth());
-    mBoardScrollArea->setSizePolicy(sizePolicy);
-    mBoardScrollArea->setMinimumSize(QSize(400, 400));
-    mBoardScrollArea->setBaseSize(QSize(100, 100));
-    mBoardScrollArea->setWidgetResizable(true);
+    mBoardView = new BoardView( mBoardScene, this );
+    mBoardView->setObjectName( QString::fromUtf8("mBoardView") );
 
-    mBoardWidget = new BoardWidget();
-    mBoardWidget->setObjectName(QString::fromUtf8("mBoardWidget"));
-    mBoardWidget->setGeometry(QRect(0, 0, 400, 400));
-    mBoardScrollArea->setWidget(mBoardWidget);
+//    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//    sizePolicy.setHorizontalStretch(0);
+//    sizePolicy.setVerticalStretch(0);
+//    sizePolicy.setHeightForWidth(mBoardScrollArea->sizePolicy().hasHeightForWidth());
+//    mBoardScrollArea->setSizePolicy(sizePolicy);
+//    mBoardScrollArea->setMinimumSize(QSize(400, 400));
+//    mBoardScrollArea->setBaseSize(QSize(100, 100));
+//    mBoardScrollArea->setWidgetResizable(true);
 
-    connect(mBoardWidget, SIGNAL(clicked(uint, uint)), this, SLOT(onClicked(uint, uint)));
+//    mBoardWidget = new BoardWidget();
+//    mBoardWidget->setObjectName(QString::fromUtf8("mBoardWidget"));
+//    mBoardWidget->setGeometry(QRect(0, 0, 400, 400));
+//    mBoardScrollArea->setWidget(mBoardWidget);
 
-    mBoardAndSideBarLayout->addWidget(mBoardScrollArea);
+//    connect(mBoardWidget, SIGNAL(clicked(uint, uint)), this, SLOT(onClicked(uint, uint)));
+
+    mBoardAndSideBarLayout->addWidget( mBoardView );
+
+    connect( mBoardView, SIGNAL(clicked(int,int)), this, SLOT(onClicked(int,int)) );
 
     mSideBarLayout = new QVBoxLayout();
     mSideBarLayout->setObjectName(QString::fromUtf8("mSideBarLayout"));
@@ -78,39 +81,18 @@ GameWindow::~GameWindow()
 }
 
 void
-GameWindow::addRowsOnTop(unsigned int inNr)
-{
-    mBoardWidget->addRowsOnTop(inNr);
-}
-
-void
-GameWindow::addRowsBelow(unsigned int inNr)
-{
-    mBoardWidget->addRowsBelow(inNr);
-}
-
-void
-GameWindow::addColsLeft(unsigned int inNr)
-{
-    mBoardWidget->addColsLeft(inNr);
-}
-
-void
-GameWindow::addColsRight(unsigned int inNr)
-{
-    mBoardWidget->addColsRight(inNr);
-}
-
-void
 GameWindow::displayTilesLeft(unsigned int inNr)
 {
     mTilesLeft->setText(QString::number(inNr).append(" tiles left."));
 }
 
 void
-GameWindow::setTile(unsigned int inCol, unsigned int inRow, std::string inId, int inRotation)
+GameWindow::setTile(int inX, int inY, std::string inId, int inRotation)
 {
-    mBoardWidget->setTile(inCol, inRow, inId, inRotation);
+    TileItem *item = new TileItem( inId, inRotation );
+    item->moveBy(inX, inY);
+    mTiles.push_back( item );
+    mBoardScene->addItem( item );
 }
 
 void
@@ -123,8 +105,8 @@ GameWindow::setNextTile(std::string inId)
 }
 
 void
-GameWindow::onClicked(unsigned int inCol, unsigned int inRow)
+GameWindow::onClicked(int x, int y)
 {
     std::cout << "GameWindow sees a click" << std::endl;
-    emit clicked(inCol, inRow);
+    emit clicked(x, y);
 }

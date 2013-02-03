@@ -3,8 +3,8 @@
 
 #include <QObject>
 
-#include "game.h"
-#include "gamewindow.h"
+#include "Game.h"
+#include "GameWindow.h"
 
 class GameController : public QObject
 {
@@ -16,12 +16,8 @@ signals:
 
 public slots:
     void placeTile(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot, std::string inNextId);
-    void onClicked(unsigned int inCol, unsigned int inRow);
+    void onClicked(int x, int y);
     void rotateTile(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
-    void addRowsOnTop(unsigned int inNr);
-    void addRowsBelow(unsigned int inNr);
-    void addColsLeft(unsigned int inNr);
-    void addColsRight(unsigned int inNr);
     void onTilesLeft(unsigned int inNr);
 
 private:

@@ -26,7 +26,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
-#include <boardwidget.h>
+#include "BoardView.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -37,7 +37,7 @@ public:
     QHBoxLayout *horizontalLayout_3;
     QHBoxLayout *mBoardAndSideBarLayout;
     QScrollArea *mBoardScrollArea;
-    BoardWidget *scrollAreaWidgetContents;
+    BoardView *mBoardView;
     QVBoxLayout *mSideBarLayout;
     QLabel *mTilesLeftLabel;
     QHBoxLayout *mPickedTileLayout;
@@ -75,10 +75,9 @@ public:
         mBoardScrollArea->setMinimumSize(QSize(400, 400));
         mBoardScrollArea->setBaseSize(QSize(400, 400));
         mBoardScrollArea->setWidgetResizable(false);
-        scrollAreaWidgetContents = new BoardWidget();
-        scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 500, 500));
-        mBoardScrollArea->setWidget(scrollAreaWidgetContents);
+        mBoardView = new BoardView();
+        mBoardView->setObjectName( QString::fromUtf8("mBoardView") );
+        mBoardScrollArea->setWidget(mBoardView);
 
         mBoardAndSideBarLayout->addWidget(mBoardScrollArea);
 
