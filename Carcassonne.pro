@@ -16,7 +16,6 @@ SOURCES += main.cpp\
     UnitTests.cpp \
     BoardView.cpp \
     TileItem.cpp \
-    Board.cpp \
     Color.cpp \
     CreateBaseGameTiles.cpp \
     Game.cpp \
@@ -25,7 +24,8 @@ SOURCES += main.cpp\
     Piece.cpp \
     PlacedPiece.cpp \
     TileOnBoard.cpp \
-    Tile.cpp
+    Tile.cpp \
+    Board_.cpp
 
 HEADERS  += \
     test_o_matic.hpp \

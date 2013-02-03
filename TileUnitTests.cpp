@@ -1,7 +1,7 @@
 #include <test_o_matic.hpp>
 
-#include "Tile_.h"
-#include "CreateBaseGameTiles_.h"
+#include "Tile.h"
+#include "CreateBaseGameTiles.h"
 
 namespace
 {
