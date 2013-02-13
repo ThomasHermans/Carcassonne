@@ -1,8 +1,8 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "Tile.h"
-#include "TileOnBoard.h"
+#include "src-model/Tile.h"
+#include "src-model/TileOnBoard.h"
 
 #include <QObject>
 
@@ -16,8 +16,6 @@ public:
 
     unsigned int getNrOfRows() const;
     unsigned int getNrOfCols() const;
-    unsigned int getStartRow() const;
-    unsigned int getStartCol() const;
     boost::optional< TileOnBoard > getTile(unsigned int inCol, unsigned int inRow) const;
 
     void addRowsOnTop(unsigned int inNrOfRows);
@@ -32,6 +30,8 @@ public:
     bool placeValidTile(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow);
     unsigned int placeStartTile(const TileOnBoard & inTile);
     void rotateTileOnBoard(unsigned int inCol, unsigned int inRow);
+
+    boost::optional< TileOnBoard > removeTile(unsigned int inCol, unsigned int inRow);
 
     std::string toString() const;
     std::string shortPrint(unsigned int inCol, unsigned int inRow) const;
@@ -55,8 +55,6 @@ private:
     unsigned int mNrRows;
     unsigned int mNrCols;
     std::vector< boost::optional< TileOnBoard > > mBoard; // one vector of size cols * rows might be easier to use than nested vectors
-    unsigned int mStartRow;
-    unsigned int mStartCol;
 };
 
 #endif // BOARD_H

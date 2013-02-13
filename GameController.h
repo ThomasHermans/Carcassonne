@@ -1,8 +1,8 @@
 #ifndef GAMECONTROLLER_H
 #define GAMECONTROLLER_H
 
-#include "Game.h"
-#include "GameWindow.h"
+#include "src-model/Game.h"
+#include "src-view/GameWindow.h"
 
 #include <QObject>
 
@@ -15,9 +15,12 @@ public:
 signals:
 
 public slots:
-    void placeTile(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot, std::string inNextId);
+    void onTilePlaced(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
+    void onTileUnplaced(unsigned int inCol, unsigned int inRow);
     void onClicked(int x, int y);
-    void rotateTile(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
+    void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
+    void onNextTile(std::string inNextId);
+    void onSubmitCurrentTile();
     void onTilesLeft(unsigned int inNr);
 
 private:

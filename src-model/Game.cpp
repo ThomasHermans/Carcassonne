@@ -1,6 +1,6 @@
-#include "Game.h"
+#include "src-model/Game.h"
 
-#include "CreateBaseGameTiles.h"
+#include "src-model/CreateBaseGameTiles.h"
 
 #include <stdio.h>
 
@@ -11,7 +11,13 @@ int size = 5;
 }
 
 Game::Game() :
-    mBoard(new Board(size))
+    mBoard(new Board(size)),
+    mBag(),
+    mNextTile(),
+    mStartRow( 0 ),
+    mStartCol( 0 ),
+    mCurrentPlacedRow( (unsigned int)-1 ),
+    mCurrentPlacedCol( (unsigned int)-1 )
 {
     mBag = createBaseGameTiles();
     for(unsigned int i = 0; i < mBag.size(); ++i)
@@ -19,9 +25,6 @@ Game::Game() :
         std::cout << mBag[i].getID();
     }
     std::cout << std::endl;
-    mNextTile = boost::optional< Tile >();
-    mLastPlacedCol = (unsigned int)-1;
-    mLastPlacedCol = (unsigned int)-1;
     if (!mBag.empty())
     {
         mNextTile = mBag.back();
@@ -29,7 +32,6 @@ Game::Game() :
     }
     connect(mBoard, SIGNAL(tileRotated(uint,uint,std::string,TileOnBoard::Rotation)),
             this, SLOT(onTileRotated(uint,uint,std::string,TileOnBoard::Rotation)));
-//    emit tilePlaced( size / 2, size / 2, mBoard->getTile( size / 2, size / 2 )->getID(), mBoard->getTile( size / 2, size / 2 )->getRotation(), mNextTile->getID());
 }
 
 unsigned int
@@ -47,13 +49,13 @@ Game::getNrOfCols() const
 unsigned int
 Game::getStartRow() const
 {
-    return mBoard->getStartRow();
+    return mStartRow;
 }
 
 unsigned int
 Game::getStartCol() const
 {
-    return mBoard->getStartCol();
+    return mStartCol;
 }
 
 void
@@ -75,9 +77,17 @@ Game::clickTile(unsigned int inCol, unsigned int inRow)
 void
 Game::placeTileOnBoard(unsigned int inCol, unsigned int inRow)
 {
-    TileOnBoard::Rotation rotation = TileOnBoard::cw0;
     if (mNextTile)
     {
+        // Delete tile that was placed earlier in current turn
+        boost::optional< TileOnBoard > earlierTile;
+        if (mCurrentPlacedCol != (unsigned int)-1 && mCurrentPlacedRow != (unsigned int)-1)
+        {
+            earlierTile = mBoard->removeTile(mCurrentPlacedCol, mCurrentPlacedRow);
+            emit tileUnplaced(mCurrentPlacedCol, mCurrentPlacedRow);
+        }
+        // Try the newly clicked position (try all rotations until we found a good one)
+        TileOnBoard::Rotation rotation = TileOnBoard::cw0;
         TileOnBoard toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
         bool found = false;
         for (int i = 0; i < 4; ++i)
@@ -95,39 +105,43 @@ Game::placeTileOnBoard(unsigned int inCol, unsigned int inRow)
         }
         if (found)
         {
-            unsigned int col = inCol;
-            unsigned int row = inRow;
-            if (inCol == 0)
+            // If a valid placement is found at the newly clicked position, place tile
+            if (mBoard->placeValidTile(toBePlacedTile, inCol, inRow))
             {
-                mBoard->addColsLeft( extraRowsAndCols );
-                col += extraRowsAndCols;
-            }
-            else if (inCol == mBoard->getNrOfCols() - 1)
-            {
-                mBoard->addColsRight( extraRowsAndCols );
-            }
-            else if (inRow == 0)
-            {
-                mBoard->addRowsOnTop( extraRowsAndCols );
-                row += extraRowsAndCols;
-            }
-            else if (inRow == mBoard->getNrOfRows() - 1)
-            {
-                mBoard->addRowsBelow( extraRowsAndCols );
-            }
-            if (mBoard->placeValidTile(toBePlacedTile, col, row))
-            {
-                mLastPlacedCol = col;
-                mLastPlacedRow = row;
-                pickNextTile();
-                if (mNextTile)
+                unsigned int col = inCol;
+                unsigned int row = inRow;
+                if (inCol == 0)
                 {
-                    emit tilePlaced(col, row, toBePlacedTile.getID(), toBePlacedTile.getRotation(), mNextTile->getID());
+                    mBoard->addColsLeft( extraRowsAndCols );
+                    col += extraRowsAndCols;
+                    mStartCol += extraRowsAndCols;
                 }
-                else
+                else if (inCol == mBoard->getNrOfCols() - 1)
                 {
-                    emit tilePlaced(col, row, toBePlacedTile.getID(), toBePlacedTile.getRotation(), "");
+                    mBoard->addColsRight( extraRowsAndCols );
                 }
+                else if (inRow == 0)
+                {
+                    mBoard->addRowsOnTop( extraRowsAndCols );
+                    row += extraRowsAndCols;
+                    mStartRow += extraRowsAndCols;
+                }
+                else if (inRow == mBoard->getNrOfRows() - 1)
+                {
+                    mBoard->addRowsBelow( extraRowsAndCols );
+                }
+                mCurrentPlacedCol = col;
+                mCurrentPlacedRow = row;
+                emit tilePlaced(mCurrentPlacedCol, mCurrentPlacedRow, toBePlacedTile.getID(), toBePlacedTile.getRotation());
+            }
+        }
+        else
+        {
+            // If no valid placement is found at the newly clicked position, restore earlier tile
+            if (earlierTile)
+            {
+                mBoard->placeValidTile(*earlierTile, mCurrentPlacedCol, mCurrentPlacedRow);
+                emit tilePlaced(mCurrentPlacedCol, mCurrentPlacedRow, earlierTile->getID(), earlierTile->getRotation());
             }
         }
     }
@@ -136,21 +150,18 @@ Game::placeTileOnBoard(unsigned int inCol, unsigned int inRow)
 void
 Game::placeStartTileOnBoard()
 {
-    TileOnBoard::Rotation rotation = TileOnBoard::cw0;
     if (mNextTile)
     {
+        TileOnBoard::Rotation rotation = TileOnBoard::cw0; // TODO: get a random Rotation each time
         TileOnBoard toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
         unsigned int pos = mBoard->placeStartTile(toBePlacedTile);
-        unsigned int col = pos % mBoard->getNrOfCols();
-        unsigned int row = pos / mBoard->getNrOfCols();
+        mStartCol = pos % mBoard->getNrOfCols();
+        mStartRow = pos / mBoard->getNrOfCols();
         pickNextTile();
+        emit tilePlaced(mStartCol, mStartRow, toBePlacedTile.getID(), toBePlacedTile.getRotation());
         if (mNextTile)
         {
-            emit tilePlaced(col, row, toBePlacedTile.getID(), toBePlacedTile.getRotation(), mNextTile->getID());
-        }
-        else
-        {
-            emit tilePlaced(col, row, toBePlacedTile.getID(), toBePlacedTile.getRotation(), "");
+            emit nextTile(mNextTile->getID());
         }
     }
 }
@@ -158,7 +169,7 @@ Game::placeStartTileOnBoard()
 void
 Game::rotateTileOnBoard(unsigned int inCol, unsigned int inRow)
 {
-    if (inCol == mLastPlacedCol && inRow == mLastPlacedRow)
+    if (inCol == mCurrentPlacedCol && inRow == mCurrentPlacedRow)
     {
         std::cout << "Rotating " << inCol << ", " << inRow << std::endl;
         mBoard->rotateTileOnBoard(inCol, inRow);
@@ -166,6 +177,21 @@ Game::rotateTileOnBoard(unsigned int inCol, unsigned int inRow)
     else
     {
         std::cout << "Not rotating" << std::endl;
+    }
+}
+
+void
+Game::submitCurrentTile()
+{
+    if (mCurrentPlacedRow != (unsigned int)-1 && mCurrentPlacedCol != (unsigned int)-1)
+    {
+        mCurrentPlacedRow = (unsigned int)-1;
+        mCurrentPlacedCol = (unsigned int)-1;
+        pickNextTile();
+        if (mNextTile)
+        {
+            emit nextTile(mNextTile->getID());
+        }
     }
 }
 

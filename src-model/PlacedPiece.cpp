@@ -1,4 +1,4 @@
-#include "PlacedPiece.h"
+#include "src-model/PlacedPiece.h"
 
 namespace
 {

@@ -14,35 +14,35 @@ SOURCES += main.cpp\
     test_o_matic.cpp \
     TileUnitTests.cpp \
     UnitTests.cpp \
-    BoardView.cpp \
-    TileItem.cpp \
-    Color.cpp \
-    CreateBaseGameTiles.cpp \
-    Game.cpp \
-    GameController.cpp \
-    GameWindow.cpp \
-    Piece.cpp \
-    PlacedPiece.cpp \
-    TileOnBoard.cpp \
-    Tile.cpp \
-    Board.cpp
+    src-model\Board.cpp \
+    src-model\Color.cpp \
+    src-model\CreateBaseGameTiles.cpp \
+    src-model\Game.cpp \
+    src-model\Piece.cpp \
+    src-model\PlacedPiece.cpp \
+    src-model\TileOnBoard.cpp \
+    src-model\Tile.cpp \
+    src-view\BoardView.cpp \
+    src-view\GameWindow.cpp \
+    src-view\TileItem.cpp \
+    GameController.cpp    
 
 HEADERS  += \
     test_o_matic.hpp \
     UnitTests.h \
-    BoardView.h \
-    TileItem.h \
-    GuiConstants.h \
-    Board.h \
-    Color.h \
-    Game.h \
-    GameController.h \
-    GameWindow.h \
-    Piece.h \
-    PlacedPiece.h \
-    Tile.h \
-    TileOnBoard.h \
-    CreateBaseGameTiles.h
+    src-model\Board.h \
+    src-model\Color.h \
+    src-model\CreateBaseGameTiles.h \
+    src-model\Game.h \
+    src-model\Piece.h \
+    src-model\PlacedPiece.h \
+    src-model\Tile.h \
+    src-model\TileOnBoard.h \
+    src-view\BoardView.h \
+    src-view\GameWindow.h \
+    src-view\TileItem.h \
+    src-view\GuiConstants.h \
+    GameController.h
 
 INCLUDEPATH += "C:\\Program Files\\boost\\boost_1_52_0"
 

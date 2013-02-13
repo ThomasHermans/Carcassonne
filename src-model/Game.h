@@ -1,8 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Board.h"
-#include "Tile.h"
+#include "src-model/Board.h"
+#include "src-model/Tile.h"
 
 #include <QObject>
 
@@ -24,6 +24,7 @@ public:
     void placeTileOnBoard(unsigned int inCol, unsigned int inRow);
     void placeStartTileOnBoard();
     void rotateTileOnBoard(unsigned int inCol, unsigned int inRow);
+    void submitCurrentTile();
 
     boost::optional< Tile > getNextTile() const;
 
@@ -32,7 +33,9 @@ public slots:
 
 signals:
     void tileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
-    void tilePlaced(unsigned int col, unsigned int row, std::string id, TileOnBoard::Rotation rot, std::string nextId);
+    void tilePlaced(unsigned int col, unsigned int row, std::string id, TileOnBoard::Rotation rot);
+    void tileUnplaced(unsigned int inCol, unsigned int inRow);
+    void nextTile(std::string inNextId);
     void tilesLeft(unsigned int inNr);
 
 private:
@@ -42,8 +45,10 @@ private:
     Board *mBoard;
     std::vector< Tile > mBag;
     boost::optional< Tile > mNextTile;
-    unsigned int mLastPlacedCol;
-    unsigned int mLastPlacedRow;
+    unsigned int mStartRow;
+    unsigned int mStartCol;
+    unsigned int mCurrentPlacedRow;
+    unsigned int mCurrentPlacedCol;
 };
 
 #endif // GAME_H

@@ -1,18 +1,22 @@
 #include "GameController.h"
 
-#include "GuiConstants.h"
+#include "src-view/GuiConstants.h"
 
 GameController::GameController(QObject *parent) :
     QObject(parent),
     mGame(new Game()),
     mWindow(new GameWindow())
 {
-    connect(mGame, SIGNAL(tilePlaced(unsigned int, unsigned int, std::string, TileOnBoard::Rotation, std::string)),
-            this, SLOT(placeTile(unsigned int, unsigned int, std::string, TileOnBoard::Rotation, std::string)));
-    connect(mWindow, SIGNAL(clicked(int,int)), this, SLOT(onClicked(int,int)));
-    connect(mGame, SIGNAL(tileRotated(uint,uint,std::string,TileOnBoard::Rotation)),
-            this, SLOT(rotateTile(uint,uint,std::string,TileOnBoard::Rotation)));
-    connect(mGame, SIGNAL(tilesLeft(uint)), this, SLOT(onTilesLeft(uint)));
+    connect( mGame, SIGNAL( tilePlaced(unsigned int, unsigned int, std::string, TileOnBoard::Rotation) ),
+            this, SLOT( onTilePlaced(unsigned int, unsigned int, std::string, TileOnBoard::Rotation) ) );
+    connect( mGame, SIGNAL( tileUnplaced(unsigned int, unsigned int) ),
+            this, SLOT( onTileUnplaced(unsigned int, unsigned int) ) );
+    connect( mGame, SIGNAL( tileRotated(uint,uint,std::string,TileOnBoard::Rotation) ),
+            this, SLOT( onTileRotated(uint,uint,std::string,TileOnBoard::Rotation) ) );
+    connect( mGame, SIGNAL( nextTile(std::string) ), this, SLOT( onNextTile(std::string) ) );
+    connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
+    connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
+    connect( mWindow, SIGNAL( submitCurrentTile() ), this, SLOT( onSubmitCurrentTile() ) );
     mWindow->show();
     if (mGame->getNextTile())
     {
@@ -21,12 +25,20 @@ GameController::GameController(QObject *parent) :
 }
 
 void
-GameController::placeTile(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot, std::string inNextId)
+GameController::onTilePlaced(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
 {
     int x = ((int)inCol - (int)mGame->getStartCol()) * GuiConstants::tileWidth;
     int y = ((int)inRow - (int)mGame->getStartRow()) * GuiConstants::tileHeight;
     mWindow->setTile(x, y, inId, inRot * 30);
-    mWindow->setNextTile(inNextId);
+    mWindow->fadeNextTile();
+}
+
+void
+GameController::onTileUnplaced(unsigned int inCol, unsigned int inRow)
+{
+    int x = ((int)inCol - (int)mGame->getStartCol()) * GuiConstants::tileWidth;
+    int y = ((int)inRow - (int)mGame->getStartRow()) * GuiConstants::tileHeight;
+    mWindow->clearTile(x, y);
 }
 
 void
@@ -42,12 +54,23 @@ GameController::onClicked(int x, int y)
 }
 
 void
-GameController::rotateTile(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
+GameController::onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
 {
     int x = ((int)inCol - (int)mGame->getStartCol()) * GuiConstants::tileWidth;
     int y = ((int)inRow - (int)mGame->getStartRow()) * GuiConstants::tileHeight;
-    std::cout << "GameController sees a rotation" << std::endl;
-    mWindow->setTile(x, y, inId, inRot * 30);
+    mWindow->rotateTile(x, y, inId, inRot * 30);
+}
+
+void
+GameController::onNextTile( std::string inNextId )
+{
+    mWindow->setNextTile(inNextId);
+}
+
+void
+GameController::onSubmitCurrentTile()
+{
+    mGame->submitCurrentTile();
 }
 
 void

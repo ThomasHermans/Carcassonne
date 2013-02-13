@@ -1,9 +1,9 @@
 #ifndef TILEONBOARD_H
 #define TILEONBOARD_H
 
-#include "Color.h"
-#include "PlacedPiece.h"
-#include "Tile.h"
+#include "src-model/Color.h"
+#include "src-model/PlacedPiece.h"
+#include "src-model/Tile.h"
 
 class TileOnBoard
 {

@@ -1,4 +1,4 @@
-#include "GameController_.h"
+#include "GameController.h"
 #include "UnitTests.h"
 
 #include <QtGui/QApplication>

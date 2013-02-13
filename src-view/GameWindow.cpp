@@ -1,8 +1,23 @@
-#include "GameWindow.h"
+#include "src-view/GameWindow.h"
 
-#include "GuiConstants.h"
+#include "src-view/GuiConstants.h"
 
+#include <iostream>
 #include <sstream>
+
+namespace
+{
+
+QPixmap
+getPixmapFromId( std::string inId )
+{
+    std::stringstream sstr;
+    sstr << ":/tiles/" << inId << ".png";
+    const QPixmap pm(QString::fromStdString(sstr.str()));
+    return pm;
+}
+
+} // end of nameless namespace
 
 GameWindow::GameWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -59,6 +74,12 @@ GameWindow::GameWindow(QWidget *parent) :
 
     mSideBarLayout->addWidget(mPickedTileLabel);
 
+    mSubmitTileButton = new QPushButton(mCentralWidget);
+    mSubmitTileButton->setObjectName(QString::fromUtf8("mSubmitTileButton"));
+    mSubmitTileButton->setText("Submit Tile");
+    connect( mSubmitTileButton, SIGNAL( clicked() ), this, SIGNAL( submitCurrentTile() ) );
+    mSideBarLayout->addWidget(mSubmitTileButton);
+
     mSideBarLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding));
 
     mBoardAndSideBarLayout->addLayout(mSideBarLayout);
@@ -83,6 +104,41 @@ GameWindow::~GameWindow()
 }
 
 void
+GameWindow::clearTile(int x, int y)
+{
+    std::vector< TileItem * >::iterator it = mTiles.end();
+    while (it != mTiles.begin())
+    {
+        --it;
+        if ((*it)->scenePos() == QPointF(x, y))
+        {
+            mBoardScene->removeItem( *it );
+            mTiles.erase(it);
+            break;
+        }
+    }
+}
+
+void
+GameWindow::rotateTile(int x, int y, std::string inId, int inRotation)
+{
+    std::vector< TileItem * >::iterator it = mTiles.end();
+    while (it != mTiles.begin())
+    {
+        --it;
+        if ((*it)->scenePos() == QPointF(x, y))
+        {
+            QPixmap pixmap = getPixmapFromId( inId );
+            QTransform rotation = QTransform();
+            rotation.rotate( inRotation );
+            pixmap = pixmap.transformed( rotation );
+            (*it)->setPixmap( pixmap );
+            break;
+        }
+    }
+}
+
+void
 GameWindow::displayTilesLeft(unsigned int inNr)
 {
     mTilesLeft->setText(QString::number(inNr).append(" tiles left."));
@@ -91,20 +147,35 @@ GameWindow::displayTilesLeft(unsigned int inNr)
 void
 GameWindow::setTile(int inX, int inY, std::string inId, int inRotation)
 {
-    TileItem *item = new TileItem( inId, inRotation );
+    QPixmap pixmap = getPixmapFromId( inId );
+    QTransform rotation = QTransform();
+    rotation.rotate( inRotation );
+    pixmap = pixmap.transformed( rotation );
+    TileItem *item = new TileItem( pixmap );
     item->moveBy(inX, inY);
     mTiles.push_back( item );
     mBoardScene->addItem( item );
-    updateSceneRect(inX, inY);
+    updateSceneRect();
 }
 
 void
 GameWindow::setNextTile(std::string inId)
 {
-    std::stringstream sstr;
-    sstr << ":/tiles/" << inId << ".png";
-    const QPixmap pm(QString::fromStdString(sstr.str()));
-    mPickedTileLabel->setPixmap(pm);
+    QPixmap pixmap = getPixmapFromId( inId );
+    mPickedTileLabel->setPixmap( pixmap );
+}
+
+void
+GameWindow::fadeNextTile()
+{
+    if ( mPickedTileLabel->pixmap() == 0)
+        return;
+    QPixmap pixmap( *mPickedTileLabel->pixmap() );
+    QPainter painter( &pixmap );
+    QPen pen(Qt::black, 2, Qt::SolidLine);
+    painter.setPen(pen);
+    painter.drawLine( 0, pixmap.height(), pixmap.width(), 0 );
+    mPickedTileLabel->setPixmap( pixmap );
 }
 
 void
@@ -115,22 +186,9 @@ GameWindow::onClicked(int x, int y)
 }
 
 void
-GameWindow::updateSceneRect(int inX, int inY)
+GameWindow::updateSceneRect()
 {
-    QRectF currentRect = mBoardScene->sceneRect();
-    if ((inX <= currentRect.x()) || (inX >= currentRect.x() + currentRect.width() - GuiConstants::tileWidth))
-    {
-        mBoardScene->setSceneRect(inX - GuiConstants::tileWidth,
-                                  currentRect.y(),
-                                  currentRect.width() + currentRect.x() - inX + 2 * GuiConstants::tileWidth,
-                                  currentRect.height());
-    }
-    currentRect = mBoardScene->sceneRect();
-    if ((inY <= currentRect.y()) || (inY >= currentRect.y() + currentRect.height() - GuiConstants::tileHeight))
-    {
-        mBoardScene->setSceneRect(currentRect.x(),
-                                  currentRect.y() - GuiConstants::tileHeight,
-                                  currentRect.width(),
-                                  currentRect.height() + inY - currentRect.y() + 2 * GuiConstants::tileHeight);
-    }
+    QRectF bounding = mBoardScene->itemsBoundingRect();
+    bounding.adjust( -GuiConstants::tileWidth, -GuiConstants::tileHeight, GuiConstants::tileWidth, GuiConstants::tileHeight );
+    mBoardScene->setSceneRect( bounding );
 }

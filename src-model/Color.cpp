@@ -1,4 +1,4 @@
-#include "Color.h"
+#include "src-model/Color.h"
 
 std::string
 Color::colorToString(Color inColor)

@@ -1,4 +1,4 @@
-#include "BoardView.h"
+#include "src-view/BoardView.h"
 
 #include <QGraphicsItem>
 #include <QList>

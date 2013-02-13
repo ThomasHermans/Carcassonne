@@ -1,39 +1,21 @@
-#include "TileItem.h"
+#include "src-view/TileItem.h"
 
-#include "GuiConstants.h"
+#include "src-view/GuiConstants.h"
 
 #include <QGraphicsSceneMouseEvent>
 
 #include <iostream>
 #include <sstream>
 
-namespace
-{
-
-QPixmap
-getPixmapFromId( std::string inId )
-{
-    std::stringstream sstr;
-    sstr << ":/tiles/" << inId << ".png";
-    const QPixmap pm(QString::fromStdString(sstr.str()));
-    return pm;
-}
-
-} // end of nameless namespace
-
 TileItem::TileItem(QGraphicsItem *parent) :
     QGraphicsPixmapItem(parent)
 {
 }
 
-TileItem::TileItem(std::string inId, unsigned int inRotation, QGraphicsItem *parent) :
+TileItem::TileItem(QPixmap inPixmap, QGraphicsItem *parent) :
     QGraphicsPixmapItem( parent )
 {
-    QPixmap pixmap = getPixmapFromId( inId );
-    QTransform rotation = QTransform();
-    rotation.rotate( inRotation );
-    pixmap = pixmap.transformed( rotation );
-    setPixmap( pixmap );
+    setPixmap( inPixmap );
 }
 
 void

@@ -1,4 +1,4 @@
-#include "Board.h"
+#include "src-model/Board.h"
 
 #include <sstream>
 
@@ -7,8 +7,6 @@ Board::Board(unsigned int inSize)
     mNrCols = (inSize % 2 == 1) ? inSize : inSize + 1;
     mNrRows = mNrCols;
     mBoard = std::vector< boost::optional< TileOnBoard > >(mNrCols * mNrRows, boost::optional< TileOnBoard >());
-    mStartCol = 0;
-    mStartRow = 0;
 }
 
 unsigned int Board::getNrOfRows() const
@@ -22,18 +20,6 @@ Board::getNrOfCols() const
     return mNrCols;
 }
 
-unsigned int
-Board::getStartRow() const
-{
-    return mStartRow;
-}
-
-unsigned int
-Board::getStartCol() const
-{
-    return mStartCol;
-}
-
 boost::optional< TileOnBoard >
 Board::getTile(unsigned int inCol, unsigned int inRow) const
 {
@@ -45,7 +31,6 @@ Board::addRowsOnTop(unsigned int inNrOfRows)
 {
     mBoard.insert(mBoard.begin(), mNrCols * inNrOfRows, boost::optional< TileOnBoard >());
     mNrRows += inNrOfRows;
-    mStartRow += inNrOfRows;
 }
 
 void
@@ -72,7 +57,6 @@ Board::addColsLeft(unsigned int inNrOfCols)
         }
     }
     mNrCols += inNrOfCols;
-    mStartCol += inNrOfCols;
 }
 
 void
@@ -221,8 +205,6 @@ Board::placeStartTile(const TileOnBoard &inTile)
     unsigned int col = mNrCols / 2;
     unsigned int row = mNrRows / 2;
     placeTile(inTile, col, row);
-    mStartCol = col;
-    mStartRow = row;
     return row * mNrCols + col;
 }
 
@@ -251,6 +233,18 @@ Board::rotateTileOnBoard(unsigned int inCol, unsigned int inRow)
             emit tileRotated(inCol, inRow, rotated.getID(), rotated.getRotation());
         }
     }
+}
+
+boost::optional< TileOnBoard >
+Board::removeTile(unsigned int inCol, unsigned int inRow)
+{
+    boost::optional< TileOnBoard > tile;
+    if ((inCol >= 0) && (inCol < mNrCols) && (inRow >= 0) && (inRow < mNrRows))
+    {
+        tile = mBoard[inRow * mNrCols + inCol];
+        mBoard[inRow * mNrCols + inCol] = boost::optional< TileOnBoard >();
+    }
+    return tile;
 }
 
 std::string
