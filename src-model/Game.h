@@ -39,6 +39,8 @@ signals:
     void tilesLeft(unsigned int inNr);
     void finishedCloister(unsigned int inCol, unsigned int inRow);
 
+    void endOfGame(unsigned int inTilesLeft);
+
 private:
     void pickNextTile();
 

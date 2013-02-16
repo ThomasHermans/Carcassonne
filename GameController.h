@@ -24,6 +24,8 @@ public slots:
 
     void onFinishedCloister(unsigned int inCol, unsigned int inRow);
 
+    void onEndOfGame(unsigned int inTilesLeft);
+
 private:
     Game *mGame;
     GameWindow *mWindow;

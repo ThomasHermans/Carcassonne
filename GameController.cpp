@@ -42,7 +42,8 @@ GameController::GameController(QObject *parent) :
             this, SLOT( onTileRotated(uint,uint,std::string,TileOnBoard::Rotation) ) );
     connect( mGame, SIGNAL( nextTile(std::string) ), this, SLOT( onNextTile(std::string) ) );
     connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
-    connect( mGame, SIGNAL( finishedCloister(uint, uint)), this, SLOT( onFinishedCloister(uint, uint)));
+    connect( mGame, SIGNAL( finishedCloister(uint, uint) ), this, SLOT( onFinishedCloister(uint, uint) ) );
+    connect( mGame, SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );
     connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
     connect( mWindow, SIGNAL( submitCurrentTile() ), mGame, SLOT( onSubmitCurrentTile() ) );
     mWindow->show();
@@ -108,4 +109,14 @@ GameController::onFinishedCloister(unsigned int inCol, unsigned int inRow)
     int x = fromColToX( inCol, mGame->getStartCol() );
     int y = fromRowToY( inRow, mGame->getStartRow() );
     mWindow->finishCloister( x, y );
+}
+
+void
+GameController::onEndOfGame(unsigned int inTilesLeft)
+{
+    std::cout << "Game has ended." << std::endl;
+    if ( inTilesLeft >= 1 )
+    {
+        std::cout << "Number of unplayed tiles: " << inTilesLeft << std::endl;
+    }
 }

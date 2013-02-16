@@ -233,7 +233,8 @@ Game::pickNextTile()
             else
             {
                 // No more valid tiles to place, this should give End Of Game
-                mNextTile = mBag.back();
+                mNextTile = boost::optional< Tile >();
+                emit endOfGame( mBag.size() );
             }
         }
         emit tilesLeft(mBag.size());
@@ -241,5 +242,6 @@ Game::pickNextTile()
     else
     {
         mNextTile = boost::optional< Tile >();
+        emit endOfGame( 0 );
     }
 }
