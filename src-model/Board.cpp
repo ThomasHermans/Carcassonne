@@ -1,5 +1,6 @@
 #include "src-model/Board.h"
 
+#include <algorithm>
 #include <sstream>
 
 Board::Board(unsigned int inSize)
@@ -245,6 +246,70 @@ Board::removeTile(unsigned int inCol, unsigned int inRow)
         mBoard[inRow * mNrCols + inCol] = boost::optional< TileOnBoard >();
     }
     return tile;
+}
+
+void
+Board::checkForFinishedCloisters(unsigned int inCol, unsigned int inRow)
+{
+    unsigned int leftCol = std::max( inCol, (unsigned int)1 ) - 1;
+    unsigned int rightCol = std::min( inCol + 1, mNrCols );
+    unsigned int topRow = std::max( inRow, (unsigned int)1 ) - 1;
+    unsigned int bottomRow = std::min( inRow + 1, mNrRows );
+    for ( unsigned int r = topRow; r <= bottomRow; ++r )
+    {
+        for ( unsigned int c = leftCol; c <= rightCol; ++c )
+        {
+            if ( isFinishedCloister( c, r ) )
+            {
+                emit finishedCloister( c, r );
+            }
+        }
+    }
+}
+
+bool
+Board::isFinishedCloister( unsigned int inCol, unsigned int inRow ) const
+{
+    if ( !mBoard[inRow * mNrCols + inCol])
+    {
+        return false;
+    }
+    TileOnBoard thisTile = mBoard[inRow * mNrCols + inCol].get();
+    if ( thisTile.getCenter() == Tile::Cloister )
+    {
+        if ( isFullySurrounded( inCol, inRow ) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool
+Board::isFullySurrounded( unsigned int inCol, unsigned int inRow ) const
+{
+    if ( inCol == 0 || inCol == mNrCols - 1 || inRow == 0 || inRow == mNrRows - 1 )
+    {
+        return false;
+    }
+    for ( unsigned int r = inRow - 1; r <= inRow + 1; ++r )
+    {
+        for ( unsigned int c = inCol - 1; c <= inCol + 1; ++c )
+        {
+            if ( !mBoard[r * mNrCols + c] )
+            {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 std::string

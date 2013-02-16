@@ -32,6 +32,7 @@ Game::Game() :
     }
     connect(mBoard, SIGNAL(tileRotated(uint,uint,std::string,TileOnBoard::Rotation)),
             this, SLOT(onTileRotated(uint,uint,std::string,TileOnBoard::Rotation)));
+    connect(mBoard, SIGNAL(finishedCloister(uint, uint)), this, SIGNAL(finishedCloister(uint, uint)));
 }
 
 unsigned int
@@ -181,10 +182,11 @@ Game::rotateTileOnBoard(unsigned int inCol, unsigned int inRow)
 }
 
 void
-Game::submitCurrentTile()
+Game::onSubmitCurrentTile()
 {
     if (mCurrentPlacedRow != (unsigned int)-1 && mCurrentPlacedCol != (unsigned int)-1)
     {
+        mBoard->checkForFinishedCloisters( mCurrentPlacedCol, mCurrentPlacedRow );
         mCurrentPlacedRow = (unsigned int)-1;
         mCurrentPlacedCol = (unsigned int)-1;
         pickNextTile();

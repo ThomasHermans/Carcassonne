@@ -1025,7 +1025,7 @@ createBaseGameTiles()
     }
     tiles.push_back(createTileX());
 
-    //std::srand(std::time(0));
+    std::srand(std::time(0));
     std::random_shuffle(tiles.begin(), tiles.end());
     //add starting tile
     tiles.push_back(createTileD());

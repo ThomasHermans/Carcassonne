@@ -33,11 +33,16 @@ public:
 
     boost::optional< TileOnBoard > removeTile(unsigned int inCol, unsigned int inRow);
 
+    void checkForFinishedCloisters(unsigned int inCol, unsigned int inRow);
+    bool isFinishedCloister(unsigned int inCol, unsigned int inRow) const;
+    bool isFullySurrounded(unsigned int inCol, unsigned int inRow) const;
+
     std::string toString() const;
     std::string shortPrint(unsigned int inCol, unsigned int inRow) const;
 
 signals:
     void tileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
+    void finishedCloister(unsigned int inCol, unsigned int inRow );
 
 private:
     bool placeTile(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow);

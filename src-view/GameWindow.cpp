@@ -2,6 +2,10 @@
 
 #include "src-view/GuiConstants.h"
 
+#include <QBrush>
+#include <QGraphicsEllipseItem>
+#include <QPen>
+
 #include <iostream>
 #include <sstream>
 
@@ -142,6 +146,14 @@ void
 GameWindow::displayTilesLeft(unsigned int inNr)
 {
     mTilesLeft->setText(QString::number(inNr).append(" tiles left."));
+}
+
+void
+GameWindow::finishCloister(int inX, int inY)
+{
+    QGraphicsEllipseItem* circle = new QGraphicsEllipseItem( inX, inY, 100, 100 );
+    circle->setPen( QPen( QBrush( Qt::blue ), 2 ) );
+    mBoardScene->addItem( circle );
 }
 
 void

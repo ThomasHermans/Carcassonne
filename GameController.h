@@ -20,8 +20,9 @@ public slots:
     void onClicked(int x, int y);
     void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
     void onNextTile(std::string inNextId);
-    void onSubmitCurrentTile();
     void onTilesLeft(unsigned int inNr);
+
+    void onFinishedCloister(unsigned int inCol, unsigned int inRow);
 
 private:
     Game *mGame;

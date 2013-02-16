@@ -2,6 +2,33 @@
 
 #include "src-view/GuiConstants.h"
 
+namespace
+{
+    unsigned int
+    fromXToCol(int inX, unsigned int inStartCol)
+    {
+        return (inX / GuiConstants::tileWidth + inStartCol - (inX < 0 ? 1 : 0));
+    }
+
+    unsigned int
+    fromYToRow(int inY, unsigned int inStartRow)
+    {
+        return (inY / GuiConstants::tileHeight + inStartRow - (inY < 0 ? 1 : 0));
+    }
+
+    int
+    fromColToX(unsigned int inCol, unsigned int inStartCol)
+    {
+        return ( ((int)inCol - (int)inStartCol) * GuiConstants::tileWidth );
+    }
+
+    int
+    fromRowToY(unsigned int inRow, unsigned int inStartRow)
+    {
+        return ( ((int)inRow - (int)inStartRow) * GuiConstants::tileHeight );
+    }
+}
+
 GameController::GameController(QObject *parent) :
     QObject(parent),
     mGame(new Game()),
@@ -15,8 +42,9 @@ GameController::GameController(QObject *parent) :
             this, SLOT( onTileRotated(uint,uint,std::string,TileOnBoard::Rotation) ) );
     connect( mGame, SIGNAL( nextTile(std::string) ), this, SLOT( onNextTile(std::string) ) );
     connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
+    connect( mGame, SIGNAL( finishedCloister(uint, uint)), this, SLOT( onFinishedCloister(uint, uint)));
     connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
-    connect( mWindow, SIGNAL( submitCurrentTile() ), this, SLOT( onSubmitCurrentTile() ) );
+    connect( mWindow, SIGNAL( submitCurrentTile() ), mGame, SLOT( onSubmitCurrentTile() ) );
     mWindow->show();
     if (mGame->getNextTile())
     {
@@ -27,8 +55,8 @@ GameController::GameController(QObject *parent) :
 void
 GameController::onTilePlaced(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
 {
-    int x = ((int)inCol - (int)mGame->getStartCol()) * GuiConstants::tileWidth;
-    int y = ((int)inRow - (int)mGame->getStartRow()) * GuiConstants::tileHeight;
+    int x = fromColToX( inCol, mGame->getStartCol() );
+    int y = fromRowToY( inRow, mGame->getStartRow() );
     mWindow->setTile(x, y, inId, inRot * 30);
     mWindow->fadeNextTile();
 }
@@ -36,16 +64,16 @@ GameController::onTilePlaced(unsigned int inCol, unsigned int inRow, std::string
 void
 GameController::onTileUnplaced(unsigned int inCol, unsigned int inRow)
 {
-    int x = ((int)inCol - (int)mGame->getStartCol()) * GuiConstants::tileWidth;
-    int y = ((int)inRow - (int)mGame->getStartRow()) * GuiConstants::tileHeight;
+    int x = fromColToX( inCol, mGame->getStartCol() );
+    int y = fromRowToY( inRow, mGame->getStartRow() );
     mWindow->clearTile(x, y);
 }
 
 void
 GameController::onClicked(int x, int y)
 {
-    unsigned int col = x / GuiConstants::tileWidth + mGame->getStartCol() - (x < 0 ? 1 : 0);
-    unsigned int row = y / GuiConstants::tileHeight + mGame->getStartRow() - (y < 0 ? 1 : 0);
+    unsigned int col = fromXToCol( x, mGame->getStartCol() );
+    unsigned int row = fromYToRow( y, mGame->getStartRow() );
     std::cout << "GameController sees a click at x, y: " << x << ", " << y << ", which is col, row: " << col << ", " << row << std::endl;
     if (col >= 0 && col < mGame->getNrOfCols() && row >= 0 && row < mGame->getNrOfRows())
     {
@@ -56,8 +84,8 @@ GameController::onClicked(int x, int y)
 void
 GameController::onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
 {
-    int x = ((int)inCol - (int)mGame->getStartCol()) * GuiConstants::tileWidth;
-    int y = ((int)inRow - (int)mGame->getStartRow()) * GuiConstants::tileHeight;
+    int x = fromColToX( inCol, mGame->getStartCol() );
+    int y = fromRowToY( inRow, mGame->getStartRow() );
     mWindow->rotateTile(x, y, inId, inRot * 30);
 }
 
@@ -68,13 +96,16 @@ GameController::onNextTile( std::string inNextId )
 }
 
 void
-GameController::onSubmitCurrentTile()
-{
-    mGame->submitCurrentTile();
-}
-
-void
 GameController::onTilesLeft(unsigned int inNr)
 {
     mWindow->displayTilesLeft(inNr);
+}
+
+void
+GameController::onFinishedCloister(unsigned int inCol, unsigned int inRow)
+{
+    std::cout << "Finished cloister on tile " << inCol << ", " << inRow << std::endl;
+    int x = fromColToX( inCol, mGame->getStartCol() );
+    int y = fromRowToY( inRow, mGame->getStartRow() );
+    mWindow->finishCloister( x, y );
 }

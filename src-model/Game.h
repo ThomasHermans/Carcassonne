@@ -24,12 +24,12 @@ public:
     void placeTileOnBoard(unsigned int inCol, unsigned int inRow);
     void placeStartTileOnBoard();
     void rotateTileOnBoard(unsigned int inCol, unsigned int inRow);
-    void submitCurrentTile();
 
     boost::optional< Tile > getNextTile() const;
 
 public slots:
     void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
+    void onSubmitCurrentTile();
 
 signals:
     void tileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
@@ -37,6 +37,7 @@ signals:
     void tileUnplaced(unsigned int inCol, unsigned int inRow);
     void nextTile(std::string inNextId);
     void tilesLeft(unsigned int inNr);
+    void finishedCloister(unsigned int inCol, unsigned int inRow);
 
 private:
     void pickNextTile();

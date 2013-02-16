@@ -29,6 +29,7 @@ public:
     void clearTile(int x, int y);
     void rotateTile(int x, int y, std::string inId, int inRotation);
     void displayTilesLeft(unsigned int inNr);
+    void finishCloister(int inX, int inY);
     
 signals:
     void clicked(int x, int y);
