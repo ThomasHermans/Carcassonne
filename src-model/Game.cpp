@@ -30,9 +30,17 @@ Game::Game() :
         mNextTile = mBag.back();
         mBag.pop_back();
     }
-    connect(mBoard, SIGNAL(tileRotated(uint,uint,std::string,TileOnBoard::Rotation)),
-            this, SLOT(onTileRotated(uint,uint,std::string,TileOnBoard::Rotation)));
-    connect(mBoard, SIGNAL(finishedCloister(uint, uint)), this, SIGNAL(finishedCloister(uint, uint)));
+    connect
+    (
+        mBoard, SIGNAL( tileRotated(uint,uint,std::string,TileOnBoard::Rotation) ),
+        this, SLOT( onTileRotated(uint,uint,std::string,TileOnBoard::Rotation) )
+    );
+    connect( mBoard, SIGNAL( finishedCloister(uint, uint) ), this, SIGNAL( finishedCloister(uint, uint) ) );
+    connect
+    (
+        mBoard, SIGNAL( finishedCity(std::vector< std::pair< uint, uint > >) ),
+        this, SIGNAL( finishedCity(std::vector< std::pair< uint, uint > >) )
+    );
 }
 
 unsigned int
@@ -187,6 +195,7 @@ Game::onSubmitCurrentTile()
     if (mCurrentPlacedRow != (unsigned int)-1 && mCurrentPlacedCol != (unsigned int)-1)
     {
         mBoard->checkForFinishedCloisters( mCurrentPlacedCol, mCurrentPlacedRow );
+        mBoard->checkForFinishedCities( mCurrentPlacedCol, mCurrentPlacedRow );
         mCurrentPlacedRow = (unsigned int)-1;
         mCurrentPlacedCol = (unsigned int)-1;
         pickNextTile();

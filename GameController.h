@@ -23,6 +23,7 @@ public slots:
     void onTilesLeft(unsigned int inNr);
 
     void onFinishedCloister(unsigned int inCol, unsigned int inRow);
+    void onFinishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
 
     void onEndOfGame(unsigned int inTilesLeft);
 

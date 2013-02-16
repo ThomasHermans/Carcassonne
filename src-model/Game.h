@@ -37,7 +37,9 @@ signals:
     void tileUnplaced(unsigned int inCol, unsigned int inRow);
     void nextTile(std::string inNextId);
     void tilesLeft(unsigned int inNr);
+
     void finishedCloister(unsigned int inCol, unsigned int inRow);
+    void finishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
 
     void endOfGame(unsigned int inTilesLeft);
 

@@ -157,6 +157,14 @@ GameWindow::finishCloister(int inX, int inY)
 }
 
 void
+GameWindow::finishCity(int inLeft, int inRight, int inTop, int inBottom)
+{
+    QGraphicsEllipseItem* city = new QGraphicsEllipseItem( inLeft, inTop, inRight - inLeft, inBottom - inTop);
+    city->setPen( QPen( QBrush( Qt::red ), 2 ) );
+    mBoardScene->addItem( city );
+}
+
+void
 GameWindow::setTile(int inX, int inY, std::string inId, int inRotation)
 {
     QPixmap pixmap = getPixmapFromId( inId );

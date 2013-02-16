@@ -11,6 +11,11 @@
 class Board : public QObject
 {
     Q_OBJECT
+
+    typedef std::pair< unsigned int, FRCArea::CityArea > LocatedCity;
+    typedef std::pair< unsigned int, FRCArea::RoadArea > LocatedRoad;
+    typedef std::pair< unsigned int, FRCArea::FieldArea > LocatedField;
+    
 public:
     Board(unsigned int inSize = 5);
 
@@ -37,15 +42,22 @@ public:
     bool isFinishedCloister(unsigned int inCol, unsigned int inRow) const;
     bool isFullySurrounded(unsigned int inCol, unsigned int inRow) const;
 
+    void checkForFinishedCities(unsigned int inCol, unsigned int inRow);
+
     std::string toString() const;
     std::string shortPrint(unsigned int inCol, unsigned int inRow) const;
 
 signals:
     void tileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
     void finishedCloister(unsigned int inCol, unsigned int inRow );
+    void finishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
 
 private:
     bool placeTile(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow);
+
+    bool isContinueued( LocatedCity inLocatedCity ) const;
+    unsigned int getNeighborLocation( LocatedCity inLocatedCity ) const;
+
     void updateOccupiedRoads(unsigned int inCol, unsigned int inRow);
     void updateOccupiedRoadsCheck(unsigned int inNeighborLocation, FRCArea::RoadArea inNeighborSide, bool& ioOccupied,
                                   std::vector< std::pair< unsigned int, FRCArea::RoadArea > >& inQueue);
