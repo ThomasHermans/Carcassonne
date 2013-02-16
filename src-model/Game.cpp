@@ -41,6 +41,11 @@ Game::Game() :
         mBoard, SIGNAL( finishedCity(std::vector< std::pair< uint, uint > >) ),
         this, SIGNAL( finishedCity(std::vector< std::pair< uint, uint > >) )
     );
+    connect
+    (
+        mBoard, SIGNAL( finishedRoad(std::vector< std::pair< uint, uint > >) ),
+        this, SIGNAL( finishedRoad(std::vector< std::pair< uint, uint > >) )
+    );
 }
 
 unsigned int
@@ -196,6 +201,7 @@ Game::onSubmitCurrentTile()
     {
         mBoard->checkForFinishedCloisters( mCurrentPlacedCol, mCurrentPlacedRow );
         mBoard->checkForFinishedCities( mCurrentPlacedCol, mCurrentPlacedRow );
+        mBoard->checkForFinishedRoads( mCurrentPlacedCol, mCurrentPlacedRow );
         mCurrentPlacedRow = (unsigned int)-1;
         mCurrentPlacedCol = (unsigned int)-1;
         pickNextTile();

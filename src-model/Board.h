@@ -43,6 +43,7 @@ public:
     bool isFullySurrounded(unsigned int inCol, unsigned int inRow) const;
 
     void checkForFinishedCities(unsigned int inCol, unsigned int inRow);
+    void checkForFinishedRoads(unsigned int inCol, unsigned int inRow);
 
     std::string toString() const;
     std::string shortPrint(unsigned int inCol, unsigned int inRow) const;
@@ -51,6 +52,7 @@ signals:
     void tileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
     void finishedCloister(unsigned int inCol, unsigned int inRow );
     void finishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
+    void finishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
 
 private:
     bool placeTile(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow);

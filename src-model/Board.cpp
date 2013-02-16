@@ -396,6 +396,69 @@ Board::checkForFinishedCities( unsigned int inCol, unsigned int inRow )
     }
 }
 
+void
+Board::checkForFinishedRoads( unsigned int inCol, unsigned int inRow )
+{
+    if ( !mBoard[inRow * mNrCols + inCol] )
+    {
+        return;
+    }
+    TileOnBoard thisTile = mBoard[inRow * mNrCols + inCol].get();
+    std::vector< Tile::ContiguousRoad > contiguousRoads = thisTile.getContiguousRoads();
+    for ( unsigned int road = 0; road < contiguousRoads.size(); ++road )
+    {
+        // Start a tempQueue and add all RoadAreas from this ContRoad to it
+        std::vector< LocatedRoad > tempQueue;
+        for ( unsigned int i = 0; i < contiguousRoads[road].size(); ++i )
+        {
+            tempQueue.push_back
+            (
+                LocatedRoad( inRow * mNrCols + inCol, contiguousRoads[road][i])
+            );
+        }
+        // Go over tempQueue, adding ContinuationRoadAreas to it as we go
+        unsigned int i = 0;
+        bool finished = true;
+        while ( i < tempQueue.size() )
+        {
+            LocatedRoad currentRoad = tempQueue[i];
+            unsigned int neighborLocation = getNeighborLocation( currentRoad );
+            if ( mBoard[neighborLocation] )
+            {
+                // If not already in tempQueue, add continuation and all of its contiguous RoadAreas to tempQueue
+                FRCArea::RoadArea neighborSide = oppositeSide( currentRoad.second );
+                if ( std::find(tempQueue.begin(), tempQueue.end(), LocatedRoad(neighborLocation, neighborSide)) == tempQueue.end() )
+                {
+                    Tile::ContiguousRoad contRoad = mBoard[neighborLocation]->getContiguousRoad(neighborSide);
+                    for (unsigned int j = 0; j < contRoad.size(); ++j)
+                    {
+                        tempQueue.push_back(LocatedRoad(neighborLocation, contRoad[j]));
+                    }
+                }
+            }
+            else
+            {
+                // No continuation means unfinished road
+                finished = false;
+                break;
+            }
+            ++i;
+        }
+        if ( finished )
+        {
+            // Emit signal finishedRoad( tempQueue )
+            std::vector< std::pair< unsigned int, unsigned int > > tiles;
+            for (unsigned int tile = 0; tile < tempQueue.size(); ++tile)
+            {
+                unsigned int col = tempQueue[tile].first % mNrCols;
+                unsigned int row = tempQueue[tile].first / mNrCols;
+                tiles.push_back( std::pair< unsigned int, unsigned int >( col, row ) );
+            }
+            emit finishedRoad( tiles );
+        }
+    }
+}
+
 std::string
 Board::toString() const
 {

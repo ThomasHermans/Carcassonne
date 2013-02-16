@@ -40,6 +40,7 @@ signals:
 
     void finishedCloister(unsigned int inCol, unsigned int inRow);
     void finishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
+    void finishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
 
     void endOfGame(unsigned int inTilesLeft);
 

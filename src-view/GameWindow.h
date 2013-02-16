@@ -32,6 +32,7 @@ public:
 
     void finishCloister(int inX, int inY);
     void finishCity(int inLeft, int inRight, int inTop, int inBottom);
+    void finishRoad(int inLeft, int inRight, int inTop, int inBottom);
     
 signals:
     void clicked(int x, int y);
