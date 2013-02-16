@@ -125,17 +125,16 @@ Board::isPossibleTile(Tile inTile)
 bool
 Board::isEmptySpot(unsigned int inCol, unsigned int inRow) const
 {
-    bool valid = true;
     if (inCol < 0 || inCol >= mNrCols || inRow < 0 || inRow >= mNrRows)
     {
-        valid = false;
+        return false;
     }
     // Check if no tile placed there yet
     if (mBoard[inRow * mNrCols + inCol])
     {
-        valid = false;
+        return false;
     }
-    return valid;
+    return true;
 }
 
 bool

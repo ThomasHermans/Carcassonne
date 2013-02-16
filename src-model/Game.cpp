@@ -117,6 +117,7 @@ Game::placeTileOnBoard(unsigned int inCol, unsigned int inRow)
                 rotation = TileOnBoard::Rotation(rotation + TileOnBoard::cw90);
             }
         }
+        std::cout << "Found: " << found << std::endl;
         if (found)
         {
             // If a valid placement is found at the newly clicked position, place tile
