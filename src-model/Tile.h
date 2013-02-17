@@ -81,21 +81,14 @@ public:
     typedef std::vector< FRCArea::CityArea > ContiguousCity;
 
     Tile();
-    Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
+    Tile(Center inCenter,
          const std::string & inID,
          const std::vector< ContiguousField > & inFields,
          const std::vector< ContiguousRoad > & inRoads,
          const std::vector< ContiguousCity > & inCities,
          const std::map< ContiguousField, std::vector< ContiguousCity > > & inCitiesPerField,
-         const std::vector< FRCArea::CityArea > & inShields);
-    Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
-         const std::string & inID,
-         const std::vector< ContiguousField > & inFields,
-         const std::vector< ContiguousRoad > & inRoads,
-         const std::vector< ContiguousCity > & inCities,
-         const std::map< ContiguousField, std::vector< ContiguousCity > > & inCitiesPerField,
-         const std::vector< FRCArea::CityArea > & inShields,
-         const std::vector< FRCArea::RoadArea > & inInns);
+         const std::vector< FRCArea::CityArea > & inShields = std::vector< FRCArea::CityArea >(),
+         const std::vector< FRCArea::RoadArea > & inInns = std::vector< FRCArea::RoadArea >());
 
 
     static std::string sideToString(Side inSide);

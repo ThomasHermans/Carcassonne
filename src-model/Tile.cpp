@@ -1,6 +1,7 @@
 #include "src-model/Tile.h"
 
 #include <algorithm>
+#include <cassert>
 
 std::string
 FRCArea::fieldAreaToString(FieldArea inFieldArea)
@@ -123,29 +124,7 @@ Tile::Tile():
     mInns = std::vector< FRCArea::RoadArea >();
 }
 
-Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
-           const std::string & inID,
-           const std::vector< ContiguousField > & inFields,
-           const std::vector< ContiguousRoad > & inRoads,
-           const std::vector< ContiguousCity > & inCities,
-           const std::map< ContiguousField, std::vector< ContiguousCity > > & inCitiesPerField,
-           const std::vector< FRCArea::CityArea > & inShields):
-    mID(inID),
-    mTop(inTop),
-    mRight(inRight),
-    mBottom(inBottom),
-    mLeft(inLeft),
-    mCenter(inCenter),
-    mFields(inFields),
-    mRoads(inRoads),
-    mCities(inCities),
-    mCitiesPerField(inCitiesPerField),
-    mShields(inShields)
-{
-    mInns = std::vector< FRCArea::RoadArea >();
-}
-
-Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter,
+Tile::Tile(Center inCenter,
            const std::string & inID,
            const std::vector< ContiguousField > & inFields,
            const std::vector< ContiguousRoad > & inRoads,
@@ -154,10 +133,10 @@ Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter
            const std::vector< FRCArea::CityArea > & inShields,
            const std::vector< FRCArea::RoadArea > & inInns):
     mID(inID),
-    mTop(inTop),
-    mRight(inRight),
-    mBottom(inBottom),
-    mLeft(inLeft),
+    mTop(Tile::Field),
+    mRight(Tile::Field),
+    mBottom(Tile::Field),
+    mLeft(Tile::Field),
     mCenter(inCenter),
     mFields(inFields),
     mRoads(inRoads),
@@ -166,6 +145,64 @@ Tile::Tile(Side inTop, Side inRight, Side inBottom, Side inLeft, Center inCenter
     mShields(inShields),
     mInns(inInns)
 {
+    int top = 0;
+    int right = 0;
+    int bottom = 0;
+    int left = 0;
+    for ( unsigned int i = 0; i < inCities.size(); ++i )
+    {
+        for ( unsigned int j = 0; j < inCities[i].size(); ++j )
+        {
+            switch ( inCities[i][j] )
+            {
+            case FRCArea::Top:
+                mTop = Tile::City;
+                ++top;
+                break;
+            case FRCArea::Right:
+                mRight = Tile::City;
+                ++right;
+                break;
+            case FRCArea::Bottom:
+                mBottom = Tile::City;
+                ++bottom;
+                break;
+            case FRCArea::Left:
+                mLeft = Tile::City;
+                ++left;
+                break;
+            }
+        }
+    }
+    for ( unsigned int i = 0; i < inRoads.size(); ++i )
+    {
+        for ( unsigned int j = 0; j < inRoads[i].size(); ++j )
+        {
+            switch ( inRoads[i][j] )
+            {
+            case FRCArea::Top:
+                mTop = Tile::Road;
+                ++top;
+                break;
+            case FRCArea::Right:
+                mRight = Tile::Road;
+                ++right;
+                break;
+            case FRCArea::Bottom:
+                mBottom = Tile::Road;
+                ++bottom;
+                break;
+            case FRCArea::Left:
+                mLeft = Tile::Road;
+                ++left;
+                break;
+            }
+        }
+    }
+    assert( top <= 1 );
+    assert( right <= 1 );
+    assert( bottom <= 1 );
+    assert( left <= 1 );
 }
 
 Tile::Side
