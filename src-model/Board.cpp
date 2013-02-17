@@ -184,7 +184,7 @@ Board::isValidAlternateTilePlacement(const TileOnBoard &inTile, unsigned int inC
     {
         ++nrOfNeighbors;
     }
-    if ((inRow + 1 < mNrCols) && mBoard[(inRow + 1) * mNrCols + inCol])
+    if ((inRow + 1 < mNrRows) && mBoard[(inRow + 1) * mNrCols + inCol])
     {
         ++nrOfNeighbors;
     }
@@ -203,25 +203,25 @@ Board::isValidAlternateTilePlacement(const TileOnBoard &inTile, unsigned int inC
     // Check if sides match with four neighbors
     if ((inRow > 0)
             && mBoard[(inRow - 1) * mNrCols + inCol]
-            && !inTile.matchesBelow(*mBoard[(inRow - 1) * mNrCols + inCol]))
+            && !inTile.matchesBelow( mBoard[(inRow - 1) * mNrCols + inCol].get() ) )
     {
         valid = false;
     }
-    if ((inRow + 1 < mNrCols)
+    if ((inRow + 1 < mNrRows)
             && mBoard[(inRow + 1) * mNrCols + inCol]
-            && !inTile.matchesAbove(*mBoard[(inRow + 1) * mNrCols + inCol]))
+            && !inTile.matchesAbove( mBoard[(inRow + 1) * mNrCols + inCol].get() ) )
     {
         valid = false;
     }
     if ((inCol > 0)
             && mBoard[inRow * mNrCols + inCol - 1]
-            && !inTile.matchesRightOf(*mBoard[inRow * mNrCols + inCol - 1]))
+            && !inTile.matchesRightOf( mBoard[inRow * mNrCols + inCol - 1].get() ) )
     {
         valid = false;
     }
     if ((inCol + 1 < mNrCols)
             && mBoard[inRow * mNrCols + inCol + 1]
-            && !inTile.matchesLeftOf(*mBoard[inRow * mNrCols + inCol + 1]))
+            && !inTile.matchesLeftOf( mBoard[inRow * mNrCols + inCol + 1].get() ) )
     {
         valid = false;
     }
@@ -400,7 +400,7 @@ Board::checkForFinishedCities( unsigned int inCol, unsigned int inRow )
         {
             LocatedCity currentCity = tempQueue[i];
             unsigned int neighborLocation = getNeighborLocation( currentCity );
-            if ( mBoard[neighborLocation] )
+            if ( neighborLocation < mNrCols * mNrRows && mBoard[neighborLocation] )
             {
                 // If not already in tempQueue, add continuation and all of its contiguous CityAreas to tempQueue
                 FRCArea::CityArea neighborSide = oppositeSide( currentCity.second );
@@ -463,7 +463,7 @@ Board::checkForFinishedRoads( unsigned int inCol, unsigned int inRow )
         {
             LocatedRoad currentRoad = tempQueue[i];
             unsigned int neighborLocation = getNeighborLocation( currentRoad );
-            if ( mBoard[neighborLocation] )
+            if ( neighborLocation < mNrCols * mNrRows && mBoard[neighborLocation] )
             {
                 // If not already in tempQueue, add continuation and all of its contiguous RoadAreas to tempQueue
                 FRCArea::RoadArea neighborSide = oppositeSide( currentRoad.second );
@@ -574,19 +574,35 @@ Board::getNeighborLocation( LocatedCity inLocatedCity ) const
 {
     unsigned int location = inLocatedCity.first;
     FRCArea::CityArea cityArea = inLocatedCity.second;
+    unsigned int neighborLocation = (unsigned int) -1;
     switch ( cityArea )
     {
     case FRCArea::Top:
-        return (location - mNrCols);
+        if ( location > mNrCols )
+        {
+            neighborLocation = location - mNrCols;
+        }
+        break;
     case FRCArea::Right:
-        return (location + 1);
+        if ( location % mNrCols < mNrCols - 1 )
+        {
+            neighborLocation = location + 1;
+        }
+        break;
     case FRCArea::Bottom:
-        return (location + mNrCols);
+        if ( location < (mNrRows - 1) * mNrCols )
+        {
+            neighborLocation = location + mNrCols;
+        }
+        break;
     case FRCArea::Left:
-        return (location - 1);
-    default:
-        return (unsigned int)-1;
+        if ( location % mNrCols > 0 )
+        {
+            neighborLocation = location - 1;
+        }
+        break;
     }
+    return neighborLocation;
 }
 
 unsigned int
@@ -640,7 +656,7 @@ Board::checkForOccupiedRoads(unsigned int inCol, unsigned int inRow)
             // Pick RoadArea i from tempQueue
             LocatedRoad currentRoad = tempQueue[i];
             unsigned int neighborLocation = getNeighborLocation( currentRoad );
-            if ( mBoard[neighborLocation] )
+            if ( neighborLocation < mNrCols * mNrRows && mBoard[neighborLocation] )
             {
                 FRCArea::RoadArea neighborSide = oppositeSide( currentRoad.second );
                 // If neighbor is occupied, set occupied true
@@ -702,7 +718,7 @@ Board::checkForOccupiedCities(unsigned int inCol, unsigned int inRow)
             // Pick CityArea i from tempQueue
             LocatedCity currentCity = tempQueue[i];
             unsigned int neighborLocation = getNeighborLocation( currentCity );
-            if ( mBoard[neighborLocation] )
+            if ( neighborLocation < mNrCols * mNrRows && mBoard[neighborLocation] )
             {
                 FRCArea::CityArea neighborSide = oppositeSide( currentCity.second );
                 // If neighbor is occupied, set occupied true
@@ -764,7 +780,7 @@ Board::checkForOccupiedFields(unsigned int inCol, unsigned int inRow)
             // Pick FieldArea i from tempQueue
             LocatedField currentField = tempQueue[i];
             unsigned int neighborLocation = getNeighborLocation( currentField );
-            if ( mBoard[neighborLocation] )
+            if ( neighborLocation < mNrCols * mNrRows && mBoard[neighborLocation] )
             {
                 FRCArea::FieldArea neighborSide = oppositeSide( currentField.second );
                 // If neighbor is occupied, set occupied true
