@@ -22,6 +22,32 @@ namespace
             return FRCArea::Top;
         }
     }
+
+    FRCArea::FieldArea
+    oppositeSide( FRCArea::FieldArea inFieldArea )
+    {
+        switch( inFieldArea )
+        {
+        case FRCArea::TopLeft:
+            return FRCArea::BottomLeft;
+        case FRCArea::TopRight:
+            return FRCArea::BottomRight;
+        case FRCArea::RightTop:
+            return FRCArea::LeftTop;
+        case FRCArea::RightBottom:
+            return FRCArea::LeftBottom;
+        case FRCArea::BottomRight:
+            return FRCArea::TopRight;
+        case FRCArea::BottomLeft:
+            return FRCArea::TopLeft;
+        case FRCArea::LeftBottom:
+            return FRCArea::RightBottom;
+        case FRCArea::LeftTop:
+            return FRCArea::RightTop;
+        default:
+            return FRCArea::TopLeft;
+        }
+    }
 }
 
 Board::Board(unsigned int inSize)
@@ -208,9 +234,9 @@ Board::placeValidTile(const TileOnBoard &inTile, unsigned int inCol, unsigned in
     if (isValidTilePlacement(inTile, inCol, inRow))
     {
         placeTile(inTile, inCol, inRow);
-        updateOccupiedRoads(inCol, inRow);
-        updateOccupiedCities(inCol, inRow);
-        updateOccupiedFields(inCol, inRow);
+        checkForOccupiedRoads(inCol, inRow);
+        checkForOccupiedCities(inCol, inRow);
+        checkForOccupiedFields(inCol, inRow);
         return true;
     }
     else
@@ -222,7 +248,22 @@ Board::placeValidTile(const TileOnBoard &inTile, unsigned int inCol, unsigned in
 unsigned int
 Board::placeStartTile(const TileOnBoard &inTile)
 {
-    // FIXME: should check if really placing start tile (in other words, check is board is empty)
+    bool empty = true;
+    for ( unsigned int r = 0; r < mNrRows; ++r )
+    {
+        for ( unsigned int c = 0; c < mNrCols; ++c )
+        {
+            if ( mBoard[r * mNrCols + c] )
+            {
+                empty = true;
+                break;
+            }
+        }
+    }
+    if ( !empty )
+    {
+        return (unsigned int)-1;
+    }
     unsigned int col = mNrCols / 2;
     unsigned int row = mNrRows / 2;
     placeTile(inTile, col, row);
@@ -315,7 +356,7 @@ Board::isFinishedCloister( unsigned int inCol, unsigned int inRow ) const
 bool
 Board::isFullySurrounded( unsigned int inCol, unsigned int inRow ) const
 {
-    if ( inCol == 0 || inCol == mNrCols - 1 || inRow == 0 || inRow == mNrRows - 1 )
+    if ( inCol <= 0 || inCol >= mNrCols - 1 || inRow <= 0 || inRow >= mNrRows - 1 )
     {
         return false;
     }
@@ -514,6 +555,20 @@ Board::isContinueued( LocatedCity inLocatedCity ) const
     }
 }
 
+bool
+Board::isContinueued( LocatedField inLocatedField ) const
+{
+    unsigned int neighbor = getNeighborLocation( inLocatedField );
+    if ( mBoard[neighbor] )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 unsigned int
 Board::getNeighborLocation( LocatedCity inLocatedCity ) const
 {
@@ -534,63 +589,77 @@ Board::getNeighborLocation( LocatedCity inLocatedCity ) const
     }
 }
 
-void
-Board::updateOccupiedRoads(unsigned int inCol, unsigned int inRow)
+unsigned int
+Board::getNeighborLocation( LocatedField inLocatedField ) const
 {
-    std::vector< Tile::ContiguousRoad > toBeUpdatedRoads = mBoard[inRow * mNrCols + inCol]->getContiguousRoads();
-    for (unsigned int road = 0; road < toBeUpdatedRoads.size(); ++road)
+    unsigned int location = inLocatedField.first;
+    FRCArea::FieldArea fieldArea = inLocatedField.second;
+    switch ( fieldArea )
     {
+    case FRCArea::TopLeft:
+    case FRCArea::TopRight:
+        return (location - mNrCols);
+    case FRCArea::RightTop:
+    case FRCArea::RightBottom:
+        return (location + 1);
+    case FRCArea::BottomRight:
+    case FRCArea::BottomLeft:
+        return (location + mNrCols);
+    case FRCArea::LeftBottom:
+    case FRCArea::LeftTop:
+        return (location - 1);
+    default:
+        return (unsigned int)-1;
+    }
+}
+
+void
+Board::checkForOccupiedRoads(unsigned int inCol, unsigned int inRow)
+{
+    if ( !mBoard[inRow * mNrCols + inCol] )
+    {
+        return;
+    }
+    std::vector< Tile::ContiguousRoad > toBeUpdatedRoads = mBoard[inRow * mNrCols + inCol]->getContiguousRoads();
+    for ( unsigned int road = 0; road < toBeUpdatedRoads.size(); ++road )
+    {
+        // Start a tempQueue and add all RoadAreas from this ContRoad to it
         std::vector< LocatedRoad > tempQueue;
-        bool occupied = false;
-        std::vector< FRCArea::RoadArea > roadsOfThisTile = toBeUpdatedRoads[road];
-        unsigned int i = 0;
-        for (; i < roadsOfThisTile.size(); ++i)
+        for ( unsigned int i = 0; i < toBeUpdatedRoads[road].size(); ++i )
         {
-            tempQueue.push_back(LocatedRoad(inRow * mNrCols + inCol, roadsOfThisTile[i]));
+            tempQueue.push_back
+            (
+                LocatedRoad(inRow * mNrCols + inCol, toBeUpdatedRoads[road][i])
+            );
         }
-        i = 0;
-        while (i < tempQueue.size())
+        // Go over tempQueue, adding ContinuationRoadAreas to it as we go
+        unsigned int i = 0;
+        bool occupied = false;
+        while ( i < tempQueue.size() )
         {
             // Pick RoadArea i from tempQueue
-            LocatedRoad current = tempQueue[i];
-            unsigned int neighborLocation = 0;
-            switch (current.second)
+            LocatedRoad currentRoad = tempQueue[i];
+            unsigned int neighborLocation = getNeighborLocation( currentRoad );
+            if ( mBoard[neighborLocation] )
             {
-            case FRCArea::Top:
-                neighborLocation = current.first - mNrCols;
-                if ((current.first >= mNrCols) && (mBoard[neighborLocation]))
+                FRCArea::RoadArea neighborSide = oppositeSide( currentRoad.second );
+                // If neighbor is occupied, set occupied true
+                if ( mBoard[neighborLocation]->isRoadOccupied( neighborSide ) )
                 {
-                    FRCArea::RoadArea neighborSide = FRCArea::Bottom;
-                    updateOccupiedRoadsCheck(neighborLocation, neighborSide, occupied, tempQueue);
+                    occupied = true;
                 }
-                break;
-            case FRCArea::Right:
-                neighborLocation = current.first + 1;
-                if ((current.first % mNrRows < mNrCols - 1) && (mBoard[neighborLocation]))
+                // Else if neighbor is not yet in tempQueue
+                else if ( std::find(tempQueue.begin(), tempQueue.end(), LocatedRoad( neighborLocation, neighborSide )) == tempQueue.end() )
                 {
-                    FRCArea::RoadArea neighborSide = FRCArea::Left;
-                    updateOccupiedRoadsCheck(neighborLocation, neighborSide, occupied, tempQueue);
+                    Tile::ContiguousRoad contRoad = mBoard[neighborLocation]->getContiguousRoad(neighborSide);
+                    for ( unsigned int j = 0; j < contRoad.size(); ++j )
+                    {
+                        tempQueue.push_back
+                        (
+                            LocatedRoad( neighborLocation, contRoad[j] )
+                        );
+                    }
                 }
-                break;
-            case FRCArea::Bottom:
-                neighborLocation = current.first + mNrCols;
-                if ((neighborLocation < mNrRows * mNrCols) && (mBoard[neighborLocation]))
-                {
-                    FRCArea::RoadArea neighborSide = FRCArea::Top;
-                    updateOccupiedRoadsCheck(neighborLocation, neighborSide, occupied, tempQueue);
-                }
-                break;
-            case FRCArea::Left:
-                neighborLocation = current.first - 1;
-                if ((current.first % mNrRows > 0) && (mBoard[neighborLocation]))
-                {
-                    FRCArea::RoadArea neighborSide = FRCArea::Right;
-                    updateOccupiedRoadsCheck(neighborLocation, neighborSide, occupied, tempQueue);
-                }
-                break;
-            default:
-                // Error, cannot happen
-                break;
             }
             ++i;
         }
@@ -607,85 +676,52 @@ Board::updateOccupiedRoads(unsigned int inCol, unsigned int inRow)
 }
 
 void
-Board::updateOccupiedRoadsCheck(unsigned int inNeighborLocation, FRCArea::RoadArea inNeighborSide, bool &ioOccupied,
-                                std::vector< std::pair< unsigned int, FRCArea::RoadArea > > &inQueue)
+Board::checkForOccupiedCities(unsigned int inCol, unsigned int inRow)
 {
-    // If contination RoadArea is occupied: occupied = true, break
-    if (mBoard[inNeighborLocation]->isRoadOccupied(inNeighborSide))
+    if ( !mBoard[inRow * mNrCols + inCol] )
     {
-        ioOccupied = true;
+        return;
     }
-    // Else, continuation RoadArea is unoccupied:
-    // If tempQueue already contains continuation RoadArea: break
-    // Else, tempQueue does not contain continuation RoadArea:
-    else if (std::find(inQueue.begin(), inQueue.end(), LocatedRoad(inNeighborLocation, inNeighborSide)) == inQueue.end())
-    {
-        // Push back continuation RoadArea and all of its contiguous RoadAreas on tempQueue
-        Tile::ContiguousRoad contRoad = mBoard[inNeighborLocation]->getContiguousRoad(inNeighborSide);
-        for (unsigned int j = 0; j < contRoad.size(); ++j)
-        {
-            inQueue.push_back(LocatedRoad(inNeighborLocation, contRoad[j]));
-        }
-    }
-}
-
-void
-Board::updateOccupiedCities(unsigned int inCol, unsigned int inRow)
-{
     std::vector< Tile::ContiguousCity > toBeUpdatedCities = mBoard[inRow * mNrCols + inCol]->getContiguousCities();
-    for (unsigned int city = 0; city < toBeUpdatedCities.size(); ++city)
+    for ( unsigned int city = 0; city < toBeUpdatedCities.size(); ++city )
     {
+        // Start a tempQueue and add all CityAreas from this ContCity to it
         std::vector< LocatedCity > tempQueue;
-        bool occupied = false;
-        std::vector< FRCArea::CityArea > citiesOfThisTile = toBeUpdatedCities[city];
-        unsigned int i = 0;
-        for (; i < citiesOfThisTile.size(); ++i)
+        for ( unsigned int i = 0; i < toBeUpdatedCities[city].size(); ++i )
         {
-            tempQueue.push_back(LocatedCity(inRow * mNrCols + inCol, citiesOfThisTile[i]));
+            tempQueue.push_back
+            (
+                LocatedCity( inRow * mNrCols + inCol, toBeUpdatedCities[city][i] )
+            );
         }
-        i = 0;
-        while (i < tempQueue.size())
+        // Go over tempQueue, adding ContinuationCityAreas to it as we go
+        unsigned int i = 0;
+        bool occupied = false;
+        while ( i < tempQueue.size() )
         {
             // Pick CityArea i from tempQueue
-            LocatedCity current = tempQueue[i];
-            unsigned int neighborLocation = 0;
-            switch (current.second)
+            LocatedCity currentCity = tempQueue[i];
+            unsigned int neighborLocation = getNeighborLocation( currentCity );
+            if ( mBoard[neighborLocation] )
             {
-            case FRCArea::Top:
-                neighborLocation = current.first - mNrCols;
-                if ((current.first >= mNrCols) && (mBoard[neighborLocation]))
+                FRCArea::CityArea neighborSide = oppositeSide( currentCity.second );
+                // If neighbor is occupied, set occupied true
+                if ( mBoard[neighborLocation]->isCityOccupied( neighborSide ) )
                 {
-                    FRCArea::CityArea neighborSide = FRCArea::Bottom;
-                    updateOccupiedCitiesCheck(neighborLocation, neighborSide, occupied, tempQueue);
+                    occupied = true;
                 }
-                break;
-            case FRCArea::Right:
-                neighborLocation = current.first + 1;
-                if ((current.first % mNrRows < mNrCols - 1) && (mBoard[neighborLocation]))
+                // Else if neighbor is not yet in tempQueue
+                else if ( std::find(tempQueue.begin(), tempQueue.end(), LocatedCity( neighborLocation, neighborSide )) == tempQueue.end() )
                 {
-                    FRCArea::CityArea neighborSide = FRCArea::Left;
-                    updateOccupiedCitiesCheck(neighborLocation, neighborSide, occupied, tempQueue);
+                    Tile::ContiguousCity contCity = mBoard[neighborLocation]->getContiguousCity(neighborSide);
+                    for ( unsigned int j = 0; j < contCity.size(); ++j )
+                    {
+                        tempQueue.push_back
+                        (
+                            LocatedCity( neighborLocation, contCity[j] )
+                        );
+                    }
                 }
-                break;
-            case FRCArea::Bottom:
-                neighborLocation = current.first + mNrCols;
-                if ((neighborLocation < mNrRows * mNrCols) && (mBoard[neighborLocation]))
-                {
-                    FRCArea::CityArea neighborSide = FRCArea::Top;
-                    updateOccupiedCitiesCheck(neighborLocation, neighborSide, occupied, tempQueue);
-                }
-                break;
-            case FRCArea::Left:
-                neighborLocation = current.first - 1;
-                if ((current.first % mNrRows > 0) && (mBoard[neighborLocation]))
-                {
-                    FRCArea::CityArea neighborSide = FRCArea::Right;
-                    updateOccupiedCitiesCheck(neighborLocation, neighborSide, occupied, tempQueue);
-                }
-                break;
-            default:
-                // Error, cannot happen
-                break;
             }
             ++i;
         }
@@ -702,117 +738,52 @@ Board::updateOccupiedCities(unsigned int inCol, unsigned int inRow)
 }
 
 void
-Board::updateOccupiedCitiesCheck(unsigned  int inNeighborLocation, FRCArea::CityArea inNeighborSide, bool &ioOccupied,
-                                std::vector< std::pair< unsigned int, FRCArea::CityArea > > &inQueue)
+Board::checkForOccupiedFields(unsigned int inCol, unsigned int inRow)
 {
-    // If contination CityArea is occupied: occupied = true, break
-    if (mBoard[inNeighborLocation]->isCityOccupied(inNeighborSide))
+    if ( !mBoard[inRow * mNrCols + inCol] )
     {
-        ioOccupied = true;
+        return;
     }
-    // Else, continuation CityArea is unoccupied:
-    // If tempQueue already contains continuation CityArea: break
-    // Else, tempQueue does not contain continuation CityArea:
-    else if (std::find(inQueue.begin(), inQueue.end(), LocatedCity(inNeighborLocation, inNeighborSide)) == inQueue.end())
-    {
-        // Push back continuation CityArea and all of its contiguous CityAreas on tempQueue
-        Tile::ContiguousCity contCity = mBoard[inNeighborLocation]->getContiguousCity(inNeighborSide);
-        for (unsigned int j = 0; j < contCity.size(); ++j)
-        {
-            inQueue.push_back(LocatedCity(inNeighborLocation, contCity[j]));
-        }
-    }
-}
-
-void
-Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
-{
     std::vector< Tile::ContiguousField > toBeUpdatedFields = mBoard[inRow * mNrCols + inCol]->getContiguousFields();
-    for (unsigned int field = 0; field < toBeUpdatedFields.size(); ++field)
+    for ( unsigned int field = 0; field < toBeUpdatedFields.size(); ++field )
     {
+        // Start a tempQueue and add all FieldAreas from this ContField to it
         std::vector< LocatedField > tempQueue;
-        bool occupied = false;
-        std::vector< FRCArea::FieldArea > fieldsOfThisTile = toBeUpdatedFields[field];
-        unsigned int i = 0;
-        for (; i < fieldsOfThisTile.size(); ++i)
+        for ( unsigned int i = 0; i < toBeUpdatedFields[field].size(); ++i )
         {
-            tempQueue.push_back(LocatedField(inRow * mNrCols + inCol, fieldsOfThisTile[i]));
+            tempQueue.push_back
+            (
+                LocatedField(inRow * mNrCols + inCol, toBeUpdatedFields[field][i])
+            );
         }
-        i = 0;
-        while (i < tempQueue.size())
+        // Go over tempQueue, adding ContinuationFieldAreas to it as we go
+        unsigned int i = 0;
+        bool occupied = false;
+        while ( i < tempQueue.size() )
         {
             // Pick FieldArea i from tempQueue
-            LocatedField current = tempQueue[i];
-            unsigned int neighborLocation = 0;
-            switch (current.second)
+            LocatedField currentField = tempQueue[i];
+            unsigned int neighborLocation = getNeighborLocation( currentField );
+            if ( mBoard[neighborLocation] )
             {
-            case FRCArea::TopLeft:
-                neighborLocation = current.first - mNrCols;
-                if ((current.first >= mNrCols) && (mBoard[neighborLocation]))
+                FRCArea::FieldArea neighborSide = oppositeSide( currentField.second );
+                // If neighbor is occupied, set occupied true
+                if ( mBoard[neighborLocation]->isFieldOccupied( neighborSide ) )
                 {
-                    FRCArea::FieldArea neighborSide = FRCArea::BottomLeft;
-                    updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
+                    occupied = true;
                 }
-                break;
-            case FRCArea::TopRight:
-                neighborLocation = current.first - mNrCols;
-                if ((current.first >= mNrCols) && (mBoard[neighborLocation]))
+                // Else if neighbor is not yet in tempQueue
+                else if ( std::find(tempQueue.begin(), tempQueue.end(), LocatedField( neighborLocation, neighborSide )) == tempQueue.end() )
                 {
-                    FRCArea::FieldArea neighborSide = FRCArea::BottomRight;
-                    updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
+                    Tile::ContiguousField contField = mBoard[neighborLocation]->getContiguousField( neighborSide );
+                    for ( unsigned int j = 0; j < contField.size(); ++j )
+                    {
+                        tempQueue.push_back
+                        (
+                            LocatedField( neighborLocation, neighborSide )
+                        );
+                    }
                 }
-                break;
-            case FRCArea::RightTop:
-                neighborLocation = current.first + 1;
-                if ((current.first % mNrRows < mNrCols - 1) && (mBoard[neighborLocation]))
-                {
-                    FRCArea::FieldArea neighborSide = FRCArea::LeftTop;
-                    updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
-                }
-                break;
-            case FRCArea::RightBottom:
-                neighborLocation = current.first + 1;
-                if ((current.first % mNrRows < mNrCols - 1) && (mBoard[neighborLocation]))
-                {
-                    FRCArea::FieldArea neighborSide = FRCArea::LeftBottom;
-                    updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
-                }
-                break;
-            case FRCArea::BottomRight:
-                neighborLocation = current.first + mNrCols;
-                if ((neighborLocation < mNrRows * mNrCols) && (mBoard[neighborLocation]))
-                {
-                    FRCArea::FieldArea neighborSide = FRCArea::TopRight;
-                    updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
-                }
-                break;
-            case FRCArea::BottomLeft:
-                neighborLocation = current.first + mNrCols;
-                if ((neighborLocation < mNrRows * mNrCols) && (mBoard[neighborLocation]))
-                {
-                    FRCArea::FieldArea neighborSide = FRCArea::TopLeft;
-                    updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
-                }
-                break;
-            case FRCArea::LeftBottom:
-                neighborLocation = current.first - 1;
-                if ((current.first % mNrRows > 0) && (mBoard[neighborLocation]))
-                {
-                    FRCArea::FieldArea neighborSide = FRCArea::RightBottom;
-                    updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
-                }
-                break;
-            case FRCArea::LeftTop:
-                neighborLocation = current.first - 1;
-                if ((current.first % mNrRows > 0) && (mBoard[neighborLocation]))
-                {
-                    FRCArea::FieldArea neighborSide = FRCArea::RightTop;
-                    updateOccupiedFieldsCheck(neighborLocation, neighborSide, occupied, tempQueue);
-                }
-                break;
-            default:
-                // Error, cannot happen
-                break;
             }
             ++i;
         }
@@ -828,25 +799,3 @@ Board::updateOccupiedFields(unsigned int inCol, unsigned int inRow)
     }
 }
 
-void
-Board::updateOccupiedFieldsCheck(unsigned int inNeighborLocation, FRCArea::FieldArea inNeighborSide, bool &ioOccupied,
-                                std::vector< std::pair< unsigned int, FRCArea::FieldArea > > &inQueue)
-{
-    // If contination FieldArea is occupied: occupied = true, break
-    if (mBoard[inNeighborLocation]->isFieldOccupied(inNeighborSide))
-    {
-        ioOccupied = true;
-    }
-    // Else, continuation FieldArea is unoccupied:
-    // If tempQueue already contains continuation FieldArea: break
-    // Else, tempQueue does not contain continuation FieldArea:
-    else if (std::find(inQueue.begin(), inQueue.end(), LocatedField(inNeighborLocation, inNeighborSide)) == inQueue.end())
-    {
-        // Push back continuation FieldArea and all of its contiguous FieldAreas on tempQueue
-        Tile::ContiguousField contField = mBoard[inNeighborLocation]->getContiguousField(inNeighborSide);
-        for (unsigned int j = 0; j < contField.size(); ++j)
-        {
-            inQueue.push_back(LocatedField(inNeighborLocation, contField[j]));
-        }
-    }
-}

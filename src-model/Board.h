@@ -58,17 +58,13 @@ private:
     bool placeTile(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow);
 
     bool isContinueued( LocatedCity inLocatedCity ) const;
+    bool isContinueued( LocatedField inLocatedField ) const;
     unsigned int getNeighborLocation( LocatedCity inLocatedCity ) const;
+    unsigned int getNeighborLocation( LocatedField inLocatedField ) const;
 
-    void updateOccupiedRoads(unsigned int inCol, unsigned int inRow);
-    void updateOccupiedRoadsCheck(unsigned int inNeighborLocation, FRCArea::RoadArea inNeighborSide, bool& ioOccupied,
-                                  std::vector< std::pair< unsigned int, FRCArea::RoadArea > >& inQueue);
-    void updateOccupiedCities(unsigned int inCol, unsigned int inRow);
-    void updateOccupiedCitiesCheck(unsigned int inNeighborLocation, FRCArea::CityArea inNeighborSide, bool& ioOccupied,
-                                  std::vector< std::pair< unsigned int, FRCArea::CityArea > >& inQueue);
-    void updateOccupiedFields(unsigned int inCol, unsigned int inRow);
-    void updateOccupiedFieldsCheck(unsigned int inNeighborLocation, FRCArea::FieldArea inNeighborSide, bool& ioOccupied,
-                                   std::vector< std::pair< unsigned int, FRCArea::FieldArea > >& inQueue);
+    void checkForOccupiedRoads(unsigned int inCol, unsigned int inRow);
+    void checkForOccupiedCities(unsigned int inCol, unsigned int inRow);
+    void checkForOccupiedFields(unsigned int inCol, unsigned int inRow);
 
 private:
     unsigned int mNrRows;
