@@ -2,30 +2,30 @@
 
 namespace
 {
-bool isValid(Piece inPiece, Area::Area inLocation)
+bool isValid(Piece inPiece, Area::Area inArea)
 {
     bool res = true;
     switch (inPiece.getType())
     {
     case Piece::Builder:
-        if ((inLocation == Area::TopLeft)
-                || (inLocation == Area::TopRight)
-                || (inLocation == Area::RightTop)
-                || (inLocation == Area::RightBottom)
-                || (inLocation == Area::BottomRight)
-                || (inLocation == Area::BottomLeft)
-                || (inLocation == Area::LeftBottom)
-                || (inLocation == Area::LeftTop)
-                || (inLocation == Area::Central))
+        if ((inArea == Area::TopLeft)
+                || (inArea == Area::TopRight)
+                || (inArea == Area::RightTop)
+                || (inArea == Area::RightBottom)
+                || (inArea == Area::BottomRight)
+                || (inArea == Area::BottomLeft)
+                || (inArea == Area::LeftBottom)
+                || (inArea == Area::LeftTop)
+                || (inArea == Area::Central))
         {
             res = false;
         }
         break;
     case Piece::Pig:
-        if ((inLocation == Area::Top)
-                || (inLocation == Area::Right)
-                || (inLocation == Area::Bottom)
-                || (inLocation == Area::Left))
+        if ((inArea == Area::Top)
+                || (inArea == Area::Right)
+                || (inArea == Area::Bottom)
+                || (inArea == Area::Left))
         {
             res = false;
         }
@@ -36,34 +36,17 @@ bool isValid(Piece inPiece, Area::Area inLocation)
 }
 
 PlacedPiece::PlacedPiece():
-    mPiece(Piece()),
-    mLocation(Area::Central)
+    mPiece( Piece() ),
+    mLocation( (unsigned int)-1 ),
+    mArea( Area::Invalid )
 {
 }
 
-PlacedPiece::PlacedPiece(const Piece &inPiece, Area::Area inLocation):
-    mPiece(inPiece)
+PlacedPiece::PlacedPiece( const Piece &inPiece ):
+    mPiece( inPiece ),
+    mLocation( (unsigned int)-1 ),
+    mArea( Area::Invalid )
 {
-    if (isValid(inPiece, inLocation))
-    {
-        mLocation = inLocation;
-    }
-    else
-    {
-        switch (inPiece.getType())
-        {
-        case Piece::Follower:
-        case Piece::LargeFollower:
-        case Piece::Builder:
-            mLocation = Area::Top;
-            break;
-        case Piece::Pig:
-            mLocation = Area::TopLeft;
-            break;
-        default:
-            mLocation = Area::Top;
-        }
-    }
 }
 
 Piece
@@ -72,10 +55,44 @@ PlacedPiece::getPiece() const
     return mPiece;
 }
 
-Area::Area
+unsigned int
 PlacedPiece::getLocation() const
 {
     return mLocation;
+}
+
+Area::Area
+PlacedPiece::getArea() const
+{
+    return mArea;
+}
+
+bool
+PlacedPiece::placePiece( unsigned int inLocation, Area::Area inArea )
+{
+    if ( inLocation != (unsigned int)-1 )
+    {
+        // Already placed, you can just move Pieces
+        return false;
+    }
+    if ( isValid( getPiece(), inArea ) )
+    {
+        mLocation = inLocation;
+        mArea = inArea;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool
+PlacedPiece::unplacePiece()
+{
+    mLocation = (unsigned int)-1;
+    mArea = Area::Invalid;
+    return true;
 }
 
 std::string
@@ -83,6 +100,6 @@ PlacedPiece::toString() const
 {
     std::string res = mPiece.toString();
     res.append(" on ");
-    res.append(Area::areaToString(mLocation));
+    res.append(Area::areaToString(mArea));
     return res;
 }

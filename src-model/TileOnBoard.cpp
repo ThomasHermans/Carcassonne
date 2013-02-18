@@ -6,7 +6,7 @@ namespace
 {
 bool isValid(TileOnBoard inTile, PlacedPiece inPlacedPiece)
 {
-    Area::Area location = inPlacedPiece.getLocation();
+    Area::Area area = inPlacedPiece.getArea();
     // TODO: check whether inTile's fields, roads or cities contain location
     // if one of the three vectors contains location, return true
     // else return false

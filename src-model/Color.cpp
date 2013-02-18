@@ -3,22 +3,21 @@
 std::string
 Color::colorToString(Color inColor)
 {
-    std::string res = "";
     switch (inColor)
     {
     case Red:
-        res.append("Red");
+        return "Red";
     case Green:
-        res.append("Green");
+        return "Green";
     case Blue:
-        res.append("Blue");
+        return "Blue";
     case Yellow:
-        res.append("Yellow");
+        return "Yellow";
     case Black:
-        res.append("Black");
+        return "Black";
     case Gray:
-        res.append("Gray");
-
+        return "Gray";
+    default:
+        return "Invalid color";
     }
-    return res;
 }

@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "src-model/Board.h"
+#include "src-model/PlacedPiece.h"
 #include "src-model/Tile.h"
 
 #include <QObject>
@@ -19,6 +20,7 @@ public:
     unsigned int getNrOfCols() const;
     unsigned int getStartRow() const;
     unsigned int getStartCol() const;
+    unsigned int getCurrentPlayer() const;
 
     void clickTile(unsigned int inCol, unsigned int inRow);
     void placeTileOnBoard(unsigned int inCol, unsigned int inRow);
@@ -26,6 +28,8 @@ public:
     void rotateTileOnBoard(unsigned int inCol, unsigned int inRow);
 
     boost::optional< Tile > getNextTile() const;
+
+    void endTurn();
 
 public slots:
     void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
@@ -42,6 +46,8 @@ signals:
     void finishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
     void finishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
 
+    void currentPlayerChanged(unsigned int inCurrentPlayer);
+
     void endOfGame(unsigned int inTilesLeft);
 
 private:
@@ -55,6 +61,11 @@ private:
     unsigned int mStartCol;
     unsigned int mCurrentPlacedRow;
     unsigned int mCurrentPlacedCol;
+
+    unsigned int mNrOfPlayers;
+    std::vector< std::vector< PlacedPiece > > mPieces; // Each color/player has its own vector of PlacedPieces
+
+    unsigned int mCurrentPlayer;
 };
 
 #endif // GAME_H

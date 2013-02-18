@@ -51,7 +51,8 @@ namespace Area
         LeftBottom = 9,
         Left = 10,
         LeftTop = 11,
-        Central = 12
+        Central = 12,
+        Invalid = 13
     };
 
     std::string areaToString(Area inArea);

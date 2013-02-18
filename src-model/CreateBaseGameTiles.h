@@ -1,6 +1,8 @@
 #ifndef SETUPBASEGAME_H
 #define SETUPBASEGAME_H
 
+#include "src-model/Color.h"
+#include "src-model/PlacedPiece.h"
 #include "src-model/Tile.h"
 
 #include <vector>
@@ -38,5 +40,7 @@ Tile createTileX();
   * This means that Tiles should be removed using pop_back.
   */
 std::vector< Tile > createBaseGameTiles();
+
+std::vector< PlacedPiece > createBaseGamePieces( Color::Color inColor );
 
 #endif // SETUPBASEGAME_H

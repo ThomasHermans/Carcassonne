@@ -86,6 +86,7 @@ Area::areaToString(Area inArea)
         return "AreaBottom";
     case Left:
         return "AreaLeft";
+    case Invalid:
     default:
         return "No valid Area";
     }

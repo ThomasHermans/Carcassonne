@@ -7,7 +7,7 @@ namespace Color
 {
     enum Color
     {
-        Red,
+        Red = 0,
         Green,
         Blue,
         Yellow,

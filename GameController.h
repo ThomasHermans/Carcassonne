@@ -22,6 +22,8 @@ public slots:
     void onNextTile(std::string inNextId);
     void onTilesLeft(unsigned int inNr);
 
+    void onCurrentPlayerChanged(unsigned int inCurrentPlayer);
+
     void onFinishedCloister(unsigned int inCol, unsigned int inRow);
     void onFinishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
     void onFinishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);

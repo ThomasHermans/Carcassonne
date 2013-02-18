@@ -17,18 +17,26 @@ Game::Game() :
     mStartRow( 0 ),
     mStartCol( 0 ),
     mCurrentPlacedRow( (unsigned int)-1 ),
-    mCurrentPlacedCol( (unsigned int)-1 )
+    mCurrentPlacedCol( (unsigned int)-1 ),
+    mNrOfPlayers( 2 ),
+    mPieces( std::vector< std::vector< PlacedPiece > >() ),
+    mCurrentPlayer( 0 )
 {
     mBag = createBaseGameTiles();
-    for(unsigned int i = 0; i < mBag.size(); ++i)
+    for ( unsigned int i = 0; i < mBag.size(); ++i )
     {
         std::cout << mBag[i].getID();
     }
     std::cout << std::endl;
-    if (!mBag.empty())
+    if ( !mBag.empty() )
     {
         mNextTile = mBag.back();
         mBag.pop_back();
+    }
+    for ( unsigned int i = 0; i < mNrOfPlayers; ++i )
+    {
+        std::vector< PlacedPiece > pieces = createBaseGamePieces( Color::Color(i) );
+        mPieces.push_back( pieces );
     }
     connect
     (
@@ -70,6 +78,12 @@ unsigned int
 Game::getStartCol() const
 {
     return mStartCol;
+}
+
+unsigned int
+Game::getCurrentPlayer() const
+{
+    return mCurrentPlayer;
 }
 
 void
@@ -195,6 +209,30 @@ Game::rotateTileOnBoard(unsigned int inCol, unsigned int inRow)
     }
 }
 
+boost::optional< Tile >
+Game::getNextTile() const
+{
+    return mNextTile;
+}
+
+void
+Game::endTurn()
+{
+    ++mCurrentPlayer;
+    if ( mCurrentPlayer == mNrOfPlayers )
+    {
+        mCurrentPlayer = 0;
+    }
+    emit currentPlayerChanged( mCurrentPlayer );
+}
+
+void
+Game::onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
+{
+    std::cout << "Game sees a rotation" << std::endl;
+    emit tileRotated(inCol, inRow, inId, inRot);
+}
+
 void
 Game::onSubmitCurrentTile()
 {
@@ -210,20 +248,8 @@ Game::onSubmitCurrentTile()
         {
             emit nextTile(mNextTile->getID());
         }
+        endTurn();
     }
-}
-
-boost::optional< Tile >
-Game::getNextTile() const
-{
-    return mNextTile;
-}
-
-void
-Game::onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
-{
-    std::cout << "Game sees a rotation" << std::endl;
-    emit tileRotated(inCol, inRow, inId, inRot);
 }
 
 void

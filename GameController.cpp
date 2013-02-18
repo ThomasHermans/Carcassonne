@@ -1,5 +1,6 @@
 #include "GameController.h"
 
+#include "src-model/Color.h"
 #include "src-view/GuiConstants.h"
 
 namespace
@@ -42,6 +43,8 @@ GameController::GameController(QObject *parent) :
             this, SLOT( onTileRotated(uint,uint,std::string,TileOnBoard::Rotation) ) );
     connect( mGame, SIGNAL( nextTile(std::string) ), this, SLOT( onNextTile(std::string) ) );
     connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
+
+    connect( mGame, SIGNAL( currentPlayerChanged(uint) ), this, SLOT( onCurrentPlayerChanged(uint) ) );
 
     connect( mGame, SIGNAL( finishedCloister(uint, uint) ), this, SLOT( onFinishedCloister(uint, uint) ) );
     connect( mGame, SIGNAL( finishedCity(std::vector<std::pair<uint,uint>>)), this, SLOT( onFinishedCity(std::vector<std::pair<uint,uint>>) ) );
@@ -104,6 +107,12 @@ void
 GameController::onTilesLeft(unsigned int inNr)
 {
     mWindow->displayTilesLeft(inNr);
+}
+
+void
+GameController::onCurrentPlayerChanged(unsigned int inCurrentPlayer)
+{
+    std::cout << "Current player: " << Color::colorToString( Color::Color( inCurrentPlayer ) ) << std::endl;
 }
 
 void
