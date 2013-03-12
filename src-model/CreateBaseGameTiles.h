@@ -41,6 +41,6 @@ Tile createTileX();
   */
 std::vector< Tile > createBaseGameTiles();
 
-std::vector< PlacedPiece > createBaseGamePieces( Color::Color inColor );
+std::vector< Piece > createBaseGamePieces( Color::Color inColor );
 
 #endif // SETUPBASEGAME_H

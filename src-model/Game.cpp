@@ -18,8 +18,7 @@ Game::Game() :
     mStartCol( 0 ),
     mCurrentPlacedRow( (unsigned int)-1 ),
     mCurrentPlacedCol( (unsigned int)-1 ),
-    mNrOfPlayers( 2 ),
-    mPieces( std::vector< std::vector< PlacedPiece > >() ),
+    mPlayers(),
     mCurrentPlayer( 0 )
 {
     mBag = createBaseGameTiles();
@@ -33,11 +32,9 @@ Game::Game() :
         mNextTile = mBag.back();
         mBag.pop_back();
     }
-    for ( unsigned int i = 0; i < mNrOfPlayers; ++i )
-    {
-        std::vector< PlacedPiece > pieces = createBaseGamePieces( Color::Color(i) );
-        mPieces.push_back( pieces );
-    }
+    mPlayers.push_back( Player( "Thomas", Color::Green ) );
+    mPlayers.push_back( Player( "Gijs", Color::Red ) );
+    emit currentPlayerChanged( mPlayers.front() );
     connect
     (
         mBoard, SIGNAL( tileRotated(uint,uint,std::string,TileOnBoard::Rotation) ),
@@ -80,10 +77,10 @@ Game::getStartCol() const
     return mStartCol;
 }
 
-unsigned int
+Player const &
 Game::getCurrentPlayer() const
 {
-    return mCurrentPlayer;
+    return mPlayers[mCurrentPlayer];
 }
 
 void
@@ -218,12 +215,8 @@ Game::getNextTile() const
 void
 Game::endTurn()
 {
-    ++mCurrentPlayer;
-    if ( mCurrentPlayer == mNrOfPlayers )
-    {
-        mCurrentPlayer = 0;
-    }
-    emit currentPlayerChanged( mCurrentPlayer );
+    mCurrentPlayer = (mCurrentPlayer + 1) % mPlayers.size();
+    emit currentPlayerChanged( mPlayers[mCurrentPlayer] );
 }
 
 void
@@ -234,7 +227,25 @@ Game::onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, Ti
 }
 
 void
-Game::onSubmitCurrentTile()
+Game::onTryToPlacePiece()
+{
+    if ( mCurrentPlacedRow != (unsigned int)-1
+        && mCurrentPlacedCol != (unsigned int)-1
+        && mPlayers[mCurrentPlayer].hasFreePieces() )
+    {
+        if ( mNextTile && mNextTile->getCenter() == Tile::Cloister )
+        {
+            // Place a meeple on this cloister
+            if ( mPlayers[mCurrentPlayer].placePiece( mCurrentPlacedRow * mBoard->getNrOfCols() + mCurrentPlacedCol, Area::Central ) )
+            {
+                emit piecePlaced( mCurrentPlacedCol, mCurrentPlacedRow, mPlayers[mCurrentPlayer] );
+            }
+        }
+    }
+}
+
+void
+Game::onEndCurrentTurn()
 {
     if (mCurrentPlacedRow != (unsigned int)-1 && mCurrentPlacedCol != (unsigned int)-1)
     {

@@ -20,6 +20,7 @@ SOURCES += main.cpp\
     src-model\Game.cpp \
     src-model\Piece.cpp \
     src-model\PlacedPiece.cpp \
+    src-model\Player.cpp \
     src-model\TileOnBoard.cpp \
     src-model\Tile.cpp \
     src-view\BoardView.cpp \
@@ -36,6 +37,7 @@ HEADERS  += \
     src-model\Game.h \
     src-model\Piece.h \
     src-model\PlacedPiece.h \
+    src-model\Player.h \
     src-model\Tile.h \
     src-model\TileOnBoard.h \
     src-view\BoardView.h \

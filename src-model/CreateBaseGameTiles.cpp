@@ -972,13 +972,13 @@ createBaseGameTiles()
     return tiles;
 }
 
-std::vector< PlacedPiece >
+std::vector< Piece >
 createBaseGamePieces( Color::Color inColor )
 {
-    std::vector< PlacedPiece > pieces;
+    std::vector< Piece > pieces;
     for ( unsigned int i = 0; i < 6; ++i)
     {
-        pieces.push_back( PlacedPiece( Piece( Piece::Follower, inColor ) ) );
+        pieces.push_back( Piece( Piece::Follower, inColor ) );
     }
     return pieces;
 }

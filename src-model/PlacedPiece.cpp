@@ -42,11 +42,15 @@ PlacedPiece::PlacedPiece():
 {
 }
 
-PlacedPiece::PlacedPiece( const Piece &inPiece ):
+PlacedPiece::PlacedPiece( const Piece & inPiece, unsigned int inLocation, Area::Area inArea ):
     mPiece( inPiece ),
-    mLocation( (unsigned int)-1 ),
+    mLocation( inLocation ),
     mArea( Area::Invalid )
 {
+    if ( isValid( inPiece, inArea ) )
+    {
+        mArea = inArea;
+    }
 }
 
 Piece
@@ -65,34 +69,6 @@ Area::Area
 PlacedPiece::getArea() const
 {
     return mArea;
-}
-
-bool
-PlacedPiece::placePiece( unsigned int inLocation, Area::Area inArea )
-{
-    if ( inLocation != (unsigned int)-1 )
-    {
-        // Already placed, you can just move Pieces
-        return false;
-    }
-    if ( isValid( getPiece(), inArea ) )
-    {
-        mLocation = inLocation;
-        mArea = inArea;
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool
-PlacedPiece::unplacePiece()
-{
-    mLocation = (unsigned int)-1;
-    mArea = Area::Invalid;
-    return true;
 }
 
 std::string

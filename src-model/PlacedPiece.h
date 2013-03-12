@@ -10,14 +10,11 @@ class PlacedPiece
 {
 public:
     PlacedPiece();
-    PlacedPiece(const Piece & inPiece);
+    PlacedPiece( const Piece & inPiece, unsigned int inLocation, Area::Area inArea );
 
     Piece getPiece() const;
     unsigned int getLocation() const;
     Area::Area getArea() const;
-
-    bool placePiece( unsigned int inLocation, Area::Area inArea );
-    bool unplacePiece();
 
     std::string toString() const;
 

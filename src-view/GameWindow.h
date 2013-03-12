@@ -36,7 +36,8 @@ public:
     
 signals:
     void clicked(int x, int y);
-    void submitCurrentTile();
+    void endCurrentTurn();
+    void tryToPlacePiece();
     
 public slots:
     void setTile(int inX, int inY, std::string inId, int inRotation);
@@ -56,7 +57,8 @@ private:
     QVBoxLayout *mSideBarLayout;
     QLabel *mTilesLeft;
     QLabel *mPickedTileLabel;
-    QPushButton *mSubmitTileButton;
+    QPushButton *mEndTurnButton;
+    QPushButton *mTryToPlacePieceButton;
 };
 
 #endif // GAMEWINDOW_H

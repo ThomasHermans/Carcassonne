@@ -44,15 +44,20 @@ GameController::GameController(QObject *parent) :
     connect( mGame, SIGNAL( nextTile(std::string) ), this, SLOT( onNextTile(std::string) ) );
     connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
 
-    connect( mGame, SIGNAL( currentPlayerChanged(uint) ), this, SLOT( onCurrentPlayerChanged(uint) ) );
+    connect( mGame, SIGNAL( piecePlaced(uint, uint, Player) ), this, SLOT( onPiecePlaced(uint, uint, Player ) ) );
+    connect( mGame, SIGNAL( currentPlayerChanged(Player) ), this, SLOT( onCurrentPlayerChanged(Player) ) );
 
     connect( mGame, SIGNAL( finishedCloister(uint, uint) ), this, SLOT( onFinishedCloister(uint, uint) ) );
     connect( mGame, SIGNAL( finishedCity(std::vector<std::pair<uint,uint>>)), this, SLOT( onFinishedCity(std::vector<std::pair<uint,uint>>) ) );
     connect( mGame, SIGNAL( finishedRoad(std::vector<std::pair<uint,uint>>)), this, SLOT( onFinishedRoad(std::vector<std::pair<uint,uint>>) ) );
 
-    connect( mGame, SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );
     connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
-    connect( mWindow, SIGNAL( submitCurrentTile() ), mGame, SLOT( onSubmitCurrentTile() ) );
+    connect( mWindow, SIGNAL( tryToPlacePiece() ), mGame, SLOT( onTryToPlacePiece() ) );
+    connect( mWindow, SIGNAL( endCurrentTurn() ), mGame, SLOT( onEndCurrentTurn() ) );
+
+    connect( mGame, SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );
+
+    onCurrentPlayerChanged( mGame->getCurrentPlayer() );
     mWindow->show();
     if (mGame->getNextTile())
     {
@@ -110,9 +115,15 @@ GameController::onTilesLeft(unsigned int inNr)
 }
 
 void
-GameController::onCurrentPlayerChanged(unsigned int inCurrentPlayer)
+GameController::onPiecePlaced( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer )
 {
-    std::cout << "Current player: " << Color::colorToString( Color::Color( inCurrentPlayer ) ) << std::endl;
+    std::cout << inCurrentPlayer.getName() << " placed a piece." << std::endl;
+}
+
+void
+GameController::onCurrentPlayerChanged( Player const & inCurrentPlayer )
+{
+    std::cout << "Current player: " << inCurrentPlayer.getName() << std::endl;
 }
 
 void

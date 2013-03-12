@@ -81,12 +81,19 @@ GameWindow::GameWindow(QWidget *parent) :
 
     mSideBarLayout->addWidget(mPickedTileLabel);
 
-    mSubmitTileButton = new QPushButton(mCentralWidget);
-    mSubmitTileButton->setObjectName(QString::fromUtf8("mSubmitTileButton"));
-    mSubmitTileButton->setText("Submit Tile");
+    mEndTurnButton = new QPushButton(mCentralWidget);
+    mEndTurnButton->setObjectName(QString::fromUtf8("mEndTurnButton"));
+    mEndTurnButton->setText("End Turn");
+    
+    connect( mEndTurnButton, SIGNAL( clicked() ), this, SIGNAL( endCurrentTurn() ) );
+    mSideBarLayout->addWidget(mEndTurnButton);
 
-    connect( mSubmitTileButton, SIGNAL( clicked() ), this, SIGNAL( submitCurrentTile() ) );
-    mSideBarLayout->addWidget(mSubmitTileButton);
+    mTryToPlacePieceButton = new QPushButton(mCentralWidget);
+    mTryToPlacePieceButton->setObjectName(QString::fromUtf8("mTryToPlacePieceButton"));
+    mTryToPlacePieceButton->setText("Try to place a Piece");
+
+    connect( mTryToPlacePieceButton, SIGNAL( clicked() ), this, SIGNAL( tryToPlacePiece() ) );
+    mSideBarLayout->addWidget( mTryToPlacePieceButton );
 
     mSideBarLayout->addStretch();
 
