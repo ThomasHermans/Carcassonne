@@ -31,7 +31,8 @@ GameWindow::GameWindow(QWidget *parent) :
     mCentralWidget->setObjectName(QString::fromUtf8("mCentralWidget"));
 
     mBoardAndSideBarLayout = new QHBoxLayout();
-    mBoardAndSideBarLayout->setSpacing(6);
+    mBoardAndSideBarLayout->setContentsMargins( 0, 0, 0, 0 );
+    mBoardAndSideBarLayout->setSpacing( 0 );
     mBoardAndSideBarLayout->setObjectName(QString::fromUtf8("mBoardAndSideBarLayout"));
 
     mBoardScene = new QGraphicsScene( mCentralWidget );
@@ -39,6 +40,7 @@ GameWindow::GameWindow(QWidget *parent) :
 
     mBoardView = new BoardView( mBoardScene, this );
     mBoardView->setObjectName( QString::fromUtf8("mBoardView") );
+    mBoardView->setFrameStyle( QFrame::NoFrame );
 
 //    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 //    sizePolicy.setHorizontalStretch(0);
@@ -62,7 +64,8 @@ GameWindow::GameWindow(QWidget *parent) :
 
     mSideBarLayout = new QVBoxLayout();
     mSideBarLayout->setObjectName(QString::fromUtf8("mSideBarLayout"));
-    mSideBarLayout->setSpacing(6);
+    mSideBarLayout->setContentsMargins( 6, 6, 6, 6 );
+    mSideBarLayout->setSpacing( 0 );
 
     mTilesLeft = new QLabel(mCentralWidget);
     mTilesLeft->setObjectName(QString::fromUtf8("mTilesLeft"));
@@ -72,7 +75,7 @@ GameWindow::GameWindow(QWidget *parent) :
 
     mPickedTileLabel = new QLabel(mCentralWidget);
     mPickedTileLabel->setObjectName(QString::fromUtf8("mPickedTileLabel"));
-    mPickedTileLabel->setFixedSize(QSize(100, 100));
+    mPickedTileLabel->setFixedSize( QSize(100, 100) );
     mPickedTileLabel->setText(".");
     mPickedTileLabel->setAlignment(Qt::AlignCenter);
 
@@ -81,10 +84,11 @@ GameWindow::GameWindow(QWidget *parent) :
     mSubmitTileButton = new QPushButton(mCentralWidget);
     mSubmitTileButton->setObjectName(QString::fromUtf8("mSubmitTileButton"));
     mSubmitTileButton->setText("Submit Tile");
+
     connect( mSubmitTileButton, SIGNAL( clicked() ), this, SIGNAL( submitCurrentTile() ) );
     mSideBarLayout->addWidget(mSubmitTileButton);
 
-    mSideBarLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding));
+    mSideBarLayout->addStretch();
 
     mBoardAndSideBarLayout->addLayout(mSideBarLayout);
 
