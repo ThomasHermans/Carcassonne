@@ -1,5 +1,7 @@
 #include "src-model/Piece.h"
 
+#include "src-model/PlacedPiece.h"
+
 Piece::Piece():
     mType(Piece::Follower),
     mColor(Color::Red)
@@ -9,6 +11,12 @@ Piece::Piece():
 Piece::Piece(const Piece & inPiece):
     mType(inPiece.getType()),
     mColor(inPiece.getColor())
+{
+}
+
+Piece::Piece(const PlacedPiece & inPlacedPiece) :
+    mType( inPlacedPiece.getPiece().getType() ),
+    mColor( inPlacedPiece.getPiece().getColor() )
 {
 }
 

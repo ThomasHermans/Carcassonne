@@ -35,6 +35,7 @@ public slots:
     void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
     void onTryToPlacePiece();
     void onEndCurrentTurn();
+    void onFinishedCloister( unsigned int inCol, unsigned int inRow );
 
 signals:
     void tileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
@@ -44,6 +45,7 @@ signals:
     void tilesLeft(unsigned int inNr);
 
     void piecePlaced( unsigned int inCol, unsigned int inRow, Player inCurrentPlayer );
+    void pieceReturned( unsigned int inCol, unsigned int inRow, Player inCurrentPlayer );
 
     void finishedCloister(unsigned int inCol, unsigned int inRow);
     void finishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);

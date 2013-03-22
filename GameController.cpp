@@ -28,6 +28,28 @@ namespace
     {
         return ( ((int)inRow - (int)inStartRow) * GuiConstants::tileHeight );
     }
+
+    QColor
+    toQColor( Color::Color inColor )
+    {
+        switch ( inColor )
+        {
+            case Color::Red:
+                return Qt::red;
+            case Color::Green:
+                return Qt::green;
+            case Color::Blue:
+                return Qt::blue;
+            case Color::Yellow:
+                return Qt::yellow;
+            case Color::Black:
+                return Qt::black;
+            case Color::Gray:
+                return Qt::gray;
+            default:
+                return Qt::white;
+        }
+    }
 }
 
 GameController::GameController(QObject *parent) :
@@ -45,6 +67,7 @@ GameController::GameController(QObject *parent) :
     connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
 
     connect( mGame, SIGNAL( piecePlaced(uint, uint, Player) ), this, SLOT( onPiecePlaced(uint, uint, Player ) ) );
+    connect( mGame, SIGNAL( pieceReturned(uint, uint, Player) ), this, SLOT( onPieceReturned(uint, uint, Player ) ) );
     connect( mGame, SIGNAL( currentPlayerChanged(Player) ), this, SLOT( onCurrentPlayerChanged(Player) ) );
 
     connect( mGame, SIGNAL( finishedCloister(uint, uint) ), this, SLOT( onFinishedCloister(uint, uint) ) );
@@ -118,6 +141,18 @@ void
 GameController::onPiecePlaced( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer )
 {
     std::cout << inCurrentPlayer.getName() << " placed a piece." << std::endl;
+    int x = fromColToX( inCol, mGame->getStartCol() );
+    int y = fromRowToY( inRow, mGame->getStartRow() );
+    mWindow->placePiece( x, y, toQColor( inCurrentPlayer.getColor() ) );
+}
+
+void
+GameController::onPieceReturned( unsigned int inCol, unsigned int inRow, Player const & inPlayer )
+{
+    std::cout << inPlayer.getName() << " got a piece back." << std::endl;
+    int x = fromColToX( inCol, mGame->getStartCol() );
+    int y = fromRowToY( inRow, mGame->getStartRow() );
+    mWindow->returnPiece( x, y, toQColor( inPlayer.getColor() ) );
 }
 
 void

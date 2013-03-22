@@ -44,6 +44,8 @@ public slots:
     void setNextTile(std::string inId);
     void fadeNextTile();
     void onClicked(int x, int y);
+    void placePiece( int inX, int inY, QColor inColor );
+    void returnPiece( int inX, int inY, QColor inColor );
 
 private:
     void updateSceneRect();

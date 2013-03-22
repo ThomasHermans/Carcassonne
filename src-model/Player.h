@@ -16,7 +16,10 @@ public:
 
 	bool hasFreePieces() const;
 
-	bool placePiece( unsigned int inLocation, Area::Area inArea );
+	bool placePiece( unsigned int inCol, unsigned int inRow, Area::Area inArea );
+	bool returnPiece( unsigned int inCol, unsigned int inRow, Area::Area inArea );
+
+	bool hasPiece( unsigned int inCol, unsigned int inRow, Area::Area inArea );
 
 private:
 	std::string mName;

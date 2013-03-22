@@ -40,7 +40,11 @@ Game::Game() :
         mBoard, SIGNAL( tileRotated(uint,uint,std::string,TileOnBoard::Rotation) ),
         this, SLOT( onTileRotated(uint,uint,std::string,TileOnBoard::Rotation) )
     );
-    connect( mBoard, SIGNAL( finishedCloister(uint, uint) ), this, SIGNAL( finishedCloister(uint, uint) ) );
+    connect
+    (
+        mBoard, SIGNAL( finishedCloister(uint, uint) ),
+        this, SLOT( onFinishedCloister(uint, uint) )
+    );
     connect
     (
         mBoard, SIGNAL( finishedCity(std::vector< std::pair< uint, uint > >) ),
@@ -236,7 +240,7 @@ Game::onTryToPlacePiece()
         if ( mNextTile && mNextTile->getCenter() == Tile::Cloister )
         {
             // Place a meeple on this cloister
-            if ( mPlayers[mCurrentPlayer].placePiece( mCurrentPlacedRow * mBoard->getNrOfCols() + mCurrentPlacedCol, Area::Central ) )
+            if ( mPlayers[mCurrentPlayer].placePiece( mCurrentPlacedCol - mStartCol, mCurrentPlacedRow - mStartRow, Area::Central ) )
             {
                 emit piecePlaced( mCurrentPlacedCol, mCurrentPlacedRow, mPlayers[mCurrentPlayer] );
             }
@@ -261,6 +265,20 @@ Game::onEndCurrentTurn()
         }
         endTurn();
     }
+}
+
+void
+Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
+{
+    for ( unsigned int p = 0; p < mPlayers.size(); ++p )
+    {
+        if ( mPlayers[p].hasPiece( inCol - mStartCol, inRow - mStartRow, Area::Central ) )
+        {
+            mPlayers[p].returnPiece( inCol, inRow, Area::Central );
+            emit pieceReturned( inCol, inRow, mPlayers[p] );
+        }
+    }
+    emit finishedCloister( inCol, inRow );
 }
 
 void

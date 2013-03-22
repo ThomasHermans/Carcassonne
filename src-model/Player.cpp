@@ -36,16 +36,54 @@ Player::hasFreePieces() const
 }
 
 bool
-Player::placePiece( unsigned int inLocation, Area::Area inArea )
+Player::placePiece( unsigned int inCol, unsigned int inRow, Area::Area inArea )
 {
 	if ( hasFreePieces() )
 	{
-		PlacedPiece placedPiece( mFreePieces.back(), inLocation, inArea );
+		PlacedPiece placedPiece( mFreePieces.back(), inCol, inRow, inArea );
         if ( placedPiece.getArea() != Area::Invalid )
 		{
 			mPlacedPieces.push_back( placedPiece );
 			mFreePieces.pop_back();
 			return true;
+		}
+	}
+	return false;
+}
+
+bool
+Player::returnPiece( unsigned int inCol, unsigned int inRow, Area::Area inArea )
+{
+	std::vector< PlacedPiece >::iterator it = mPlacedPieces.begin();
+	while ( it != mPlacedPieces.end() )
+	{
+		if ( it->getCol() == inCol && it->getRow() == inRow && it->getArea() == inArea )
+		{
+			mFreePieces.push_back( Piece( *it ) );
+			it = mPlacedPieces.erase( it );
+			return true;
+		}
+		else
+		{
+			++it;
+		}
+	}
+	return false;
+}
+
+bool
+Player::hasPiece( unsigned int inCol, unsigned int inRow, Area::Area inArea )
+{
+	std::vector< PlacedPiece >::iterator it = mPlacedPieces.begin();
+	while ( it != mPlacedPieces.end() )
+	{
+		if ( it->getCol() == inCol && it->getRow() == inRow && it->getArea() == inArea )
+		{
+			return true;
+		}
+		else
+		{
+			++it;
 		}
 	}
 	return false;

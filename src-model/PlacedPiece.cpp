@@ -37,14 +37,16 @@ bool isValid(Piece inPiece, Area::Area inArea)
 
 PlacedPiece::PlacedPiece():
     mPiece( Piece() ),
-    mLocation( (unsigned int)-1 ),
+    mCol( (unsigned int)-1 ),
+    mRow( (unsigned int)-1 ),
     mArea( Area::Invalid )
 {
 }
 
-PlacedPiece::PlacedPiece( const Piece & inPiece, unsigned int inLocation, Area::Area inArea ):
+PlacedPiece::PlacedPiece( const Piece & inPiece, unsigned int inCol, unsigned int inRow, Area::Area inArea ):
     mPiece( inPiece ),
-    mLocation( inLocation ),
+    mCol( inCol ),
+    mRow( inRow ),
     mArea( Area::Invalid )
 {
     if ( isValid( inPiece, inArea ) )
@@ -60,9 +62,15 @@ PlacedPiece::getPiece() const
 }
 
 unsigned int
-PlacedPiece::getLocation() const
+PlacedPiece::getCol() const
 {
-    return mLocation;
+    return mCol;
+}
+
+unsigned int
+PlacedPiece::getRow() const
+{
+    return mRow;
 }
 
 Area::Area

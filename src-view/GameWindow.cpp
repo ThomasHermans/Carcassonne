@@ -4,6 +4,7 @@
 
 #include <QBrush>
 #include <QGraphicsEllipseItem>
+#include <QGraphicsPolygonItem>
 #include <QPen>
 
 #include <iostream>
@@ -222,6 +223,31 @@ GameWindow::onClicked(int x, int y)
 {
     std::cout << "GameWindow sees a click" << std::endl;
     emit clicked(x, y);
+}
+
+void
+GameWindow::placePiece( int inX, int inY, QColor inColor )
+{
+    QVector< QPointF > points;
+    points << QPointF( 0, 0 ) << QPointF( -5, -25 ) << QPointF( 10, -35 ) << QPointF( 25, -25 ) << QPointF( 20, 0 ) << QPointF( 0, 0 );
+    QPolygonF polygon( points );
+    QGraphicsPolygonItem* meeple = new QGraphicsPolygonItem( polygon );
+    meeple->moveBy( inX + GuiConstants::tileWidth / 2 - 12, inY + GuiConstants::tileHeight / 2 + 17 );
+    meeple->setPen( QPen( QBrush( inColor ), 2 ) );
+    mBoardScene->addItem( meeple );
+}
+
+void
+GameWindow::returnPiece( int inX, int inY, QColor inColor )
+{
+    // QList< QGraphicsItem * > items = mBoardScene->items( QPointF( inX, inY ), Qt::IntersectsItemShape, Qt::AscendingOrder );
+    QVector< QPointF > points;
+    points << QPointF( 0, 0 ) << QPointF( -5, -25 ) << QPointF( 10, -35 ) << QPointF( 25, -25 ) << QPointF( 20, 0 ) << QPointF( 0, 0 );
+    QPolygonF polygon( points );
+    QGraphicsPolygonItem* meeple = new QGraphicsPolygonItem( polygon );
+    meeple->moveBy( inX + GuiConstants::tileWidth / 2 - 6, inY + GuiConstants::tileHeight / 2 + 11 );
+    meeple->setPen( QPen( QBrush( inColor ), 2 ) );
+    mBoardScene->addItem( meeple );
 }
 
 void
