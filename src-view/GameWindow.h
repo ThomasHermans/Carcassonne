@@ -19,6 +19,21 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 
+struct GuiPlacedPiece
+{
+    GuiPlacedPiece( QGraphicsPolygonItem* inItem, int inX, int inY, QColor inColor )
+    :
+    mItem( inItem ),
+    mX( inX ),
+    mY( inY ),
+    mColor( inColor )
+    {}
+    QGraphicsPolygonItem* mItem;
+    int mX;
+    int mY;
+    QColor mColor;
+};
+
 class GameWindow : public QMainWindow
 {
     Q_OBJECT
@@ -56,6 +71,7 @@ private:
     QGraphicsScene *mBoardScene;
     BoardView *mBoardView;
     std::vector< TileItem* > mTiles;
+    std::vector< GuiPlacedPiece > mMeeples;
     QVBoxLayout *mSideBarLayout;
     QLabel *mTilesLeft;
     QLabel *mPickedTileLabel;

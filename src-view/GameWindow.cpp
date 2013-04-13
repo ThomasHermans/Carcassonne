@@ -235,19 +235,22 @@ GameWindow::placePiece( int inX, int inY, QColor inColor )
     meeple->moveBy( inX + GuiConstants::tileWidth / 2 - 12, inY + GuiConstants::tileHeight / 2 + 17 );
     meeple->setPen( QPen( QBrush( inColor ), 2 ) );
     mBoardScene->addItem( meeple );
+    mMeeples.push_back( GuiPlacedPiece( meeple, inX, inY, inColor ) );
 }
 
 void
 GameWindow::returnPiece( int inX, int inY, QColor inColor )
 {
     // QList< QGraphicsItem * > items = mBoardScene->items( QPointF( inX, inY ), Qt::IntersectsItemShape, Qt::AscendingOrder );
-    QVector< QPointF > points;
-    points << QPointF( 0, 0 ) << QPointF( -5, -25 ) << QPointF( 10, -35 ) << QPointF( 25, -25 ) << QPointF( 20, 0 ) << QPointF( 0, 0 );
-    QPolygonF polygon( points );
-    QGraphicsPolygonItem* meeple = new QGraphicsPolygonItem( polygon );
-    meeple->moveBy( inX + GuiConstants::tileWidth / 2 - 6, inY + GuiConstants::tileHeight / 2 + 11 );
-    meeple->setPen( QPen( QBrush( inColor ), 2 ) );
-    mBoardScene->addItem( meeple );
+    for ( std::vector< GuiPlacedPiece >::iterator it = mMeeples.begin(); it != mMeeples.end(); ++it )
+    {
+        if ( it->mX == inX && it->mY == inY && it->mColor == inColor )
+        {
+            mBoardScene->removeItem( it->mItem );
+            mMeeples.erase( it );
+            break;
+        }
+    }
 }
 
 void
