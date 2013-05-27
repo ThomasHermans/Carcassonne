@@ -45,6 +45,8 @@ public:
     void rotateTile(int x, int y, std::string inId, int inRotation);
     void displayTilesLeft(unsigned int inNr);
 
+    void setActivePlayer(std::string const & inName);
+
     void finishCloister(int inX, int inY);
     void finishCity(int inLeft, int inRight, int inTop, int inBottom);
     void finishRoad(int inLeft, int inRight, int inTop, int inBottom);
@@ -75,6 +77,9 @@ private:
     QVBoxLayout *mSideBarLayout;
     QLabel *mTilesLeft;
     QLabel *mPickedTileLabel;
+    QLabel *mActiveUserNameLabel;
+    QLabel *mActiveUserScoreLabel;
+    QLabel *mActiveUserMeepleLeftLabel;
     QPushButton *mEndTurnButton;
     QPushButton *mTryToPlacePieceButton;
 };

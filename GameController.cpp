@@ -159,6 +159,7 @@ void
 GameController::onCurrentPlayerChanged( Player const & inCurrentPlayer )
 {
     std::cout << "Current player: " << inCurrentPlayer.getName() << std::endl;
+    mWindow->setActivePlayer(inCurrentPlayer.getName());
 }
 
 void

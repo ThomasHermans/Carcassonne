@@ -82,6 +82,27 @@ GameWindow::GameWindow(QWidget *parent) :
 
     mSideBarLayout->addWidget(mPickedTileLabel);
 
+    mActiveUserNameLabel = new QLabel(mCentralWidget);
+    mActiveUserNameLabel->setObjectName(QString::fromUtf8("mActiveUserNameLabel"));
+    mActiveUserNameLabel->setText("Active user name");
+    mActiveUserNameLabel->setAlignment(Qt::AlignLeft);
+
+    mSideBarLayout->addWidget(mActiveUserNameLabel);
+
+    mActiveUserScoreLabel = new QLabel(mCentralWidget);
+    mActiveUserScoreLabel->setObjectName(QString::fromUtf8("mActiveUserScoreLabel"));
+    mActiveUserScoreLabel->setText("Active user score");
+    mActiveUserScoreLabel->setAlignment(Qt::AlignLeft);
+
+    mSideBarLayout->addWidget(mActiveUserScoreLabel);
+
+    mActiveUserMeepleLeftLabel = new QLabel(mCentralWidget);
+    mActiveUserMeepleLeftLabel->setObjectName(QString::fromUtf8("mActiveUserMeepleLeftLabel"));
+    mActiveUserMeepleLeftLabel->setText("Active user meeple left");
+    mActiveUserMeepleLeftLabel->setAlignment(Qt::AlignLeft);
+
+    mSideBarLayout->addWidget(mActiveUserMeepleLeftLabel);
+
     mEndTurnButton = new QPushButton(mCentralWidget);
     mEndTurnButton->setObjectName(QString::fromUtf8("mEndTurnButton"));
     mEndTurnButton->setText("End Turn");
@@ -158,6 +179,12 @@ void
 GameWindow::displayTilesLeft(unsigned int inNr)
 {
     mTilesLeft->setText(QString::number(inNr).append(" tiles left."));
+}
+
+void
+GameWindow::setActivePlayer(std::string const & inName)
+{
+    mActiveUserNameLabel->setText(QString::fromUtf8(inName.c_str()));
 }
 
 void
