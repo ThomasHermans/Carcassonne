@@ -29,6 +29,18 @@ Player::getColor() const
 	return mColor;
 }
 
+int
+Player::getScore() const
+{
+	return mScore;
+}
+
+int
+Player::getNumberOfFreePieces() const
+{
+	return mFreePieces.size();
+}
+
 bool
 Player::hasFreePieces() const
 {
