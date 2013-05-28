@@ -8,11 +8,13 @@
 class Player
 {
 public:
-    Player( std::string inName, Color::Color inColor );
+	Player( std::string inName, Color::Color inColor );
 	~Player();
 
 	std::string getName() const;
 	Color::Color getColor() const;
+	int getScore() const;
+	int getNumberOfFreePieces() const;
 
 	bool hasFreePieces() const;
 
@@ -23,7 +25,7 @@ public:
 
 private:
 	std::string mName;
-    Color::Color mColor;
+	Color::Color mColor;
 	int mScore;
 	std::vector< Piece > mFreePieces;
 	std::vector< PlacedPiece > mPlacedPieces;
