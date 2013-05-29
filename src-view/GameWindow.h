@@ -46,6 +46,7 @@ public:
     void displayTilesLeft(unsigned int inNr);
 
     void setActivePlayer(std::string const & inName);
+    void setActivePlayer(std::string const & inName, int inScore, int inPiecesLeft);
 
     void finishCloister(int inX, int inY);
     void finishCity(int inLeft, int inRight, int inTop, int inBottom);
