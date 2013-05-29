@@ -185,6 +185,16 @@ void
 GameWindow::setActivePlayer(std::string const & inName)
 {
     mActiveUserNameLabel->setText(QString::fromUtf8(inName.c_str()));
+    mActiveUserScoreLabel->setText("Active user score");
+    mActiveUserMeepleLeftLabel->setText("Active user meeple left");
+}
+
+void
+GameWindow::setActivePlayer(std::string const & inName, int inScore, int inPiecesLeft)
+{
+    mActiveUserNameLabel->setText(QString::fromUtf8(inName.c_str()));
+    mActiveUserScoreLabel->setText(QString::number(inScore));
+    mActiveUserMeepleLeftLabel->setText(QString::number(inPiecesLeft).append(" meeple left."));
 }
 
 void
