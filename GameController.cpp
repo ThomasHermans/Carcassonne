@@ -158,7 +158,6 @@ GameController::onPieceReturned( unsigned int inCol, unsigned int inRow, Player 
 void
 GameController::onCurrentPlayerChanged( Player const & inCurrentPlayer )
 {
-    std::cout << "Current player: " << inCurrentPlayer.getName() << std::endl;
     mWindow->setActivePlayer(inCurrentPlayer.getName(), inCurrentPlayer.getScore(), inCurrentPlayer.getNumberOfFreePieces());
 }
 

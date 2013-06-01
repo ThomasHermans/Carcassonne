@@ -48,11 +48,11 @@ Player::hasFreePieces() const
 }
 
 bool
-Player::placePiece( unsigned int inCol, unsigned int inRow, Area::Area inArea )
+Player::placePiece( int inRelCol, int inRelRow, Area::Area inArea )
 {
 	if ( hasFreePieces() )
 	{
-		PlacedPiece placedPiece( mFreePieces.back(), inCol, inRow, inArea );
+		PlacedPiece placedPiece( mFreePieces.back(), inRelCol, inRelRow, inArea );
         if ( placedPiece.getArea() != Area::Invalid )
 		{
 			mPlacedPieces.push_back( placedPiece );
@@ -64,15 +64,34 @@ Player::placePiece( unsigned int inCol, unsigned int inRow, Area::Area inArea )
 }
 
 bool
-Player::returnPiece( unsigned int inCol, unsigned int inRow, Area::Area inArea )
+Player::returnPiece( int inRelCol, int inRelRow, Area::Area inArea )
+{
+	std::vector< PlacedPiece >::iterator it = mPlacedPieces.begin();
+	bool removed = false;
+	while ( it != mPlacedPieces.end() )
+	{
+		if ( it->getCol() == inRelCol && it->getRow() == inRelRow && it->getArea() == inArea )
+		{
+			mFreePieces.push_back( Piece( *it ) );
+			it = mPlacedPieces.erase( it );
+			removed = true;
+		}
+		else
+		{
+			++it;
+		}
+	}
+	return removed;
+}
+
+bool
+Player::hasPiece( int inRelCol, int inRelRow, Area::Area inArea )
 {
 	std::vector< PlacedPiece >::iterator it = mPlacedPieces.begin();
 	while ( it != mPlacedPieces.end() )
 	{
-		if ( it->getCol() == inCol && it->getRow() == inRow && it->getArea() == inArea )
+		if ( it->getCol() == inRelCol && it->getRow() == inRelRow && it->getArea() == inArea )
 		{
-			mFreePieces.push_back( Piece( *it ) );
-			it = mPlacedPieces.erase( it );
 			return true;
 		}
 		else
@@ -83,20 +102,22 @@ Player::returnPiece( unsigned int inCol, unsigned int inRow, Area::Area inArea )
 	return false;
 }
 
-bool
-Player::hasPiece( unsigned int inCol, unsigned int inRow, Area::Area inArea )
+unsigned
+Player::getNrOfPieces( int inRelCol, int inRelRow, Area::Area inArea )
 {
-	std::vector< PlacedPiece >::iterator it = mPlacedPieces.begin();
-	while ( it != mPlacedPieces.end() )
+	unsigned nrOfPieces = 0;
+	for ( std::vector< PlacedPiece >::iterator it = mPlacedPieces.begin(); it != mPlacedPieces.end(); ++it )
 	{
-		if ( it->getCol() == inCol && it->getRow() == inRow && it->getArea() == inArea )
+		if ( it->getCol() == inRelCol && it->getRow() == inRelRow && it->getArea() == inArea )
 		{
-			return true;
-		}
-		else
-		{
-			++it;
+            ++nrOfPieces;
 		}
 	}
-	return false;
+	return nrOfPieces;
+}
+
+void
+Player::awardPoints( unsigned inPoints )
+{
+	mScore += inPoints;
 }

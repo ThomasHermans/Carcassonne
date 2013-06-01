@@ -18,10 +18,13 @@ public:
 
 	bool hasFreePieces() const;
 
-	bool placePiece( unsigned int inCol, unsigned int inRow, Area::Area inArea );
-	bool returnPiece( unsigned int inCol, unsigned int inRow, Area::Area inArea );
+	bool placePiece( int inRelCol, int inRelRow, Area::Area inArea );
+	bool returnPiece( int inRelCol, int inRelRow, Area::Area inArea );
 
-	bool hasPiece( unsigned int inCol, unsigned int inRow, Area::Area inArea );
+	bool hasPiece( int inRelCol, int inRelRow, Area::Area inArea );
+	unsigned getNrOfPieces( int inRelCol, int inRelRow, Area::Area inArea );
+
+	void awardPoints( unsigned inPoints );
 
 private:
 	std::string mName;

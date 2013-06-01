@@ -9,20 +9,19 @@
 class PlacedPiece
 {
 public:
-    PlacedPiece();
-    PlacedPiece( const Piece & inPiece, unsigned int inCol, unsigned inRow, Area::Area inArea );
+    PlacedPiece( const Piece & inPiece, int inRelCol, int inRelRow, Area::Area inArea );
 
     Piece getPiece() const;
-    unsigned int getCol() const;
-    unsigned int getRow() const;
+    int getCol() const;
+    int getRow() const;
     Area::Area getArea() const;
 
     std::string toString() const;
 
 private:
     Piece mPiece;
-    unsigned int mCol;
-    unsigned int mRow;
+    int mRelCol;
+    int mRelRow;
     Area::Area mArea;
 };
 

@@ -2,12 +2,14 @@
 
 #include "src-model/CreateBaseGameTiles.h"
 
+#include <set>
 #include <stdio.h>
 
 namespace
 {
 int extraRowsAndCols = 1;
 int size = 5;
+unsigned kPointsForFinishedCloister = 9;
 }
 
 Game::Game() :
@@ -100,7 +102,7 @@ Game::clickTile(unsigned int inCol, unsigned int inRow)
         std::cout << "Non-empty spot -> rotateTileOnBoard" << std::endl;
         rotateTileOnBoard(inCol, inRow);
     }
-    std::cout << mBoard->toString() << std::flush;
+    // std::cout << mBoard->toString() << std::flush;
 }
 
 void
@@ -233,6 +235,7 @@ Game::onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, Ti
 void
 Game::onTryToPlacePiece()
 {
+    std::cout << "onTryToPlacePiece" << std::endl;
     if ( mCurrentPlacedRow != (unsigned int)-1
         && mCurrentPlacedCol != (unsigned int)-1
         && mPlayers[mCurrentPlayer].hasFreePieces() )
@@ -251,6 +254,7 @@ Game::onTryToPlacePiece()
 void
 Game::onEndCurrentTurn()
 {
+    std::cout << "onEndCurrentTurn" << std::endl;
     if (mCurrentPlacedRow != (unsigned int)-1 && mCurrentPlacedCol != (unsigned int)-1)
     {
         mBoard->checkForFinishedCloisters( mCurrentPlacedCol, mCurrentPlacedRow );
@@ -270,13 +274,33 @@ Game::onEndCurrentTurn()
 void
 Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
 {
-    for ( unsigned int p = 0; p < mPlayers.size(); ++p )
+    std::cout << "onFinishedCloister" << std::endl;
+    // Find winning player for this cloister
+    std::set< unsigned > winningPlayers;
+    unsigned majority = 0;
+    for ( unsigned p = 0; p < mPlayers.size(); ++p )
     {
-        if ( mPlayers[p].hasPiece( inCol - mStartCol, inRow - mStartRow, Area::Central ) )
+        unsigned nrOfPieces = mPlayers[p].getNrOfPieces( inCol - mStartCol, inRow - mStartRow, Area::Central );
+        if ( nrOfPieces > 0 )
         {
-            mPlayers[p].returnPiece( inCol, inRow, Area::Central );
+            mPlayers[p].returnPiece( inCol - mStartCol, inRow - mStartRow, Area::Central );
             emit pieceReturned( inCol, inRow, mPlayers[p] );
+            if ( nrOfPieces > majority )
+            {
+                winningPlayers.clear();
+                winningPlayers.insert( p );
+                majority = nrOfPieces;
+            }
+            else if ( nrOfPieces == majority )
+            {
+                winningPlayers.insert( p );
+            }
         }
+    }
+    for ( std::set< unsigned >::iterator it = winningPlayers.begin(); it != winningPlayers.end(); ++it )
+    {
+        std::cout << "Awarding points for cloister on " << inCol << ", " << inRow << std::endl;
+        mPlayers[ *it ].awardPoints( kPointsForFinishedCloister );
     }
     emit finishedCloister( inCol, inRow );
 }
@@ -284,6 +308,7 @@ Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
 void
 Game::pickNextTile()
 {
+    std::cout << "pickNextTile" << std::endl;
     if (!mBag.empty())
     {
         std::vector< Tile >::iterator it = mBag.end();
