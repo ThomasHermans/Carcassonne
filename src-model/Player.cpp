@@ -57,6 +57,7 @@ Player::placePiece( int inRelCol, int inRelRow, Area::Area inArea )
 		{
 			mPlacedPieces.push_back( placedPiece );
 			mFreePieces.pop_back();
+			emit nrOfFreePiecesChanged( mFreePieces.size() );
 			return true;
 		}
 	}
@@ -81,6 +82,7 @@ Player::returnPiece( int inRelCol, int inRelRow, Area::Area inArea )
 			++it;
 		}
 	}
+	emit nrOfFreePiecesChanged( mFreePieces.size() );
 	return removed;
 }
 
@@ -120,4 +122,5 @@ void
 Player::awardPoints( unsigned inPoints )
 {
 	mScore += inPoints;
+	emit scoreChanged( mScore );
 }

@@ -34,8 +34,8 @@ Game::Game() :
         mNextTile = mBag.back();
         mBag.pop_back();
     }
-    mPlayers.push_back( Player( "Thomas", Color::Green ) );
-    mPlayers.push_back( Player( "Gijs", Color::Red ) );
+    mPlayers.push_back( new Player( "Thomas", Color::Green ) );
+    mPlayers.push_back( new Player( "Gijs", Color::Red ) );
     emit currentPlayerChanged( mPlayers.front() );
     connect
     (

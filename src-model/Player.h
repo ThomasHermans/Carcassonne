@@ -5,8 +5,12 @@
 #include "src-model/Piece.h"
 #include "src-model/PlacedPiece.h"
 
-class Player
+#include <QObject>
+
+class Player : public QObject
 {
+	Q_OBJECT
+
 public:
 	Player( std::string inName, Color::Color inColor );
 	~Player();
@@ -25,6 +29,10 @@ public:
 	unsigned getNrOfPieces( int inRelCol, int inRelRow, Area::Area inArea );
 
 	void awardPoints( unsigned inPoints );
+
+signals:
+	void nrOfFreePiecesChanged( unsigned int inNewNrOfFreePieces );
+	void scoreChanged( int mScore );
 
 private:
 	std::string mName;
