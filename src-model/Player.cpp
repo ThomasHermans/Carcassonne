@@ -13,8 +13,32 @@ mPlacedPieces()
 {
 }
 
+Player::Player( Player const & inPlayer )
+:
+mName( inPlayer.mName ),
+mColor( inPlayer.mColor ),
+mScore( inPlayer.mScore ),
+mFreePieces( inPlayer.mFreePieces ),
+mPlacedPieces( inPlayer.mPlacedPieces )
+{
+}
+
 Player::~Player()
 {
+}
+
+Player &
+Player::operator = ( Player const & inPlayer )
+{
+	if ( this != &inPlayer )
+	{
+		mName = inPlayer.mName;
+		mColor = inPlayer.mColor;
+		mScore = inPlayer.mScore;
+		mFreePieces = inPlayer.mFreePieces;
+		mPlacedPieces = inPlayer.mPlacedPieces;
+	}
+	return *this;
 }
 
 std::string
@@ -57,7 +81,7 @@ Player::placePiece( int inRelCol, int inRelRow, Area::Area inArea )
 		{
 			mPlacedPieces.push_back( placedPiece );
 			mFreePieces.pop_back();
-			emit nrOfFreePiecesChanged( mFreePieces.size() );
+			emit nrOfFreePiecesChanged( *this, mFreePieces.size() );
 			return true;
 		}
 	}
@@ -82,7 +106,7 @@ Player::returnPiece( int inRelCol, int inRelRow, Area::Area inArea )
 			++it;
 		}
 	}
-	emit nrOfFreePiecesChanged( mFreePieces.size() );
+	emit nrOfFreePiecesChanged( *this, mFreePieces.size() );
 	return removed;
 }
 

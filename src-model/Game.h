@@ -9,7 +9,6 @@
 
 #include <vector>
 #include <boost/optional/optional.hpp>
-#include <boost/ptr_container/ptr_vector.hpp>
 
 class Game : public QObject
 {
@@ -53,6 +52,7 @@ signals:
 	void finishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
 
 	void currentPlayerChanged( Player const & inCurrentPlayer );
+	void playerInfoChanged( Player const & inNewInfo );
 
 	void endOfGame(unsigned int inTilesLeft);
 
@@ -68,7 +68,7 @@ private:
 	unsigned int mCurrentPlacedRow;
 	unsigned int mCurrentPlacedCol;
 
-	boost::ptr_vector< Player > mPlayers;
+	std::vector< Player > mPlayers;
 	unsigned int mCurrentPlayer;
 };
 

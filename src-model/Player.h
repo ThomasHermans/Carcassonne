@@ -13,7 +13,9 @@ class Player : public QObject
 
 public:
 	Player( std::string inName, Color::Color inColor );
+	Player( Player const & inPlayer );
 	~Player();
+	Player & operator = ( Player const & inPlayer );
 
 	std::string getName() const;
 	Color::Color getColor() const;
@@ -31,7 +33,7 @@ public:
 	void awardPoints( unsigned inPoints );
 
 signals:
-	void nrOfFreePiecesChanged( unsigned int inNewNrOfFreePieces );
+	void nrOfFreePiecesChanged( Player const & inPlayer, unsigned int inNewNrOfFreePieces );
 	void scoreChanged( int mScore );
 
 private:

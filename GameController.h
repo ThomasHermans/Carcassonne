@@ -8,34 +8,33 @@
 
 class GameController : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit GameController(QObject *parent = 0);
-    
-signals:
+	explicit GameController(QObject *parent = 0);
 
 public slots:
-    void onTilePlaced(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
-    void onTileUnplaced(unsigned int inCol, unsigned int inRow);
-    void onClicked(int x, int y);
-    void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
-    void onNextTile(std::string inNextId);
-    void onTilesLeft(unsigned int inNr);
+	void onTilePlaced(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
+	void onTileUnplaced(unsigned int inCol, unsigned int inRow);
+	void onClicked(int x, int y);
+	void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
+	void onNextTile(std::string inNextId);
+	void onTilesLeft(unsigned int inNr);
 
-    void onPiecePlaced( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer );
-    void onPieceReturned( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer );
-    void onCurrentPlayerChanged(Player const & inCurrentPlayer);
+	void onPiecePlaced( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer );
+	void onPieceReturned( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer );
+	void onPlayerInfoChanged( Player const & inNewInfo );
+	void onCurrentPlayerChanged(Player const & inCurrentPlayer);
 
-    void onFinishedCloister(unsigned int inCol, unsigned int inRow);
-    void onFinishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
-    void onFinishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
+	void onFinishedCloister(unsigned int inCol, unsigned int inRow);
+	void onFinishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
+	void onFinishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
 
-    void onEndOfGame(unsigned int inTilesLeft);
+	void onEndOfGame(unsigned int inTilesLeft);
 
 private:
-    Game *mGame;
-    GameWindow *mWindow;
-    
+	Game *mGame;
+	GameWindow *mWindow;
+	
 };
 
 #endif // GAMECONTROLLER_H
