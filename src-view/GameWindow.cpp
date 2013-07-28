@@ -43,6 +43,8 @@ GameWindow::GameWindow(QWidget *parent) :
 	mBoardView->setObjectName( QString::fromUtf8("mBoardView") );
 	mBoardView->setFrameStyle( QFrame::NoFrame );
 
+	connect( mBoardView, SIGNAL( enterPressed() ), this, SIGNAL( endCurrentTurn() ) );
+
 //    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 //    sizePolicy.setHorizontalStretch(0);
 //    sizePolicy.setVerticalStretch(0);
