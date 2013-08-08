@@ -40,24 +40,30 @@ FRCArea::RoadArea unturn(FRCArea::RoadArea inRoadArea, TileOnBoard::Rotation inR
 }
 }
 
-TileOnBoard::TileOnBoard():
-    mTile(Tile::Tile()),
-    mRotation(TileOnBoard::cw0)
+TileOnBoard::TileOnBoard()
+:
+	mTile( Tile::Tile() ),
+	mRotation( TileOnBoard::cw0 ),
+	mOccupiedFields(),
+	mOccupiedRoads(),
+	mFinishedRoads(),
+	mOccupiedCities(),
+	mFinishedCities(),
+	mPlacedPieces()
 {
-    mOccupiedFields = std::vector< Tile::ContiguousField >();
-    mOccupiedRoads = std::vector< Tile::ContiguousRoad >();
-    mOccupiedCities = std::vector< Tile::ContiguousCity >();
-    mPlacedPieces = std::vector< PlacedPiece >();
 }
 
-TileOnBoard::TileOnBoard(const Tile &inTile, Rotation inRotation):
-    mTile(inTile),
-    mRotation(inRotation)
+TileOnBoard::TileOnBoard( const Tile &inTile, Rotation inRotation )
+:
+	mTile( inTile ),
+	mRotation( inRotation ),
+	mOccupiedFields(),
+	mOccupiedRoads(),
+	mFinishedRoads(),
+	mOccupiedCities(),
+	mFinishedCities(),
+	mPlacedPieces()
 {
-    mOccupiedFields = std::vector< Tile::ContiguousField >();
-    mOccupiedRoads = std::vector< Tile::ContiguousRoad >();
-    mOccupiedCities = std::vector< Tile::ContiguousCity >();
-    mPlacedPieces = std::vector< PlacedPiece >();
 }
 
 bool
@@ -159,6 +165,12 @@ TileOnBoard::Rotation
 TileOnBoard::getRotation() const
 {
     return mRotation;
+}
+
+std::vector< PlacedPiece > const &
+TileOnBoard::getPlacedPieces() const
+{
+	return mPlacedPieces;
 }
 
 bool
