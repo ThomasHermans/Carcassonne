@@ -30,6 +30,7 @@ public:
     std::string getID() const;
     Tile getTile() const;
     TileOnBoard::Rotation getRotation() const;
+    std::vector< PlacedPiece > const & getPlacedPieces() const;
 
     bool matchesAbove(const TileOnBoard & inTileOnBoard) const;
     bool matchesRightOf(const TileOnBoard & inTileOnBoard) const;
