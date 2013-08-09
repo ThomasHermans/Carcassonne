@@ -44,6 +44,8 @@ GameWindow::GameWindow(QWidget *parent) :
 	mBoardView->setFrameStyle( QFrame::NoFrame );
 
 	connect( mBoardView, SIGNAL( enterPressed() ), this, SIGNAL( endCurrentTurn() ) );
+	connect( mBoardView, SIGNAL( spacePressed() ), this, SIGNAL( endCurrentTurn() ) );
+	connect( mBoardView, SIGNAL( mPressed() ), this, SIGNAL( tryToPlacePiece() ) );
 
 //    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 //    sizePolicy.setHorizontalStretch(0);

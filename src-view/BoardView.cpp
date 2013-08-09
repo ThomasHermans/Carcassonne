@@ -36,4 +36,12 @@ BoardView::keyPressEvent( QKeyEvent * inEvent )
 	{
 		emit enterPressed();
 	}
+	else if ( inEvent->key() == Qt::Key_Space )
+	{
+		emit spacePressed();
+	}
+	else if ( inEvent->key() == Qt::Key_M )
+	{
+		emit mPressed();
+	}
 }
