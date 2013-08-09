@@ -3,9 +3,10 @@
 
 #include "src-model/Color.h"
 #include "src-model/Piece.h"
-#include "src-model/PlacedPiece.h"
 
 #include <QObject>
+
+#include <vector>
 
 class Player : public QObject
 {
@@ -24,11 +25,8 @@ public:
 
 	bool hasFreePieces() const;
 
-	bool placePiece( int inRelCol, int inRelRow, Area::Area inArea );
-	bool returnPiece( int inRelCol, int inRelRow, Area::Area inArea );
-
-	bool hasPiece( int inRelCol, int inRelRow, Area::Area inArea );
-	unsigned getNrOfPieces( int inRelCol, int inRelRow, Area::Area inArea );
+	Piece getPieceToPlace();
+	void returnPiece( Piece inPiece );
 
 	void awardPoints( unsigned inPoints );
 
@@ -41,7 +39,6 @@ private:
 	Color::Color mColor;
 	int mScore;
 	std::vector< Piece > mFreePieces;
-	std::vector< PlacedPiece > mPlacedPieces;
 };
 
 #endif // PLAYER_H

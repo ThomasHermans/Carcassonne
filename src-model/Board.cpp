@@ -5,6 +5,8 @@
 
 namespace
 {
+	int const kExtraRowsAndCols = 1;
+
 	FRCArea::CityArea
 	oppositeSide( FRCArea::CityArea inCityArea )
 	{
@@ -55,7 +57,28 @@ Board::Board( unsigned int inSize )
 	mNrRows( (inSize % 2 == 1) ? inSize : inSize + 1 ),
 	mNrCols( (inSize % 2 == 1) ? inSize : inSize + 1 ),
     mBoard( mNrCols * mNrRows, boost::optional< TileOnBoard >() )
+{}
+
+Board::Board( Board const & inBoard )
+:
+	mNrRows( inBoard.mNrRows ),
+	mNrCols( inBoard.mNrCols ),
+	mBoard( inBoard.mBoard )
+{}
+
+Board::~Board()
+{}
+
+Board &
+Board::operator = ( Board const & inBoard )
 {
+	if ( this != &inBoard )
+	{
+		mNrRows = inBoard.mNrRows;
+		mNrCols = inBoard.mNrCols;
+		mBoard = inBoard.mBoard;
+	}
+	return *this;
 }
 
 unsigned int Board::getNrOfRows() const
@@ -167,12 +190,11 @@ Board::isEmptySpot(unsigned int inCol, unsigned int inRow) const
 bool
 Board::isValidTilePlacement(const TileOnBoard &inTile, unsigned int inCol, unsigned int inRow) const
 {
-	bool valid = isEmptySpot(inCol, inRow);
-	if (valid)
+	if ( isEmptySpot( inCol, inRow ) )
 	{
-		valid = isValidAlternateTilePlacement(inTile, inCol, inRow);
+		return isValidAlternateTilePlacement(inTile, inCol, inRow);
 	}
-	return valid;
+	return false;
 }
 
 bool
@@ -271,43 +293,18 @@ Board::placeStartTile(const TileOnBoard &inTile)
 	return row * mNrCols + col;
 }
 
-void
-Board::rotateTileOnBoard(unsigned int inCol, unsigned int inRow)
+std::vector< PlacedPiece >
+Board::removePieces( unsigned inCol, unsigned inRow, Area::Area inArea )
 {
-	boost::optional< TileOnBoard > toBeRotatedTile = mBoard[inRow * mNrCols + inCol];
-	if (toBeRotatedTile)
+	boost::optional< TileOnBoard > tile = getTile( inCol, inRow );
+	if ( tile )
 	{
-		TileOnBoard::Rotation currentRotation = toBeRotatedTile->getRotation();
-		Tile tile = toBeRotatedTile->getTile();
-		TileOnBoard::Rotation newRotation = currentRotation;
-		TileOnBoard rotated = TileOnBoard(tile, newRotation);
-		for (int i = 0; i < 4; ++i)
-		{
-			newRotation = TileOnBoard::Rotation((newRotation + TileOnBoard::cw90) % (TileOnBoard::cw90 * 4));
-			rotated = TileOnBoard(tile, newRotation);
-			if (isValidAlternateTilePlacement(rotated, inCol, inRow))
-			{
-				break;
-			}
-		}
-		if (placeTile(rotated, inCol, inRow))
-		{
-			std::cout << "Board sees a rotation, " << rotated.getRotation() * 30 << std::endl;
-			emit tileRotated(inCol, inRow, rotated.getID(), rotated.getRotation());
-		}
+		return tile->removePieces( inArea );
 	}
-}
-
-boost::optional< TileOnBoard >
-Board::removeTile(unsigned int inCol, unsigned int inRow)
-{
-	boost::optional< TileOnBoard > tile;
-	if ((inCol >= 0) && (inCol < mNrCols) && (inRow >= 0) && (inRow < mNrRows))
+	else
 	{
-		tile = mBoard[inRow * mNrCols + inCol];
-		mBoard[inRow * mNrCols + inCol] = boost::optional< TileOnBoard >();
+		return std::vector< PlacedPiece >();
 	}
-	return tile;
 }
 
 void
@@ -343,15 +340,8 @@ Board::isFinishedCloister( unsigned int inCol, unsigned int inRow ) const
 		{
 			return true;
 		}
-		else
-		{
-			return false;
-		}
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 bool
@@ -537,9 +527,33 @@ Board::placeTile(const TileOnBoard &inTile, unsigned int inCol, unsigned int inR
 	if ((inCol >= 0) && (inCol < mNrCols) && (inRow >= 0) && (inRow < mNrRows))
 	{
 		mBoard[inRow * mNrCols + inCol] = boost::optional< TileOnBoard >( inTile );
+		widenUp( inCol, inRow );
 		placed = true;
 	}
 	return placed;
+}
+
+void
+Board::widenUp( unsigned inCol, unsigned inRow )
+{
+	if ( inCol == 0 )
+	{
+		addColsLeft( kExtraRowsAndCols );
+		emit colsAddedLeft( kExtraRowsAndCols );
+	}
+	else if ( inCol == getNrOfCols() - 1 )
+	{
+		addColsRight( kExtraRowsAndCols );
+	}
+	else if ( inRow == 0 )
+	{
+		addRowsOnTop( kExtraRowsAndCols );
+		emit rowsAddedTop( kExtraRowsAndCols );
+	}
+	else if ( inRow == getNrOfRows() - 1 )
+	{
+		addRowsBelow( kExtraRowsAndCols );
+	}
 }
 
 bool

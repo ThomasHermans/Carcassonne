@@ -7,19 +7,57 @@
 
 namespace
 {
-int extraRowsAndCols = 1;
-int size = 5;
-unsigned kPointsForFinishedCloister = 9;
+	int const kSize = 5;
+	unsigned const kPointsForFinishedCloister = 9;
+	unsigned const kInvalid = -1;
+
+	std::set< Color::Color >
+	getWinningColors( std::vector< PlacedPiece > const & inPieces )
+	{
+		typedef std::map< Color::Color, unsigned > Counts;
+		Counts counts;
+		for ( std::vector< PlacedPiece >::const_iterator it = inPieces.begin();
+			it != inPieces.end();
+			++it )
+		{
+			Color::Color color = it->getPiece().getColor();
+			Counts::iterator countIt = counts.find( color );
+			if ( countIt == counts.end() )
+			{
+				counts.insert( std::make_pair( color, 1 ) );
+			}
+			else
+			{
+				++countIt->second;
+			}
+		}
+		std::set< Color::Color > winningColors;
+		unsigned winningAmount = 0;
+		for ( Counts::const_iterator it = counts.begin(); it != counts.end(); ++it )
+		{
+			if ( it->second > winningAmount )
+			{
+				winningColors.clear();
+				winningAmount = it->second;
+			}
+			if ( it->second == winningAmount )
+			{
+				winningColors.insert( it->first );
+			}
+		}
+		return winningColors;
+	}
 }
 
 Game::Game() :
-	mBoard(new Board(size)),
-	mBag(),
-	mNextTile(),
+	mBoard( Board( kSize ) ),
 	mStartRow( 0 ),
 	mStartCol( 0 ),
-	mCurrentPlacedRow( (unsigned int)-1 ),
-	mCurrentPlacedCol( (unsigned int)-1 ),
+	mCurrentPlacedTile( boost::none ),
+	mCurrentPlacedRow( kInvalid ),
+	mCurrentPlacedCol( kInvalid ),
+	mBag(),
+	mNextTile(),
 	mPlayers(),
 	mCurrentPlayer( 0 )
 {
@@ -47,36 +85,44 @@ Game::Game() :
 	emit currentPlayerChanged( mPlayers.front() );
 	connect
 	(
-		mBoard, SIGNAL( tileRotated(uint,uint,std::string,TileOnBoard::Rotation) ),
-		this, SLOT( onTileRotated(uint,uint,std::string,TileOnBoard::Rotation) )
-	);
-	connect
-	(
-		mBoard, SIGNAL( finishedCloister(uint, uint) ),
+		&mBoard, SIGNAL( finishedCloister(uint, uint) ),
 		this, SLOT( onFinishedCloister(uint, uint) )
 	);
 	connect
 	(
-		mBoard, SIGNAL( finishedCity(std::vector< std::pair< uint, uint > >) ),
+		&mBoard, SIGNAL( finishedCity(std::vector< std::pair< uint, uint > >) ),
 		this, SIGNAL( finishedCity(std::vector< std::pair< uint, uint > >) )
 	);
 	connect
 	(
-		mBoard, SIGNAL( finishedRoad(std::vector< std::pair< uint, uint > >) ),
+		&mBoard, SIGNAL( finishedRoad(std::vector< std::pair< uint, uint > >) ),
 		this, SIGNAL( finishedRoad(std::vector< std::pair< uint, uint > >) )
 	);
+	connect
+	(
+		&mBoard, SIGNAL( colsAddedLeft( unsigned ) ),
+		this, SLOT( addColsLeft( unsigned ) )
+	);
+	connect
+	(
+		&mBoard, SIGNAL( rowsAddedTop( unsigned ) ),
+		this, SLOT( addRowsTop( unsigned ) )
+	);
 }
+
+Game::~Game()
+{}
 
 unsigned int
 Game::getNrOfRows() const
 {
-	return mBoard->getNrOfRows();
+	return mBoard.getNrOfRows();
 }
 
 unsigned int
 Game::getNrOfCols() const
 {
-	return mBoard->getNrOfCols();
+	return mBoard.getNrOfCols();
 }
 
 unsigned int
@@ -98,90 +144,67 @@ Game::getCurrentPlayer() const
 }
 
 void
-Game::clickTile(unsigned int inCol, unsigned int inRow)
+Game::clickTile( unsigned int inCol, unsigned int inRow )
 {
-	if (mBoard->isEmptySpot(inCol, inRow))
+	if ( isEmptySpot( inCol, inRow ) )
 	{
 		std::cout << "Empty spot -> placeTileOnBoard" << std::endl;
-		placeTileOnBoard(inCol, inRow);
+		placeTileOnBoard( inCol, inRow );
 	}
-	else
+	else if ( isCurrentSpot( inCol, inRow ) )
 	{
-		std::cout << "Non-empty spot -> rotateTileOnBoard" << std::endl;
-		rotateTileOnBoard(inCol, inRow);
+		std::cout << "Non-empty spot -> rotateCurrentTile" << std::endl;
+		rotateCurrentTile();
 	}
-	// std::cout << mBoard->toString() << std::flush;
 }
 
 void
-Game::placeTileOnBoard(unsigned int inCol, unsigned int inRow)
+Game::placeTileOnBoard( unsigned int inCol, unsigned int inRow )
 {
-	if (mNextTile)
+	if ( mNextTile )
 	{
 		// Delete tile that was placed earlier in current turn
-		boost::optional< TileOnBoard > earlierTile;
-		if (mCurrentPlacedCol != (unsigned int)-1 && mCurrentPlacedRow != (unsigned int)-1)
+		boost::optional< TileOnBoard > earlierTile = mCurrentPlacedTile;
+		if ( earlierTile )
 		{
-			earlierTile = mBoard->removeTile(mCurrentPlacedCol, mCurrentPlacedRow);
-			emit tileUnplaced(mCurrentPlacedCol, mCurrentPlacedRow);
+			emit tileUnplaced( mCurrentPlacedCol, mCurrentPlacedRow );
 		}
 		// Try the newly clicked position (try all rotations until we found a good one)
 		TileOnBoard::Rotation rotation = TileOnBoard::cw0;
 		TileOnBoard toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
 		bool found = false;
-		for (int i = 0; i < 4; ++i)
+		for ( int i = 0; i < 4; ++i )
 		{
-			toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
-			if (mBoard->isValidTilePlacement(toBePlacedTile, inCol, inRow))
+			toBePlacedTile = TileOnBoard( mNextTile.get(), rotation );
+			if ( mBoard.isValidTilePlacement( toBePlacedTile, inCol, inRow ) )
 			{
 				found = true;
 				break;
 			}
 			else
 			{
-				rotation = TileOnBoard::Rotation(rotation + TileOnBoard::cw90);
+				rotation = TileOnBoard::Rotation( rotation + TileOnBoard::cw90 );
 			}
 		}
 		std::cout << "Found: " << found << std::endl;
-		if (found)
+		if ( found )
 		{
-			// If a valid placement is found at the newly clicked position, place tile
-			if (mBoard->placeValidTile(toBePlacedTile, inCol, inRow))
+			if ( earlierTile && earlierTile->hasPieces() )
 			{
-				unsigned int col = inCol;
-				unsigned int row = inRow;
-				if (inCol == 0)
-				{
-					mBoard->addColsLeft( extraRowsAndCols );
-					col += extraRowsAndCols;
-					mStartCol += extraRowsAndCols;
-				}
-				else if (inCol == mBoard->getNrOfCols() - 1)
-				{
-					mBoard->addColsRight( extraRowsAndCols );
-				}
-				else if (inRow == 0)
-				{
-					mBoard->addRowsOnTop( extraRowsAndCols );
-					row += extraRowsAndCols;
-					mStartRow += extraRowsAndCols;
-				}
-				else if (inRow == mBoard->getNrOfRows() - 1)
-				{
-					mBoard->addRowsBelow( extraRowsAndCols );
-				}
-				mCurrentPlacedCol = col;
-				mCurrentPlacedRow = row;
-				emit tilePlaced(mCurrentPlacedCol, mCurrentPlacedRow, toBePlacedTile.getID(), toBePlacedTile.getRotation());
+				returnPieces( earlierTile->removeAllPieces(), mCurrentPlacedCol, mCurrentPlacedRow );
 			}
+			mCurrentPlacedCol = inCol;
+			mCurrentPlacedRow = inRow;
+			mCurrentPlacedTile = toBePlacedTile;
+			emit tilePlaced( mCurrentPlacedCol, mCurrentPlacedRow, toBePlacedTile.getID(), toBePlacedTile.getRotation() );
 		}
 		else
 		{
 			// If no valid placement is found at the newly clicked position, restore earlier tile
-			if (earlierTile)
+			if ( earlierTile )
 			{
-				mBoard->placeValidTile(*earlierTile, mCurrentPlacedCol, mCurrentPlacedRow);
-				emit tilePlaced(mCurrentPlacedCol, mCurrentPlacedRow, earlierTile->getID(), earlierTile->getRotation());
+				mCurrentPlacedTile = earlierTile;
+				emit tilePlaced( mCurrentPlacedCol, mCurrentPlacedRow, earlierTile->getID(), earlierTile->getRotation() );
 			}
 		}
 	}
@@ -194,29 +217,15 @@ Game::placeStartTileOnBoard()
 	{
 		TileOnBoard::Rotation rotation = TileOnBoard::cw0; // TODO: get a random Rotation each time
 		TileOnBoard toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
-		unsigned int pos = mBoard->placeStartTile(toBePlacedTile);
-		mStartCol = pos % mBoard->getNrOfCols();
-		mStartRow = pos / mBoard->getNrOfCols();
+		unsigned int pos = mBoard.placeStartTile(toBePlacedTile);
+		mStartCol = pos % mBoard.getNrOfCols();
+		mStartRow = pos / mBoard.getNrOfCols();
 		pickNextTile();
 		emit tilePlaced(mStartCol, mStartRow, toBePlacedTile.getID(), toBePlacedTile.getRotation());
 		if (mNextTile)
 		{
 			emit nextTile(mNextTile->getID());
 		}
-	}
-}
-
-void
-Game::rotateTileOnBoard(unsigned int inCol, unsigned int inRow)
-{
-	if (inCol == mCurrentPlacedCol && inRow == mCurrentPlacedRow)
-	{
-		std::cout << "Rotating " << inCol << ", " << inRow << std::endl;
-		mBoard->rotateTileOnBoard(inCol, inRow);
-	}
-	else
-	{
-		std::cout << "Not rotating" << std::endl;
 	}
 }
 
@@ -234,26 +243,28 @@ Game::endTurn()
 }
 
 void
-Game::onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
-{
-	std::cout << "Game sees a rotation" << std::endl;
-	emit tileRotated(inCol, inRow, inId, inRot);
-}
-
-void
 Game::onTryToPlacePiece()
 {
 	std::cout << "onTryToPlacePiece" << std::endl;
-	if ( mCurrentPlacedRow != (unsigned int)-1
-		&& mCurrentPlacedCol != (unsigned int)-1
+	if ( mCurrentPlacedRow != kInvalid
+		&& mCurrentPlacedCol != kInvalid
 		&& mPlayers[mCurrentPlayer].hasFreePieces() )
 	{
-		if ( mNextTile && mNextTile->getCenter() == Tile::Cloister )
+		if ( mCurrentPlacedTile && mCurrentPlacedTile->getCenter() == Tile::Cloister )
 		{
 			// Place a meeple on this cloister
-			if ( mPlayers[mCurrentPlayer].placePiece( mCurrentPlacedCol - mStartCol, mCurrentPlacedRow - mStartRow, Area::Central ) )
+			PlacedPiece placedPiece
+			(
+				mPlayers[mCurrentPlayer].getPieceToPlace(),
+				Area::Central
+			);
+			if ( mCurrentPlacedTile->placePiece( placedPiece ) )
 			{
 				emit piecePlaced( mCurrentPlacedCol, mCurrentPlacedRow, mPlayers[mCurrentPlayer] );
+			}
+			else
+			{
+				mPlayers[mCurrentPlayer].returnPiece( placedPiece.getPiece() );
 			}
 		}
 	}
@@ -263,19 +274,23 @@ void
 Game::onEndCurrentTurn()
 {
 	std::cout << "onEndCurrentTurn" << std::endl;
-	if (mCurrentPlacedRow != (unsigned int)-1 && mCurrentPlacedCol != (unsigned int)-1)
+	if ( mCurrentPlacedRow != kInvalid && mCurrentPlacedCol != kInvalid && mCurrentPlacedTile )
 	{
-		mBoard->checkForFinishedCloisters( mCurrentPlacedCol, mCurrentPlacedRow );
-		mBoard->checkForFinishedCities( mCurrentPlacedCol, mCurrentPlacedRow );
-		mBoard->checkForFinishedRoads( mCurrentPlacedCol, mCurrentPlacedRow );
-		mCurrentPlacedRow = (unsigned int)-1;
-		mCurrentPlacedCol = (unsigned int)-1;
-		pickNextTile();
-		if (mNextTile)
+		if ( mBoard.placeValidTile( *mCurrentPlacedTile, mCurrentPlacedCol, mCurrentPlacedRow ) )
 		{
-			emit nextTile(mNextTile->getID());
+			mBoard.checkForFinishedCloisters( mCurrentPlacedCol, mCurrentPlacedRow );
+			mBoard.checkForFinishedCities( mCurrentPlacedCol, mCurrentPlacedRow );
+			mBoard.checkForFinishedRoads( mCurrentPlacedCol, mCurrentPlacedRow );
+			mCurrentPlacedRow = kInvalid;
+			mCurrentPlacedCol = kInvalid;
+			mCurrentPlacedTile = boost::none;
+			pickNextTile();
+			if (mNextTile)
+			{
+				emit nextTile(mNextTile->getID());
+			}
+			endTurn();
 		}
-		endTurn();
 	}
 }
 
@@ -284,33 +299,23 @@ Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
 {
 	std::cout << "onFinishedCloister" << std::endl;
 	// Find winning player for this cloister
-	std::set< unsigned > winningPlayers;
-	unsigned majority = 0;
-	for ( unsigned p = 0; p < mPlayers.size(); ++p )
-	{
-		unsigned nrOfPieces = mPlayers[p].getNrOfPieces( inCol - mStartCol, inRow - mStartRow, Area::Central );
-		if ( nrOfPieces > 0 )
-		{
-			mPlayers[p].returnPiece( inCol - mStartCol, inRow - mStartRow, Area::Central );
-			emit pieceReturned( inCol, inRow, mPlayers[p] );
-			if ( nrOfPieces > majority )
-			{
-				winningPlayers.clear();
-				winningPlayers.insert( p );
-				majority = nrOfPieces;
-			}
-			else if ( nrOfPieces == majority )
-			{
-				winningPlayers.insert( p );
-			}
-		}
-	}
-	for ( std::set< unsigned >::iterator it = winningPlayers.begin(); it != winningPlayers.end(); ++it )
-	{
-		std::cout << "Awarding points for cloister on " << inCol << ", " << inRow << std::endl;
-		mPlayers[ *it ].awardPoints( kPointsForFinishedCloister );
-	}
+	std::vector< PlacedPiece > pieces = mBoard.removePieces( inCol, inRow, Area::Central );
+	returnPieces( pieces, inCol, inRow );	
+	std::set< Color::Color > winningColors = getWinningColors( pieces );
+	awardPoints( winningColors, kPointsForFinishedCloister );
 	emit finishedCloister( inCol, inRow );
+}
+
+void
+Game::addColsLeft( unsigned inNrOfCols )
+{
+	mStartCol += inNrOfCols;
+}
+
+void
+Game::addRowsTop( unsigned inNrOfRows )
+{
+	mStartRow += inNrOfRows;
 }
 
 void
@@ -327,7 +332,7 @@ Game::pickNextTile()
 			{
 				--it;
 				Tile maybeNextTile = *it;
-				if (mBoard->isPossibleTile(maybeNextTile))
+				if (mBoard.isPossibleTile(maybeNextTile))
 				{
 					mNextTile = maybeNextTile;
 					mBag.erase(it);
@@ -348,4 +353,83 @@ Game::pickNextTile()
 		mNextTile = boost::optional< Tile >();
 		emit endOfGame( 0 );
 	}
+}
+
+void
+Game::rotateCurrentTile()
+{
+	if ( mCurrentPlacedTile )
+	{
+		TileOnBoard::Rotation currentRotation = mCurrentPlacedTile->getRotation();
+		Tile tile = mCurrentPlacedTile->getTile();
+		TileOnBoard::Rotation newRotation = currentRotation;
+		TileOnBoard rotated = TileOnBoard( tile, newRotation );
+		for ( int i = 0; i < 4; ++i )
+		{
+			newRotation = TileOnBoard::Rotation( (newRotation + TileOnBoard::cw90) % (TileOnBoard::cw90 * 4) );
+			rotated = TileOnBoard( tile, newRotation );
+			if ( mBoard.isValidTilePlacement( rotated, mCurrentPlacedCol, mCurrentPlacedRow ) )
+			{
+				break;
+			}
+		}
+		if ( mBoard.isValidTilePlacement( rotated, mCurrentPlacedCol, mCurrentPlacedRow ) )
+		{
+			mCurrentPlacedTile = rotated;
+			emit tileRotated( mCurrentPlacedCol, mCurrentPlacedRow, mCurrentPlacedTile->getID(), mCurrentPlacedTile->getRotation() );
+		}
+	}
+}
+
+Player &
+Game::getPlayer( Color::Color inColor )
+{
+	for ( std::vector< Player >::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it )
+	{
+		if ( it->getColor() == inColor )
+		{
+			return *it;
+		}
+	}
+	assert( !"getPlayer found no player with given Color" );
+}
+
+void
+Game::returnPieces
+(
+	std::vector< PlacedPiece > const & inPieces,
+	unsigned inCol,
+	unsigned inRow
+)
+{
+	for ( std::vector< PlacedPiece >::const_iterator it = inPieces.begin();
+		it != inPieces.end();
+		++it )
+	{
+		getPlayer( it->getPiece().getColor() ).returnPiece( it->getPiece() );
+		emit pieceReturned( inCol, inRow, getPlayer( it->getPiece().getColor() ) );
+	}
+}
+
+void
+Game::awardPoints( std::set< Color::Color > const & inColors, unsigned inPoints )
+{
+	for ( std::set< Color::Color >::const_iterator it = inColors.begin();
+		it != inColors.end();
+		++it )
+	{
+		getPlayer( *it ).awardPoints( inPoints );
+	}
+}
+
+bool
+Game::isEmptySpot( unsigned inCol, unsigned inRow ) const
+{
+	return ( !isCurrentSpot( inCol, inRow ) && mBoard.isEmptySpot( inCol, inRow ) );
+}
+
+bool
+Game::isCurrentSpot( unsigned inCol, unsigned inRow ) const
+{
+	return ( inCol == mCurrentPlacedCol && inRow == mCurrentPlacedRow );
 }

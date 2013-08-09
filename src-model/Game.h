@@ -7,14 +7,17 @@
 
 #include <QObject>
 
-#include <vector>
 #include <boost/optional/optional.hpp>
+
+#include <set>
+#include <vector>
 
 class Game : public QObject
 {
 	Q_OBJECT
 public:
 	Game();
+	~Game();
 
 	unsigned int getNrOfRows() const;
 	unsigned int getNrOfCols() const;
@@ -25,14 +28,12 @@ public:
 	void clickTile(unsigned int inCol, unsigned int inRow);
 	void placeTileOnBoard(unsigned int inCol, unsigned int inRow);
 	void placeStartTileOnBoard();
-	void rotateTileOnBoard(unsigned int inCol, unsigned int inRow);
 
 	boost::optional< Tile > getNextTile() const;
 
 	void endTurn();
 
 public slots:
-	void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
 	void onTryToPlacePiece();
 	void onEndCurrentTurn();
 	void onFinishedCloister( unsigned int inCol, unsigned int inRow );
@@ -56,17 +57,46 @@ signals:
 
 	void endOfGame(unsigned int inTilesLeft);
 
-private:
-	void pickNextTile();
+private slots:
+	void addColsLeft( unsigned inNrOfCols );
+	void addRowsTop( unsigned inNrOfRows );
 
 private:
-	Board *mBoard;
-	std::vector< Tile > mBag;
-	boost::optional< Tile > mNextTile;
+	void pickNextTile();
+	void rotateCurrentTile();
+
+	Player & getPlayer( Color::Color inColor );
+
+	void
+	returnPieces
+	(
+		std::vector< PlacedPiece > const & inPieces,
+		unsigned inCol,
+		unsigned inRow
+	);
+
+	void
+	awardPoints
+	(
+		std::set< Color::Color > const & inColors,
+		unsigned inPoints
+	);
+
+	bool isEmptySpot( unsigned inCol, unsigned inRow ) const;
+	bool isCurrentSpot( unsigned inCol, unsigned inRow ) const;
+
+private:
+	Board mBoard;
 	unsigned int mStartRow;
 	unsigned int mStartCol;
+
+	boost::optional< TileOnBoard > mCurrentPlacedTile;
+
 	unsigned int mCurrentPlacedRow;
-	unsigned int mCurrentPlacedCol;
+	unsigned int mCurrentPlacedCol;	
+
+	std::vector< Tile > mBag;
+	boost::optional< Tile > mNextTile;
 
 	std::vector< Player > mPlayers;
 	unsigned int mCurrentPlayer;

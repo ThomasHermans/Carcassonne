@@ -2,80 +2,84 @@
 
 namespace
 {
-bool isValid(Piece inPiece, Area::Area inArea)
-{
-    bool res = true;
-    switch (inPiece.getType())
-    {
-    case Piece::Builder:
-        if ((inArea == Area::TopLeft)
-                || (inArea == Area::TopRight)
-                || (inArea == Area::RightTop)
-                || (inArea == Area::RightBottom)
-                || (inArea == Area::BottomRight)
-                || (inArea == Area::BottomLeft)
-                || (inArea == Area::LeftBottom)
-                || (inArea == Area::LeftTop)
-                || (inArea == Area::Central))
-        {
-            res = false;
-        }
-        break;
-    case Piece::Pig:
-        if ((inArea == Area::Top)
-                || (inArea == Area::Right)
-                || (inArea == Area::Bottom)
-                || (inArea == Area::Left))
-        {
-            res = false;
-        }
-        break;
-    }
-    return res;
-}
+	bool
+	isValid( Piece inPiece, Area::Area inArea )
+	{
+		bool res = true;
+		switch ( inPiece.getType() )
+		{
+		case Piece::Builder:
+			if (
+				( inArea == Area::TopLeft )
+				|| ( inArea == Area::TopRight )
+				|| ( inArea == Area::RightTop )
+				|| ( inArea == Area::RightBottom )
+				|| ( inArea == Area::BottomRight )
+				|| ( inArea == Area::BottomLeft )
+				|| ( inArea == Area::LeftBottom )
+				|| ( inArea == Area::LeftTop )
+				|| ( inArea == Area::Central )
+				)
+			{
+				res = false;
+			}
+			break;
+		case Piece::Pig:
+			if (
+				( inArea == Area::Top )
+				|| (inArea == Area::Right )
+				|| (inArea == Area::Bottom )
+				|| (inArea == Area::Left )
+				)
+			{
+				res = false;
+			}
+			break;
+		}
+		return res;
+	}
 }
 
-PlacedPiece::PlacedPiece( const Piece & inPiece, int inRelCol, int inRelRow, Area::Area inArea ):
-    mPiece( inPiece ),
-    mRelCol( inRelCol ),
-    mRelRow( inRelRow ),
-    mArea( Area::Invalid )
+PlacedPiece::PlacedPiece( const Piece & inPiece, Area::Area inArea )
+:
+	mPiece( inPiece ),
+	mArea( inArea )
 {
-    if ( isValid( inPiece, inArea ) )
-    {
-        mArea = inArea;
-    }
+	if ( !isValid( inPiece, inArea ) )
+	{
+		throw std::exception();
+	}
 }
 
 Piece
 PlacedPiece::getPiece() const
 {
-    return mPiece;
+	return mPiece;
 }
 
-int
-PlacedPiece::getCol() const
+Piece::PieceType
+PlacedPiece::getType() const
 {
-    return mRelCol;
+	return mPiece.getType();
 }
 
-int
-PlacedPiece::getRow() const
+Color::Color
+PlacedPiece::getColor() const
 {
-    return mRelRow;
+	return mPiece.getColor();
 }
 
 Area::Area
 PlacedPiece::getArea() const
 {
-    return mArea;
+	return mArea;
 }
 
 std::string
 PlacedPiece::toString() const
 {
-    std::string res = mPiece.toString();
-    res.append(" on ");
-    res.append(Area::areaToString(mArea));
-    return res;
+	std::string res = mPiece.toString();
+	res.append(" on ");
+	res.append(Area::areaToString(mArea));
+	return res;
 }

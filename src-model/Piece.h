@@ -10,30 +10,30 @@ class PlacedPiece;
 class Piece
 {
 public:
-    enum PieceType
-    {
-        Follower,
-        LargeFollower,
-        Builder,
-        Pig
-    };
+	enum PieceType
+	{
+		Follower,
+		LargeFollower,
+		Builder,
+		Pig
+	};
 
 public:
-    Piece();
-    Piece(const Piece & inPiece);
-    Piece(const PlacedPiece & inPlacedPiece);
-    Piece(PieceType inType, Color::Color inColor);
-    Piece & operator=(const Piece & inPiece);
+	Piece();
+	Piece( const Piece & inPiece );
+	Piece( const PlacedPiece & inPlacedPiece );
+	Piece( PieceType inType, Color::Color inColor );
+	Piece & operator = ( const Piece & inPiece );
 
-    PieceType getType() const;
-    Color::Color getColor() const;
-    int getPoints() const;
+	PieceType getType() const;
+	Color::Color getColor() const;
+	int getPoints() const;
 
-    std::string toString() const;
+	std::string toString() const;
 
 private:
-    PieceType mType;
-    Color::Color mColor;
+	PieceType mType;
+	Color::Color mColor;
 };
 
 #endif // PIECE_H
