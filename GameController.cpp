@@ -1,32 +1,127 @@
 #include "GameController.h"
 
 #include "src-model/Color.h"
-#include "src-view/GuiConstants.h"
+#include "src-view/DragData.h"
+#include "src-view/Typedefs.h"
 
 namespace
 {
 	unsigned int
-	fromXToCol(int inX, unsigned int inStartCol)
+	colFromX(int inX, unsigned int inStartCol)
 	{
-		return (inX / GuiConstants::tileWidth + inStartCol - (inX < 0 ? 1 : 0));
+		return (inX / Gui::kTileWidth + inStartCol - (inX < 0 ? 1 : 0));
 	}
 
 	unsigned int
-	fromYToRow(int inY, unsigned int inStartRow)
+	rowFromY(int inY, unsigned int inStartRow)
 	{
-		return (inY / GuiConstants::tileHeight + inStartRow - (inY < 0 ? 1 : 0));
+		return (inY / Gui::kTileHeight + inStartRow - (inY < 0 ? 1 : 0));
 	}
 
 	int
-	fromColToX(unsigned int inCol, unsigned int inStartCol)
+	xFromCol(unsigned int inCol, unsigned int inStartCol)
 	{
-		return ( ((int)inCol - (int)inStartCol) * GuiConstants::tileWidth );
+		return ( ((int)inCol - (int)inStartCol) * Gui::kTileWidth );
 	}
 
 	int
-	fromRowToY(unsigned int inRow, unsigned int inStartRow)
+	yFromRow(unsigned int inRow, unsigned int inStartRow)
 	{
-		return ( ((int)inRow - (int)inStartRow) * GuiConstants::tileHeight );
+		return ( ((int)inRow - (int)inStartRow) * Gui::kTileHeight );
+	}
+
+	int
+	posXFromX( int inX )
+	{
+		int res = ( inX % Gui::kTileWidth );
+		if ( res < 0 )
+		{
+			res += Gui::kTileWidth;
+		}
+		return res;
+	}
+
+	int
+	posYFromY( int inY )
+	{
+		int res = ( inY % Gui::kTileHeight );
+		if ( res < 0 )
+		{
+			res += Gui::kTileHeight;
+		}
+		return res;
+	}
+
+	Area::Area
+	areaFromPos( int inX, int inY )
+	{
+		if ( inX > 33 && inX < 66 && inY > 33 && inY < 66 )
+		{
+			return Area::Central;
+		}
+		return Area::Invalid;
+	}
+
+	Color::Color
+	modelFromView( Dragging::Color inColor )
+	{
+		switch ( inColor )
+		{
+			case Dragging::kRed:
+				return Color::Red;
+			case Dragging::kGreen:
+				return Color::Green;
+			case Dragging::kBlue:
+				return Color::Blue;
+			case Dragging::kYellow:
+				return Color::Yellow;
+			case Dragging::kBlack:
+				return Color::Black;
+			case Dragging::kGray:
+				return Color::Gray;
+			default:
+				return Color::Red;
+		}
+	}
+
+	Dragging::Color
+	viewFromModel( Color::Color inColor )
+	{
+		switch ( inColor )
+		{
+			case Color::Red:
+				return Dragging::kRed;
+			case Color::Green:
+				return Dragging::kGreen;
+			case Color::Blue:
+				return Dragging::kBlue;
+			case Color::Yellow:
+				return Dragging::kYellow;
+			case Color::Black:
+				return Dragging::kBlack;
+			case Color::Gray:
+				return Dragging::kGray;
+			default:
+				return Dragging::kRed;
+		}
+	}
+
+	Piece::PieceType
+	modelFromView( Dragging::Piece inPiece )
+	{
+		switch ( inPiece )
+		{
+			case Dragging::kFollower:
+				return Piece::Follower;
+			case Dragging::kLargeFollower:
+				return Piece::LargeFollower;
+			case Dragging::kBuilder:
+				return Piece::Builder;
+			case Dragging::kPig:
+				return Piece::Pig;
+			default:
+				return Piece::Follower;
+		}
 	}
 
 	QColor
@@ -77,6 +172,7 @@ GameController::GameController(QObject *parent) :
 
 	connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
 	connect( mWindow, SIGNAL( tryToPlacePiece() ), mGame, SLOT( onTryToPlacePiece() ) );
+	connect( mWindow, SIGNAL( tryToPlacePiece( DragData, int, int ) ), this, SLOT( onTryToPlacePiece( DragData, int, int ) ) );
 	connect( mWindow, SIGNAL( endCurrentTurn() ), mGame, SLOT( onEndCurrentTurn() ) );
 
 	connect( mGame, SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );
@@ -92,8 +188,8 @@ GameController::GameController(QObject *parent) :
 void
 GameController::onTilePlaced(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
 {
-	int x = fromColToX( inCol, mGame->getStartCol() );
-	int y = fromRowToY( inRow, mGame->getStartRow() );
+	int x = xFromCol( inCol, mGame->getStartCol() );
+	int y = yFromRow( inRow, mGame->getStartRow() );
 	mWindow->setTile(x, y, inId, inRot * 30);
 	mWindow->fadeNextTile();
 }
@@ -101,28 +197,16 @@ GameController::onTilePlaced(unsigned int inCol, unsigned int inRow, std::string
 void
 GameController::onTileUnplaced(unsigned int inCol, unsigned int inRow)
 {
-	int x = fromColToX( inCol, mGame->getStartCol() );
-	int y = fromRowToY( inRow, mGame->getStartRow() );
+	int x = xFromCol( inCol, mGame->getStartCol() );
+	int y = yFromRow( inRow, mGame->getStartRow() );
 	mWindow->clearTile(x, y);
-}
-
-void
-GameController::onClicked(int x, int y)
-{
-	unsigned int col = fromXToCol( x, mGame->getStartCol() );
-	unsigned int row = fromYToRow( y, mGame->getStartRow() );
-	std::cout << "GameController sees a click at x, y: " << x << ", " << y << ", which is col, row: " << col << ", " << row << std::endl;
-	if (col >= 0 && col < mGame->getNrOfCols() && row >= 0 && row < mGame->getNrOfRows())
-	{
-		mGame->clickTile(col, row);
-	}
 }
 
 void
 GameController::onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
 {
-	int x = fromColToX( inCol, mGame->getStartCol() );
-	int y = fromRowToY( inRow, mGame->getStartRow() );
+	int x = xFromCol( inCol, mGame->getStartCol() );
+	int y = yFromRow( inRow, mGame->getStartRow() );
 	mWindow->rotateTile(x, y, inId, inRot * 30);
 }
 
@@ -142,8 +226,8 @@ void
 GameController::onPiecePlaced( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer )
 {
 	std::cout << inCurrentPlayer.getName() << " placed a piece." << std::endl;
-	int x = fromColToX( inCol, mGame->getStartCol() );
-	int y = fromRowToY( inRow, mGame->getStartRow() );
+	int x = xFromCol( inCol, mGame->getStartCol() );
+	int y = yFromRow( inRow, mGame->getStartRow() );
 	mWindow->placePiece( x, y, toQColor( inCurrentPlayer.getColor() ) );
 }
 
@@ -151,8 +235,8 @@ void
 GameController::onPieceReturned( unsigned int inCol, unsigned int inRow, Player const & inPlayer )
 {
 	std::cout << inPlayer.getName() << " got a piece back." << std::endl;
-	int x = fromColToX( inCol, mGame->getStartCol() );
-	int y = fromRowToY( inRow, mGame->getStartRow() );
+	int x = xFromCol( inCol, mGame->getStartCol() );
+	int y = yFromRow( inRow, mGame->getStartRow() );
 	mWindow->returnPiece( x, y, toQColor( inPlayer.getColor() ) );
 }
 
@@ -168,15 +252,21 @@ GameController::onPlayerInfoChanged( Player const & inNewInfo )
 void
 GameController::onCurrentPlayerChanged( Player const & inCurrentPlayer )
 {
-	mWindow->setActivePlayer(inCurrentPlayer.getName(), inCurrentPlayer.getScore(), inCurrentPlayer.getNumberOfFreePieces());
+	mWindow->setActivePlayer
+	(
+		inCurrentPlayer.getName(),
+		viewFromModel( inCurrentPlayer.getColor() ),
+		inCurrentPlayer.getScore(),
+		inCurrentPlayer.getNumberOfFreePieces()
+	);
 }
 
 void
 GameController::onFinishedCloister(unsigned int inCol, unsigned int inRow)
 {
 	std::cout << "Finished cloister on tile " << inCol << ", " << inRow << std::endl;
-	int x = fromColToX( inCol, mGame->getStartCol() );
-	int y = fromRowToY( inRow, mGame->getStartRow() );
+	int x = xFromCol( inCol, mGame->getStartCol() );
+	int y = yFromRow( inRow, mGame->getStartRow() );
 	mWindow->finishCloister( x, y );
 }
 
@@ -203,10 +293,10 @@ GameController::onFinishedCity(std::vector< std::pair< unsigned int, unsigned in
 	std::cout << std::endl;
 	++rightCol;
 	++bottomRow;
-	int left = fromColToX( leftCol, mGame->getStartCol() );
-	int right = fromColToX( rightCol, mGame->getStartCol() );
-	int top = fromRowToY( topRow, mGame->getStartRow() );
-	int bottom = fromRowToY( bottomRow, mGame->getStartRow() );
+	int left = xFromCol( leftCol, mGame->getStartCol() );
+	int right = xFromCol( rightCol, mGame->getStartCol() );
+	int top = yFromRow( topRow, mGame->getStartRow() );
+	int bottom = yFromRow( bottomRow, mGame->getStartRow() );
 	mWindow->finishCity( left, right, top, bottom );
 }
 
@@ -233,10 +323,10 @@ GameController::onFinishedRoad(std::vector< std::pair< unsigned int, unsigned in
 	std::cout << std::endl;
 	++rightCol;
 	++bottomRow;
-	int left = fromColToX( leftCol, mGame->getStartCol() );
-	int right = fromColToX( rightCol, mGame->getStartCol() );
-	int top = fromRowToY( topRow, mGame->getStartRow() );
-	int bottom = fromRowToY( bottomRow, mGame->getStartRow() );
+	int left = xFromCol( leftCol, mGame->getStartCol() );
+	int right = xFromCol( rightCol, mGame->getStartCol() );
+	int top = yFromRow( topRow, mGame->getStartRow() );
+	int bottom = yFromRow( bottomRow, mGame->getStartRow() );
 	mWindow->finishRoad( left, right, top, bottom );
 }
 
@@ -247,5 +337,37 @@ GameController::onEndOfGame(unsigned int inTilesLeft)
 	if ( inTilesLeft >= 1 )
 	{
 		std::cout << "Number of unplayed tiles: " << inTilesLeft << std::endl;
+	}
+}
+
+void
+GameController::onClicked( int inX, int inY )
+{
+	unsigned int col = colFromX( inX, mGame->getStartCol() );
+	unsigned int row = rowFromY( inY, mGame->getStartRow() );
+	std::cout << "GameController sees a click at x, y: " << inX << ", " << inY << ", which is col, row: " << col << ", " << row << std::endl;
+	if ( col < mGame->getNrOfCols() && row < mGame->getNrOfRows() )
+	{
+		mGame->clickTile(col, row);
+	}
+}
+
+void
+GameController::onTryToPlacePiece( DragData const & inData, int inX, int inY )
+{
+	unsigned col = colFromX( inX, mGame->getStartCol() );
+	unsigned row = rowFromY( inY, mGame->getStartRow() );
+	std::cout << "GameController sees drop at x, y: " << inX << ", " << inY << ", which is col, row: " << col << ", " << row << std::endl;
+	std::cout << "Which is at " << posXFromX( inX ) << ", " << posYFromY( inY ) << " at that tile." << std::endl;
+	std::cout << "Which is at Area::" << areaFromPos( posXFromX( inX ), posYFromY( inY ) ) << std::endl;
+	std::cout << "Drop contains " << inData.getColor() << " " << inData.getPiece() << std::endl;
+	if ( col < mGame->getNrOfCols() && row < mGame->getNrOfRows() )
+	{
+		// Decipher data
+		Color::Color color = modelFromView( inData.getColor() );
+		Piece::PieceType type = modelFromView( inData.getPiece() );
+		Area::Area area = areaFromPos( posXFromX( inX ), posYFromY( inY ) );
+		// Send to mGame
+		mGame->tryToPlacePiece( color, type, col, row, area );
 	}
 }

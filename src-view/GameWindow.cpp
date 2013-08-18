@@ -1,6 +1,6 @@
 #include "src-view/GameWindow.h"
 
-#include "src-view/GuiConstants.h"
+#include "src-view/DragMeepleLabel.h"
 
 #include <QBrush>
 #include <QGraphicsEllipseItem>
@@ -24,19 +24,20 @@ getPixmapFromId( std::string inId )
 
 } // end of nameless namespace
 
-GameWindow::GameWindow(QWidget *parent) :
-	QMainWindow(parent)
+GameWindow::GameWindow( QWidget *parent )
+:
+	QMainWindow( parent )
 {
-	this->resize(800, 500);
-	mCentralWidget = new QWidget(this);
-	mCentralWidget->setObjectName(QString::fromUtf8("mCentralWidget"));
+	this->resize( 800, 500 );
+	QWidget * centralWidget = new QWidget( this );
+	centralWidget->setObjectName( QString::fromUtf8( "centralWidget" ) );
 
-	mBoardAndSideBarLayout = new QHBoxLayout();
-	mBoardAndSideBarLayout->setContentsMargins( 0, 0, 0, 0 );
-	mBoardAndSideBarLayout->setSpacing( 0 );
-	mBoardAndSideBarLayout->setObjectName(QString::fromUtf8("mBoardAndSideBarLayout"));
+	QHBoxLayout * boardAndSideBarLayout = new QHBoxLayout();
+	boardAndSideBarLayout->setContentsMargins( 0, 0, 0, 0 );
+	boardAndSideBarLayout->setSpacing( 0 );
+	boardAndSideBarLayout->setObjectName(QString::fromUtf8("boardAndSideBarLayout"));
 
-	mBoardScene = new QGraphicsScene( mCentralWidget );
+	mBoardScene = new QGraphicsScene( centralWidget );
 	mBoardScene->setObjectName( QString::fromUtf8("mBoardScene") );
 
 	mBoardView = new BoardView( mBoardScene, this );
@@ -45,7 +46,8 @@ GameWindow::GameWindow(QWidget *parent) :
 
 	connect( mBoardView, SIGNAL( enterPressed() ), this, SIGNAL( endCurrentTurn() ) );
 	connect( mBoardView, SIGNAL( spacePressed() ), this, SIGNAL( endCurrentTurn() ) );
-	connect( mBoardView, SIGNAL( mPressed() ), this, SIGNAL( tryToPlacePiece() ) );
+	connect( mBoardView, SIGNAL( dropped( DragData, int, int ) ),
+		this, SIGNAL( tryToPlacePiece( DragData, int, int ) ) );
 
 //    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 //    sizePolicy.setHorizontalStretch(0);
@@ -63,7 +65,7 @@ GameWindow::GameWindow(QWidget *parent) :
 
 //    connect(mBoardWidget, SIGNAL(clicked(uint, uint)), this, SLOT(onClicked(uint, uint)));
 
-	mBoardAndSideBarLayout->addWidget( mBoardView );
+	boardAndSideBarLayout->addWidget( mBoardView );
 
 	connect( mBoardView, SIGNAL(clicked(int,int)), this, SLOT(onClicked(int,int)) );
 
@@ -72,13 +74,13 @@ GameWindow::GameWindow(QWidget *parent) :
 	mSideBarLayout->setContentsMargins( 6, 6, 6, 6 );
 	mSideBarLayout->setSpacing( 0 );
 
-	mTilesLeft = new QLabel(mCentralWidget);
+	mTilesLeft = new QLabel(centralWidget);
 	mTilesLeft->setObjectName(QString::fromUtf8("mTilesLeft"));
 	mTilesLeft->setText("X tiles left");
 
 	mSideBarLayout->addWidget(mTilesLeft);
 
-	mPickedTileLabel = new QLabel(mCentralWidget);
+	mPickedTileLabel = new QLabel(centralWidget);
 	mPickedTileLabel->setObjectName(QString::fromUtf8("mPickedTileLabel"));
 	mPickedTileLabel->setFixedSize( QSize(100, 100) );
 	mPickedTileLabel->setText(".");
@@ -86,47 +88,50 @@ GameWindow::GameWindow(QWidget *parent) :
 
 	mSideBarLayout->addWidget(mPickedTileLabel);
 
-	mActiveUserNameLabel = new QLabel(mCentralWidget);
+	mActiveUserNameLabel = new QLabel(centralWidget);
 	mActiveUserNameLabel->setObjectName(QString::fromUtf8("mActiveUserNameLabel"));
 	mActiveUserNameLabel->setText("Active user name");
 	mActiveUserNameLabel->setAlignment(Qt::AlignLeft);
 
 	mSideBarLayout->addWidget(mActiveUserNameLabel);
 
-	mActiveUserScoreLabel = new QLabel(mCentralWidget);
+	mActiveUserScoreLabel = new QLabel(centralWidget);
 	mActiveUserScoreLabel->setObjectName(QString::fromUtf8("mActiveUserScoreLabel"));
 	mActiveUserScoreLabel->setText("Active user score");
 	mActiveUserScoreLabel->setAlignment(Qt::AlignLeft);
 
 	mSideBarLayout->addWidget(mActiveUserScoreLabel);
 
-	mActiveUserMeepleLeftLabel = new QLabel(mCentralWidget);
+	mActiveUserMeepleLeftLabel = new QLabel(centralWidget);
 	mActiveUserMeepleLeftLabel->setObjectName(QString::fromUtf8("mActiveUserMeepleLeftLabel"));
 	mActiveUserMeepleLeftLabel->setText("Active user meeple left");
 	mActiveUserMeepleLeftLabel->setAlignment(Qt::AlignLeft);
 
 	mSideBarLayout->addWidget(mActiveUserMeepleLeftLabel);
 
-	mEndTurnButton = new QPushButton(mCentralWidget);
-	mEndTurnButton->setObjectName(QString::fromUtf8("mEndTurnButton"));
-	mEndTurnButton->setText("End Turn");
-	
-	connect( mEndTurnButton, SIGNAL( clicked() ), this, SIGNAL( endCurrentTurn() ) );
-	mSideBarLayout->addWidget(mEndTurnButton);
+	mActiveUserDragFollowerLabel = new DragMeepleLabel( Dragging::kFollower, 0, Dragging::kRed, centralWidget );
+	mActiveUserDragFollowerLabel->setObjectName( QString::fromUtf8( "mActiveUserDragFollowerLabel" ) );
+	mActiveUserDragFollowerLabel->setFixedWidth( 100 );
+	mSideBarLayout->addWidget( mActiveUserDragFollowerLabel );
 
-	mTryToPlacePieceButton = new QPushButton(mCentralWidget);
+	mTryToPlacePieceButton = new QPushButton(centralWidget);
 	mTryToPlacePieceButton->setObjectName(QString::fromUtf8("mTryToPlacePieceButton"));
 	mTryToPlacePieceButton->setText("Try to place a Piece");
-
 	connect( mTryToPlacePieceButton, SIGNAL( clicked() ), this, SIGNAL( tryToPlacePiece() ) );
 	mSideBarLayout->addWidget( mTryToPlacePieceButton );
 
+	mEndTurnButton = new QPushButton(centralWidget);
+	mEndTurnButton->setObjectName(QString::fromUtf8("mEndTurnButton"));
+	mEndTurnButton->setText("End Turn");
+	connect( mEndTurnButton, SIGNAL( clicked() ), this, SIGNAL( endCurrentTurn() ) );
+	mSideBarLayout->addWidget(mEndTurnButton);
+
 	mSideBarLayout->addStretch();
 
-	mBoardAndSideBarLayout->addLayout(mSideBarLayout);
+	boardAndSideBarLayout->addLayout(mSideBarLayout);
 
-	mCentralWidget->setLayout(mBoardAndSideBarLayout);
-	setCentralWidget(mCentralWidget);
+	centralWidget->setLayout(boardAndSideBarLayout);
+	setCentralWidget(centralWidget);
 
 //    mMenuBar = new QMenuBar(this);
 //    mMenuBar->setObjectName(QString::fromUtf8("mMenuBar"));
@@ -180,31 +185,31 @@ GameWindow::rotateTile(int x, int y, std::string inId, int inRotation)
 }
 
 void
-GameWindow::displayTilesLeft(unsigned int inNr)
+GameWindow::displayTilesLeft( unsigned int inNr )
 {
-	mTilesLeft->setText(QString::number(inNr).append(" tiles left."));
+	mTilesLeft->setText( QString::number( inNr ).append( " tiles left." ) );
 }
 
 void
-GameWindow::setActivePlayer(std::string const & inName)
+GameWindow::setActivePlayer
+(
+	std::string const & inName,
+	Dragging::Color inColor,
+	int inScore,
+	int inPiecesLeft
+)
 {
-	mActiveUserNameLabel->setText(QString::fromUtf8(inName.c_str()));
-	mActiveUserScoreLabel->setText("Active user score");
-	mActiveUserMeepleLeftLabel->setText("Active user meeple left");
-}
-
-void
-GameWindow::setActivePlayer(std::string const & inName, int inScore, int inPiecesLeft)
-{
-	mActiveUserNameLabel->setText(QString::fromUtf8(inName.c_str()));
-	mActiveUserScoreLabel->setText(QString::number(inScore));
+	mActiveUserNameLabel->setText( QString::fromUtf8( inName.c_str() ) );
+	mActiveUserScoreLabel->setText( QString::number( inScore ) );
 	setMeepleLeft( inPiecesLeft );
+	mActiveUserDragFollowerLabel->setColor( inColor );
 }
 
 void
 GameWindow::setMeepleLeft( int inMeepleLeft )
 {
 	mActiveUserMeepleLeftLabel->setText( QString::number( inMeepleLeft ).append( " meeple left." ) );
+	mActiveUserDragFollowerLabel->setNr( inMeepleLeft );
 }
 
 void
@@ -279,7 +284,7 @@ GameWindow::placePiece( int inX, int inY, QColor inColor )
 	points << QPointF( 0, 0 ) << QPointF( -5, -25 ) << QPointF( 10, -35 ) << QPointF( 25, -25 ) << QPointF( 20, 0 ) << QPointF( 0, 0 );
 	QPolygonF polygon( points );
 	QGraphicsPolygonItem* meeple = new QGraphicsPolygonItem( polygon );
-	meeple->moveBy( inX + GuiConstants::tileWidth / 2 - 12, inY + GuiConstants::tileHeight / 2 + 17 );
+	meeple->moveBy( inX + Gui::kTileWidth / 2 - 12, inY + Gui::kTileHeight / 2 + 17 );
 	meeple->setPen( QPen( QBrush( inColor ), 2 ) );
 	mBoardScene->addItem( meeple );
 	mMeeples.push_back( GuiPlacedPiece( meeple, inX, inY, inColor ) );
@@ -304,6 +309,6 @@ void
 GameWindow::updateSceneRect()
 {
 	QRectF bounding = mBoardScene->itemsBoundingRect();
-	bounding.adjust( -GuiConstants::tileWidth, -GuiConstants::tileHeight, GuiConstants::tileWidth, GuiConstants::tileHeight );
+	bounding.adjust( -Gui::kTileWidth, -Gui::kTileHeight, Gui::kTileWidth, Gui::kTileHeight );
 	mBoardScene->setSceneRect( bounding );
 }

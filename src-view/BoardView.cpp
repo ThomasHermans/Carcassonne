@@ -1,20 +1,30 @@
 #include "src-view/BoardView.h"
 
+#include "src-view/DragData.h"
+
+#include <QDragEnterEvent>
+#include <QDropEvent>
 #include <QGraphicsItem>
+#include <QGraphicsScene>
 #include <QKeyEvent>
 #include <QList>
+#include <QMimeData>
 #include <QMouseEvent>
+#include <QString>
+#include <QWidget>
 
 #include <iostream>
 
 BoardView::BoardView( QWidget *parent ) :
 	QGraphicsView( parent )
 {
+	setAcceptDrops( true );
 }
 
 BoardView::BoardView( QGraphicsScene *scene, QWidget *parent ) :
 	QGraphicsView( scene, parent )
 {
+	setAcceptDrops( true );
 }
 
 void
@@ -40,8 +50,30 @@ BoardView::keyPressEvent( QKeyEvent * inEvent )
 	{
 		emit spacePressed();
 	}
-	else if ( inEvent->key() == Qt::Key_M )
+}
+
+void
+BoardView::dragEnterEvent( QDragEnterEvent * inEvent )
+{
+	const DragData * droppedData = qobject_cast< const DragData * >( inEvent->mimeData() );
+	if ( droppedData )
 	{
-		emit mPressed();
+		inEvent->acceptProposedAction();
+	}
+}
+
+void
+BoardView::dragMoveEvent( QDragMoveEvent * inEvent )
+{
+}
+
+void
+BoardView::dropEvent( QDropEvent * inEvent )
+{
+	const DragData * droppedData = qobject_cast< const DragData * >( inEvent->mimeData() );
+	if ( droppedData )
+	{
+		QPointF dropPoint = mapToScene( inEvent->pos() );
+		emit dropped( *droppedData, dropPoint.x(), dropPoint.y() );
 	}
 }

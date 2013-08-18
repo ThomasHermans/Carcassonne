@@ -1,9 +1,17 @@
 #ifndef BOARDVIEW_H
 #define BOARDVIEW_H
 
-#include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QWidget>
+
+class QDragEnterEvent;
+class QDragMoveEvent;
+class QDropEvent;
+class QGraphicsScene;
+class QKeyEvent;
+class QMouseEvent;
+class QWidget;
+
+class DragData;
 
 class BoardView : public QGraphicsView
 {
@@ -13,14 +21,18 @@ public:
 	explicit BoardView( QGraphicsScene *inScene, QWidget *parent = 0 );
 
 signals:
-	void clicked(int x, int y);
+	void clicked( int x, int y );
 	void enterPressed();
 	void spacePressed();
-	void mPressed();
+	void dropped( DragData const & inData, int inX, int inY );
 
 protected:
 	void mousePressEvent( QMouseEvent * inEvent );
 	void keyPressEvent( QKeyEvent * inEvent );
+
+	void dragEnterEvent( QDragEnterEvent * inEvent );
+	void dragMoveEvent( QDragMoveEvent * inEvent );
+	void dropEvent( QDropEvent * inEvent );
 };
 
 #endif // BOARDVIEW_H

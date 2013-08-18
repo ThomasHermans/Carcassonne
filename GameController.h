@@ -6,16 +6,18 @@
 
 #include <QObject>
 
+class DragData;
+
 class GameController : public QObject
 {
 	Q_OBJECT
 public:
 	explicit GameController(QObject *parent = 0);
 
-public slots:
+private slots:
+	// From model to view
 	void onTilePlaced(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
 	void onTileUnplaced(unsigned int inCol, unsigned int inRow);
-	void onClicked(int x, int y);
 	void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
 	void onNextTile(std::string inNextId);
 	void onTilesLeft(unsigned int inNr);
@@ -30,6 +32,10 @@ public slots:
 	void onFinishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
 
 	void onEndOfGame(unsigned int inTilesLeft);
+
+	// From view to model
+	void onClicked( int inX, int inY );
+	void onTryToPlacePiece( DragData const & inData, int inX, int inY );
 
 private:
 	Game *mGame;

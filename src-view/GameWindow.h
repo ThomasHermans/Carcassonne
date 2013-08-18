@@ -3,6 +3,7 @@
 
 #include "src-view/BoardView.h"
 #include "src-view/TileItem.h"
+#include "src-view/Typedefs.h"
 
 #include <QMainWindow>
 
@@ -19,71 +20,80 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 
+class DragData;
+class DragMeepleLabel;
+
 struct GuiPlacedPiece
 {
-    GuiPlacedPiece( QGraphicsPolygonItem* inItem, int inX, int inY, QColor inColor )
-    :
-    mItem( inItem ),
-    mX( inX ),
-    mY( inY ),
-    mColor( inColor )
-    {}
-    QGraphicsPolygonItem* mItem;
-    int mX;
-    int mY;
-    QColor mColor;
+	QGraphicsPolygonItem* mItem;
+	int mX;
+	int mY;
+	QColor mColor;
+	
+	GuiPlacedPiece( QGraphicsPolygonItem* inItem, int inX, int inY, QColor inColor )
+	:
+	mItem( inItem ),
+	mX( inX ),
+	mY( inY ),
+	mColor( inColor )
+	{}
 };
 
 class GameWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit GameWindow(QWidget *parent = 0);
-    ~GameWindow();
+	explicit GameWindow( QWidget *parent = 0 );
+	~GameWindow();
 
-    void clearTile(int x, int y);
-    void rotateTile(int x, int y, std::string inId, int inRotation);
-    void displayTilesLeft(unsigned int inNr);
+	void clearTile( int x, int y );
+	void rotateTile( int x, int y, std::string inId, int inRotation );
+	void displayTilesLeft( unsigned int inNr );
 
-    void setActivePlayer(std::string const & inName);
-    void setActivePlayer(std::string const & inName, int inScore, int inPiecesLeft);
-    void setMeepleLeft( int inPiecesLeft );
+	void setActivePlayer
+	(
+		std::string const & inName,
+		Dragging::Color inColor,
+		int inScore,
+		int inPiecesLeft
+	);
+	void setMeepleLeft( int inPiecesLeft );
 
-    void finishCloister(int inX, int inY);
-    void finishCity(int inLeft, int inRight, int inTop, int inBottom);
-    void finishRoad(int inLeft, int inRight, int inTop, int inBottom);
-    
+	void finishCloister( int inX, int inY );
+	void finishCity( int inLeft, int inRight, int inTop, int inBottom );
+	void finishRoad( int inLeft, int inRight, int inTop, int inBottom );
+	
 signals:
-    void clicked(int x, int y);
-    void endCurrentTurn();
-    void tryToPlacePiece();
-    
+	void clicked( int x, int y );
+	void endCurrentTurn();
+	void tryToPlacePiece();
+	void tryToPlacePiece( DragData const & inData, int inX, int inY );
+	
 public slots:
-    void setTile(int inX, int inY, std::string inId, int inRotation);
-    void setNextTile(std::string inId);
-    void fadeNextTile();
-    void onClicked(int x, int y);
-    void placePiece( int inX, int inY, QColor inColor );
-    void returnPiece( int inX, int inY, QColor inColor );
+	void setTile( int inX, int inY, std::string inId, int inRotation );
+	void setNextTile( std::string inId );
+	void fadeNextTile();
+	void onClicked( int x, int y );
+	void placePiece( int inX, int inY, QColor inColor );
+	void returnPiece( int inX, int inY, QColor inColor );
 
 private:
-    void updateSceneRect();
+	void updateSceneRect();
 
 private:
-    QWidget *mCentralWidget;
-    QHBoxLayout *mBoardAndSideBarLayout;
-    QGraphicsScene *mBoardScene;
-    BoardView *mBoardView;
-    std::vector< TileItem* > mTiles;
-    std::vector< GuiPlacedPiece > mMeeples;
-    QVBoxLayout *mSideBarLayout;
-    QLabel *mTilesLeft;
-    QLabel *mPickedTileLabel;
-    QLabel *mActiveUserNameLabel;
-    QLabel *mActiveUserScoreLabel;
-    QLabel *mActiveUserMeepleLeftLabel;
-    QPushButton *mEndTurnButton;
-    QPushButton *mTryToPlacePieceButton;
+	QGraphicsScene *mBoardScene;
+	BoardView *mBoardView;
+	std::vector< TileItem* > mTiles;
+	std::vector< GuiPlacedPiece > mMeeples;
+	QVBoxLayout *mSideBarLayout;
+	QLabel *mTilesLeft;
+	QLabel *mPickedTileLabel;
+	QLabel *mActiveUserNameLabel;
+	QLabel *mActiveUserScoreLabel;
+	QLabel *mActiveUserMeepleLeftLabel;
+	DragMeepleLabel * mActiveUserDragFollowerLabel;
+	QPushButton *mEndTurnButton;
+	QPushButton *mTryToPlacePieceButton;
 };
 
 #endif // GAMEWINDOW_H

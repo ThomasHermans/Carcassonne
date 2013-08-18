@@ -24,6 +24,8 @@ SOURCES += main.cpp\
     src-model\TileOnBoard.cpp \
     src-model\Tile.cpp \
     src-view\BoardView.cpp \
+    src-view\DragData.cpp \
+    src-view\DragMeepleLabel.cpp \
     src-view\GameWindow.cpp \
     src-view\TileItem.cpp \
     GameController.cpp    
@@ -41,9 +43,11 @@ HEADERS  += \
     src-model\Tile.h \
     src-model\TileOnBoard.h \
     src-view\BoardView.h \
+    src-view\DragData.h \
+    src-view\DragMeepleLabel.h \
     src-view\GameWindow.h \
     src-view\TileItem.h \
-    src-view\GuiConstants.h \
+    src-view\Typedefs.h \
     GameController.h
 
 INCLUDEPATH += "C:\\Program Files\\boost\\boost_1_52_0"

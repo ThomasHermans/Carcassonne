@@ -31,6 +31,15 @@ public:
 
 	boost::optional< Tile > getNextTile() const;
 
+	void tryToPlacePiece
+	(
+		Color::Color inColor,
+		Piece::PieceType inType,
+		unsigned inCol,
+		unsigned inRow,
+		Area::Area inArea
+	);
+
 	void endTurn();
 
 public slots:

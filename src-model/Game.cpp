@@ -236,6 +236,40 @@ Game::getNextTile() const
 }
 
 void
+Game::tryToPlacePiece
+(
+	Color::Color inColor,
+	Piece::PieceType inType,
+	unsigned inCol,
+	unsigned inRow,
+	Area::Area inArea
+)
+{
+	if ( mCurrentPlacedCol == inCol && mCurrentPlacedRow == inRow && mCurrentPlacedTile)
+	{
+		if ( mPlayers[mCurrentPlayer].getColor() == inColor && mPlayers[mCurrentPlayer].hasFreePieces() )
+		{
+			if ( inArea == Area::Central && mCurrentPlacedTile->getCenter() == Tile::Cloister )
+			{
+				PlacedPiece placedPiece
+				(
+					mPlayers[mCurrentPlayer].getPieceToPlace(),
+					Area::Central
+				);
+				if ( mCurrentPlacedTile->placePiece( placedPiece ) )
+				{
+					emit piecePlaced( mCurrentPlacedCol, mCurrentPlacedRow, mPlayers[mCurrentPlayer] );
+				}
+				else
+				{
+					mPlayers[mCurrentPlayer].returnPiece( placedPiece.getPiece() );
+				}
+			}
+		}
+	}
+}
+
+void
 Game::endTurn()
 {
 	mCurrentPlayer = (mCurrentPlayer + 1) % mPlayers.size();
