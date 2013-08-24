@@ -9,8 +9,49 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QPainter>
+#include <QPaintEvent>
 #include <QString>
 #include <QWidget>
+
+namespace
+{
+	QColor
+	toQColor( Dragging::Color inColor )
+	{
+		switch ( inColor )
+		{
+			case Dragging::kRed:
+				return Qt::red;
+			case Dragging::kGreen:
+				return Qt::green;
+			case Dragging::kBlue:
+				return Qt::blue;
+			case Dragging::kYellow:
+				return Qt::yellow;
+			case Dragging::kBlack:
+				return Qt::black;
+			case Dragging::kGray:
+				return Qt::gray;
+			default:
+				return Qt::white;
+		}
+	}
+
+	QPainterPath
+	getMeeplePath( int inX, int inY, int inWidth, int inHeight )
+	{
+		QPainterPath path;
+		path.moveTo( inX + .5 * inWidth, inY + 0 );
+		path.lineTo( inX + .8 * inWidth, inY + inHeight );
+		path.lineTo( inX + 0, inY + .4 * inHeight );
+		path.lineTo( inX + inWidth, inY + .4 * inHeight );
+		path.lineTo( inX + .2 * inWidth, inY + inHeight );
+		path.lineTo( inX + .5 * inWidth, inY + 0 );
+		path.setFillRule( Qt::WindingFill );
+		return path;
+	}
+}
 
 DragMeepleLabel::DragMeepleLabel
 (
@@ -31,8 +72,7 @@ DragMeepleLabel::DragMeepleLabel
 	QHBoxLayout * layout = new QHBoxLayout( this );
 	layout->setContentsMargins( 0, 0, 0, 0 );
 
-	QLabel * iconLabel = new QLabel( "*", this );
-	layout->addWidget( iconLabel );
+	layout->addSpacing( 40 );
 
 	mNrLabel = new QLabel( QString::number( mNr ), this );
 	layout->addWidget( mNrLabel );
@@ -41,7 +81,8 @@ DragMeepleLabel::DragMeepleLabel
 
 	setLayout( layout );
 
-	setFixedHeight( sizeHint().height() * 2 );
+	setFixedWidth( parentWidget()->width() );
+	setFixedHeight( 40 );
 }
 
 DragMeepleLabel::~DragMeepleLabel()
@@ -86,4 +127,11 @@ DragMeepleLabel::mouseMoveEvent( QMouseEvent * inEvent )
 	drag->setMimeData( dragData );
 
 	drag->exec( Qt::MoveAction );
+}
+
+void
+DragMeepleLabel::paintEvent( QPaintEvent * inEvent )
+{
+	QPainter painter( this );
+	painter.fillPath( getMeeplePath( 0, 5, 30, 30 ), toQColor( mColor ) );
 }

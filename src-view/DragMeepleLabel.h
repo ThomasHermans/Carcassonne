@@ -26,6 +26,7 @@ public:
 protected:
 	void mousePressEvent( QMouseEvent * inEvent );
 	void mouseMoveEvent( QMouseEvent * inEvent );
+	void paintEvent( QPaintEvent * inEvent );
 
 private:
 	QLabel * mNrLabel;
