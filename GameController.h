@@ -22,7 +22,7 @@ private slots:
 	void onNextTile(std::string inNextId);
 	void onTilesLeft(unsigned int inNr);
 
-	void onPiecePlaced( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer );
+	void onPiecePlaced( unsigned int inCol, unsigned int inRow, Area::Area inArea, Player const & inCurrentPlayer );
 	void onPieceReturned( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer );
 	void onPlayerInfoChanged( Player const & inNewInfo );
 	void onCurrentPlayerChanged(Player const & inCurrentPlayer);

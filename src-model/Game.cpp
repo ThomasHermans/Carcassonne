@@ -72,7 +72,7 @@ Game::Game() :
 		mNextTile = mBag.back();
 		mBag.pop_back();
 	}
-	mPlayers.push_back( Player( "Thomas", Color::Green ) );
+	mPlayers.push_back( Player( "Thomas", Color::Blue ) );
 	mPlayers.push_back( Player( "Gijs", Color::Red ) );
 	for ( std::vector< Player >::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it )
 	{
@@ -260,16 +260,20 @@ Game::tryToPlacePiece
 	{
 		if ( mPlayers[mCurrentPlayer].getColor() == inColor && mPlayers[mCurrentPlayer].hasFreePieces() )
 		{
-			if ( inArea == Area::Central && mCurrentPlacedTile->getCenter() == Tile::Cloister )
+			if ( ( inArea == Area::Central && mCurrentPlacedTile->getCenter() == Tile::Cloister )
+				|| ( inArea == Area::Top && mCurrentPlacedTile->getTop() == Tile::Road )
+				|| ( inArea == Area::Right && mCurrentPlacedTile->getRight() == Tile::Road )
+				|| ( inArea == Area::Bottom && mCurrentPlacedTile->getBottom() == Tile::Road )
+				|| ( inArea == Area::Left && mCurrentPlacedTile->getLeft() == Tile::Road ) )
 			{
 				PlacedPiece placedPiece
 				(
 					mPlayers[mCurrentPlayer].getPieceToPlace(),
-					Area::Central
+					inArea
 				);
 				if ( mCurrentPlacedTile->placePiece( placedPiece ) )
 				{
-					emit piecePlaced( mCurrentPlacedCol, mCurrentPlacedRow, mPlayers[mCurrentPlayer] );
+					emit piecePlaced( mCurrentPlacedCol, mCurrentPlacedRow, inArea, mPlayers[mCurrentPlayer] );
 				}
 				else
 				{
@@ -285,34 +289,6 @@ Game::endTurn()
 {
 	mCurrentPlayer = (mCurrentPlayer + 1) % mPlayers.size();
 	emit currentPlayerChanged( mPlayers[mCurrentPlayer] );
-}
-
-void
-Game::onTryToPlacePiece()
-{
-	std::cout << "onTryToPlacePiece" << std::endl;
-	if ( mCurrentPlacedRow != kInvalid
-		&& mCurrentPlacedCol != kInvalid
-		&& mPlayers[mCurrentPlayer].hasFreePieces() )
-	{
-		if ( mCurrentPlacedTile && mCurrentPlacedTile->getCenter() == Tile::Cloister )
-		{
-			// Place a meeple on this cloister
-			PlacedPiece placedPiece
-			(
-				mPlayers[mCurrentPlayer].getPieceToPlace(),
-				Area::Central
-			);
-			if ( mCurrentPlacedTile->placePiece( placedPiece ) )
-			{
-				emit piecePlaced( mCurrentPlacedCol, mCurrentPlacedRow, mPlayers[mCurrentPlayer] );
-			}
-			else
-			{
-				mPlayers[mCurrentPlayer].returnPiece( placedPiece.getPiece() );
-			}
-		}
-	}
 }
 
 void

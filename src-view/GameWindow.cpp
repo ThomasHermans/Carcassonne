@@ -76,12 +76,6 @@ GameWindow::GameWindow( QWidget *parent )
 	mUserInfo = new QStackedWidget( centralWidget );
 	mSideBarLayout->addWidget( mUserInfo, 0 );
 
-	mTryToPlacePieceButton = new QPushButton(centralWidget);
-	mTryToPlacePieceButton->setObjectName(QString::fromUtf8("mTryToPlacePieceButton"));
-	mTryToPlacePieceButton->setText("Try to place a Piece");
-	connect( mTryToPlacePieceButton, SIGNAL( clicked() ), this, SIGNAL( tryToPlacePiece() ) );
-	mSideBarLayout->addWidget( mTryToPlacePieceButton );
-
 	mEndTurnButton = new QPushButton(centralWidget);
 	mEndTurnButton->setObjectName(QString::fromUtf8("mEndTurnButton"));
 	mEndTurnButton->setText("End Turn");

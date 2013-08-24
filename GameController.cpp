@@ -31,6 +31,64 @@ namespace
 	}
 
 	int
+	xFromArea( Area::Area inArea )
+	{
+		using namespace Gui;
+		switch ( inArea )
+		{
+			case Area::LeftTop:
+			case Area::Left:
+			case Area::LeftBottom:
+				return .15 * kTileWidth;
+			case Area::TopLeft:
+			case Area::BottomLeft:
+				return .3 * kTileWidth;
+			case Area::Top:
+			case Area::Central:
+			case Area::Bottom:
+				return .5 * kTileWidth;
+			case Area::TopRight:
+			case Area::BottomRight:
+				return .7 * kTileWidth;
+			case Area::RightTop:
+			case Area::Right:
+			case Area::RightBottom:
+				return .85 * kTileWidth;
+			default:
+				return .5 * kTileWidth;
+		}
+	}
+
+	int
+	yFromArea( Area::Area inArea )
+	{
+		using namespace Gui;
+		switch ( inArea )
+		{
+			case Area::TopLeft:
+			case Area::Top:
+			case Area::TopRight:
+				return .15 * kTileHeight;
+			case Area::LeftTop:
+			case Area::RightTop:
+				return .3 * kTileHeight;
+			case Area::Left:
+			case Area::Central:
+			case Area::Right:
+				return .5 * kTileHeight;
+			case Area::LeftBottom:
+			case Area::RightBottom:
+				return .7 * kTileHeight;
+			case Area::BottomLeft:
+			case Area::Bottom:
+			case Area::BottomRight:
+				return .85 * kTileHeight;
+			default:
+				return .5 * kTileHeight;
+		}
+	}
+
+	int
 	posXFromX( int inX )
 	{
 		int res = ( inX % Gui::kTileWidth );
@@ -55,9 +113,53 @@ namespace
 	Area::Area
 	areaFromPos( int inX, int inY )
 	{
-		if ( inX > 33 && inX < 66 && inY > 33 && inY < 66 )
+		using namespace Gui;
+		if ( inX < kFirstBorder )
 		{
-			return Area::Central;
+			if ( inY < kFirstBorder )
+			{
+				if ( inY < inX )
+					return Area::TopLeft;
+				else
+					return Area::LeftTop;
+			}
+			else if ( kSecondBorder < inY )
+			{
+				if ( kTileHeight - inY < inX )
+					return Area::BottomLeft;
+				else
+					return Area::LeftBottom;
+			}
+			else if ( kFirstBorder < inY && inY < kSecondBorder )
+				return Area::Left;
+		}
+		else if ( kSecondBorder < inX )
+		{
+			if ( inY < kFirstBorder )
+			{
+				if ( inY < kTileWidth - inX )
+					return Area::TopRight;
+				else
+					return Area::RightTop;
+			}
+			else if ( kSecondBorder < inY )
+			{
+				if ( kTileHeight - inY < kTileWidth - inX )
+					return Area::BottomRight;
+				else
+					return Area::RightBottom;
+			}
+			else if ( kFirstBorder < inY && inY < kSecondBorder )
+				return Area::Right;
+		}
+		else if ( kFirstBorder < inX && inX < kSecondBorder )
+		{
+			if ( inY < kFirstBorder )
+				return Area::Top;
+			else if ( kSecondBorder < inY )
+				return Area::Bottom;
+			if ( kFirstBorder < inY && inY < kSecondBorder )
+				return Area::Central;
 		}
 		return Area::Invalid;
 	}
@@ -167,7 +269,7 @@ GameController::GameController(QObject *parent) :
 	connect( mGame, SIGNAL( nextTile(std::string) ), this, SLOT( onNextTile(std::string) ) );
 	connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
 
-	connect( mGame, SIGNAL( piecePlaced(uint, uint, Player) ), this, SLOT( onPiecePlaced(uint, uint, Player ) ) );
+	connect( mGame, SIGNAL( piecePlaced(uint, uint, Area::Area, Player) ), this, SLOT( onPiecePlaced(uint, uint, Area::Area, Player ) ) );
 	connect( mGame, SIGNAL( pieceReturned(uint, uint, Player) ), this, SLOT( onPieceReturned(uint, uint, Player ) ) );
 	connect( mGame, SIGNAL( playerInfoChanged(Player) ), this, SLOT( onPlayerInfoChanged(Player) ) );
 	connect( mGame, SIGNAL( currentPlayerChanged(Player) ), this, SLOT( onCurrentPlayerChanged(Player) ) );
@@ -177,7 +279,6 @@ GameController::GameController(QObject *parent) :
 	connect( mGame, SIGNAL( finishedRoad(std::vector<std::pair<uint,uint>>)), this, SLOT( onFinishedRoad(std::vector<std::pair<uint,uint>>) ) );
 
 	connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
-	connect( mWindow, SIGNAL( tryToPlacePiece() ), mGame, SLOT( onTryToPlacePiece() ) );
 	connect( mWindow, SIGNAL( tryToPlacePiece( DragData, int, int ) ), this, SLOT( onTryToPlacePiece( DragData, int, int ) ) );
 	connect( mWindow, SIGNAL( endCurrentTurn() ), mGame, SLOT( onEndCurrentTurn() ) );
 
@@ -229,11 +330,13 @@ GameController::onTilesLeft(unsigned int inNr)
 }
 
 void
-GameController::onPiecePlaced( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer )
+GameController::onPiecePlaced( unsigned int inCol, unsigned int inRow, Area::Area inArea, Player const & inCurrentPlayer )
 {
 	std::cout << inCurrentPlayer.getName() << " placed a piece." << std::endl;
 	int x = xFromCol( inCol, mGame->getStartCol() );
 	int y = yFromRow( inRow, mGame->getStartRow() );
+	x += xFromArea( inArea ) - .5 * Gui::kTileWidth;
+	y += yFromArea( inArea ) - .5 * Gui::kTileHeight;
 	mWindow->placePiece( x, y, toQColor( inCurrentPlayer.getColor() ) );
 }
 

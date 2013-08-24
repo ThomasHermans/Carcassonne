@@ -4,7 +4,9 @@
 namespace Gui
 {
 	int const kTileHeight = 100;
-	int const kTileWidth = 100;
+	int const kTileWidth = kTileHeight;
+	double const kFirstBorder = .375 * kTileHeight;
+	double const kSecondBorder = kTileHeight - kFirstBorder;
 }
 
 namespace Dragging

@@ -73,7 +73,6 @@ public:
 signals:
 	void clicked( int x, int y );
 	void endCurrentTurn();
-	void tryToPlacePiece();
 	void tryToPlacePiece( DragData const & inData, int inX, int inY );
 	
 public slots:
@@ -98,7 +97,6 @@ private:
 	QStackedWidget * mUserInfo;
 	std::map< std::string, UserInfoWidget * > mUserInfoMap;
 	QPushButton *mEndTurnButton;
-	QPushButton *mTryToPlacePieceButton;
 };
 
 #endif // GAMEWINDOW_H

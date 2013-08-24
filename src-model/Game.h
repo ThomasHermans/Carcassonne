@@ -45,7 +45,6 @@ public:
 	void endTurn();
 
 public slots:
-	void onTryToPlacePiece();
 	void onEndCurrentTurn();
 	void onFinishedCloister( unsigned int inCol, unsigned int inRow );
 
@@ -56,7 +55,7 @@ signals:
 	void nextTile(std::string inNextId);
 	void tilesLeft(unsigned int inNr);
 
-	void piecePlaced( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer );
+	void piecePlaced( unsigned int inCol, unsigned int inRow, Area::Area inArea, Player const & inCurrentPlayer );
 	void pieceReturned( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer );
 
 	void finishedCloister(unsigned int inCol, unsigned int inRow);
