@@ -1,11 +1,13 @@
 #include "src-view/GameWindow.h"
 
 #include "src-view/DragMeepleLabel.h"
+#include "src-view/UserInfoWidget.h"
 
 #include <QBrush>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsPolygonItem>
 #include <QPen>
+#include <QStackedWidget>
 
 #include <iostream>
 #include <sstream>
@@ -43,29 +45,14 @@ GameWindow::GameWindow( QWidget *parent )
 	mBoardView = new BoardView( mBoardScene, this );
 	mBoardView->setObjectName( QString::fromUtf8("mBoardView") );
 	mBoardView->setFrameStyle( QFrame::NoFrame );
+	mBoardView->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
 	connect( mBoardView, SIGNAL( enterPressed() ), this, SIGNAL( endCurrentTurn() ) );
 	connect( mBoardView, SIGNAL( spacePressed() ), this, SIGNAL( endCurrentTurn() ) );
 	connect( mBoardView, SIGNAL( dropped( DragData, int, int ) ),
 		this, SIGNAL( tryToPlacePiece( DragData, int, int ) ) );
 
-//    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-//    sizePolicy.setHorizontalStretch(0);
-//    sizePolicy.setVerticalStretch(0);
-//    sizePolicy.setHeightForWidth(mBoardScrollArea->sizePolicy().hasHeightForWidth());
-//    mBoardScrollArea->setSizePolicy(sizePolicy);
-//    mBoardScrollArea->setMinimumSize(QSize(400, 400));
-//    mBoardScrollArea->setBaseSize(QSize(100, 100));
-//    mBoardScrollArea->setWidgetResizable(true);
-
-//    mBoardWidget = new BoardWidget();
-//    mBoardWidget->setObjectName(QString::fromUtf8("mBoardWidget"));
-//    mBoardWidget->setGeometry(QRect(0, 0, 400, 400));
-//    mBoardScrollArea->setWidget(mBoardWidget);
-
-//    connect(mBoardWidget, SIGNAL(clicked(uint, uint)), this, SLOT(onClicked(uint, uint)));
-
-	boardAndSideBarLayout->addWidget( mBoardView );
+	boardAndSideBarLayout->addWidget( mBoardView, 1 );
 
 	connect( mBoardView, SIGNAL(clicked(int,int)), this, SLOT(onClicked(int,int)) );
 
@@ -77,7 +64,6 @@ GameWindow::GameWindow( QWidget *parent )
 	mTilesLeft = new QLabel(centralWidget);
 	mTilesLeft->setObjectName(QString::fromUtf8("mTilesLeft"));
 	mTilesLeft->setText("X tiles left");
-
 	mSideBarLayout->addWidget(mTilesLeft);
 
 	mPickedTileLabel = new QLabel(centralWidget);
@@ -85,34 +71,10 @@ GameWindow::GameWindow( QWidget *parent )
 	mPickedTileLabel->setFixedSize( QSize(100, 100) );
 	mPickedTileLabel->setText(".");
 	mPickedTileLabel->setAlignment(Qt::AlignCenter);
-
 	mSideBarLayout->addWidget(mPickedTileLabel);
 
-	mActiveUserNameLabel = new QLabel(centralWidget);
-	mActiveUserNameLabel->setObjectName(QString::fromUtf8("mActiveUserNameLabel"));
-	mActiveUserNameLabel->setText("Active user name");
-	mActiveUserNameLabel->setAlignment(Qt::AlignLeft);
-
-	mSideBarLayout->addWidget(mActiveUserNameLabel);
-
-	mActiveUserScoreLabel = new QLabel(centralWidget);
-	mActiveUserScoreLabel->setObjectName(QString::fromUtf8("mActiveUserScoreLabel"));
-	mActiveUserScoreLabel->setText("Active user score");
-	mActiveUserScoreLabel->setAlignment(Qt::AlignLeft);
-
-	mSideBarLayout->addWidget(mActiveUserScoreLabel);
-
-	mActiveUserMeepleLeftLabel = new QLabel(centralWidget);
-	mActiveUserMeepleLeftLabel->setObjectName(QString::fromUtf8("mActiveUserMeepleLeftLabel"));
-	mActiveUserMeepleLeftLabel->setText("Active user meeple left");
-	mActiveUserMeepleLeftLabel->setAlignment(Qt::AlignLeft);
-
-	mSideBarLayout->addWidget(mActiveUserMeepleLeftLabel);
-
-	mActiveUserDragFollowerLabel = new DragMeepleLabel( Dragging::kFollower, 0, Dragging::kRed, centralWidget );
-	mActiveUserDragFollowerLabel->setObjectName( QString::fromUtf8( "mActiveUserDragFollowerLabel" ) );
-	mActiveUserDragFollowerLabel->setFixedWidth( 100 );
-	mSideBarLayout->addWidget( mActiveUserDragFollowerLabel );
+	mUserInfo = new QStackedWidget( centralWidget );
+	mSideBarLayout->addWidget( mUserInfo, 0 );
 
 	mTryToPlacePieceButton = new QPushButton(centralWidget);
 	mTryToPlacePieceButton->setObjectName(QString::fromUtf8("mTryToPlacePieceButton"));
@@ -124,7 +86,7 @@ GameWindow::GameWindow( QWidget *parent )
 	mEndTurnButton->setObjectName(QString::fromUtf8("mEndTurnButton"));
 	mEndTurnButton->setText("End Turn");
 	connect( mEndTurnButton, SIGNAL( clicked() ), this, SIGNAL( endCurrentTurn() ) );
-	mSideBarLayout->addWidget(mEndTurnButton);
+	mSideBarLayout->addWidget( mEndTurnButton );
 
 	mSideBarLayout->addStretch();
 
@@ -147,6 +109,20 @@ GameWindow::GameWindow( QWidget *parent )
 
 GameWindow::~GameWindow()
 {
+}
+
+void
+GameWindow::addPlayer
+(
+	std::string const & inName,
+	Dragging::Color inColor,
+	unsigned inNumberOfFollowers
+)
+{
+	UserInfoWidget * newUserInfo = new UserInfoWidget( inName, inColor, inNumberOfFollowers, mUserInfo );
+	mUserInfo->addWidget( newUserInfo );
+	mUserInfo->setFixedHeight( newUserInfo->sizeHint().height() );
+	mUserInfoMap[inName] = newUserInfo;
 }
 
 void
@@ -191,25 +167,33 @@ GameWindow::displayTilesLeft( unsigned int inNr )
 }
 
 void
-GameWindow::setActivePlayer
-(
-	std::string const & inName,
-	Dragging::Color inColor,
-	int inScore,
-	int inPiecesLeft
-)
+GameWindow::setActivePlayer( std::string const & inName )
 {
-	mActiveUserNameLabel->setText( QString::fromUtf8( inName.c_str() ) );
-	mActiveUserScoreLabel->setText( QString::number( inScore ) );
-	setMeepleLeft( inPiecesLeft );
-	mActiveUserDragFollowerLabel->setColor( inColor );
+	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
+	if ( it != mUserInfoMap.end() )
+	{
+		mUserInfo->setCurrentWidget( it->second );
+	}
 }
 
 void
-GameWindow::setMeepleLeft( int inMeepleLeft )
+GameWindow::setScore( std::string const & inName, unsigned inScore )
 {
-	mActiveUserMeepleLeftLabel->setText( QString::number( inMeepleLeft ).append( " meeple left." ) );
-	mActiveUserDragFollowerLabel->setNr( inMeepleLeft );
+	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
+	if ( it != mUserInfoMap.end() )
+	{
+		it->second->setScore( inScore );
+	}
+}
+
+void
+GameWindow::setFollowersLeft( std::string const & inName, unsigned inNumberOfFollowers )
+{
+	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
+	if ( it != mUserInfoMap.end() )
+	{
+		it->second->setNumberOfFollowers( inNumberOfFollowers );
+	}
 }
 
 void

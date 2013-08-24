@@ -52,13 +52,13 @@ Player::getColor() const
 	return mColor;
 }
 
-int
+unsigned
 Player::getScore() const
 {
 	return mScore;
 }
 
-int
+unsigned
 Player::getNumberOfFreePieces() const
 {
 	return mFreePieces.size();
@@ -91,5 +91,5 @@ void
 Player::awardPoints( unsigned inPoints )
 {
 	mScore += inPoints;
-	emit scoreChanged( mScore );
+	emit scoreChanged( *this, mScore );
 }

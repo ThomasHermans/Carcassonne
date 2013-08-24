@@ -19,6 +19,8 @@ public:
 	Game();
 	~Game();
 
+	std::vector< Player > const & getPlayers();
+
 	unsigned int getNrOfRows() const;
 	unsigned int getNrOfCols() const;
 	unsigned int getStartRow() const;

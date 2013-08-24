@@ -20,8 +20,8 @@ public:
 
 	std::string getName() const;
 	Color::Color getColor() const;
-	int getScore() const;
-	int getNumberOfFreePieces() const;
+	unsigned getScore() const;
+	unsigned getNumberOfFreePieces() const;
 
 	bool hasFreePieces() const;
 
@@ -31,13 +31,13 @@ public:
 	void awardPoints( unsigned inPoints );
 
 signals:
-	void nrOfFreePiecesChanged( Player const & inPlayer, unsigned int inNewNrOfFreePieces );
-	void scoreChanged( int mScore );
+	void nrOfFreePiecesChanged( Player const & inPlayer, unsigned inNewNrOfFreePieces );
+	void scoreChanged( Player const & inPlayer, unsigned mScore );
 
 private:
 	std::string mName;
 	Color::Color mColor;
-	int mScore;
+	unsigned mScore;
 	std::vector< Piece > mFreePieces;
 };
 

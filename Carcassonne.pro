@@ -28,6 +28,7 @@ SOURCES += main.cpp\
     src-view\DragMeepleLabel.cpp \
     src-view\GameWindow.cpp \
     src-view\TileItem.cpp \
+    src-view\UserInfoWidget.cpp \
     GameController.cpp    
 
 HEADERS  += \
@@ -48,6 +49,7 @@ HEADERS  += \
     src-view\GameWindow.h \
     src-view\TileItem.h \
     src-view\Typedefs.h \
+    src-view\UserInfoWidget.h \
     GameController.h
 
 INCLUDEPATH += "C:\\Program Files\\boost\\boost_1_52_0"

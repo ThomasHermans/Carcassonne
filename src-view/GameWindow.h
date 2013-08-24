@@ -20,8 +20,13 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 
+#include <map>
+
 class DragData;
 class DragMeepleLabel;
+class UserInfoWidget;
+
+class QStackedWidget;
 
 struct GuiPlacedPiece
 {
@@ -46,18 +51,20 @@ public:
 	explicit GameWindow( QWidget *parent = 0 );
 	~GameWindow();
 
+	void addPlayer
+	(
+		std::string const & inName,
+		Dragging::Color inColor,
+		unsigned inNumberOfFollowers
+	);
+
 	void clearTile( int x, int y );
 	void rotateTile( int x, int y, std::string inId, int inRotation );
 	void displayTilesLeft( unsigned int inNr );
 
-	void setActivePlayer
-	(
-		std::string const & inName,
-		Dragging::Color inColor,
-		int inScore,
-		int inPiecesLeft
-	);
-	void setMeepleLeft( int inPiecesLeft );
+	void setActivePlayer( std::string const & inName );
+	void setScore( std::string const & inName, unsigned inScore );
+	void setFollowersLeft( std::string const & inName, unsigned inNumberOfFollowers );
 
 	void finishCloister( int inX, int inY );
 	void finishCity( int inLeft, int inRight, int inTop, int inBottom );
@@ -88,10 +95,8 @@ private:
 	QVBoxLayout *mSideBarLayout;
 	QLabel *mTilesLeft;
 	QLabel *mPickedTileLabel;
-	QLabel *mActiveUserNameLabel;
-	QLabel *mActiveUserScoreLabel;
-	QLabel *mActiveUserMeepleLeftLabel;
-	DragMeepleLabel * mActiveUserDragFollowerLabel;
+	QStackedWidget * mUserInfo;
+	std::map< std::string, UserInfoWidget * > mUserInfoMap;
 	QPushButton *mEndTurnButton;
 	QPushButton *mTryToPlacePieceButton;
 };

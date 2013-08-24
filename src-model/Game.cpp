@@ -81,6 +81,11 @@ Game::Game() :
 			&(*it), SIGNAL( nrOfFreePiecesChanged( Player, uint ) ),
 			this, SIGNAL( playerInfoChanged( Player ) )
 		);
+		connect
+		(
+			&(*it), SIGNAL( scoreChanged( Player, uint ) ),
+			this, SIGNAL( playerInfoChanged( Player ) )
+		);
 	}
 	emit currentPlayerChanged( mPlayers.front() );
 	connect
@@ -112,6 +117,12 @@ Game::Game() :
 
 Game::~Game()
 {}
+
+std::vector< Player > const &
+Game::getPlayers()
+{
+	return mPlayers;
+}
 
 unsigned int
 Game::getNrOfRows() const

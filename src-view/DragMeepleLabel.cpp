@@ -12,31 +12,6 @@
 #include <QString>
 #include <QWidget>
 
-namespace
-{
-	QString
-	getStyleSheet( Dragging::Color inColor )
-	{
-		switch ( inColor )
-		{
-			case Dragging::kRed:
-				return "color: red";
-			case Dragging::kGreen:
-				return "color: green";
-			case Dragging::kBlue:
-				return "color: blue";
-			case Dragging::kYellow:
-				return "color: yellow";
-			case Dragging::kBlack:
-				return "color: black";
-			case Dragging::kGray:
-				return "color: gray";
-			default:
-				return "";
-		}
-	}
-}
-
 DragMeepleLabel::DragMeepleLabel
 (
 	Dragging::Piece inType,
@@ -53,7 +28,6 @@ DragMeepleLabel::DragMeepleLabel
 	mDragStartPosition()
 {
 	setContentsMargins( 0, 0, 0, 0 );
-	setStyleSheet( getStyleSheet( mColor ) );
 	QHBoxLayout * layout = new QHBoxLayout( this );
 	layout->setContentsMargins( 0, 0, 0, 0 );
 
@@ -66,6 +40,8 @@ DragMeepleLabel::DragMeepleLabel
 	layout->addStretch();
 
 	setLayout( layout );
+
+	setFixedHeight( sizeHint().height() * 2 );
 }
 
 DragMeepleLabel::~DragMeepleLabel()
@@ -82,7 +58,6 @@ void
 DragMeepleLabel::setColor( Dragging::Color inColor )
 {
 	mColor = inColor;
-	setStyleSheet( getStyleSheet( mColor ) );
 }
 
 void

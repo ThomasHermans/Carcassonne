@@ -152,6 +152,12 @@ GameController::GameController(QObject *parent) :
 	mGame(new Game()),
 	mWindow(new GameWindow())
 {
+	for ( std::vector< Player >::const_iterator it = mGame->getPlayers().begin();
+		it != mGame->getPlayers().end();
+		++it )
+	{
+		mWindow->addPlayer( it->getName(), viewFromModel( it->getColor() ), it->getNumberOfFreePieces() );
+	}
 	connect( mGame, SIGNAL( tilePlaced(unsigned int, unsigned int, std::string, TileOnBoard::Rotation) ),
 			this, SLOT( onTilePlaced(unsigned int, unsigned int, std::string, TileOnBoard::Rotation) ) );
 	connect( mGame, SIGNAL( tileUnplaced(unsigned int, unsigned int) ),
@@ -243,22 +249,14 @@ GameController::onPieceReturned( unsigned int inCol, unsigned int inRow, Player 
 void
 GameController::onPlayerInfoChanged( Player const & inNewInfo )
 {
-	if ( mGame->getCurrentPlayer().getColor() == inNewInfo.getColor() )
-	{
-		mWindow->setMeepleLeft( inNewInfo.getNumberOfFreePieces() );
-	}
+	mWindow->setFollowersLeft( inNewInfo.getName(), inNewInfo.getNumberOfFreePieces() );
+	mWindow->setScore( inNewInfo.getName(), inNewInfo.getScore() );
 }
 
 void
 GameController::onCurrentPlayerChanged( Player const & inCurrentPlayer )
 {
-	mWindow->setActivePlayer
-	(
-		inCurrentPlayer.getName(),
-		viewFromModel( inCurrentPlayer.getColor() ),
-		inCurrentPlayer.getScore(),
-		inCurrentPlayer.getNumberOfFreePieces()
-	);
+	mWindow->setActivePlayer( inCurrentPlayer.getName() );
 }
 
 void
