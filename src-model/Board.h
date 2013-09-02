@@ -12,68 +12,69 @@ class Board : public QObject
 {
 	Q_OBJECT
 
-	typedef std::pair< unsigned int, FRCArea::CityArea > LocatedCity;
-	typedef std::pair< unsigned int, FRCArea::RoadArea > LocatedRoad;
-	typedef std::pair< unsigned int, FRCArea::FieldArea > LocatedField;
+private:
+	typedef std::pair< unsigned, FRCArea::CityArea > LocatedCity;
+	typedef std::pair< unsigned, FRCArea::RoadArea > LocatedRoad;
+	typedef std::pair< unsigned, FRCArea::FieldArea > LocatedField;
 	
 public:
-	Board( unsigned int inSize = 5 );
+	Board( unsigned inSize = 5 );
 	Board( Board const & inBoard );
 	~Board();
 	Board & operator = ( Board const & inBoard );
 
-	unsigned int getNrOfRows() const;
-	unsigned int getNrOfCols() const;
-	boost::optional< TileOnBoard > getTile(unsigned int inCol, unsigned int inRow) const;
+	unsigned getNrOfRows() const;
+	unsigned getNrOfCols() const;
+	bool isTile( unsigned inCol, unsigned inRow ) const;
+	boost::optional< TileOnBoard > const & getTile( unsigned inCol, unsigned inRow ) const;
+	boost::optional< TileOnBoard > & getTile( unsigned inCol, unsigned inRow );
 
-	void addRowsOnTop(unsigned int inNrOfRows);
-	void addRowsBelow(unsigned int inNrOfRows);
-	void addColsLeft(unsigned int inNrOfCols);
-	void addColsRight(unsigned int inNrOfCols);
+	bool isPossibleTile( Tile const & inTile );
+	bool isEmptySpot( unsigned inCol, unsigned inRow ) const;
+	bool isValidTilePlacement( TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const;
+	bool isValidAlternateTilePlacement( TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const;
+	bool placeValidTile( TileOnBoard const & inTile, unsigned inCol, unsigned inRow );
+	unsigned placeStartTile( TileOnBoard const & inTile );
 
-	bool isPossibleTile(Tile inTile);
-	bool isEmptySpot(unsigned int inCol, unsigned int inRow) const;
-	bool isValidTilePlacement(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow) const;
-	bool isValidAlternateTilePlacement(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow) const;
-	bool placeValidTile(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow);
-	unsigned int placeStartTile(const TileOnBoard & inTile);
-
+	bool isOccupied( unsigned inCol, unsigned inRow, Area::Area inArea ) const;
+	bool isOccupiedRoad( unsigned inCol, unsigned inRow, FRCArea::RoadArea inArea ) const;
 	std::vector< PlacedPiece > removePieces( unsigned inCol, unsigned inRow, Area::Area inArea );
 
-	void checkForFinishedCloisters(unsigned int inCol, unsigned int inRow);
-	bool isFinishedCloister(unsigned int inCol, unsigned int inRow) const;
-	bool isFullySurrounded(unsigned int inCol, unsigned int inRow) const;
-
-	void checkForFinishedCities(unsigned int inCol, unsigned int inRow);
-	void checkForFinishedRoads(unsigned int inCol, unsigned int inRow);
+	void checkForFinishedCities( unsigned inCol, unsigned inRow );
+	void checkForFinishedRoads( unsigned inCol, unsigned inRow );
+	void checkForFinishedCloisters( unsigned inCol, unsigned inRow );
+	bool isFinishedCloister( unsigned inCol, unsigned inRow ) const;
+	bool isFullySurrounded( unsigned inCol, unsigned inRow ) const;
 
 	std::string toString() const;
-	std::string shortPrint(unsigned int inCol, unsigned int inRow) const;
+	std::string shortPrint( unsigned inCol, unsigned inRow ) const;
 
 signals:
-	void finishedCloister(unsigned int inCol, unsigned int inRow );
-	void finishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
-	void finishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
+	void finishedCloister( unsigned inCol, unsigned inRow );
+	void finishedCity( std::vector< std::pair< unsigned, unsigned > > inTiles );
+	void finishedRoad( std::vector< std::pair< unsigned, unsigned > > inTiles );
 
 	void colsAddedLeft( unsigned inNrOfCols );
 	void rowsAddedTop( unsigned inNrOfRows );
 
 private:
-	bool placeTile(const TileOnBoard & inTile, unsigned int inCol, unsigned int inRow);
+	bool placeTile( TileOnBoard const & inTile, unsigned inCol, unsigned inRow );
+	bool removeTile( unsigned inCol, unsigned inRow );
+
 	void widenUp( unsigned inCol, unsigned inRow );
+	void addRowsOnTop( unsigned inNrOfRows );
+	void addRowsBelow( unsigned inNrOfRows );
+	void addColsLeft( unsigned inNrOfCols );
+	void addColsRight( unsigned inNrOfCols );
 
 	bool isContinueued( LocatedCity inLocatedCity ) const;
 	bool isContinueued( LocatedField inLocatedField ) const;
-	unsigned int getNeighborLocation( LocatedCity inLocatedCity ) const;
-	unsigned int getNeighborLocation( LocatedField inLocatedField ) const;
-
-	void checkForOccupiedRoads(unsigned int inCol, unsigned int inRow);
-	void checkForOccupiedCities(unsigned int inCol, unsigned int inRow);
-	void checkForOccupiedFields(unsigned int inCol, unsigned int inRow);
+	unsigned getNeighborLocation( LocatedCity inLocatedCity ) const;
+	unsigned getNeighborLocation( LocatedField inLocatedField ) const;
 
 private:
-	unsigned int mNrRows;
-	unsigned int mNrCols;
+	unsigned mNrRows;
+	unsigned mNrCols;
 	std::vector< boost::optional< TileOnBoard > > mBoard; // one vector of size cols * rows might be easier to use than nested vectors
 };
 

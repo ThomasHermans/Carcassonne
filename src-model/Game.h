@@ -73,6 +73,8 @@ private slots:
 
 private:
 	void pickNextTile();
+	void updateOccupations();
+
 	void rotateCurrentTile();
 
 	Player & getPlayer( Color::Color inColor );
@@ -94,6 +96,7 @@ private:
 
 	bool isEmptySpot( unsigned inCol, unsigned inRow ) const;
 	bool isCurrentSpot( unsigned inCol, unsigned inRow ) const;
+	bool isOccupied( Area::Area inArea ) const;
 
 private:
 	Board mBoard;

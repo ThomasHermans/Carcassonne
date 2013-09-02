@@ -1,6 +1,7 @@
 #include "src-model/Game.h"
 
 #include "src-model/CreateBaseGameTiles.h"
+#include "src-model/PlacedProject.h"
 
 #include <set>
 #include <stdio.h>
@@ -256,15 +257,11 @@ Game::tryToPlacePiece
 	Area::Area inArea
 )
 {
-	if ( mCurrentPlacedCol == inCol && mCurrentPlacedRow == inRow && mCurrentPlacedTile)
+	if ( isCurrentSpot( inCol, inRow ) && mCurrentPlacedTile)
 	{
 		if ( mPlayers[mCurrentPlayer].getColor() == inColor && mPlayers[mCurrentPlayer].hasFreePieces() )
 		{
-			if ( ( inArea == Area::Central && mCurrentPlacedTile->getCenter() == Tile::Cloister )
-				|| ( inArea == Area::Top && mCurrentPlacedTile->getTop() == Tile::Road )
-				|| ( inArea == Area::Right && mCurrentPlacedTile->getRight() == Tile::Road )
-				|| ( inArea == Area::Bottom && mCurrentPlacedTile->getBottom() == Tile::Road )
-				|| ( inArea == Area::Left && mCurrentPlacedTile->getLeft() == Tile::Road ) )
+			if ( !isOccupied( inArea ) )
 			{
 				PlacedPiece placedPiece
 				(
@@ -308,7 +305,7 @@ Game::onEndCurrentTurn()
 			pickNextTile();
 			if (mNextTile)
 			{
-				emit nextTile(mNextTile->getID());
+				emit nextTile( mNextTile->getID() );
 			}
 			endTurn();
 		}
@@ -453,4 +450,33 @@ bool
 Game::isCurrentSpot( unsigned inCol, unsigned inRow ) const
 {
 	return ( inCol == mCurrentPlacedCol && inRow == mCurrentPlacedRow );
+}
+
+bool
+Game::isOccupied( Area::Area inArea ) const
+{
+	if ( mCurrentPlacedTile->isCloister( inArea ) )
+	{
+		return mCurrentPlacedTile->hasPiece( inArea );
+	}
+	if ( mCurrentPlacedTile->isRoad( inArea ) )
+	{
+		Tile::ContiguousRoad road = mCurrentPlacedTile->getContiguousRoad( FRCArea::RoadArea( inArea ) );
+		std::vector< PlacedRoad > roadsToCheck;
+		for ( Tile::ContiguousRoad::const_iterator it = road.begin(); it != road.end(); ++it )
+		{
+            roadsToCheck.push_back( getNeighbor( PlacedRoad( mCurrentPlacedCol, mCurrentPlacedRow, *it ) ) );
+		}
+		for ( std::vector< PlacedRoad >::iterator it = roadsToCheck.begin();
+			it != roadsToCheck.end();
+			++it )
+		{
+			if ( mBoard.isOccupiedRoad( it->col, it->row, it->area ) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	return true;
 }

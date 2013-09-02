@@ -100,7 +100,7 @@ public:
     Side getBottom() const;
     Side getLeft() const;
     Center getCenter() const;
-    std::string getID() const;
+    std::string const & getID() const;
     std::vector< ContiguousField > getContiguousFields() const;
     std::vector< ContiguousRoad > getContiguousRoads() const;
     std::vector< ContiguousCity > getContiguousCities() const;

@@ -20,6 +20,7 @@ SOURCES += main.cpp\
     src-model\Game.cpp \
     src-model\Piece.cpp \
     src-model\PlacedPiece.cpp \
+    src-model\PlacedProject.cpp \
     src-model\Player.cpp \
     src-model\TileOnBoard.cpp \
     src-model\Tile.cpp \

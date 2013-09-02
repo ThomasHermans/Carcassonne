@@ -236,7 +236,7 @@ Tile::getCenter() const
     return mCenter;
 }
 
-std::string
+std::string const &
 Tile::getID() const
 {
     return mID;
