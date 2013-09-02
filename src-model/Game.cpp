@@ -465,6 +465,10 @@ Game::isOccupied( Area::Area inArea ) const
 		std::vector< PlacedRoad > roadsToCheck;
 		for ( Tile::ContiguousRoad::const_iterator it = road.begin(); it != road.end(); ++it )
 		{
+			if ( mCurrentPlacedTile->hasPiece( Area::Area( *it ) ) )
+			{
+				return true;
+			}
             roadsToCheck.push_back( getNeighbor( PlacedRoad( mCurrentPlacedCol, mCurrentPlacedRow, *it ) ) );
 		}
 		for ( std::vector< PlacedRoad >::iterator it = roadsToCheck.begin();
