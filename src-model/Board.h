@@ -1,6 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "src-model/PlacedProject.h"
 #include "src-model/Tile.h"
 #include "src-model/TileOnBoard.h"
 
@@ -52,7 +53,7 @@ public:
 signals:
 	void finishedCloister( unsigned inCol, unsigned inRow );
 	void finishedCity( std::vector< std::pair< unsigned, unsigned > > inTiles );
-	void finishedRoad( std::vector< std::pair< unsigned, unsigned > > inTiles );
+	void finishedRoad( std::vector< PlacedRoad > inTiles );
 
 	void colsAddedLeft( unsigned inNrOfCols );
 	void rowsAddedTop( unsigned inNrOfRows );

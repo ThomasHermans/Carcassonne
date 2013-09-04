@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "src-model/Board.h"
+#include "src-model/PlacedProject.h"
 #include "src-model/Player.h"
 #include "src-model/Tile.h"
 
@@ -70,6 +71,8 @@ signals:
 private slots:
 	void addColsLeft( unsigned inNrOfCols );
 	void addRowsTop( unsigned inNrOfRows );
+
+	void onFinishedRoad( std::vector< PlacedRoad > const & inRoad );
 
 private:
 	void pickNextTile();

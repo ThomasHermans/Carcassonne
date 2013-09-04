@@ -1,7 +1,6 @@
 #include "src-model/Game.h"
 
 #include "src-model/CreateBaseGameTiles.h"
-#include "src-model/PlacedProject.h"
 
 #include <set>
 #include <stdio.h>
@@ -102,8 +101,8 @@ Game::Game() :
 	);
 	connect
 	(
-		&mBoard, SIGNAL( finishedRoad(std::vector< std::pair< uint, uint > >) ),
-		this, SIGNAL( finishedRoad(std::vector< std::pair< uint, uint > >) )
+		&mBoard, SIGNAL( finishedRoad( std::vector< PlacedRoad > ) ),
+		this, SLOT( onFinishedRoad( std::vector< PlacedRoad > ) )
 	);
 	connect
 	(
@@ -340,6 +339,15 @@ void
 Game::addRowsTop( unsigned inNrOfRows )
 {
 	mStartRow += inNrOfRows;
+}
+
+void
+Game::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
+{
+	// TODO:
+	// Calculate major color of inRoad
+	// Award points
+	// Return all pieces
 }
 
 void

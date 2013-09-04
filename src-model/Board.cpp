@@ -1,7 +1,5 @@
 #include "src-model/Board.h"
 
-#include "src-model/PlacedProject.h"
-
 #include <algorithm>
 #include <cassert>
 #include <sstream>
@@ -397,12 +395,12 @@ Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 	for ( unsigned road = 0; road < contiguousRoads.size(); ++road )
 	{
 		// Start a tempQueue and add all RoadAreas from this ContRoad to it
-		std::vector< LocatedRoad > tempQueue;
+		std::vector< PlacedRoad > tempQueue;
 		for ( unsigned i = 0; i < contiguousRoads[road].size(); ++i )
 		{
 			tempQueue.push_back
 			(
-				LocatedRoad( inRow * mNrCols + inCol, contiguousRoads[road][i] )
+				PlacedRoad( inCol, inRow, contiguousRoads[road][i] )
 			);
 		}
 		// Go over tempQueue, adding ContinuationRoadAreas to it as we go
@@ -410,18 +408,17 @@ Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 		bool finished = true;
 		while ( i < tempQueue.size() )
 		{
-			LocatedRoad currentRoad = tempQueue[i];
-			unsigned neighborLocation = getNeighborLocation( currentRoad );
-			if ( neighborLocation < mNrCols * mNrRows && mBoard[neighborLocation] )
+			PlacedRoad currentRoad = tempQueue[i];
+			PlacedRoad neighbor = getNeighbor( currentRoad );
+			if ( isTile( neighbor.col, neighbor.row ) )
 			{
 				// If not already in tempQueue, add continuation and all of its contiguous RoadAreas to tempQueue
-				FRCArea::RoadArea neighborSide = oppositeSide( currentRoad.second );
-				if ( std::find( tempQueue.begin(), tempQueue.end(), LocatedRoad( neighborLocation, neighborSide ) ) == tempQueue.end() )
+				if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 				{
-					Tile::ContiguousRoad contRoad = mBoard[neighborLocation]->getContiguousRoad( neighborSide );
-					for ( unsigned j = 0; j < contRoad.size(); ++j)
+					Tile::ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row)->getContiguousRoad( neighbor.area );
+					for ( Tile::ContiguousRoad::const_iterator it = contRoad.begin(); it != contRoad.end(); ++it )
 					{
-						tempQueue.push_back( LocatedRoad( neighborLocation, contRoad[j] ) );
+						tempQueue.push_back( PlacedRoad( neighbor.col, neighbor.row, *it ) );
 					}
 				}
 			}
@@ -435,15 +432,7 @@ Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 		}
 		if ( finished )
 		{
-			// Emit signal finishedRoad( tempQueue )
-			std::vector< std::pair< unsigned, unsigned > > tiles;
-			for (unsigned tile = 0; tile < tempQueue.size(); ++tile)
-			{
-				unsigned col = tempQueue[tile].first % mNrCols;
-				unsigned row = tempQueue[tile].first / mNrCols;
-				tiles.push_back( std::make_pair( col, row ) );
-			}
-			emit finishedRoad( tiles );
+			emit finishedRoad( tempQueue );
 		}
 	}
 }
