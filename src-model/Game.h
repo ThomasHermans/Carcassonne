@@ -21,14 +21,14 @@ public:
 
 	std::vector< Player > const & getPlayers();
 
-	unsigned int getNrOfRows() const;
-	unsigned int getNrOfCols() const;
-	unsigned int getStartRow() const;
-	unsigned int getStartCol() const;
+	unsigned getNrOfRows() const;
+	unsigned getNrOfCols() const;
+	unsigned getStartRow() const;
+	unsigned getStartCol() const;
 	Player const & getCurrentPlayer() const;
 
-	void clickTile(unsigned int inCol, unsigned int inRow);
-	void placeTileOnBoard(unsigned int inCol, unsigned int inRow);
+	void clickTile( unsigned inCol, unsigned inRow );
+	void placeTileOnBoard( unsigned inCol, unsigned inRow );
 	void placeStartTileOnBoard();
 
 	boost::optional< Tile > getNextTile() const;
@@ -46,26 +46,26 @@ public:
 
 public slots:
 	void onEndCurrentTurn();
-	void onFinishedCloister( unsigned int inCol, unsigned int inRow );
+	void onFinishedCloister( unsigned inCol, unsigned inRow );
 
 signals:
-	void tileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
-	void tilePlaced(unsigned int col, unsigned int row, std::string id, TileOnBoard::Rotation rot);
-	void tileUnplaced(unsigned int inCol, unsigned int inRow);
-	void nextTile(std::string inNextId);
-	void tilesLeft(unsigned int inNr);
+	void tileRotated( unsigned inCol, unsigned inRow, std::string inId, TileOnBoard::Rotation inRot );
+	void tilePlaced( unsigned col, unsigned row, std::string id, TileOnBoard::Rotation rot );
+	void tileUnplaced( unsigned inCol, unsigned inRow );
+	void nextTile( std::string inNextId );
+	void tilesLeft( unsigned inNr );
 
-	void piecePlaced( unsigned int inCol, unsigned int inRow, Area::Area inArea, Player const & inCurrentPlayer );
-	void pieceReturned( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer );
+	void piecePlaced( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer );
+	void pieceReturned( unsigned inCol, unsigned inRow, Player const & inCurrentPlayer );
 
-	void finishedCloister(unsigned int inCol, unsigned int inRow);
-	void finishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
-	void finishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
+	void finishedCloister( unsigned inCol, unsigned inRow );
+	void finishedCity( std::vector< std::pair< unsigned, unsigned > > inTiles );
+	void finishedRoad (std::vector< std::pair< unsigned, unsigned > > inTiles );
 
 	void currentPlayerChanged( Player const & inCurrentPlayer );
 	void playerInfoChanged( Player const & inNewInfo );
 
-	void endOfGame(unsigned int inTilesLeft);
+	void endOfGame( unsigned inTilesLeft );
 
 private slots:
 	void addColsLeft( unsigned inNrOfCols );
@@ -100,19 +100,20 @@ private:
 
 private:
 	Board mBoard;
-	unsigned int mStartRow;
-	unsigned int mStartCol;
+	unsigned mStartRow;
+	unsigned mStartCol;
 
 	boost::optional< TileOnBoard > mCurrentPlacedTile;
 
-	unsigned int mCurrentPlacedRow;
-	unsigned int mCurrentPlacedCol;	
+	unsigned mCurrentPlacedRow;
+	unsigned mCurrentPlacedCol;	
 
 	std::vector< Tile > mBag;
 	boost::optional< Tile > mNextTile;
 
 	std::vector< Player > mPlayers;
-	unsigned int mCurrentPlayer;
+	unsigned mCurrentPlayer;
+	unsigned mPiecesPlacedInCurrentTurn;
 };
 
 #endif // GAME_H

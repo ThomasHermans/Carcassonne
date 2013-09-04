@@ -60,7 +60,8 @@ Game::Game() :
 	mBag(),
 	mNextTile(),
 	mPlayers(),
-	mCurrentPlayer( 0 )
+	mCurrentPlayer( 0 ),
+	mPiecesPlacedInCurrentTurn( 0 )
 {
 	mBag = createBaseGameTiles();
 	for ( unsigned int i = 0; i < mBag.size(); ++i )
@@ -203,6 +204,7 @@ Game::placeTileOnBoard( unsigned int inCol, unsigned int inRow )
 		{
 			if ( earlierTile && earlierTile->hasPieces() )
 			{
+				mPiecesPlacedInCurrentTurn = 0;
 				returnPieces( earlierTile->removeAllPieces(), mCurrentPlacedCol, mCurrentPlacedRow );
 			}
 			mCurrentPlacedCol = inCol;
@@ -259,7 +261,9 @@ Game::tryToPlacePiece
 {
 	if ( isCurrentSpot( inCol, inRow ) && mCurrentPlacedTile)
 	{
-		if ( mPlayers[mCurrentPlayer].getColor() == inColor && mPlayers[mCurrentPlayer].hasFreePieces() )
+		if ( mPlayers[mCurrentPlayer].getColor() == inColor
+			&& mPlayers[mCurrentPlayer].hasFreePieces()
+			&& mPiecesPlacedInCurrentTurn == 0 )
 		{
 			if ( !isOccupied( inArea ) )
 			{
@@ -270,6 +274,7 @@ Game::tryToPlacePiece
 				);
 				if ( mCurrentPlacedTile->placePiece( placedPiece ) )
 				{
+					++mPiecesPlacedInCurrentTurn;
 					emit piecePlaced( mCurrentPlacedCol, mCurrentPlacedRow, inArea, mPlayers[mCurrentPlayer] );
 				}
 				else
@@ -285,6 +290,7 @@ void
 Game::endTurn()
 {
 	mCurrentPlayer = (mCurrentPlayer + 1) % mPlayers.size();
+	mPiecesPlacedInCurrentTurn = 0;
 	emit currentPlayerChanged( mPlayers[mCurrentPlayer] );
 }
 
