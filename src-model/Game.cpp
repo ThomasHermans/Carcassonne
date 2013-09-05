@@ -9,6 +9,7 @@ namespace
 {
 	int const kSize = 5;
 	unsigned const kPointsForFinishedCloister = 9;
+	unsigned const kPointsPerTileFinishedRoad = 1;
 	unsigned const kInvalid = -1;
 
 	std::set< Color::Color >
@@ -344,10 +345,21 @@ Game::addRowsTop( unsigned inNrOfRows )
 void
 Game::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
 {
-	// TODO:
-	// Calculate major color of inRoad
-	// Award points
-	// Return all pieces
+	std::vector< PlacedPiece > allPieces;
+	std::set< std::pair< unsigned, unsigned > > usedTiles;
+	for ( std::vector< PlacedRoad >::const_iterator it = inRoad.begin(); it != inRoad.end(); ++it )
+	{
+		// Add to usedTiles (will not add doubles)
+		usedTiles.insert( std::make_pair( it->col, it->row ) );
+		// Remove all pieces from this PlacedRoad
+		std::vector< PlacedPiece > pieces = mBoard.getTile( it->col, it->row )->removePieces( Area::Area( it->area ) );
+		// Return removed pieces to corresponding Players
+		returnPieces( pieces, it->col, it->row );
+		// Insert in allPieces to calculate winning colors
+		allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
+	}
+	std::set< Color::Color > winningColors = getWinningColors( allPieces );
+	awardPoints( winningColors, usedTiles.size() * kPointsPerTileFinishedRoad );
 }
 
 void
