@@ -451,7 +451,7 @@ Game::returnPieces
 		++it )
 	{
 		getPlayer( it->getPiece().getColor() ).returnPiece( it->getPiece() );
-		emit pieceReturned( inCol, inRow, getPlayer( it->getPiece().getColor() ) );
+		emit pieceReturned( inCol, inRow, it->getArea(), getPlayer( it->getPiece().getColor() ) );
 	}
 }
 

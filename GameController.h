@@ -23,14 +23,13 @@ private slots:
 	void onTilesLeft(unsigned int inNr);
 
 	void onPiecePlaced( unsigned int inCol, unsigned int inRow, Area::Area inArea, Player const & inCurrentPlayer );
-	void onPieceReturned( unsigned int inCol, unsigned int inRow, Player const & inCurrentPlayer );
+	void onPieceReturned( unsigned int inCol, unsigned int inRow, Area::Area inArea, Player const & inCurrentPlayer );
 	void onPlayerInfoChanged( Player const & inNewInfo );
 	void onCurrentPlayerChanged(Player const & inCurrentPlayer);
 
 	void onFinishedCloister(unsigned int inCol, unsigned int inRow);
 	void onFinishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
-	void onFinishedRoad(std::vector< std::pair< unsigned int, unsigned int > > inTiles);
-
+	
 	void onEndOfGame(unsigned int inTilesLeft);
 
 	// From view to model

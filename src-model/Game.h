@@ -57,11 +57,10 @@ signals:
 	void tilesLeft( unsigned inNr );
 
 	void piecePlaced( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer );
-	void pieceReturned( unsigned inCol, unsigned inRow, Player const & inCurrentPlayer );
+	void pieceReturned( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer );
 
 	void finishedCloister( unsigned inCol, unsigned inRow );
 	void finishedCity( std::vector< std::pair< unsigned, unsigned > > inTiles );
-	void finishedRoad (std::vector< std::pair< unsigned, unsigned > > inTiles );
 
 	void currentPlayerChanged( Player const & inCurrentPlayer );
 	void playerInfoChanged( Player const & inNewInfo );
