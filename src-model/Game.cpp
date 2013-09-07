@@ -419,6 +419,11 @@ Game::rotateCurrentTile()
 		}
 		if ( mBoard.isValidTilePlacement( rotated, mCurrentPlacedCol, mCurrentPlacedRow ) )
 		{
+			if ( mCurrentPlacedTile->hasPieces() )
+			{
+				mPiecesPlacedInCurrentTurn = 0;
+				returnPieces( mCurrentPlacedTile->removeAllPieces(), mCurrentPlacedCol, mCurrentPlacedRow );
+			}
 			mCurrentPlacedTile = rotated;
 			emit tileRotated( mCurrentPlacedCol, mCurrentPlacedRow, mCurrentPlacedTile->getID(), mCurrentPlacedTile->getRotation() );
 		}
