@@ -558,6 +558,9 @@ Board::placeTile( const TileOnBoard &inTile, unsigned inCol, unsigned inRow )
 	if ( inCol < mNrCols && inRow < mNrRows && !isTile( inCol, inRow ) )
 	{
 		getTile( inCol, inRow ) = boost::optional< TileOnBoard >( inTile );
+		checkForFinishedCloisters( inCol, inRow );
+		checkForFinishedCities( inCol, inRow );
+		checkForFinishedRoads( inCol, inRow );
 		widenUp( inCol, inRow );
 		return true;
 	}

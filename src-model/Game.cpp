@@ -321,9 +321,6 @@ Game::onEndCurrentTurn()
 	{
 		if ( mBoard.placeValidTile( *mCurrentPlacedTile, mCurrentPlacedCol, mCurrentPlacedRow ) )
 		{
-			mBoard.checkForFinishedCloisters( mCurrentPlacedCol, mCurrentPlacedRow );
-			mBoard.checkForFinishedCities( mCurrentPlacedCol, mCurrentPlacedRow );
-			mBoard.checkForFinishedRoads( mCurrentPlacedCol, mCurrentPlacedRow );
 			mCurrentPlacedRow = kInvalid;
 			mCurrentPlacedCol = kInvalid;
 			mCurrentPlacedTile = boost::none;
