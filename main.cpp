@@ -16,7 +16,7 @@ int main(int argc, char * argv[])
     else
     {
         QApplication a(argc, argv);
-        GameController gc;
+        GameController gc( "DAAD" );
 
         return a.exec();
     }

@@ -12,7 +12,8 @@ class GameController : public QObject
 {
 	Q_OBJECT
 public:
-	explicit GameController(QObject *parent = 0);
+	explicit GameController( QObject * inParent = 0 );
+	explicit GameController( std::string const & inTiles, QObject * inParent = 0 );
 
 private slots:
 	// From model to view
@@ -34,6 +35,11 @@ private slots:
 	// From view to model
 	void onClicked( int inX, int inY );
 	void onTryToPlacePiece( DragData const & inData, int inX, int inY );
+
+private:
+	void addPlayers();
+	void makeConnections();
+	void startGame();
 
 private:
 	Game *mGame;

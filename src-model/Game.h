@@ -17,7 +17,8 @@ class Game : public QObject
 {
 	Q_OBJECT
 public:
-	Game();
+	Game( QObject * inParent = 0 );
+	Game( std::string const & inTiles, QObject * inParent = 0 );
 	~Game();
 
 	std::vector< Player > const & getPlayers();
@@ -99,6 +100,10 @@ private:
 	bool isEmptySpot( unsigned inCol, unsigned inRow ) const;
 	bool isCurrentSpot( unsigned inCol, unsigned inRow ) const;
 	bool isOccupied( Area::Area inArea ) const;
+
+	// Initialization
+	void connectPlayerSignals();
+	void connectGameSignals();
 
 private:
 	Board mBoard;

@@ -5,6 +5,7 @@
 #include "src-model/PlacedPiece.h"
 #include "src-model/Tile.h"
 
+#include <string>
 #include <vector>
 
 namespace cbgt
@@ -33,13 +34,17 @@ Tile createTileU();
 Tile createTileV();
 Tile createTileW();
 Tile createTileX();
+
+Tile createTile( char inChar );
 }
 
 /*
-  * returns a shuffled vector of Tiles containing all of the base game tiles, having the start Tile on the back.
-  * This means that Tiles should be removed using pop_back.
-  */
+ * returns a shuffled vector of Tiles containing all of the base game tiles, having the start Tile on the back.
+ * This means that Tiles should be removed using pop_back.
+ */
 std::vector< Tile > createBaseGameTiles();
+
+std::vector< Tile > createTiles( std::string const & inTiles );
 
 std::vector< Piece > createBaseGamePieces( Color::Color inColor );
 

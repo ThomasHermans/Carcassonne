@@ -249,45 +249,26 @@ namespace
 	}
 }
 
-GameController::GameController(QObject *parent) :
-	QObject(parent),
-	mGame(new Game()),
-	mWindow(new GameWindow())
+GameController::GameController( QObject *parent )
+:
+	QObject( parent ),
+	mGame( new Game( this ) ),
+	mWindow( new GameWindow() )
 {
-	for ( std::vector< Player >::const_iterator it = mGame->getPlayers().begin();
-		it != mGame->getPlayers().end();
-		++it )
-	{
-		mWindow->addPlayer( it->getName(), viewFromModel( it->getColor() ), it->getNumberOfFreePieces() );
-	}
-	connect( mGame, SIGNAL( tilePlaced(unsigned int, unsigned int, std::string, TileOnBoard::Rotation) ),
-			this, SLOT( onTilePlaced(unsigned int, unsigned int, std::string, TileOnBoard::Rotation) ) );
-	connect( mGame, SIGNAL( tileUnplaced(unsigned int, unsigned int) ),
-			this, SLOT( onTileUnplaced(unsigned int, unsigned int) ) );
-	connect( mGame, SIGNAL( tileRotated(uint,uint,std::string,TileOnBoard::Rotation) ),
-			this, SLOT( onTileRotated(uint,uint,std::string,TileOnBoard::Rotation) ) );
-	connect( mGame, SIGNAL( nextTile(std::string) ), this, SLOT( onNextTile(std::string) ) );
-	connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
+	addPlayers();
+	makeConnections();
+	startGame();
+}
 
-	connect( mGame, SIGNAL( piecePlaced(uint, uint, Area::Area, Player) ), this, SLOT( onPiecePlaced(uint, uint, Area::Area, Player ) ) );
-	connect( mGame, SIGNAL( pieceReturned(uint, uint, Area::Area, Player) ), this, SLOT( onPieceReturned(uint, uint, Area::Area, Player ) ) );
-	connect( mGame, SIGNAL( playerInfoChanged(Player) ), this, SLOT( onPlayerInfoChanged(Player) ) );
-	connect( mGame, SIGNAL( currentPlayerChanged(Player) ), this, SLOT( onCurrentPlayerChanged(Player) ) );
-
-	connect( mGame, SIGNAL( finishedCloister(uint, uint) ), this, SLOT( onFinishedCloister(uint, uint) ) );
-
-	connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
-	connect( mWindow, SIGNAL( tryToPlacePiece( DragData, int, int ) ), this, SLOT( onTryToPlacePiece( DragData, int, int ) ) );
-	connect( mWindow, SIGNAL( endCurrentTurn() ), mGame, SLOT( onEndCurrentTurn() ) );
-
-	connect( mGame, SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );
-
-	onCurrentPlayerChanged( mGame->getCurrentPlayer() );
-	mWindow->show();
-	if (mGame->getNextTile())
-	{
-		mGame->placeStartTileOnBoard();
-	}
+GameController::GameController( std::string const & inTiles, QObject * inParent )
+:
+	QObject( inParent ),
+	mGame( new Game( inTiles, this ) ),
+	mWindow( new GameWindow() )
+{
+	addPlayers();
+	makeConnections();
+	startGame();
 }
 
 void
@@ -410,5 +391,53 @@ GameController::onTryToPlacePiece( DragData const & inData, int inX, int inY )
 		Area::Area area = areaFromPos( posXFromX( inX ), posYFromY( inY ) );
 		// Send to mGame
 		mGame->tryToPlacePiece( color, type, col, row, area );
+	}
+}
+
+void
+GameController::addPlayers()
+{
+	for ( std::vector< Player >::const_iterator it = mGame->getPlayers().begin();
+		it != mGame->getPlayers().end();
+		++it )
+	{
+		mWindow->addPlayer( it->getName(), viewFromModel( it->getColor() ), it->getNumberOfFreePieces() );
+	}
+}
+
+void
+GameController::makeConnections()
+{
+	connect( mGame, SIGNAL( tilePlaced(unsigned int, unsigned int, std::string, TileOnBoard::Rotation) ),
+			this, SLOT( onTilePlaced(unsigned int, unsigned int, std::string, TileOnBoard::Rotation) ) );
+	connect( mGame, SIGNAL( tileUnplaced(unsigned int, unsigned int) ),
+			this, SLOT( onTileUnplaced(unsigned int, unsigned int) ) );
+	connect( mGame, SIGNAL( tileRotated(uint,uint,std::string,TileOnBoard::Rotation) ),
+			this, SLOT( onTileRotated(uint,uint,std::string,TileOnBoard::Rotation) ) );
+	connect( mGame, SIGNAL( nextTile(std::string) ), this, SLOT( onNextTile(std::string) ) );
+	connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
+
+	connect( mGame, SIGNAL( piecePlaced(uint, uint, Area::Area, Player) ), this, SLOT( onPiecePlaced(uint, uint, Area::Area, Player ) ) );
+	connect( mGame, SIGNAL( pieceReturned(uint, uint, Area::Area, Player) ), this, SLOT( onPieceReturned(uint, uint, Area::Area, Player ) ) );
+	connect( mGame, SIGNAL( playerInfoChanged(Player) ), this, SLOT( onPlayerInfoChanged(Player) ) );
+	connect( mGame, SIGNAL( currentPlayerChanged(Player) ), this, SLOT( onCurrentPlayerChanged(Player) ) );
+
+	connect( mGame, SIGNAL( finishedCloister(uint, uint) ), this, SLOT( onFinishedCloister(uint, uint) ) );
+
+	connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
+	connect( mWindow, SIGNAL( tryToPlacePiece( DragData, int, int ) ), this, SLOT( onTryToPlacePiece( DragData, int, int ) ) );
+	connect( mWindow, SIGNAL( endCurrentTurn() ), mGame, SLOT( onEndCurrentTurn() ) );
+
+	connect( mGame, SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );
+}
+
+void
+GameController::startGame()
+{
+	onCurrentPlayerChanged( mGame->getCurrentPlayer() );
+	mWindow->show();
+	if ( mGame->getNextTile() )
+	{
+		mGame->placeStartTileOnBoard();
 	}
 }

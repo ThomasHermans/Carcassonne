@@ -52,7 +52,9 @@ namespace
 	}
 }
 
-Game::Game() :
+Game::Game( QObject * inParent )
+:
+	QObject( inParent ),
 	mBoard( Board( kSize ) ),
 	mStartRow( 0 ),
 	mStartCol( 0 ),
@@ -65,58 +67,65 @@ Game::Game() :
 	mCurrentPlayer( 0 ),
 	mPiecesPlacedInCurrentTurn( 0 )
 {
+	// Fill bag of tiles
 	mBag = createBaseGameTiles();
+	// Print out bag
 	for ( unsigned int i = 0; i < mBag.size(); ++i )
 	{
 		std::cout << mBag[i].getID();
 	}
 	std::cout << std::endl;
+	// Game signals
+	connectGameSignals();
+	// Initialize first tile
 	if ( !mBag.empty() )
 	{
 		mNextTile = mBag.back();
 		mBag.pop_back();
 	}
+	// Initialize players
 	mPlayers.push_back( Player( "Thomas", Color::Blue ) );
 	mPlayers.push_back( Player( "Gijs", Color::Red ) );
-	for ( std::vector< Player >::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it )
-	{
-		connect
-		(
-			&(*it), SIGNAL( nrOfFreePiecesChanged( Player, uint ) ),
-			this, SIGNAL( playerInfoChanged( Player ) )
-		);
-		connect
-		(
-			&(*it), SIGNAL( scoreChanged( Player, uint ) ),
-			this, SIGNAL( playerInfoChanged( Player ) )
-		);
-	}
+	connectPlayerSignals();
 	emit currentPlayerChanged( mPlayers.front() );
-	connect
-	(
-		&mBoard, SIGNAL( finishedCloister(uint, uint) ),
-		this, SLOT( onFinishedCloister(uint, uint) )
-	);
-	connect
-	(
-		&mBoard, SIGNAL( finishedCity( std::vector< PlacedCity > ) ),
-		this, SLOT( onFinishedCity( std::vector< PlacedCity > ) )
-	);
-	connect
-	(
-		&mBoard, SIGNAL( finishedRoad( std::vector< PlacedRoad > ) ),
-		this, SLOT( onFinishedRoad( std::vector< PlacedRoad > ) )
-	);
-	connect
-	(
-		&mBoard, SIGNAL( colsAddedLeft( unsigned ) ),
-		this, SLOT( addColsLeft( unsigned ) )
-	);
-	connect
-	(
-		&mBoard, SIGNAL( rowsAddedTop( unsigned ) ),
-		this, SLOT( addRowsTop( unsigned ) )
-	);
+}
+
+Game::Game( std::string const & inTiles, QObject * inParent )
+:
+	QObject( inParent ),
+	mBoard( Board( kSize ) ),
+	mStartRow( 0 ),
+	mStartCol( 0 ),
+	mCurrentPlacedTile( boost::none ),
+	mCurrentPlacedRow( kInvalid ),
+	mCurrentPlacedCol( kInvalid ),
+	mBag(),
+	mNextTile(),
+	mPlayers(),
+	mCurrentPlayer( 0 ),
+	mPiecesPlacedInCurrentTurn( 0 )
+{
+	// Initialize bag
+	mBag = createTiles( inTiles );
+	// Print out bag
+	for ( unsigned int i = 0; i < mBag.size(); ++i )
+	{
+		std::cout << mBag[i].getID();
+	}
+	std::cout << std::endl;
+	// Game signals
+	connectGameSignals();
+	// Initialize first tile
+	if ( !mBag.empty() )
+	{
+		mNextTile = mBag.back();
+		mBag.pop_back();
+	}
+	// Initialize players
+	mPlayers.push_back( Player( "Thomas", Color::Blue ) );
+	mPlayers.push_back( Player( "Gijs", Color::Red ) );
+	connectPlayerSignals();
+	emit currentPlayerChanged( mPlayers.front() );
 }
 
 Game::~Game()
@@ -580,4 +589,52 @@ Game::isOccupied( Area::Area inArea ) const
 		return false;
 	}
 	return true;
+}
+
+void
+Game::connectPlayerSignals()
+{
+	for ( std::vector< Player >::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it )
+	{
+		connect
+		(
+			&(*it), SIGNAL( nrOfFreePiecesChanged( Player, uint ) ),
+			this, SIGNAL( playerInfoChanged( Player ) )
+		);
+		connect
+		(
+			&(*it), SIGNAL( scoreChanged( Player, uint ) ),
+			this, SIGNAL( playerInfoChanged( Player ) )
+		);
+	}
+}
+
+void
+Game::connectGameSignals()
+{
+	connect
+	(
+		&mBoard, SIGNAL( finishedCloister(uint, uint) ),
+		this, SLOT( onFinishedCloister(uint, uint) )
+	);
+	connect
+	(
+		&mBoard, SIGNAL( finishedCity( std::vector< PlacedCity > ) ),
+		this, SLOT( onFinishedCity( std::vector< PlacedCity > ) )
+	);
+	connect
+	(
+		&mBoard, SIGNAL( finishedRoad( std::vector< PlacedRoad > ) ),
+		this, SLOT( onFinishedRoad( std::vector< PlacedRoad > ) )
+	);
+	connect
+	(
+		&mBoard, SIGNAL( colsAddedLeft( unsigned ) ),
+		this, SLOT( addColsLeft( unsigned ) )
+	);
+	connect
+	(
+		&mBoard, SIGNAL( rowsAddedTop( unsigned ) ),
+		this, SLOT( addRowsTop( unsigned ) )
+	);
 }
