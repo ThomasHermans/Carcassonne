@@ -49,6 +49,29 @@ operator != ( PlacedRoad const & inLeft, PlacedRoad const & inRight )
 	return !( inLeft == inRight );
 }
 
+bool
+operator < ( PlacedRoad const & inLeft, PlacedRoad const & inRight )
+{
+	return
+	(
+		inLeft.row < inRight.row
+		||
+		(
+			inLeft.row == inRight.row
+			&&
+			(
+				inLeft.col < inRight.col
+				||
+				(
+					inLeft.col == inRight.col
+					&&
+					inLeft.area < inRight.area
+				)
+			)
+		)
+	);
+}
+
 PlacedRoad
 getNeighbor( PlacedRoad const & inPlacedRoad )
 {

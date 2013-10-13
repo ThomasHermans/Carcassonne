@@ -371,12 +371,12 @@ Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 	for ( unsigned city = 0; city < contiguousCities.size(); ++city )
 	{
 		// Start a tempQueue and add all CityAreas from this ContCity to it
-		std::vector< LocatedCity > tempQueue;
+		std::vector< PlacedCity > tempQueue;
 		for ( unsigned i = 0; i < contiguousCities[city].size(); ++i )
 		{
 			tempQueue.push_back
 			(
-				LocatedCity( inRow * mNrCols + inCol, contiguousCities[city][i] )
+				PlacedCity( inCol, inRow, contiguousCities[city][i] )
 			);
 		}
 		// Go over tempQueue, adding ContinuationCityAreas to it as we go
@@ -384,18 +384,17 @@ Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 		bool finished = true;
 		while ( i < tempQueue.size() )
 		{
-			LocatedCity currentCity = tempQueue[i];
-			unsigned neighborLocation = getNeighborLocation( currentCity );
-			if ( neighborLocation < mNrCols * mNrRows && mBoard[neighborLocation] )
+			PlacedCity currentCity = tempQueue[i];
+			PlacedCity neighbor = getNeighbor( currentCity );
+			if ( isTile( neighbor.col, neighbor.row ) )
 			{
 				// If not already in tempQueue, add continuation and all of its contiguous CityAreas to tempQueue
-				FRCArea::CityArea neighborSide = oppositeSide( currentCity.second );
-				if ( std::find( tempQueue.begin(), tempQueue.end(), LocatedCity( neighborLocation, neighborSide ) ) == tempQueue.end() )
+				if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 				{
-					Tile::ContiguousCity contCity = mBoard[neighborLocation]->getContiguousCity( neighborSide );
-					for (unsigned j = 0; j < contCity.size(); ++j)
+					Tile::ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+					for ( Tile::ContiguousCity::const_iterator it = contCity.begin(); it != contCity.end(); ++it )
 					{
-						tempQueue.push_back( LocatedCity( neighborLocation, contCity[j] ) );
+						tempQueue.push_back( PlacedRoad( neighbor.col, neighbor.row, *it ) );
 					}
 				}
 			}
@@ -409,15 +408,7 @@ Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 		}
 		if ( finished )
 		{
-			// Emit signal finishedCity( tempQueue )
-			std::vector< std::pair< unsigned, unsigned > > tiles;
-			for ( unsigned tile = 0; tile < tempQueue.size(); ++tile )
-			{
-				unsigned col = tempQueue[tile].first % mNrCols;
-				unsigned row = tempQueue[tile].first / mNrCols;
-				tiles.push_back( std::make_pair( col, row ) );
-			}
-			emit finishedCity( tiles );
+			emit finishedCity( tempQueue );
 		}
 	}
 }
@@ -453,7 +444,7 @@ Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 				// If not already in tempQueue, add continuation and all of its contiguous RoadAreas to tempQueue
 				if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 				{
-					Tile::ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row)->getContiguousRoad( neighbor.area );
+					Tile::ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
 					for ( Tile::ContiguousRoad::const_iterator it = contRoad.begin(); it != contRoad.end(); ++it )
 					{
 						tempQueue.push_back( PlacedRoad( neighbor.col, neighbor.row, *it ) );

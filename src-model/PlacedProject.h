@@ -18,6 +18,9 @@ operator == ( PlacedRoad const & inLeft, PlacedRoad const & inRight );
 bool
 operator != ( PlacedRoad const & inLeft, PlacedRoad const & inRight );
 
+bool
+operator < ( PlacedRoad const & inLeft, PlacedRoad const & inRight );
+
 PlacedRoad
 getNeighbor( PlacedRoad const & inPlacedRoad );
 

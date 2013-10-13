@@ -53,7 +53,7 @@ public:
 
 signals:
 	void finishedCloister( unsigned inCol, unsigned inRow );
-	void finishedCity( std::vector< std::pair< unsigned, unsigned > > inTiles );
+	void finishedCity( std::vector< PlacedCity > inTiles );
 	void finishedRoad( std::vector< PlacedRoad > inTiles );
 
 	void colsAddedLeft( unsigned inNrOfCols );

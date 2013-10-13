@@ -10,6 +10,8 @@ namespace
 	int const kSize = 5;
 	unsigned const kPointsForFinishedCloister = 9;
 	unsigned const kPointsPerTileFinishedRoad = 1;
+	unsigned const kPointsPerTileFinishedCity = 2;
+	unsigned const kPointsPerTileFinishedShield = 2;
 	unsigned const kInvalid = -1;
 
 	std::set< Color::Color >
@@ -97,8 +99,8 @@ Game::Game() :
 	);
 	connect
 	(
-		&mBoard, SIGNAL( finishedCity(std::vector< std::pair< uint, uint > >) ),
-		this, SIGNAL( finishedCity(std::vector< std::pair< uint, uint > >) )
+		&mBoard, SIGNAL( finishedCity( std::vector< PlacedCity > ) ),
+		this, SLOT( onFinishedCity( std::vector< PlacedCity > ) )
 	);
 	connect
 	(
@@ -368,6 +370,33 @@ Game::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
 	}
 	std::set< Color::Color > winningColors = getWinningColors( allPieces );
 	awardPoints( winningColors, usedTiles.size() * kPointsPerTileFinishedRoad );
+}
+
+void
+Game::onFinishedCity( std::vector< PlacedCity > const & inCity )
+{
+	std::vector< PlacedPiece > allPieces;
+	std::set< std::pair< unsigned, unsigned > > usedTiles;
+	std::set< PlacedCity > allShields;
+	for ( std::vector< PlacedCity >::const_iterator it = inCity.begin(); it != inCity.end(); ++it )
+	{
+		// Add to usedTiles (will not add doubles)
+		usedTiles.insert( std::make_pair( it->col, it->row ) );
+		// Add shield if there was one
+		std::vector< FRCArea::CityArea > shields = mBoard.getTile( it->col, it->row )->getShields();
+		if ( std::find( shields.begin(), shields.end(), it->area ) != shields.end() )
+		{
+			allShields.insert( *it );
+		}
+		// Remove all pieces from this PlacedCity
+		std::vector< PlacedPiece > pieces = mBoard.getTile( it->col, it->row )->removePieces( Area::Area( it->area ) );
+		// Return removed pieces to corresponding Players
+		returnPieces( pieces, it->col, it->row );
+		// Insert in allPieces to calculate winning colors
+		allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
+	}
+	std::set< Color::Color > winningColors = getWinningColors( allPieces );
+	awardPoints( winningColors, usedTiles.size() * kPointsPerTileFinishedCity + allShields.size() * kPointsPerTileFinishedShield );
 }
 
 void

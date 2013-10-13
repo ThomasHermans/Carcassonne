@@ -60,7 +60,6 @@ signals:
 	void pieceReturned( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer );
 
 	void finishedCloister( unsigned inCol, unsigned inRow );
-	void finishedCity( std::vector< std::pair< unsigned, unsigned > > inTiles );
 
 	void currentPlayerChanged( Player const & inCurrentPlayer );
 	void playerInfoChanged( Player const & inNewInfo );
@@ -72,6 +71,7 @@ private slots:
 	void addRowsTop( unsigned inNrOfRows );
 
 	void onFinishedRoad( std::vector< PlacedRoad > const & inRoad );
+	void onFinishedCity( std::vector< PlacedCity > const & inCity );
 
 private:
 	void pickNextTile();

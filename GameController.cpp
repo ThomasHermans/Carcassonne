@@ -275,8 +275,7 @@ GameController::GameController(QObject *parent) :
 	connect( mGame, SIGNAL( currentPlayerChanged(Player) ), this, SLOT( onCurrentPlayerChanged(Player) ) );
 
 	connect( mGame, SIGNAL( finishedCloister(uint, uint) ), this, SLOT( onFinishedCloister(uint, uint) ) );
-	connect( mGame, SIGNAL( finishedCity(std::vector<std::pair<uint,uint>>)), this, SLOT( onFinishedCity(std::vector<std::pair<uint,uint>>) ) );
-	
+
 	connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
 	connect( mWindow, SIGNAL( tryToPlacePiece( DragData, int, int ) ), this, SLOT( onTryToPlacePiece( DragData, int, int ) ) );
 	connect( mWindow, SIGNAL( endCurrentTurn() ), mGame, SLOT( onEndCurrentTurn() ) );
@@ -370,36 +369,6 @@ GameController::onFinishedCloister(unsigned int inCol, unsigned int inRow)
 	int x = xFromCol( inCol, mGame->getStartCol() );
 	int y = yFromRow( inRow, mGame->getStartRow() );
 	mWindow->finishCloister( x, y );
-}
-
-void
-GameController::onFinishedCity(std::vector< std::pair< unsigned int, unsigned int > > inTiles)
-{
-	if ( inTiles.empty() )
-	{
-		return;
-	}
-	std::cout << "Finished city on tiles ";
-	unsigned int leftCol = inTiles[0].first;
-	unsigned int rightCol = inTiles[0].first;
-	unsigned int topRow = inTiles[0].second;
-	unsigned int bottomRow = inTiles[0].second;
-	for ( unsigned int i = 0; i < inTiles.size(); ++i )
-	{
-		std::cout << inTiles[i].first << ", " << inTiles[i].second << "; ";
-		leftCol = std::min( leftCol, inTiles[i].first );
-		rightCol = std::max( rightCol, inTiles[i].first );
-		topRow = std::min( topRow, inTiles[i].second );
-		bottomRow = std::max( bottomRow, inTiles[i].second );
-	}
-	std::cout << std::endl;
-	++rightCol;
-	++bottomRow;
-	int left = xFromCol( leftCol, mGame->getStartCol() );
-	int right = xFromCol( rightCol, mGame->getStartCol() );
-	int top = yFromRow( topRow, mGame->getStartRow() );
-	int bottom = yFromRow( bottomRow, mGame->getStartRow() );
-	mWindow->finishCity( left, right, top, bottom );
 }
 
 void
