@@ -259,19 +259,26 @@ Game::tryToPlacePiece
 	Area::Area inArea
 )
 {
-	if ( isCurrentSpot( inCol, inRow ) && mCurrentPlacedTile)
+	// You can only place a piece on the current placed tile
+	if ( isCurrentSpot( inCol, inRow ) && mCurrentPlacedTile )
 	{
+		// Only the active player can place a piece
+		// The active player needs a free piece to place
+		// The active player cannot place more than one piece
 		if ( mPlayers[mCurrentPlayer].getColor() == inColor
 			&& mPlayers[mCurrentPlayer].hasFreePieces()
 			&& mPiecesPlacedInCurrentTurn == 0 )
 		{
+			// You can only place a piece in an unoccupied area
 			if ( !isOccupied( inArea ) )
 			{
+				// Construct a piece to place
 				PlacedPiece placedPiece
 				(
 					mPlayers[mCurrentPlayer].getPieceToPlace(),
 					inArea
 				);
+				// Place the piece
 				if ( mCurrentPlacedTile->placePiece( placedPiece ) )
 				{
 					++mPiecesPlacedInCurrentTurn;
@@ -279,6 +286,7 @@ Game::tryToPlacePiece
 				}
 				else
 				{
+					// Return the piece if the placement failed
 					mPlayers[mCurrentPlayer].returnPiece( placedPiece.getPiece() );
 				}
 			}
@@ -486,12 +494,16 @@ Game::isCurrentSpot( unsigned inCol, unsigned inRow ) const
 bool
 Game::isOccupied( Area::Area inArea ) const
 {
+	// Cloister
 	if ( mCurrentPlacedTile->isCloister( inArea ) )
 	{
+		// A cloister is occupied if it has a piece
 		return mCurrentPlacedTile->hasPiece( inArea );
 	}
+	// Road
 	if ( mCurrentPlacedTile->isRoad( inArea ) )
 	{
+		// A road is occupied if there is a piece somewhere on this road
 		Tile::ContiguousRoad road = mCurrentPlacedTile->getContiguousRoad( FRCArea::RoadArea( inArea ) );
 		std::vector< PlacedRoad > roadsToCheck;
 		for ( Tile::ContiguousRoad::const_iterator it = road.begin(); it != road.end(); ++it )
@@ -507,6 +519,31 @@ Game::isOccupied( Area::Area inArea ) const
 			++it )
 		{
 			if ( mBoard.isOccupiedRoad( it->col, it->row, it->area ) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	// City
+	if ( mCurrentPlacedTile->isCity( inArea ) )
+	{
+		// A city is occupied if there is a piece somewhere on this city
+		Tile::ContiguousCity city = mCurrentPlacedTile->getContiguousCity( FRCArea::CityArea( inArea ) );
+		std::vector< PlacedCity > citiesToCheck;
+		for ( Tile::ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
+		{
+			if ( mCurrentPlacedTile->hasPiece( Area::Area( *it ) ) )
+			{
+				return true;
+			}
+			citiesToCheck.push_back( getNeighbor( PlacedCity( mCurrentPlacedCol, mCurrentPlacedRow, *it ) ) );
+		}
+		for ( std::vector< PlacedCity >::iterator it = citiesToCheck.begin();
+			it != citiesToCheck.end();
+			++it )
+		{
+			if ( mBoard.isOccupiedCity( it->col, it->row, it->area ) )
 			{
 				return true;
 			}

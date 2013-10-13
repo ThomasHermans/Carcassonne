@@ -39,6 +39,7 @@ public:
 
 	bool isOccupied( unsigned inCol, unsigned inRow, Area::Area inArea ) const;
 	bool isOccupiedRoad( unsigned inCol, unsigned inRow, FRCArea::RoadArea inArea ) const;
+	bool isOccupiedCity( unsigned inCol, unsigned inRow, FRCArea::CityArea inArea ) const;
 	std::vector< PlacedPiece > removePieces( unsigned inCol, unsigned inRow, Area::Area inArea );
 
 	void checkForFinishedCities( unsigned inCol, unsigned inRow );

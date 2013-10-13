@@ -44,6 +44,7 @@ public:
 
 	bool isCloister( Area::Area inArea ) const;
 	bool isRoad( Area::Area inArea ) const;
+	bool isCity( Area::Area inArea ) const;
 
 	Tile::ContiguousField getContiguousField( FRCArea::FieldArea inFieldArea ) const;
 	Tile::ContiguousRoad getContiguousRoad( FRCArea::RoadArea inRoadArea ) const;

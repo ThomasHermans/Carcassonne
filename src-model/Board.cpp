@@ -308,6 +308,44 @@ Board::isOccupiedRoad( unsigned inCol, unsigned inRow, FRCArea::RoadArea inArea 
 	return false;
 }
 
+bool
+Board::isOccupiedCity( unsigned inCol, unsigned inRow, FRCArea::CityArea inArea ) const
+{
+	if ( !isTile( inCol, inRow ) )
+	{
+		return false;
+	}
+	Tile::ContiguousCity city = getTile( inCol, inRow )->getContiguousCity( inArea );
+	std::vector< PlacedCity > toCheckQueue;
+	for ( Tile::ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
+	{
+		toCheckQueue.push_back( PlacedCity( inCol, inRow, *it ) );
+	}
+	unsigned index = 0;
+	while ( index < toCheckQueue.size() )
+	{
+		if ( isTile( toCheckQueue[index].col, toCheckQueue[index].row )
+			&& getTile( toCheckQueue[index].col, toCheckQueue[index].row )->hasPiece( Area::Area( toCheckQueue[index].area ) ) )
+		{
+			return true;
+		}
+		PlacedCity neighbor = getNeighbor( toCheckQueue[index] );
+		if ( isTile( neighbor.col, neighbor.row ) )
+		{
+			if ( std::find( toCheckQueue.begin(), toCheckQueue.end(), neighbor ) == toCheckQueue.end() )
+			{
+				Tile::ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+				for ( Tile::ContiguousCity::const_iterator contCityIt = contCity.begin(); contCityIt != contCity.end(); ++contCityIt )
+				{
+					toCheckQueue.push_back( PlacedCity( neighbor.col, neighbor.row, *contCityIt ) );
+				}
+			}
+		}
+		++index;
+	}
+	return false;
+}
+
 std::vector< PlacedPiece >
 Board::removePieces( unsigned inCol, unsigned inRow, Area::Area inArea )
 {

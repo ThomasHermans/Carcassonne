@@ -252,6 +252,24 @@ TileOnBoard::isRoad( Area::Area inArea ) const
 	}
 }
 
+bool
+TileOnBoard::isCity( Area::Area inArea ) const
+{
+	switch ( inArea )
+	{
+		case Area::Top:
+			return getTop() == Tile::City;
+		case Area::Right:
+			return getRight() == Tile::City;
+		case Area::Bottom:
+			return getBottom() == Tile::City;
+		case Area::Left:
+			return getLeft() == Tile::City;
+		default:
+			return false;
+	}
+}
+
 Tile::ContiguousField
 TileOnBoard::getContiguousField( FRCArea::FieldArea inFieldArea ) const
 {
