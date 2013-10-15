@@ -10,7 +10,7 @@ TARGET = Carcassonne
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
+SOURCES += main.cpp \
     test_o_matic.cpp \
     TileUnitTests.cpp \
     UnitTests.cpp \
@@ -28,9 +28,11 @@ SOURCES += main.cpp\
     src-view\DragData.cpp \
     src-view\DragMeepleLabel.cpp \
     src-view\GameWindow.cpp \
+    src-view\StartScreen.cpp \
+    src-view\StartScreenRow.cpp \
     src-view\TileItem.cpp \
     src-view\UserInfoWidget.cpp \
-    GameController.cpp    
+    GameController.cpp 
 
 HEADERS  += \
     test_o_matic.hpp \
@@ -48,6 +50,8 @@ HEADERS  += \
     src-view\DragData.h \
     src-view\DragMeepleLabel.h \
     src-view\GameWindow.h \
+    src-view\StartScreen.h \
+    src-view\StartScreenRow.h \
     src-view\TileItem.h \
     src-view\Typedefs.h \
     src-view\UserInfoWidget.h \

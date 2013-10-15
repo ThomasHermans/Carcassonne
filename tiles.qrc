@@ -25,4 +25,7 @@
         <file>tiles/W.png</file>
         <file>tiles/X.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>StyleSheet.qss</file>
+    </qresource>
 </RCC>

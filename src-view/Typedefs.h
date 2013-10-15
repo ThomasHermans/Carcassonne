@@ -7,6 +7,16 @@ namespace Gui
 	int const kTileWidth = kTileHeight;
 	double const kFirstBorder = .375 * kTileHeight;
 	double const kSecondBorder = kTileHeight - kFirstBorder;
+
+	enum Color
+	{
+		kRed,
+		kGreen,
+		kBlue,
+		kYellow,
+		kBlack,
+		kGray
+	};
 }
 
 namespace Dragging

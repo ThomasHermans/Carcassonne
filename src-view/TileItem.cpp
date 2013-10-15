@@ -1,6 +1,6 @@
 #include "src-view/TileItem.h"
 
-#include "src-view/GuiConstants.h"
+#include "src-view/Typedefs.h"
 
 #include <QGraphicsSceneMouseEvent>
 
