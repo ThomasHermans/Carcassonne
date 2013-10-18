@@ -18,6 +18,9 @@ StartScreen::StartScreen( QWidget * inParent )
 	mPlayButton( new QPushButton( "Start game", this ) )
 {
 	connect( mAddPlayerButton, SIGNAL( clicked() ), this, SLOT( addPlayer() ) );
+	mPlayButton->setAutoDefault( true );
+	mPlayButton->setDefault( true );
+	connect( mPlayButton, SIGNAL( clicked() ), this, SLOT( playClicked() ) );
 
 	setLayout( mLayout );
 
@@ -105,4 +108,17 @@ StartScreen::updateColors( Gui::Color inColor )
 			}
 		}
 	}
+}
+
+void
+StartScreen::playClicked()
+{
+	std::vector< std::pair< std::string, Gui::Color > > players;
+	for ( std::vector< StartScreenRow * >::const_iterator it = mPlayerRows.begin();
+		it != mPlayerRows.end();
+		++it )
+	{
+		players.push_back( std::make_pair( (*it)->getName().toUtf8(), (*it)->getColor() ) );
+	}
+	emit startGame( players );
 }

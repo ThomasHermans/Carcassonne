@@ -7,7 +7,9 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include <string>
 #include <vector>
+#include <utility>
 
 class StartScreenRow;
 
@@ -18,6 +20,9 @@ public:
 	explicit StartScreen( QWidget * inParent = 0 );
 	~StartScreen();
 
+signals:
+	void startGame( std::vector< std::pair< std::string, Gui::Color > > const & inPlayers );
+
 private:
 	Gui::Color findUnusedColor() const;
 
@@ -25,6 +30,7 @@ private slots:
 	void addPlayer();
 	void removePlayer();
 	void updateColors( Gui::Color inColor );
+	void playClicked();
 
 private:
 	QVBoxLayout * mLayout;

@@ -62,4 +62,4 @@ INCLUDEPATH += "C:\\Program Files\\boost\\boost_1_52_0"
 FORMS    += mainwindow.ui
 
 RESOURCES += \
-    tiles.qrc
+    Resources.qrc

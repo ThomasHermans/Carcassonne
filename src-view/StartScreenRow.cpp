@@ -27,6 +27,8 @@ StartScreenRow::StartScreenRow( QWidget * inParent )
 	rowLayout->addWidget( mNameLineEdit );
 	rowLayout->addWidget( mColorComboBox );
 	rowLayout->addWidget( mDeleteButton );
+
+	mNameLineEdit->setFocus();
 }
 
 StartScreenRow::~StartScreenRow()
