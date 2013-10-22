@@ -113,12 +113,12 @@ StartScreen::updateColors( Gui::Color inColor )
 void
 StartScreen::playClicked()
 {
-	std::vector< std::pair< std::string, Gui::Color > > players;
+	std::map< Gui::Color, std::string > players;
 	for ( std::vector< StartScreenRow * >::const_iterator it = mPlayerRows.begin();
 		it != mPlayerRows.end();
 		++it )
 	{
-		players.push_back( std::make_pair( (*it)->getName().toUtf8(), (*it)->getColor() ) );
+		players[ (*it)->getColor() ] = (*it)->getName().toUtf8().constData();
 	}
 	emit startGame( players );
 }

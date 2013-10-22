@@ -19,6 +19,7 @@ class Game : public QObject
 public:
 	Game( QObject * inParent = 0 );
 	Game( std::string const & inTiles, QObject * inParent = 0 );
+	Game( std::vector< Player > const & inPlayers, QObject * inParent = 0 );
 	~Game();
 
 	std::vector< Player > const & getPlayers();

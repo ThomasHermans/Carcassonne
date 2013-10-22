@@ -128,6 +128,42 @@ Game::Game( std::string const & inTiles, QObject * inParent )
 	emit currentPlayerChanged( mPlayers.front() );
 }
 
+Game::Game( std::vector< Player > const & inPlayers, QObject * inParent )
+:
+	QObject( inParent ),
+	mBoard( Board( kSize ) ),
+	mStartRow( 0 ),
+	mStartCol( 0 ),
+	mCurrentPlacedTile( boost::none ),
+	mCurrentPlacedRow( kInvalid ),
+	mCurrentPlacedCol( kInvalid ),
+	mBag(),
+	mNextTile(),
+	mPlayers( inPlayers ),
+	mCurrentPlayer( 0 ),
+	mPiecesPlacedInCurrentTurn( 0 )
+{
+	// Initialize bag
+	mBag = createBaseGameTiles();
+	// Print out bag
+	for ( unsigned int i = 0; i < mBag.size(); ++i )
+	{
+		std::cout << mBag[i].getID();
+	}
+	std::cout << std::endl;
+	// Game signals
+	connectGameSignals();
+	// Initialize first tile
+	if ( !mBag.empty() )
+	{
+		mNextTile = mBag.back();
+		mBag.pop_back();
+	}
+	// Player signals
+	connectPlayerSignals();
+	emit currentPlayerChanged( mPlayers.front() );
+}
+
 Game::~Game()
 {}
 

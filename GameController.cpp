@@ -271,6 +271,17 @@ GameController::GameController( std::string const & inTiles, QObject * inParent 
 	startGame();
 }
 
+GameController::GameController( std::vector< Player > const & inPlayers, QObject * inParent )
+:
+	QObject( inParent ),
+	mGame( new Game( inPlayers, this ) ),
+	mWindow( new GameWindow() )
+{
+	addPlayers();
+	makeConnections();
+	startGame();
+}
+
 void
 GameController::onTilePlaced(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
 {

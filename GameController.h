@@ -14,6 +14,7 @@ class GameController : public QObject
 public:
 	explicit GameController( QObject * inParent = 0 );
 	explicit GameController( std::string const & inTiles, QObject * inParent = 0 );
+	explicit GameController( std::vector< Player > const & inPlayer, QObject * inParent = 0 );
 
 private slots:
 	// From model to view

@@ -7,9 +7,9 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include <map>
 #include <string>
 #include <vector>
-#include <utility>
 
 class StartScreenRow;
 
@@ -21,7 +21,7 @@ public:
 	~StartScreen();
 
 signals:
-	void startGame( std::vector< std::pair< std::string, Gui::Color > > const & inPlayers );
+	void startGame( std::map< Gui::Color, std::string > const & inPlayers );
 
 private:
 	Gui::Color findUnusedColor() const;
