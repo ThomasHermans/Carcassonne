@@ -24,11 +24,11 @@ StartScreen::StartScreen( QWidget * inParent )
 
 	setLayout( mLayout );
 
-	addPlayer();
-
 	mLayout->addWidget( mAddPlayerButton );
 	mLayout->addWidget( mPlayButton );
 	mLayout->addStretch();
+
+	loadDefaultPlayers();
 }
 
 StartScreen::~StartScreen()
@@ -53,6 +53,17 @@ StartScreen::findUnusedColor() const
 	}
 	assert( !colors.empty() );
 	return *colors.begin();
+}
+
+void
+StartScreen::loadDefaultPlayers()
+{
+	addPlayer();
+	addPlayer();
+	mPlayerRows[0]->setName( QString::fromUtf8( "Thomas" ) );
+	mPlayerRows[0]->setColor( Gui::kRed );
+	mPlayerRows[1]->setName( QString::fromUtf8( "Yumi" ) );
+	mPlayerRows[1]->setColor( Gui::kBlue );
 }
 
 void

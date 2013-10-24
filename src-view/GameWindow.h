@@ -22,6 +22,7 @@
 
 #include <map>
 
+class AllScoresWidget;
 class DragData;
 class DragMeepleLabel;
 class UserInfoWidget;
@@ -95,6 +96,7 @@ private:
 	QStackedWidget * mUserInfo;
 	std::map< std::string, UserInfoWidget * > mUserInfoMap;
 	QPushButton *mEndTurnButton;
+	AllScoresWidget * mAllScoresWidget;
 };
 
 #endif // GAMEWINDOW_H

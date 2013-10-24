@@ -48,6 +48,12 @@ StartScreenRow::getColor() const
 }
 
 void
+StartScreenRow::setName( QString const & inName )
+{
+	mNameLineEdit->setText( inName );
+}
+
+void
 StartScreenRow::setColor( Gui::Color inColor )
 {
 	mColorComboBox->setCurrentIndex( int( inColor ) );

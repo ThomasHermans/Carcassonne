@@ -19,6 +19,7 @@ public:
 	QString getName() const;
 	Gui::Color getColor() const;
 
+	void setName( QString const & inName );
 	void setColor( Gui::Color inColor );
 
 signals:

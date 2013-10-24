@@ -1,5 +1,6 @@
 #include "src-view/GameWindow.h"
 
+#include "src-view/AllScoresWidget.h"
 #include "src-view/DragMeepleLabel.h"
 #include "src-view/UserInfoWidget.h"
 
@@ -84,6 +85,10 @@ GameWindow::GameWindow( QWidget *parent )
 
 	mSideBarLayout->addStretch();
 
+	mAllScoresWidget = new AllScoresWidget( centralWidget );
+	mAllScoresWidget->setObjectName( QString::fromUtf8( "mAllScoresWidget" ) );
+	mSideBarLayout->addWidget( mAllScoresWidget );
+
 	boardAndSideBarLayout->addLayout(mSideBarLayout);
 
 	centralWidget->setLayout(boardAndSideBarLayout);
@@ -117,6 +122,8 @@ GameWindow::addPlayer
 	mUserInfo->addWidget( newUserInfo );
 	mUserInfo->setFixedHeight( newUserInfo->sizeHint().height() );
 	mUserInfoMap[inName] = newUserInfo;
+
+	mAllScoresWidget->addPlayer( inName );
 }
 
 void
@@ -178,6 +185,7 @@ GameWindow::setScore( std::string const & inName, unsigned inScore )
 	{
 		it->second->setScore( inScore );
 	}
+	mAllScoresWidget->setScore( inName, inScore );
 }
 
 void

@@ -25,6 +25,7 @@ signals:
 
 private:
 	Gui::Color findUnusedColor() const;
+	void loadDefaultPlayers();
 
 private slots:
 	void addPlayer();

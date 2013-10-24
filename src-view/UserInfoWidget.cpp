@@ -2,8 +2,11 @@
 
 #include "src-view/DragMeepleLabel.h"
 
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QVBoxLayout>
+
+#include <cassert>
 
 namespace
 {
@@ -24,16 +27,35 @@ namespace
 				return "black";
 			case Dragging::kGray:
 				return "gray";
-			default:
-				return "red";
 		}
+		assert( !"Invalid color" );
+		return "red";
+	}
+
+	QString
+	GetBackgroundColor( Dragging::Color inColor )
+	{
+		switch ( inColor )
+		{
+			case Dragging::kRed:
+			case Dragging::kGreen:
+			case Dragging::kBlue:
+			case Dragging::kBlack:
+			case Dragging::kGray:
+				return "none";
+			case Dragging::kYellow:
+				return "darkGray";
+		}
+		assert( !"Invalid color" );
+		return "none";
 	}
 
 	QString
 	GetStyleSheet( Dragging::Color inColor )
 	{
-		QString styleSheet( "QLabel { color: __COLOR__; }");
+		QString styleSheet( "QLabel { color: __COLOR__; } QWidget { background-color: __BGCOLOR__; }");
 		styleSheet.replace( "__COLOR__", GetColor( inColor ) );
+		styleSheet.replace( "__BGCOLOR__", GetBackgroundColor( inColor ) );
 		return styleSheet;
 	}
 }
@@ -52,19 +74,27 @@ UserInfoWidget::UserInfoWidget
 	mDragFollowersLabel()
 {
 	setObjectName( "UserInfoWidget" );
-	setContentsMargins( 0, 0, 0, 0 );
+	setContentsMargins( 5, 5, 5, 5 );
 
 	QVBoxLayout * layout = new QVBoxLayout( this );
 	layout->setContentsMargins( 0, 0, 0, 0 );
 	layout->setSpacing( 0 );
 
+	QHBoxLayout * rowLayout = new QHBoxLayout();
+	rowLayout->setContentsMargins( 0, 0, 0, 0 );
+	rowLayout->setSpacing( 0 );
+
 	mNameLabel = new QLabel( QString::fromStdString( inName ), this );
 	mNameLabel->setObjectName( "mNameLabel" );
-	layout->addWidget( mNameLabel );
+	rowLayout->addWidget( mNameLabel );
+
+	rowLayout->addStretch();
 
 	mScoreLabel = new QLabel( QString::number( 0 ), this );
 	mScoreLabel->setObjectName( "mScoreLabel" );
-	layout->addWidget( mScoreLabel );
+	rowLayout->addWidget( mScoreLabel );
+
+	layout->addLayout( rowLayout );
 
 	mDragFollowersLabel = new DragMeepleLabel( Dragging::kFollower, inNumberOfFollowers, inColor, this );
 	mDragFollowersLabel->setObjectName( "mDragFollowersLabel" );

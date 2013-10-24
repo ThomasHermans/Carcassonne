@@ -27,6 +27,7 @@ SOURCES += main.cpp \
 	src-model\Player.cpp \
 	src-model\TileOnBoard.cpp \
 	src-model\Tile.cpp \
+	src-view\AllScoresWidget.cpp \
 	src-view\BoardView.cpp \
 	src-view\DragData.cpp \
 	src-view\DragMeepleLabel.cpp \
@@ -51,6 +52,7 @@ HEADERS += \
 	src-model\Player.h \
 	src-model\Tile.h \
 	src-model\TileOnBoard.h \
+	src-view\AllScoresWidget.h \
 	src-view\BoardView.h \
 	src-view\DragData.h \
 	src-view\DragMeepleLabel.h \
