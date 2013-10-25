@@ -11,57 +11,57 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-	GameController.cpp \
-	StartController.cpp \
-	SupremeController.cpp \
+	Controller\src\GameController.cpp \
+	Controller\src\StartController.cpp \
+	Controller\src\SupremeController.cpp \
 	test_o_matic.cpp \
 	TileUnitTests.cpp \
 	UnitTests.cpp \
-	src-model\Board.cpp \
-	src-model\Color.cpp \
-	src-model\CreateBaseGameTiles.cpp \
-	src-model\Game.cpp \
-	src-model\Piece.cpp \
-	src-model\PlacedPiece.cpp \
-	src-model\PlacedProject.cpp \
-	src-model\Player.cpp \
-	src-model\TileOnBoard.cpp \
-	src-model\Tile.cpp \
-	src-view\AllScoresWidget.cpp \
-	src-view\BoardView.cpp \
-	src-view\DragData.cpp \
-	src-view\DragMeepleLabel.cpp \
-	src-view\GameWindow.cpp \
-	src-view\StartScreen.cpp \
-	src-view\StartScreenRow.cpp \
-	src-view\TileItem.cpp \
-	src-view\UserInfoWidget.cpp \
+	Model\src\Board.cpp \
+	Model\src\Color.cpp \
+	Model\src\CreateBaseGameTiles.cpp \
+	Model\src\Game.cpp \
+	Model\src\Piece.cpp \
+	Model\src\PlacedPiece.cpp \
+	Model\src\PlacedProject.cpp \
+	Model\src\Player.cpp \
+	Model\src\TileOnBoard.cpp \
+	Model\src\Tile.cpp \
+	View\src\AllScoresWidget.cpp \
+	View\src\BoardView.cpp \
+	View\src\DragData.cpp \
+	View\src\DragMeepleLabel.cpp \
+	View\src\GameWindow.cpp \
+	View\src\StartScreen.cpp \
+	View\src\StartScreenRow.cpp \
+	View\src\TileItem.cpp \
+	View\src\UserInfoWidget.cpp \
 
 HEADERS += \
-	GameController.h \
-	StartController.h \
-	SupremeController.h \
+	Controller\src\GameController.h \
+	Controller\src\StartController.h \
+	Controller\SupremeController.h \
 	test_o_matic.hpp \
 	UnitTests.h \
-	src-model\Board.h \
-	src-model\Color.h \
-	src-model\CreateBaseGameTiles.h \
-	src-model\Game.h \
-	src-model\Piece.h \
-	src-model\PlacedPiece.h \
-	src-model\Player.h \
-	src-model\Tile.h \
-	src-model\TileOnBoard.h \
-	src-view\AllScoresWidget.h \
-	src-view\BoardView.h \
-	src-view\DragData.h \
-	src-view\DragMeepleLabel.h \
-	src-view\GameWindow.h \
-	src-view\StartScreen.h \
-	src-view\StartScreenRow.h \
-	src-view\TileItem.h \
-	src-view\Typedefs.h \
-	src-view\UserInfoWidget.h \
+	Model\Game.h \
+	Model\Player.h \
+	Model\src\Board.h \
+	Model\src\Color.h \
+	Model\src\CreateBaseGameTiles.h \
+	Model\src\Piece.h \
+	Model\src\PlacedPiece.h \
+	Model\src\Tile.h \
+	Model\src\TileOnBoard.h \
+	View\DragData.h \
+	View\GameWindow.h \
+	View\StartScreen.h \
+	View\src\AllScoresWidget.h \
+	View\src\BoardView.h \
+	View\src\DragMeepleLabel.h \
+	View\src\StartScreenRow.h \
+	View\src\TileItem.h \
+	View\src\Typedefs.h \
+	View\src\UserInfoWidget.h \
 
 INCLUDEPATH += "C:\\Program Files\\boost\\boost_1_52_0"
 
