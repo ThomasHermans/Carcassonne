@@ -1,4 +1,4 @@
-#include "GameController.h"
+#include "Controller/GameController.h"
 
 #include "Model/Color.h"
 #include "View/Typedefs.h"
@@ -366,6 +366,7 @@ GameController::onFinishedCloister(unsigned int inCol, unsigned int inRow)
 void
 GameController::onEndOfGame(unsigned int inTilesLeft)
 {
+	mGame->calculateEndPoints();
 	std::cout << "Game has ended." << std::endl;
 	if ( inTilesLeft >= 1 )
 	{

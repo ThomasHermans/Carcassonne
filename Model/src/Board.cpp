@@ -552,6 +552,63 @@ Board::shortPrint( unsigned inCol, unsigned inRow ) const
 	return res.str();
 }
 
+unsigned
+Board::getPointsForCloister( unsigned inCol, unsigned inRow ) const
+{
+	unsigned points = 0;
+	for ( unsigned row = inRow - 1; row <= inRow + 1; ++row )
+	{
+		for ( unsigned col = inCol - 1; col <= inCol + 1; ++col )
+		{
+			if ( isTile( col, row ) )
+			{
+				++points;
+			}
+		}
+	}
+	return points;
+}
+
+std::vector< PlacedRoad >
+Board::getCompleteRoad( PlacedRoad const & inPlacedRoad ) const
+{
+	unsigned col = inPlacedRoad.col;
+	unsigned row = inPlacedRoad.row;
+	if ( !isTile( col, row ) )
+	{
+		return std::vector< PlacedRoad >();
+	}
+	Tile::ContiguousRoad contiguousRoad = getTile( col, row )->getContiguousRoad( inPlacedRoad.area );
+    std::vector< PlacedRoad > completeRoad;
+	for ( Tile::ContiguousRoad::const_iterator it = contiguousRoad.begin();
+		it != contiguousRoad.end();
+		++it )
+	{
+		completeRoad.push_back( PlacedRoad( col, row, *it ) );
+	}
+	unsigned i = 0;
+	while ( i < completeRoad.size() )
+	{
+		PlacedRoad currentRoad = completeRoad[i];
+		PlacedRoad neighbor = getNeighbor( currentRoad );
+		if ( isTile( neighbor.col, neighbor.row ) )
+		{
+			if ( std::find( completeRoad.begin(), completeRoad.end(), neighbor ) == completeRoad.end() )
+			{
+				Tile::ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
+				for ( Tile::ContiguousRoad::const_iterator it = contRoad.begin();
+					it != contRoad.end();
+					++it )
+				{
+					completeRoad.push_back( PlacedRoad( neighbor.col, neighbor.row, *it ) );
+				}
+			}
+		}
+		++i;
+	}
+	return completeRoad;
+}
+
 bool
 Board::placeTile( const TileOnBoard &inTile, unsigned inCol, unsigned inRow )
 {

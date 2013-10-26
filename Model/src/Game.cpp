@@ -12,6 +12,7 @@ namespace
 	unsigned const kPointsPerTileFinishedRoad = 1;
 	unsigned const kPointsPerTileFinishedCity = 2;
 	unsigned const kPointsPerTileFinishedShield = 2;
+	unsigned const kPointsPerTileUnfinishedRoad = 1;
 	unsigned const kInvalid = -1;
 
 	std::set< Color::Color >
@@ -350,6 +351,69 @@ Game::endTurn()
 }
 
 void
+Game::calculateEndPoints()
+{
+	for ( unsigned row = 0; row < mBoard.getNrOfRows(); ++row )
+	{
+		for ( unsigned col = 0; col < mBoard.getNrOfCols(); ++col )
+		{
+			if ( mBoard.isTile( col, row ) )
+			{
+				boost::optional< TileOnBoard > const tile = mBoard.getTile( col, row );
+				std::vector< PlacedPiece > const pieces = tile->getPlacedPieces();
+				for ( std::vector< PlacedPiece >::const_iterator it = pieces.begin();
+					it != pieces.end();
+					++it )
+				{
+					if ( tile->isCloister( it->getArea() ) )
+					{
+						// Remove all pieces
+						std::vector< PlacedPiece > pieces = mBoard.removePieces( col, row, it->getArea() );
+						returnPieces( pieces, col, row );
+						// Calculate winner of unfinished cloister
+						std::set< Color::Color > winningColors = getWinningColors( pieces );
+						// Calculate points
+						unsigned points = mBoard.getPointsForCloister( col, row );
+						// Award points
+						awardPoints( winningColors, points );
+					}
+					else if ( tile->isRoad( it->getArea() ) )
+					{
+						PlacedRoad roadPart( col, row, FRCArea::RoadArea( it->getArea() ) );
+						std::vector< PlacedRoad > const road = mBoard.getCompleteRoad( roadPart );
+						// Remove all pieces
+						std::vector< PlacedPiece > allPieces;
+						std::set< std::pair< unsigned, unsigned > > usedTiles;
+						for ( std::vector< PlacedRoad >::const_iterator rIt = road.begin();
+							rIt != road.end();
+							++rIt )
+						{
+							usedTiles.insert( std::make_pair( rIt->col, rIt->row ) );
+							std::vector< PlacedPiece > pieces = mBoard.getTile( rIt->col, rIt->row )->removePieces( Area::Area( rIt->area ) );
+							returnPieces( pieces, col, row );
+							allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
+						}
+						// Calculate winner of unfinished road
+						std::set< Color::Color > winningColors = getWinningColors( allPieces );
+						// Calculate points
+						unsigned points = usedTiles.size() * kPointsPerTileUnfinishedRoad;
+						// Award points
+						awardPoints( winningColors, points );
+					}
+					else if ( tile->isCity( it->getArea() ) )
+					{
+						// Calculate winner of unfinished city
+						// Calculate points
+						// Remove all pieces
+						// Award points
+					}
+				}
+			}
+		}
+	}
+}
+
+void
 Game::onEndCurrentTurn()
 {
 	std::cout << "onEndCurrentTurn" << std::endl;
@@ -371,18 +435,6 @@ Game::onEndCurrentTurn()
 }
 
 void
-Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
-{
-	std::cout << "onFinishedCloister" << std::endl;
-	// Find winning player for this cloister
-	std::vector< PlacedPiece > pieces = mBoard.removePieces( inCol, inRow, Area::Central );
-	returnPieces( pieces, inCol, inRow );	
-	std::set< Color::Color > winningColors = getWinningColors( pieces );
-	awardPoints( winningColors, kPointsForFinishedCloister );
-	emit finishedCloister( inCol, inRow );
-}
-
-void
 Game::addColsLeft( unsigned inNrOfCols )
 {
 	mStartCol += inNrOfCols;
@@ -392,6 +444,20 @@ void
 Game::addRowsTop( unsigned inNrOfRows )
 {
 	mStartRow += inNrOfRows;
+}
+
+void
+Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
+{
+	std::cout << "onFinishedCloister" << std::endl;
+	// Remove all pieces
+	std::vector< PlacedPiece > pieces = mBoard.removePieces( inCol, inRow, Area::Central );
+	returnPieces( pieces, inCol, inRow );	
+	// Find winning player for this cloister
+	std::set< Color::Color > winningColors = getWinningColors( pieces );
+	// Award points
+	awardPoints( winningColors, kPointsForFinishedCloister );
+	emit finishedCloister( inCol, inRow );
 }
 
 void

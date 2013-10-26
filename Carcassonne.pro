@@ -38,15 +38,15 @@ SOURCES += main.cpp \
 	View\src\UserInfoWidget.cpp \
 
 HEADERS += \
-	Controller\src\GameController.h \
-	Controller\src\StartController.h \
+	Controller\GameController.h \
 	Controller\SupremeController.h \
+	Controller\src\StartController.h \
 	test_o_matic.hpp \
 	UnitTests.h \
+	Model\Color.h \
 	Model\Game.h \
 	Model\Player.h \
 	Model\src\Board.h \
-	Model\src\Color.h \
 	Model\src\CreateBaseGameTiles.h \
 	Model\src\Piece.h \
 	Model\src\PlacedPiece.h \

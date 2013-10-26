@@ -51,6 +51,9 @@ public:
 	std::string toString() const;
 	std::string shortPrint( unsigned inCol, unsigned inRow ) const;
 
+	unsigned getPointsForCloister( unsigned inCol, unsigned inRow ) const;
+	std::vector< PlacedRoad > getCompleteRoad( PlacedRoad const & inPlacedRoad ) const;
+
 signals:
 	void finishedCloister( unsigned inCol, unsigned inRow );
 	void finishedCity( std::vector< PlacedCity > inTiles );

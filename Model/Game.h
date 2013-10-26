@@ -47,9 +47,10 @@ public:
 
 	void endTurn();
 
+	void calculateEndPoints();
+
 public slots:
 	void onEndCurrentTurn();
-	void onFinishedCloister( unsigned inCol, unsigned inRow );
 
 signals:
 	void tileRotated( unsigned inCol, unsigned inRow, std::string inId, TileOnBoard::Rotation inRot );
@@ -72,6 +73,7 @@ private slots:
 	void addColsLeft( unsigned inNrOfCols );
 	void addRowsTop( unsigned inNrOfRows );
 
+	void onFinishedCloister( unsigned inCol, unsigned inRow );
 	void onFinishedRoad( std::vector< PlacedRoad > const & inRoad );
 	void onFinishedCity( std::vector< PlacedCity > const & inCity );
 
@@ -96,7 +98,7 @@ private:
 	(
 		std::set< Color::Color > const & inColors,
 		unsigned inPoints
-	);
+    );
 
 	bool isEmptySpot( unsigned inCol, unsigned inRow ) const;
 	bool isCurrentSpot( unsigned inCol, unsigned inRow ) const;

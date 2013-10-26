@@ -1,5 +1,5 @@
-#include "GameController.h"
-#include "SupremeController.h"
+#include "Controller/GameController.h"
+#include "Controller/SupremeController.h"
 #include "UnitTests.h"
 
 #include <QApplication>
@@ -17,7 +17,7 @@ namespace
 
 int main(int argc, char * argv[])
 {
-	int const gameOption = kPlay;
+	int const gameOption = kDebugSpecificGame;
 
 	if ( gameOption == kPlay )
 	{
@@ -46,7 +46,7 @@ int main(int argc, char * argv[])
 		QApplication a(argc, argv);
 		a.setStyleSheet( styleSheet );
 		
-		GameController gc( "QVVUKXDPJD" );
+		GameController gc( "BKDAD" );
 
 		return a.exec();
 	}
