@@ -13,6 +13,8 @@ namespace
 	unsigned const kPointsPerTileFinishedCity = 2;
 	unsigned const kPointsPerTileFinishedShield = 2;
 	unsigned const kPointsPerTileUnfinishedRoad = 1;
+	unsigned const kPointsPerTileUnfinishedCity = 1;
+	unsigned const kPointsPerTileUnfinishedShield = 1;
 	unsigned const kInvalid = -1;
 
 	std::set< Color::Color >
@@ -390,7 +392,7 @@ Game::calculateEndPoints()
 						{
 							usedTiles.insert( std::make_pair( rIt->col, rIt->row ) );
 							std::vector< PlacedPiece > pieces = mBoard.getTile( rIt->col, rIt->row )->removePieces( Area::Area( rIt->area ) );
-							returnPieces( pieces, col, row );
+							returnPieces( pieces, rIt->col, rIt->row );
 							allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
 						}
 						// Calculate winner of unfinished road
@@ -402,10 +404,37 @@ Game::calculateEndPoints()
 					}
 					else if ( tile->isCity( it->getArea() ) )
 					{
+						PlacedCity cityPart( col, row, FRCArea::CityArea( it->getArea() ) );
+						std::vector< PlacedCity > const city = mBoard.getCompleteCity( cityPart );
 						// Calculate winner of unfinished city
+						std::vector< PlacedPiece > allPieces;
+						std::set< std::pair< unsigned, unsigned > > usedTiles;
+						std::set< PlacedCity > allShields;
+						for ( std::vector< PlacedCity >::const_iterator cIt = city.begin();
+							cIt != city.end();
+							++cIt )
+						{
+							// Add to usedTiles
+							usedTiles.insert( std::make_pair( cIt->col, cIt->row ) );
+							// Add shield if there was one
+							std::vector< FRCArea::CityArea > shields = mBoard.getTile( cIt->col, cIt->row )->getShields();
+                            if ( std::find( shields.begin(), shields.end(), cIt->area ) != shields.end() )
+							{
+                                allShields.insert( *cIt );
+							}
+							// Remove all pieces from this PlacedCity
+							std::vector< PlacedPiece > pieces = mBoard.getTile( cIt->col, cIt->row )->removePieces( Area::Area( cIt->area ) );
+							// Return removed pieces to corresponding Players
+							returnPieces( pieces, cIt->col, cIt->row );
+							// Insert in allPieces to calculate winning colors
+							allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
+						}
+						// Calculate winner of unfinished city
+						std::set< Color::Color > winningColors = getWinningColors( allPieces );
 						// Calculate points
-						// Remove all pieces
+						unsigned points = usedTiles.size() * kPointsPerTileUnfinishedCity + allShields.size() * kPointsPerTileUnfinishedShield;
 						// Award points
+						awardPoints( winningColors, points );
 					}
 				}
 			}

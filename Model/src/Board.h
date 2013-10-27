@@ -53,6 +53,7 @@ public:
 
 	unsigned getPointsForCloister( unsigned inCol, unsigned inRow ) const;
 	std::vector< PlacedRoad > getCompleteRoad( PlacedRoad const & inPlacedRoad ) const;
+	std::vector< PlacedCity > getCompleteCity( PlacedCity const & inPlacedCity ) const;
 
 signals:
 	void finishedCloister( unsigned inCol, unsigned inRow );
