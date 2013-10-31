@@ -2,8 +2,8 @@
 #define TILEONBOARD_H
 
 #include "Model/Color.h"
-#include "Model/src/PlacedPiece.h"
-#include "Model/src/Tile.h"
+#include "PlacedPiece.h"
+#include "Tile.h"
 
 #include <utility>
 #include <vector>

@@ -1,7 +1,8 @@
 #include "Controller/SupremeController.h"
 
 #include "Controller/GameController.h"
-#include "Controller/src/StartController.h"
+
+#include "StartController.h"
 
 #include <cassert>
 

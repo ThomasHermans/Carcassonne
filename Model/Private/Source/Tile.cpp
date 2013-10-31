@@ -1,4 +1,4 @@
-#include "Model/src/Tile.h"
+#include "Tile.h"
 
 #include <algorithm>
 #include <cassert>

@@ -1,4 +1,4 @@
-#include "View/src/BoardView.h"
+#include "BoardView.h"
 
 #include "View/DragData.h"
 

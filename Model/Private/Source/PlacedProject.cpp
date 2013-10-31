@@ -1,4 +1,4 @@
-#include "Model/src/PlacedProject.h"
+#include "PlacedProject.h"
 
 #include <cassert>
 

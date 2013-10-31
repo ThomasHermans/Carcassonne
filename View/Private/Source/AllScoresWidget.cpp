@@ -1,4 +1,4 @@
-#include "View/src/AllScoresWidget.h"
+#include "AllScoresWidget.h"
 
 #include <QHBoxLayout>
 #include <QLabel>

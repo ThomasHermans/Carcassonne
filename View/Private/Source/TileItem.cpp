@@ -1,4 +1,4 @@
-#include "View/src/TileItem.h"
+#include "TileItem.h"
 
 #include "View/Typedefs.h"
 

@@ -1,8 +1,8 @@
 #include "View/GameWindow.h"
 
-#include "View/src/AllScoresWidget.h"
-#include "View/src/DragMeepleLabel.h"
-#include "View/src/UserInfoWidget.h"
+#include "AllScoresWidget.h"
+#include "DragMeepleLabel.h"
+#include "UserInfoWidget.h"
 
 #include <QBrush>
 #include <QGraphicsEllipseItem>

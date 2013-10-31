@@ -1,10 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "Board.h"
+#include "PlacedProject.h"
+#include "Tile.h"
+
 #include "Model/Player.h"
-#include "Model/src/Board.h"
-#include "Model/src/PlacedProject.h"
-#include "Model/src/Tile.h"
 
 #include <QObject>
 

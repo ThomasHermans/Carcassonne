@@ -1,8 +1,9 @@
 #ifndef GAMEWINDOW_H
 #define GAMEWINDOW_H
 
-#include "View/src/BoardView.h"
-#include "View/src/TileItem.h"
+#include "BoardView.h"
+#include "TileItem.h"
+
 #include "View/Typedefs.h"
 
 #include <QMainWindow>

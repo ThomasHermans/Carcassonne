@@ -1,6 +1,6 @@
 #include "Model/Game.h"
 
-#include "Model/src/CreateBaseGameTiles.h"
+#include "CreateBaseGameTiles.h"
 
 #include <set>
 #include <stdio.h>

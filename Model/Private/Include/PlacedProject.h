@@ -1,7 +1,7 @@
 #ifndef PLACEDPROJECT_H
 #define PLACEDPROJECT_H
 
-#include "Model/src/Tile.h"
+#include "Tile.h"
 
 struct PlacedRoad
 {

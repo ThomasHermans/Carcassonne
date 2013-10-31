@@ -1,9 +1,9 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "Model/src/PlacedProject.h"
-#include "Model/src/Tile.h"
-#include "Model/src/TileOnBoard.h"
+#include "PlacedProject.h"
+#include "Tile.h"
+#include "TileOnBoard.h"
 
 #include <QObject>
 

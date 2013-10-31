@@ -1,4 +1,4 @@
-#include "View/src/DragMeepleLabel.h"
+#include "DragMeepleLabel.h"
 
 #include "View/DragData.h"
 #include "View/Typedefs.h"

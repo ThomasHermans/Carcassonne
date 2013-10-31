@@ -1,4 +1,4 @@
-#include "Model/src/TileOnBoard.h"
+#include "TileOnBoard.h"
 
 #include <algorithm>
 #include <cassert>

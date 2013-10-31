@@ -1,6 +1,6 @@
-#include "View/src/UserInfoWidget.h"
+#include "UserInfoWidget.h"
 
-#include "View/src/DragMeepleLabel.h"
+#include "DragMeepleLabel.h"
 
 #include <QHBoxLayout>
 #include <QLabel>

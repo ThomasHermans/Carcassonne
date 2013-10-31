@@ -1,9 +1,10 @@
 #ifndef SETUPBASEGAME_H
 #define SETUPBASEGAME_H
 
+#include "PlacedPiece.h"
+#include "Tile.h"
+
 #include "Model/Color.h"
-#include "Model/src/PlacedPiece.h"
-#include "Model/src/Tile.h"
 
 #include <string>
 #include <vector>

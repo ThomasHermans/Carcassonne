@@ -1,4 +1,4 @@
-#include "View/src/StartScreenRow.h"
+#include "StartScreenRow.h"
 
 #include <QHBoxLayout>
 #include <QPainter>

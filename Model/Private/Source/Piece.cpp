@@ -1,6 +1,6 @@
-#include "Model/src/Piece.h"
+#include "Piece.h"
 
-#include "Model/src/PlacedPiece.h"
+#include "PlacedPiece.h"
 
 Piece::Piece():
 	mType( Piece::Follower ),

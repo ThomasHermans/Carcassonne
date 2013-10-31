@@ -1,4 +1,4 @@
-#include "Model/src/PlacedPiece.h"
+#include "PlacedPiece.h"
 
 #include <cassert>
 

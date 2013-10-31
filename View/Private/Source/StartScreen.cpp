@@ -1,6 +1,6 @@
 #include "View/StartScreen.h"
 
-#include "View/src/StartScreenRow.h"
+#include "StartScreenRow.h"
 
 #include <QLabel>
 #include <QPushButton>

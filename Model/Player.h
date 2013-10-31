@@ -1,8 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "Piece.h"
+
 #include "Model/Color.h"
-#include "Model/src/Piece.h"
 
 #include <QObject>
 
