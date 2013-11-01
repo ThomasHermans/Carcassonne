@@ -4,28 +4,30 @@
 #include "View/Typedefs.h"
 #include "View/DragData.h"
 
+#include <cassert>
+
 namespace
 {
-	unsigned int
-	colFromX(int inX, unsigned int inStartCol)
+	unsigned
+	colFromX( int inX, unsigned inStartCol )
 	{
-		return (inX / Gui::kTileWidth + inStartCol - (inX < 0 ? 1 : 0));
+		return ( inX / Gui::kTileWidth + inStartCol - ( inX < 0 ? 1 : 0 ) );
 	}
 
-	unsigned int
-	rowFromY(int inY, unsigned int inStartRow)
+	unsigned
+	rowFromY( int inY, unsigned inStartRow )
 	{
-		return (inY / Gui::kTileHeight + inStartRow - (inY < 0 ? 1 : 0));
+		return ( inY / Gui::kTileHeight + inStartRow - ( inY < 0 ? 1 : 0 ) );
 	}
 
 	int
-	xFromCol(unsigned int inCol, unsigned int inStartCol)
+	xFromCol( unsigned inCol, unsigned inStartCol )
 	{
 		return ( ((int)inCol - (int)inStartCol) * Gui::kTileWidth );
 	}
 
 	int
-	yFromRow(unsigned int inRow, unsigned int inStartRow)
+	yFromRow( unsigned inRow, unsigned inStartRow )
 	{
 		return ( ((int)inRow - (int)inStartRow) * Gui::kTileHeight );
 	}
@@ -33,59 +35,57 @@ namespace
 	int
 	xFromArea( Area::Area inArea )
 	{
-		using namespace Gui;
 		switch ( inArea )
 		{
 			case Area::LeftTop:
 			case Area::Left:
 			case Area::LeftBottom:
-				return .15 * kTileWidth;
+				return .15 * Gui::kTileWidth;
 			case Area::TopLeft:
 			case Area::BottomLeft:
-				return .3 * kTileWidth;
+				return .3 * Gui::kTileWidth;
 			case Area::Top:
 			case Area::Central:
 			case Area::Bottom:
-				return .5 * kTileWidth;
+				return .5 * Gui::kTileWidth;
 			case Area::TopRight:
 			case Area::BottomRight:
-				return .7 * kTileWidth;
+				return .7 * Gui::kTileWidth;
 			case Area::RightTop:
 			case Area::Right:
 			case Area::RightBottom:
-				return .85 * kTileWidth;
-			default:
-				return .5 * kTileWidth;
+				return .85 * Gui::kTileWidth;
 		}
+		assert( !"Invalid Area" );
+		return .5 * Gui::kTileWidth;
 	}
 
 	int
 	yFromArea( Area::Area inArea )
 	{
-		using namespace Gui;
 		switch ( inArea )
 		{
 			case Area::TopLeft:
 			case Area::Top:
 			case Area::TopRight:
-				return .15 * kTileHeight;
+				return .15 * Gui::kTileHeight;
 			case Area::LeftTop:
 			case Area::RightTop:
-				return .3 * kTileHeight;
+				return .3 * Gui::kTileHeight;
 			case Area::Left:
 			case Area::Central:
 			case Area::Right:
-				return .5 * kTileHeight;
+				return .5 * Gui::kTileHeight;
 			case Area::LeftBottom:
 			case Area::RightBottom:
-				return .7 * kTileHeight;
+				return .7 * Gui::kTileHeight;
 			case Area::BottomLeft:
 			case Area::Bottom:
 			case Area::BottomRight:
-				return .85 * kTileHeight;
-			default:
-				return .5 * kTileHeight;
+				return .85 * Gui::kTileHeight;
 		}
+		assert( !"Invalid Area" );
+		return .5 * Gui::kTileHeight;
 	}
 
 	int
@@ -161,7 +161,8 @@ namespace
 			if ( kFirstBorder < inY && inY < kSecondBorder )
 				return Area::Central;
 		}
-		return Area::Invalid;
+		assert( !"Invalid Area" );
+		return Area::Central;
 	}
 
 	Color::Color
@@ -181,9 +182,9 @@ namespace
 				return Color::Black;
 			case Dragging::kGray:
 				return Color::Gray;
-			default:
-				return Color::Red;
 		}
+		assert( !"Invalid Dragging Color" );
+		return Color::Red;
 	}
 
 	Dragging::Color
@@ -203,9 +204,9 @@ namespace
 				return Dragging::kBlack;
 			case Color::Gray:
 				return Dragging::kGray;
-			default:
-				return Dragging::kRed;
 		}
+		assert( !"Invalid Color Color" );
+		return Dragging::kRed;
 	}
 
 	Piece::PieceType
@@ -221,9 +222,9 @@ namespace
 				return Piece::Builder;
 			case Dragging::kPig:
 				return Piece::Pig;
-			default:
-				return Piece::Follower;
 		}
+		assert( !"Invalid Dragging Piece" );
+		return Piece::Follower;
 	}
 
 	QColor
@@ -243,9 +244,9 @@ namespace
 				return Qt::black;
 			case Color::Gray:
 				return Qt::gray;
-			default:
-				return Qt::white;
 		}
+		assert( !"Invalid Color Color" );
+		return Qt::white;
 	}
 }
 
@@ -283,44 +284,60 @@ GameController::GameController( std::vector< Player > const & inPlayers, QObject
 }
 
 void
-GameController::onTilePlaced(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
+GameController::onTilePlaced
+(
+	unsigned inCol,
+	unsigned inRow,
+	std::string const & inId,
+	TileOnBoard::Rotation inRot
+)
 {
 	int x = xFromCol( inCol, mGame->getStartCol() );
 	int y = yFromRow( inRow, mGame->getStartRow() );
-	mWindow->setTile(x, y, inId, inRot * 30);
+	mWindow->setTile( x, y, inId, inRot * 30 );
 	mWindow->fadeNextTile();
 }
 
 void
-GameController::onTileUnplaced(unsigned int inCol, unsigned int inRow)
+GameController::onTileUnplaced
+(
+	unsigned inCol,
+	unsigned inRow
+)
 {
 	int x = xFromCol( inCol, mGame->getStartCol() );
 	int y = yFromRow( inRow, mGame->getStartRow() );
-	mWindow->clearTile(x, y);
+	mWindow->clearTile( x, y );
 }
 
 void
-GameController::onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot)
+GameController::onTileRotated
+(
+	unsigned inCol,
+	unsigned inRow,
+	std::string const & inId,
+	TileOnBoard::Rotation inRot
+)
 {
 	int x = xFromCol( inCol, mGame->getStartCol() );
 	int y = yFromRow( inRow, mGame->getStartRow() );
-	mWindow->rotateTile(x, y, inId, inRot * 30);
+	mWindow->rotateTile( x, y, inId, inRot * 30 );
 }
 
 void
-GameController::onNextTile( std::string inNextId )
+GameController::onNextTile( std::string const & inNextId )
 {
-	mWindow->setNextTile(inNextId);
+	mWindow->setNextTile( inNextId );
 }
 
 void
-GameController::onTilesLeft(unsigned int inNr)
+GameController::onTilesLeft( unsigned inNr )
 {
 	mWindow->displayTilesLeft(inNr);
 }
 
 void
-GameController::onPiecePlaced( unsigned int inCol, unsigned int inRow, Area::Area inArea, Player const & inCurrentPlayer )
+GameController::onPiecePlaced( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer )
 {
 	std::cout << inCurrentPlayer.getName() << " placed a piece." << std::endl;
 	int x = xFromCol( inCol, mGame->getStartCol() );
@@ -331,7 +348,7 @@ GameController::onPiecePlaced( unsigned int inCol, unsigned int inRow, Area::Are
 }
 
 void
-GameController::onPieceReturned( unsigned int inCol, unsigned int inRow, Area::Area inArea, Player const & inPlayer )
+GameController::onPieceReturned( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inPlayer )
 {
 	std::cout << inPlayer.getName() << " got a piece back." << std::endl;
 	int x = xFromCol( inCol, mGame->getStartCol() );
@@ -355,7 +372,7 @@ GameController::onCurrentPlayerChanged( Player const & inCurrentPlayer )
 }
 
 void
-GameController::onFinishedCloister(unsigned int inCol, unsigned int inRow)
+GameController::onFinishedCloister( unsigned inCol, unsigned inRow )
 {
 	std::cout << "Finished cloister on tile " << inCol << ", " << inRow << std::endl;
 	int x = xFromCol( inCol, mGame->getStartCol() );
@@ -364,7 +381,7 @@ GameController::onFinishedCloister(unsigned int inCol, unsigned int inRow)
 }
 
 void
-GameController::onEndOfGame(unsigned int inTilesLeft)
+GameController::onEndOfGame( unsigned inTilesLeft )
 {
 	mGame->calculateEndPoints();
 	std::cout << "Game has ended." << std::endl;
@@ -377,8 +394,8 @@ GameController::onEndOfGame(unsigned int inTilesLeft)
 void
 GameController::onClicked( int inX, int inY )
 {
-	unsigned int col = colFromX( inX, mGame->getStartCol() );
-	unsigned int row = rowFromY( inY, mGame->getStartRow() );
+	unsigned col = colFromX( inX, mGame->getStartCol() );
+	unsigned row = rowFromY( inY, mGame->getStartRow() );
 	std::cout << "GameController sees a click at x, y: " << inX << ", " << inY << ", which is col, row: " << col << ", " << row << std::endl;
 	if ( col < mGame->getNrOfCols() && row < mGame->getNrOfRows() )
 	{

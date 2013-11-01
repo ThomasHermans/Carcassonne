@@ -18,20 +18,20 @@ public:
 
 private slots:
 	// From model to view
-	void onTilePlaced(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
-	void onTileUnplaced(unsigned int inCol, unsigned int inRow);
-	void onTileRotated(unsigned int inCol, unsigned int inRow, std::string inId, TileOnBoard::Rotation inRot);
-	void onNextTile(std::string inNextId);
-	void onTilesLeft(unsigned int inNr);
+	void onTilePlaced( unsigned inCol, unsigned inRow, std::string const & inId, TileOnBoard::Rotation inRot );
+	void onTileUnplaced( unsigned inCol, unsigned inRow );
+	void onTileRotated( unsigned inCol, unsigned inRow, std::string const & inId, TileOnBoard::Rotation inRot );
+	void onNextTile( std::string const & inNextId );
+	void onTilesLeft( unsigned inNr );
 
-	void onPiecePlaced( unsigned int inCol, unsigned int inRow, Area::Area inArea, Player const & inCurrentPlayer );
-	void onPieceReturned( unsigned int inCol, unsigned int inRow, Area::Area inArea, Player const & inCurrentPlayer );
+	void onPiecePlaced( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer );
+	void onPieceReturned( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer );
 	void onPlayerInfoChanged( Player const & inNewInfo );
-	void onCurrentPlayerChanged(Player const & inCurrentPlayer);
+	void onCurrentPlayerChanged( Player const & inCurrentPlayer);
 
-	void onFinishedCloister(unsigned int inCol, unsigned int inRow);
+	void onFinishedCloister( unsigned inCol, unsigned inRow );
 
-	void onEndOfGame(unsigned int inTilesLeft);
+	void onEndOfGame( unsigned inTilesLeft );
 
 	// From view to model
 	void onClicked( int inX, int inY );
