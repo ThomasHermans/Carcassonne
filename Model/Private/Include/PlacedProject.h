@@ -1,29 +1,31 @@
 #ifndef PLACEDPROJECT_H
 #define PLACEDPROJECT_H
 
-#include "Tile.h"
+#include "Area.h"
 
-struct PlacedRoad
+struct PlacedProject
 {
 	unsigned col;
 	unsigned row;
-	FRCArea::RoadArea area;
+	Area::Area area;
 
-	PlacedRoad( unsigned inCol, unsigned inRow, FRCArea::RoadArea inRoadArea );
+	PlacedProject( unsigned inCol, unsigned inRow, Area::Area inArea );
 };
 
 bool
-operator == ( PlacedRoad const & inLeft, PlacedRoad const & inRight );
+operator == ( PlacedProject const & inLeft, PlacedProject const & inRight );
 
 bool
-operator != ( PlacedRoad const & inLeft, PlacedRoad const & inRight );
+operator != ( PlacedProject const & inLeft, PlacedProject const & inRight );
 
 bool
-operator < ( PlacedRoad const & inLeft, PlacedRoad const & inRight );
+operator < ( PlacedProject const & inLeft, PlacedProject const & inRight );
 
-PlacedRoad
-getNeighbor( PlacedRoad const & inPlacedRoad );
+PlacedProject
+getNeighbor( PlacedProject const & inPlacedRoad );
 
-typedef PlacedRoad PlacedCity;
+typedef PlacedProject PlacedRoad;
+typedef PlacedProject PlacedField;
+typedef PlacedProject PlacedCity;
 
 #endif // PLACEDPROJECT_H

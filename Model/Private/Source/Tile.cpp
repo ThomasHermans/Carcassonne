@@ -3,147 +3,156 @@
 #include <algorithm>
 #include <cassert>
 
-std::string
-FRCArea::fieldAreaToString(FieldArea inFieldArea)
+namespace
 {
-	switch (inFieldArea)
+	bool
+	tileHas( Tile const & inTile, Area::Area inArea, Tile::Side inSide )
 	{
-	case TopLeft:
-		return "TopLeft";
-	case TopRight:
-		return "TopRight";
-	case RightTop:
-		return "RightTop";
-	case RightBottom:
-		return "RightBottom";
-	case BottomRight:
-		return "BottomRight";
-	case BottomLeft:
-		return "BottomLeft";
-	case LeftBottom:
-		return "LeftBottom";
-	case LeftTop:
-		return "LeftTop";
-	case Central:
-		return "Central";
-	default:
-		return "No valid FieldArea";
+		switch ( inSide )
+		{
+		case Tile::Field:
+			return inTile.isField( inArea );
+		case Tile::Road:
+			return inTile.isRoad( inArea );
+		case Tile::City:
+			return inTile.isCity( inArea );
+		}
+		assert( !"Invalid Tile::Side" );
+		return false;
+	}
+
+	void
+	assureSideHasNo( Tile const & inTile, Area::Area inArea, Tile::Side inSide )
+	{
+		// Make sure inTile has nothing of inSide at inArea
+		assert( !tileHas( inTile, Area::Area( inArea - 1 ), inSide ) );
+		assert( !tileHas( inTile, Area::Area( inArea ), inSide ) );
+		assert( !tileHas( inTile, Area::Area( inArea + 1 ), inSide ) );
+	}
+	void
+	assureSideHasAll( Tile const & inTile, Area::Area inArea, Tile::Side inSide )
+	{
+		// Make sure inTile has nothing of inSide at inArea
+		assert( tileHas( inTile, Area::Area( inArea - 1 ), inSide ) );
+		assert( tileHas( inTile, Area::Area( inArea ), inSide ) );
+		assert( tileHas( inTile, Area::Area( inArea + 1 ), inSide ) );
+	}
+	void
+	assureSideHasOnlyMiddle( Tile const & inTile, Area::Area inArea, Tile::Side inSide )
+	{
+		// Make sure inTile has nothing of inSide at inArea
+		assert( !tileHas( inTile, Area::Area( inArea - 1 ), inSide ) );
+		assert( tileHas( inTile, Area::Area( inArea ), inSide ) );
+		assert( !tileHas( inTile, Area::Area( inArea + 1 ), inSide ) );
+	}
+	void
+	assureSideHasOnlySurround( Tile const & inTile, Area::Area inArea, Tile::Side inSide )
+	{
+		// Make sure inTile has nothing of inSide at inArea
+		assert( tileHas( inTile, Area::Area( inArea - 1 ), inSide ) );
+		assert( !tileHas( inTile, Area::Area( inArea ), inSide ) );
+		assert( tileHas( inTile, Area::Area( inArea + 1 ), inSide ) );
+	}
+
+	void
+	assureSide( Tile const & inTile, Tile::Side inSide, Area::Area inArea )
+	{
+		switch ( inSide )
+		{
+		case Tile::Field:
+		{
+			assureSideHasNo( inTile, inArea, Tile::City );
+			assureSideHasNo( inTile, inArea, Tile::Road );
+			assureSideHasAll( inTile, inArea, Tile::Field );
+			break;
+		}
+		case Tile::Road:
+		{
+			assureSideHasNo( inTile, inArea, Tile::City );
+			assureSideHasOnlyMiddle( inTile, inArea, Tile::Road );
+			assureSideHasOnlySurround( inTile, inArea, Tile::Field );
+			break;
+		}
+		case Tile::City:
+		{
+			assureSideHasAll( inTile, inArea, Tile::City );
+			assureSideHasNo( inTile, inArea, Tile::Road );
+			assureSideHasNo( inTile, inArea, Tile::Field );
+			break;
+		}
+		}
+	}
+
+	void
+	assureSides( Tile const & inTile )
+	{
+		assureSide( inTile, inTile.getTop(), Area::Top );
+		assureSide( inTile, inTile.getRight(), Area::Right );
+		assureSide( inTile, inTile.getBottom(), Area::Bottom );
+		assureSide( inTile, inTile.getLeft(), Area::Left );
 	}
 }
 
-std::string
-FRCArea::roadAreaToString(RoadArea inRoadArea)
+Tile::Tile()
+:
+	mID( "D" ),
+	mTop( Road ),
+	mRight( City ),
+	mBottom( Road ),
+	mLeft( Field ),
+	mCenter( Nothing ),
+	mFields(),
+	mRoads(),
+	mCities(),
+	mCitiesPerField(),
+	mShields(),
+	mInns()
 {
-	switch (inRoadArea)
-	{
-	case Top:
-		return "Top";
-	case Right:
-		return "Right";
-	case Bottom:
-		return "Bottom";
-	case Left:
-		return "Left";
-	default:
-		return "No valid Area";
-	}
-}
+	ContiguousField rightField;
+	rightField.push_back( Area::TopRight );
+	rightField.push_back( Area::BottomRight );
+	ContiguousField leftField;
+	leftField.push_back( Area::BottomLeft );
+	leftField.push_back( Area::LeftBottom );
+	leftField.push_back( Area::LeftTop );
+	leftField.push_back( Area::TopLeft );
+	mFields.push_back( rightField );
+	mFields.push_back( leftField );
 
-std::string
-FRCArea::cityAreaToString(CityArea inCityArea)
-{
-	return roadAreaToString(inCityArea);
-}
+	ContiguousCity rightCity;
+	rightCity.push_back( Area::Right );
 
-std::string
-Area::areaToString(Area inArea)
-{
-	switch (inArea)
-	{
-	case TopLeft:
-		return "AreaTopLeft";
-	case TopRight:
-		return "AreaTopRight";
-	case RightTop:
-		return "AreaRightTop";
-	case RightBottom:
-		return "AreaRightBottom";
-	case BottomRight:
-		return "AreaBottomRight";
-	case BottomLeft:
-		return "AreaBottomLeft";
-	case LeftBottom:
-		return "AreaLeftBottom";
-	case LeftTop:
-		return "AreaLeftTop";
-	case Central:
-		return "AreaCentral";
-	case Top:
-		return "AreaTop";
-	case Right:
-		return "AreaRight";
-	case Bottom:
-		return "AreaBottom";
-	case Left:
-		return "AreaLeft";
-	}
-	assert( !"Invalid Area" );
-	return "Invalid Area";
-}
-
-Tile::Tile():
-	mID("D"),
-	mTop(Road),
-	mRight(City),
-	mBottom(Road),
-	mLeft(Field),
-	mCenter(Nothing)
-{
-	mFields = std::vector< ContiguousField >();
-	ContiguousField rightField = std::vector< FRCArea::FieldArea >();
-	rightField.push_back(FRCArea::TopRight);
-	rightField.push_back(FRCArea::BottomRight);
-	ContiguousField leftField = std::vector< FRCArea::FieldArea >();
-	leftField.push_back(FRCArea::BottomLeft);
-	leftField.push_back(FRCArea::LeftBottom);
-	leftField.push_back(FRCArea::LeftTop);
-	leftField.push_back(FRCArea::TopLeft);
-	mFields.push_back(rightField);
-	mFields.push_back(leftField);
-	mRoads = std::vector< ContiguousRoad >();
-	mCities = std::vector< ContiguousCity >();
-	ContiguousCity rightCity = std::vector< FRCArea::CityArea >();
-	rightCity.push_back(FRCArea::Right);
-	mCitiesPerField = std::map< ContiguousField, std::vector< ContiguousCity > >();
 	std::vector< ContiguousCity > rightFieldCities;
 	rightFieldCities.push_back( rightCity );
 	std::vector< ContiguousCity > leftFieldCities;
-	mCitiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(rightField, rightFieldCities));
-	mCitiesPerField.insert( std::pair< Tile::ContiguousField, std::vector< Tile::ContiguousCity > >(leftField, leftFieldCities));
-	mShields = std::vector< FRCArea::CityArea >();
-	mInns = std::vector< FRCArea::RoadArea >();
+	mCitiesPerField[ rightField ] = rightFieldCities;
+	mCitiesPerField[ leftField ] = leftFieldCities;
 }
 
-Tile::Tile(Center inCenter,
-		   const std::string & inID,
-		   const std::vector< ContiguousField > & inFields,
-		   const std::vector< ContiguousRoad > & inRoads,
-		   const std::vector< ContiguousCity > & inCities,
-		   const std::map< ContiguousField, std::vector< ContiguousCity > > & inCitiesPerField,
-		   const std::vector< FRCArea::CityArea > & inShields,
-		   const std::vector< FRCArea::RoadArea > & inInns):
-	mID(inID),
-	mTop(Tile::Field),
-	mRight(Tile::Field),
-	mBottom(Tile::Field),
-	mLeft(Tile::Field),
-	mCenter(inCenter),
-	mFields(inFields),
-	mRoads(inRoads),
-	mCities(inCities),
-	mCitiesPerField(inCitiesPerField),
-	mShields(inShields),
-	mInns(inInns)
+Tile::Tile
+(
+	Center inCenter,
+	std::string const & inID,
+	std::vector< ContiguousField > const & inFields,
+	std::vector< ContiguousRoad > const & inRoads,
+	std::vector< ContiguousCity > const & inCities,
+	std::map< ContiguousField, std::vector< ContiguousCity > > const & inCitiesPerField,
+	std::vector< Area::Area > const & inShields,
+	std::vector< Area::Area > const & inInns
+)
+:
+	mID( inID ),
+	mTop( Tile::Field ),
+	mRight( Tile::Field ),
+	mBottom( Tile::Field ),
+	mLeft( Tile::Field ),
+	mCenter( inCenter ),
+	mFields( inFields ),
+	mRoads( inRoads ),
+	mCities( inCities ),
+	mCitiesPerField( inCitiesPerField ),
+	mShields( inShields ),
+	mInns( inInns )
 {
 	int top = 0;
 	int right = 0;
@@ -155,21 +164,31 @@ Tile::Tile(Center inCenter,
 		{
 			switch ( inCities[i][j] )
 			{
-			case FRCArea::Top:
+			case Area::Top:
 				mTop = Tile::City;
 				++top;
 				break;
-			case FRCArea::Right:
+			case Area::Right:
 				mRight = Tile::City;
 				++right;
 				break;
-			case FRCArea::Bottom:
+			case Area::Bottom:
 				mBottom = Tile::City;
 				++bottom;
 				break;
-			case FRCArea::Left:
+			case Area::Left:
 				mLeft = Tile::City;
 				++left;
+				break;
+			case Area::TopLeft:
+			case Area::TopRight:
+			case Area::RightTop:
+			case Area::RightBottom:
+			case Area::BottomRight:
+			case Area::BottomLeft:
+			case Area::LeftBottom:
+			case Area::LeftTop:
+			case Area::Central:
 				break;
 			}
 		}
@@ -180,21 +199,31 @@ Tile::Tile(Center inCenter,
 		{
 			switch ( inRoads[i][j] )
 			{
-			case FRCArea::Top:
+			case Area::Top:
 				mTop = Tile::Road;
 				++top;
 				break;
-			case FRCArea::Right:
+			case Area::Right:
 				mRight = Tile::Road;
 				++right;
 				break;
-			case FRCArea::Bottom:
+			case Area::Bottom:
 				mBottom = Tile::Road;
 				++bottom;
 				break;
-			case FRCArea::Left:
+			case Area::Left:
 				mLeft = Tile::Road;
 				++left;
+				break;
+			case Area::TopLeft:
+			case Area::TopRight:
+			case Area::RightTop:
+			case Area::RightBottom:
+			case Area::BottomRight:
+			case Area::BottomLeft:
+			case Area::LeftBottom:
+			case Area::LeftTop:
+			case Area::Central:
 				break;
 			}
 		}
@@ -203,6 +232,7 @@ Tile::Tile(Center inCenter,
 	assert( right <= 1 );
 	assert( bottom <= 1 );
 	assert( left <= 1 );
+	assureSides( *this );
 }
 
 Tile::Side
@@ -241,53 +271,53 @@ Tile::getID() const
 	return mID;
 }
 
-std::vector< Tile::ContiguousField >
+std::vector< Tile::ContiguousField > const &
 Tile::getContiguousFields() const
 {
 	return mFields;
 }
 
-std::vector< Tile::ContiguousRoad >
+std::vector< Tile::ContiguousRoad > const &
 Tile::getContiguousRoads() const
 {
 	return mRoads;
 }
 
-std::vector< Tile::ContiguousCity >
+std::vector< Tile::ContiguousCity > const &
 Tile::getContiguousCities() const
 {
 	return mCities;
 }
 
-std::vector< Tile::ContiguousCity >
+std::vector< Tile::ContiguousCity > const &
 Tile::getCitiesPerField(const ContiguousField &inContiguousField) const
 {
 	return mCitiesPerField.at(inContiguousField);
 }
 
-std::vector< Tile::ContiguousCity >
-Tile::getCitiesPerField(FRCArea::FieldArea inFieldArea) const
+std::vector< Tile::ContiguousCity > const &
+Tile::getCitiesPerField( Area::Area inFieldArea ) const
 {
-	ContiguousField cf = getContiguousField(inFieldArea);
+	ContiguousField cf = getContiguousField( inFieldArea );
 	return mCitiesPerField.at(cf);
 }
 
-std::vector< FRCArea::CityArea >
+std::vector< Area::Area > const &
 Tile::getShields() const
 {
 	return mShields;
 }
 
-std::vector< FRCArea::RoadArea >
+std::vector< Area::Area > const &
 Tile::getInns() const
 {
 	return mInns;
 }
 
 Tile::ContiguousField
-Tile::getContiguousField(FRCArea::FieldArea inFieldArea) const
+Tile::getContiguousField( Area::Area inFieldArea ) const
 {
-	unsigned int i = 0;
+	unsigned i = 0;
 	for (; i < mFields.size(); ++i)
 	{
 		if ( std::find(mFields[i].begin(), mFields[i].end(), inFieldArea) != mFields[i].end() )
@@ -306,12 +336,12 @@ Tile::getContiguousField(FRCArea::FieldArea inFieldArea) const
 }
 
 Tile::ContiguousRoad
-Tile::getContiguousRoad(FRCArea::RoadArea inRoadArea) const
+Tile::getContiguousRoad(Area::Area inArea) const
 {
 	unsigned int i = 0;
 	for (; i < mRoads.size(); ++i)
 	{
-		if ( std::find(mRoads[i].begin(), mRoads[i].end(), inRoadArea) != mRoads[i].end() )
+		if ( std::find(mRoads[i].begin(), mRoads[i].end(), inArea) != mRoads[i].end() )
 		{
 			break;
 		}
@@ -327,12 +357,12 @@ Tile::getContiguousRoad(FRCArea::RoadArea inRoadArea) const
 }
 
 Tile::ContiguousCity
-Tile::getContiguousCity(FRCArea::CityArea inCityArea) const
+Tile::getContiguousCity(Area::Area inArea) const
 {
 	unsigned int i = 0;
 	for (; i < mCities.size(); ++i)
 	{
-		if ( std::find(mCities[i].begin(), mCities[i].end(), inCityArea) != mCities[i].end() )
+		if ( std::find(mCities[i].begin(), mCities[i].end(), inArea) != mCities[i].end() )
 		{
 			break;
 		}
@@ -345,6 +375,57 @@ Tile::getContiguousCity(FRCArea::CityArea inCityArea) const
 	{
 		return Tile::ContiguousCity();
 	}
+}
+
+bool
+Tile::isCloister( Area::Area inArea ) const
+{
+	return ( inArea == Area::Central && getCenter() == Tile::Cloister );	
+}
+
+bool
+Tile::isRoad( Area::Area inArea ) const
+{
+	for ( std::vector< ContiguousRoad >::const_iterator it = mRoads.begin();
+		it != mRoads.end();
+		++it )
+	{
+		if ( std::find( it->begin(), it->end(), inArea ) != it->end() )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool
+Tile::isCity( Area::Area inArea ) const
+{
+	for ( std::vector< ContiguousCity >::const_iterator it = mCities.begin();
+		it != mCities.end();
+		++it )
+	{
+		if ( std::find( it->begin(), it->end(), inArea ) != it->end() )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool
+Tile::isField( Area::Area inArea ) const
+{
+	for ( std::vector< ContiguousField >::const_iterator it = mFields.begin();
+		it != mFields.end();
+		++it )
+	{
+		if ( std::find( it->begin(), it->end(), inArea ) != it->end() )
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 std::string
@@ -369,7 +450,7 @@ Tile::toString() const
 			result.append("\n\t- ");
 			for (unsigned int j = 0; j < mFields[i].size(); j++)
 			{
-				result.append(FRCArea::fieldAreaToString(mFields[i][j]));
+				result.append(Area::areaToString(mFields[i][j]));
 				result.append(" ");
 			}
 		}
@@ -382,7 +463,7 @@ Tile::toString() const
 			result.append("\n\t- ");
 			for (unsigned int j = 0; j < mRoads[i].size(); j++)
 			{
-				result.append(FRCArea::roadAreaToString(mRoads[i][j]));
+				result.append(Area::areaToString(mRoads[i][j]));
 				result.append(" ");
 			}
 		}
@@ -395,7 +476,7 @@ Tile::toString() const
 			result.append("\n\t- ");
 			for (unsigned int j = 0; j < mCities[i].size(); j++)
 			{
-				result.append(FRCArea::cityAreaToString(mCities[i][j]));
+				result.append(Area::areaToString(mCities[i][j]));
 				result.append(" ");
 			}
 		}
@@ -405,7 +486,7 @@ Tile::toString() const
 		result.append("\nShields at:\n\t- ");
 		for (unsigned int i = 0; i < mShields.size(); i++)
 		{
-			result.append(FRCArea::cityAreaToString(mShields[i]));
+			result.append(Area::areaToString(mShields[i]));
 			result.append(" ");
 		}
 	}
@@ -414,7 +495,7 @@ Tile::toString() const
 		result.append("\nInns at:\n\t- ");
 		for (unsigned int i = 0; i < mInns.size(); i++)
 		{
-			result.append(FRCArea::roadAreaToString(mInns[i]));
+			result.append(Area::areaToString(mInns[i]));
 			result.append(" ");
 		}
 	}

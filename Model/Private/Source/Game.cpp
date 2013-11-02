@@ -381,7 +381,7 @@ Game::calculateEndPoints()
 					}
 					else if ( tile->isRoad( it->getArea() ) )
 					{
-						PlacedRoad roadPart( col, row, FRCArea::RoadArea( it->getArea() ) );
+						PlacedRoad roadPart( col, row, Area::Area( it->getArea() ) );
 						std::vector< PlacedRoad > const road = mBoard.getCompleteRoad( roadPart );
 						// Remove all pieces
 						std::vector< PlacedPiece > allPieces;
@@ -404,7 +404,7 @@ Game::calculateEndPoints()
 					}
 					else if ( tile->isCity( it->getArea() ) )
 					{
-						PlacedCity cityPart( col, row, FRCArea::CityArea( it->getArea() ) );
+						PlacedCity cityPart( col, row, Area::Area( it->getArea() ) );
 						std::vector< PlacedCity > const city = mBoard.getCompleteCity( cityPart );
 						// Calculate winner of unfinished city
 						std::vector< PlacedPiece > allPieces;
@@ -417,7 +417,7 @@ Game::calculateEndPoints()
 							// Add to usedTiles
 							usedTiles.insert( std::make_pair( cIt->col, cIt->row ) );
 							// Add shield if there was one
-							std::vector< FRCArea::CityArea > shields = mBoard.getTile( cIt->col, cIt->row )->getShields();
+							std::vector< Area::Area > shields = mBoard.getTile( cIt->col, cIt->row )->getShields();
                             if ( std::find( shields.begin(), shields.end(), cIt->area ) != shields.end() )
 							{
                                 allShields.insert( *cIt );
@@ -520,7 +520,7 @@ Game::onFinishedCity( std::vector< PlacedCity > const & inCity )
 		// Add to usedTiles (will not add doubles)
 		usedTiles.insert( std::make_pair( it->col, it->row ) );
 		// Add shield if there was one
-		std::vector< FRCArea::CityArea > shields = mBoard.getTile( it->col, it->row )->getShields();
+		std::vector< Area::Area > shields = mBoard.getTile( it->col, it->row )->getShields();
 		if ( std::find( shields.begin(), shields.end(), it->area ) != shields.end() )
 		{
 			allShields.insert( *it );
@@ -670,7 +670,7 @@ Game::isOccupied( Area::Area inArea ) const
 	if ( mCurrentPlacedTile->isRoad( inArea ) )
 	{
 		// A road is occupied if there is a piece somewhere on this road
-		Tile::ContiguousRoad road = mCurrentPlacedTile->getContiguousRoad( FRCArea::RoadArea( inArea ) );
+		Tile::ContiguousRoad road = mCurrentPlacedTile->getContiguousRoad( Area::Area( inArea ) );
 		std::vector< PlacedRoad > roadsToCheck;
 		for ( Tile::ContiguousRoad::const_iterator it = road.begin(); it != road.end(); ++it )
 		{
@@ -695,7 +695,7 @@ Game::isOccupied( Area::Area inArea ) const
 	if ( mCurrentPlacedTile->isCity( inArea ) )
 	{
 		// A city is occupied if there is a piece somewhere on this city
-		Tile::ContiguousCity city = mCurrentPlacedTile->getContiguousCity( FRCArea::CityArea( inArea ) );
+		Tile::ContiguousCity city = mCurrentPlacedTile->getContiguousCity( Area::Area( inArea ) );
 		std::vector< PlacedCity > citiesToCheck;
 		for ( Tile::ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
 		{
@@ -710,6 +710,32 @@ Game::isOccupied( Area::Area inArea ) const
 			++it )
 		{
 			if ( mBoard.isOccupiedCity( it->col, it->row, it->area ) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	// Field
+	if ( mCurrentPlacedTile->isField( inArea ) )
+	{
+		std::cout << "It's a field!" << std::endl;
+		// A field is occupied if there is a piece somewhere on this city
+		Tile::ContiguousField field = mCurrentPlacedTile->getContiguousField( inArea );
+		std::vector< PlacedField > fieldsToCheck;
+		for ( Tile::ContiguousField::const_iterator it = field.begin(); it != field.end(); ++it )
+		{
+			if ( mCurrentPlacedTile->hasPiece( *it ) )
+			{
+				return true;
+			}
+			fieldsToCheck.push_back( getNeighbor( PlacedField( mCurrentPlacedCol, mCurrentPlacedRow, *it ) ) );
+		}
+		for ( std::vector< PlacedField >::iterator it = fieldsToCheck.begin();
+			it != fieldsToCheck.end();
+			++it )
+		{
+			if ( mBoard.isOccupiedField( *it ) )
 			{
 				return true;
 			}

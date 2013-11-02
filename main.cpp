@@ -46,7 +46,8 @@ int main(int argc, char * argv[])
 		QApplication a(argc, argv);
 		a.setStyleSheet( styleSheet );
 		
-		GameController gc( "BKDAD" );
+		// GameController gc( "BKDAD" );
+		GameController gc( "ABCEFGHIJKLMNOPQRSTUVWXD" );
 
 		return a.exec();
 	}

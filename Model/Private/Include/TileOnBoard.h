@@ -45,12 +45,13 @@ public:
 	bool isCloister( Area::Area inArea ) const;
 	bool isRoad( Area::Area inArea ) const;
 	bool isCity( Area::Area inArea ) const;
+	bool isField( Area::Area inArea ) const;
 
-	Tile::ContiguousField getContiguousField( FRCArea::FieldArea inFieldArea ) const;
-	Tile::ContiguousRoad getContiguousRoad( FRCArea::RoadArea inRoadArea ) const;
-	Tile::ContiguousCity getContiguousCity( FRCArea::CityArea inCityArea ) const;
+	Tile::ContiguousField getContiguousField( Area::Area inFieldArea ) const;
+	Tile::ContiguousRoad getContiguousRoad( Area::Area inArea ) const;
+	Tile::ContiguousCity getContiguousCity( Area::Area inArea ) const;
 
-	std::vector< Tile::ContiguousCity > getCitiesPerField( FRCArea::FieldArea inFieldArea ) const;
+	std::vector< Tile::ContiguousCity > getCitiesPerField( Area::Area inFieldArea ) const;
 
 	bool placePiece( PlacedPiece const & inPlacedPiece);
 	bool hasPieces() const;
@@ -58,8 +59,8 @@ public:
 	std::vector< PlacedPiece > removePieces( Area::Area inArea );
 	std::vector< PlacedPiece > removeAllPieces();
 
-	std::vector< FRCArea::CityArea > getShields() const;
-	std::vector< FRCArea::RoadArea > getInns() const;
+	std::vector< Area::Area > getShields() const;
+	std::vector< Area::Area > getInns() const;
 
 	std::string toString() const;
 

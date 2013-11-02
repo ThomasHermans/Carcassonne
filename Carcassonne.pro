@@ -17,6 +17,7 @@ SOURCES += main.cpp \
 	test_o_matic.cpp \
 	TileUnitTests.cpp \
 	UnitTests.cpp \
+	Model\Private\Source\Area.cpp \
 	Model\Private\Source\Board.cpp \
 	Model\Private\Source\Color.cpp \
 	Model\Private\Source\CreateBaseGameTiles.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
 	Model\Color.h \
 	Model\Game.h \
 	Model\Player.h \
+	Model\Private\Include\Area.h \
 	Model\Private\Include\Board.h \
 	Model\Private\Include\CreateBaseGameTiles.h \
 	Model\Private\Include\Piece.h \

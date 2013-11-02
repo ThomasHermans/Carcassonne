@@ -2,36 +2,15 @@
 
 #include <cassert>
 
-namespace
-{
-	FRCArea::CityArea
-	oppositeSide( FRCArea::CityArea inCityArea )
-	{
-		switch ( inCityArea )
-		{
-		case FRCArea::Top:
-			return FRCArea::Bottom;
-		case FRCArea::Right:
-			return FRCArea::Left;
-		case FRCArea::Bottom:
-			return FRCArea::Top;
-		case FRCArea::Left:
-			return FRCArea::Right;
-		default:
-			return FRCArea::Top;
-		}
-	}
-}
-
-PlacedRoad::PlacedRoad( unsigned inCol, unsigned inRow, FRCArea::RoadArea inRoadArea )
+PlacedProject::PlacedProject( unsigned inCol, unsigned inRow, Area::Area inArea )
 :
 	col( inCol ),
 	row( inRow ),
-	area( inRoadArea )
+	area( inArea )
 {}
 
 bool
-operator == ( PlacedRoad const & inLeft, PlacedRoad const & inRight )
+operator == ( PlacedProject const & inLeft, PlacedProject const & inRight )
 {
 	return
 	(
@@ -44,13 +23,13 @@ operator == ( PlacedRoad const & inLeft, PlacedRoad const & inRight )
 }
 
 bool
-operator != ( PlacedRoad const & inLeft, PlacedRoad const & inRight )
+operator != ( PlacedProject const & inLeft, PlacedProject const & inRight )
 {
 	return !( inLeft == inRight );
 }
 
 bool
-operator < ( PlacedRoad const & inLeft, PlacedRoad const & inRight )
+operator < ( PlacedProject const & inLeft, PlacedProject const & inRight )
 {
 	return
 	(
@@ -72,50 +51,60 @@ operator < ( PlacedRoad const & inLeft, PlacedRoad const & inRight )
 	);
 }
 
-PlacedRoad
-getNeighbor( PlacedRoad const & inPlacedRoad )
+PlacedProject
+getNeighbor( PlacedProject const & inProject )
 {
-	switch ( inPlacedRoad.area )
+	switch ( inProject.area )
 	{
-		case FRCArea::Top:
+		case Area::TopLeft:
+		case Area::Top:
+		case Area::TopRight:
 		{
-			return PlacedRoad
+			return PlacedProject
 			(
-				inPlacedRoad.col,
-				inPlacedRoad.row - 1,
-				oppositeSide( inPlacedRoad.area )
+				inProject.col,
+				inProject.row - 1,
+				oppositeSide( inProject.area )
 			);
 		}
-		case FRCArea::Right:
+		case Area::RightTop:
+		case Area::Right:
+		case Area::RightBottom:
 		{
-			return PlacedRoad
+			return PlacedProject
 			(
-				inPlacedRoad.col + 1,
-				inPlacedRoad.row,
-				oppositeSide( inPlacedRoad.area )
+				inProject.col + 1,
+				inProject.row,
+				oppositeSide( inProject.area )
 			);
 		}
-		case FRCArea::Bottom:
+		case Area::BottomRight:
+		case Area::Bottom:
+		case Area::BottomLeft:
 		{
-			return PlacedRoad
+			return PlacedProject
 			(
-				inPlacedRoad.col,
-				inPlacedRoad.row + 1,
-				oppositeSide( inPlacedRoad.area )
+				inProject.col,
+				inProject.row + 1,
+				oppositeSide( inProject.area )
 			);
 		}
-		case FRCArea::Left:
+		case Area::LeftBottom:
+		case Area::Left:
+		case Area::LeftTop:
 		{
-			return PlacedRoad
+			return PlacedProject
 			(
-				inPlacedRoad.col - 1,
-				inPlacedRoad.row,
-				oppositeSide( inPlacedRoad.area )
+				inProject.col - 1,
+				inProject.row,
+				oppositeSide( inProject.area )
 			);
 		}
-		default:
+		case Area::Central:
 		{
-			assert( !"Invalid inPlacedRoad given to getNeighbor" );
+			return inProject;
 		}
 	}
+	assert( !"Invalid Area to get neighbor of" );
+	return inProject;
 }

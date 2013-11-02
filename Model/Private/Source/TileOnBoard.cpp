@@ -5,34 +5,22 @@
 
 namespace
 {
-	FRCArea::FieldArea
-	turn( FRCArea::FieldArea inFieldArea, TileOnBoard::Rotation inRotation )
+	Area::Area
+	turn( Area::Area inArea, TileOnBoard::Rotation inRotation )
 	{
-		if ( inFieldArea == FRCArea::Central )
-			return FRCArea::Central;
+		if ( inArea == Area::Central )
+			return Area::Central;
 		else
-			return FRCArea::FieldArea( (inFieldArea + inRotation) % 12 );
+			return Area::Area( (inArea + inRotation) % 12 );
 	}
 
-	FRCArea::FieldArea
-	unturn( FRCArea::FieldArea inFieldArea, TileOnBoard::Rotation inRotation )
+	Area::Area
+	unturn( Area::Area inArea, TileOnBoard::Rotation inRotation )
 	{
-		if ( inFieldArea == FRCArea::Central )
-			return FRCArea::Central;
+		if ( inArea == Area::Central )
+			return Area::Central;
 		else
-			return FRCArea::FieldArea( (inFieldArea + 12 - inRotation) % 12 );
-	}
-
-	FRCArea::RoadArea
-	turn( FRCArea::RoadArea inRoadArea, TileOnBoard::Rotation inRotation )
-	{
-		return FRCArea::RoadArea( (inRoadArea + inRotation) % 12 );
-	}
-
-	FRCArea::RoadArea
-	unturn( FRCArea::RoadArea inRoadArea, TileOnBoard::Rotation inRotation )
-	{
-		return FRCArea::RoadArea( (inRoadArea + 12 - inRotation) % 12 );
+			return Area::Area( (inArea + 12 - inRotation) % 12 );
 	}
 }
 
@@ -231,49 +219,31 @@ TileOnBoard::getContiguousCities() const
 bool
 TileOnBoard::isCloister( Area::Area inArea ) const
 {
-	return ( inArea == Area::Central && getCenter() == Tile::Cloister );
+	return mTile.isCloister( unturn( inArea, mRotation ) );
 }
 
 bool
 TileOnBoard::isRoad( Area::Area inArea ) const
 {
-	switch ( inArea )
-	{
-		case Area::Top:
-			return getTop() == Tile::Road;
-		case Area::Right:
-			return getRight() == Tile::Road;
-		case Area::Bottom:
-			return getBottom() == Tile::Road;
-		case Area::Left:
-			return getLeft() == Tile::Road;
-		default:
-			return false;
-	}
+	return mTile.isRoad( unturn( inArea, mRotation ) );
 }
 
 bool
 TileOnBoard::isCity( Area::Area inArea ) const
 {
-	switch ( inArea )
-	{
-		case Area::Top:
-			return getTop() == Tile::City;
-		case Area::Right:
-			return getRight() == Tile::City;
-		case Area::Bottom:
-			return getBottom() == Tile::City;
-		case Area::Left:
-			return getLeft() == Tile::City;
-		default:
-			return false;
-	}
+	return mTile.isCity( unturn( inArea, mRotation ) );
+}
+
+bool
+TileOnBoard::isField( Area::Area inArea ) const
+{
+	return mTile.isField( unturn( inArea, mRotation ) );
 }
 
 Tile::ContiguousField
-TileOnBoard::getContiguousField( FRCArea::FieldArea inFieldArea ) const
+TileOnBoard::getContiguousField( Area::Area inArea ) const
 {
-	FRCArea::FieldArea unRotatedArea = unturn( inFieldArea, mRotation );
+	Area::Area unRotatedArea = unturn( inArea, mRotation );
 	Tile::ContiguousField unRotatedField = mTile.getContiguousField( unRotatedArea );
 	Tile::ContiguousField rotatedField;
 	for ( unsigned i = 0; i < unRotatedField.size(); ++i )
@@ -284,9 +254,9 @@ TileOnBoard::getContiguousField( FRCArea::FieldArea inFieldArea ) const
 }
 
 Tile::ContiguousRoad
-TileOnBoard::getContiguousRoad( FRCArea::RoadArea inRoadArea ) const
+TileOnBoard::getContiguousRoad( Area::Area inArea ) const
 {
-	FRCArea::RoadArea unRotatedArea = unturn( inRoadArea, mRotation );
+	Area::Area unRotatedArea = unturn( inArea, mRotation );
 	Tile::ContiguousRoad unRotatedRoad = mTile.getContiguousRoad( unRotatedArea );
 	Tile::ContiguousRoad rotatedRoad;
 	for ( unsigned i = 0; i < unRotatedRoad.size(); ++i )
@@ -297,9 +267,9 @@ TileOnBoard::getContiguousRoad( FRCArea::RoadArea inRoadArea ) const
 }
 
 Tile::ContiguousCity
-TileOnBoard::getContiguousCity( FRCArea::CityArea inCityArea ) const
+TileOnBoard::getContiguousCity( Area::Area inArea ) const
 {
-	FRCArea::CityArea unRotatedArea = unturn( inCityArea, mRotation );
+	Area::Area unRotatedArea = unturn( inArea, mRotation );
 	Tile::ContiguousCity unRotatedCity = mTile.getContiguousCity( unRotatedArea );
 	Tile::ContiguousCity rotatedCity;
 	for ( unsigned i = 0; i < unRotatedCity.size(); ++i )
@@ -310,9 +280,9 @@ TileOnBoard::getContiguousCity( FRCArea::CityArea inCityArea ) const
 }
 
 std::vector< Tile::ContiguousCity >
-TileOnBoard::getCitiesPerField( FRCArea::FieldArea inFieldArea ) const
+TileOnBoard::getCitiesPerField( Area::Area inFieldArea ) const
 {
-	FRCArea::FieldArea tileFieldArea = unturn( inFieldArea, mRotation );
+	Area::Area tileFieldArea = unturn( inFieldArea, mRotation );
 	std::vector< Tile::ContiguousCity > tileCities = mTile.getCitiesPerField( tileFieldArea );
 	std::vector< Tile::ContiguousCity > cities;
 	for ( unsigned i = 0; i < tileCities.size(); ++i )
@@ -384,11 +354,11 @@ TileOnBoard::removeAllPieces()
 	return result;
 }
 
-std::vector< FRCArea::CityArea >
+std::vector< Area::Area >
 TileOnBoard::getShields() const
 {
-	std::vector< FRCArea::CityArea > result;
-	std::vector< FRCArea::CityArea > orig = mTile.getShields();
+	std::vector< Area::Area > result;
+	std::vector< Area::Area > orig = mTile.getShields();
 	for ( unsigned i = 0; i < orig.size(); ++i )
 	{
 		result.push_back( turn( orig[i], mRotation ) );
@@ -396,11 +366,11 @@ TileOnBoard::getShields() const
 	return result;
 }
 
-std::vector< FRCArea::RoadArea >
+std::vector< Area::Area >
 TileOnBoard::getInns() const
 {
-	std::vector< FRCArea::RoadArea > result;
-	std::vector< FRCArea::RoadArea > orig = mTile.getInns();
+	std::vector< Area::Area > result;
+	std::vector< Area::Area > orig = mTile.getInns();
 	for ( unsigned i = 0; i < orig.size(); ++i )
 	{
 		result.push_back( turn( orig[i], mRotation ) );
@@ -431,7 +401,7 @@ TileOnBoard::toString() const
 			result.append("\n\t- ");
 			for (unsigned j = 0; j < fields[i].size(); j++)
 			{
-				result.append(FRCArea::fieldAreaToString(fields[i][j]));
+				result.append(Area::areaToString(fields[i][j]));
 				result.append(" ");
 			}
 		}
@@ -445,7 +415,7 @@ TileOnBoard::toString() const
 			result.append("\n\t- ");
 			for (unsigned j = 0; j < roads[i].size(); j++)
 			{
-				result.append(FRCArea::roadAreaToString(roads[i][j]));
+				result.append(Area::areaToString(roads[i][j]));
 				result.append(" ");
 			}
 		}
@@ -459,28 +429,28 @@ TileOnBoard::toString() const
 			result.append("\n\t- ");
 			for (unsigned j = 0; j < cities[i].size(); j++)
 			{
-				result.append(FRCArea::cityAreaToString(cities[i][j]));
+				result.append(Area::areaToString(cities[i][j]));
 				result.append(" ");
 			}
 		}
 	}
-	std::vector< FRCArea::CityArea > shields = this->getShields();
+	std::vector< Area::Area > shields = this->getShields();
 	if (!shields.empty())
 	{
 		result.append("\nShields at:\n\t- ");
 		for (unsigned i = 0; i < shields.size(); i++)
 		{
-			result.append(FRCArea::cityAreaToString(shields[i]));
+			result.append(Area::areaToString(shields[i]));
 			result.append(" ");
 		}
 	}
-	std::vector< FRCArea::RoadArea > inns = this->getInns();
+	std::vector< Area::Area > inns = this->getInns();
 	if (!inns.empty())
 	{
 		result.append("\nInns at:\n\t- ");
 		for (unsigned i = 0; i < inns.size(); i++)
 		{
-			result.append(FRCArea::roadAreaToString(inns[i]));
+			result.append(Area::areaToString(inns[i]));
 			result.append(" ");
 		}
 	}

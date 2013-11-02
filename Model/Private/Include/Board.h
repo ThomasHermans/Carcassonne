@@ -12,11 +12,6 @@
 class Board : public QObject
 {
 	Q_OBJECT
-
-private:
-	typedef std::pair< unsigned, FRCArea::CityArea > LocatedCity;
-	typedef std::pair< unsigned, FRCArea::RoadArea > LocatedRoad;
-	typedef std::pair< unsigned, FRCArea::FieldArea > LocatedField;
 	
 public:
 	Board( unsigned inSize = 5 );
@@ -37,9 +32,9 @@ public:
 	bool placeValidTile( TileOnBoard const & inTile, unsigned inCol, unsigned inRow );
 	unsigned placeStartTile( TileOnBoard const & inTile );
 
-	bool isOccupied( unsigned inCol, unsigned inRow, Area::Area inArea ) const;
-	bool isOccupiedRoad( unsigned inCol, unsigned inRow, FRCArea::RoadArea inArea ) const;
-	bool isOccupiedCity( unsigned inCol, unsigned inRow, FRCArea::CityArea inArea ) const;
+	bool isOccupiedRoad( unsigned inCol, unsigned inRow, Area::Area inArea ) const;
+	bool isOccupiedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const;
+	bool isOccupiedField( PlacedField const & inField ) const;
 	std::vector< PlacedPiece > removePieces( unsigned inCol, unsigned inRow, Area::Area inArea );
 
 	void checkForFinishedCities( unsigned inCol, unsigned inRow );
@@ -72,11 +67,6 @@ private:
 	void addRowsBelow( unsigned inNrOfRows );
 	void addColsLeft( unsigned inNrOfCols );
 	void addColsRight( unsigned inNrOfCols );
-
-	bool isContinueued( LocatedCity inLocatedCity ) const;
-	bool isContinueued( LocatedField inLocatedField ) const;
-	unsigned getNeighborLocation( LocatedCity inLocatedCity ) const;
-	unsigned getNeighborLocation( LocatedField inLocatedField ) const;
 
 private:
 	unsigned mNrRows;

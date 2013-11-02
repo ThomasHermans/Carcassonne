@@ -1,4 +1,4 @@
-#include "Model/src/Board.h"
+#include "Board.h"
 
 #include <algorithm>
 #include <cassert>
@@ -8,50 +8,6 @@ namespace
 {
 	int const kExtraRowsAndCols = 1;
 	unsigned const kInvalid = -1;
-
-	FRCArea::CityArea
-	oppositeSide( FRCArea::CityArea inCityArea )
-	{
-		switch ( inCityArea )
-		{
-		case FRCArea::Top:
-			return FRCArea::Bottom;
-		case FRCArea::Right:
-			return FRCArea::Left;
-		case FRCArea::Bottom:
-			return FRCArea::Top;
-		case FRCArea::Left:
-			return FRCArea::Right;
-		default:
-			return FRCArea::Top;
-		}
-	}
-
-	FRCArea::FieldArea
-	oppositeSide( FRCArea::FieldArea inFieldArea )
-	{
-		switch( inFieldArea )
-		{
-		case FRCArea::TopLeft:
-			return FRCArea::BottomLeft;
-		case FRCArea::TopRight:
-			return FRCArea::BottomRight;
-		case FRCArea::RightTop:
-			return FRCArea::LeftTop;
-		case FRCArea::RightBottom:
-			return FRCArea::LeftBottom;
-		case FRCArea::BottomRight:
-			return FRCArea::TopRight;
-		case FRCArea::BottomLeft:
-			return FRCArea::TopLeft;
-		case FRCArea::LeftBottom:
-			return FRCArea::RightBottom;
-		case FRCArea::LeftTop:
-			return FRCArea::RightTop;
-		default:
-			return FRCArea::TopLeft;
-		}
-	}
 }
 
 Board::Board( unsigned inSize )
@@ -253,25 +209,7 @@ Board::placeStartTile( TileOnBoard const & inTile )
 }
 
 bool
-Board::isOccupied( unsigned inCol, unsigned inRow, Area::Area inArea ) const
-{
-	if ( !isTile( inCol, inRow ) )
-	{
-		return false;
-	}
-	if ( getTile( inCol, inRow )->isRoad( inArea ) )
-	{
-		return isOccupiedRoad( inCol, inRow, FRCArea::RoadArea( inArea ) );
-	}
-	else
-	{
-		// TODO: expand for cities, fields and cloisters
-		return false;
-	}
-}
-
-bool
-Board::isOccupiedRoad( unsigned inCol, unsigned inRow, FRCArea::RoadArea inArea ) const
+Board::isOccupiedRoad( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 {
 	if ( !isTile( inCol, inRow ) )
 	{
@@ -309,7 +247,7 @@ Board::isOccupiedRoad( unsigned inCol, unsigned inRow, FRCArea::RoadArea inArea 
 }
 
 bool
-Board::isOccupiedCity( unsigned inCol, unsigned inRow, FRCArea::CityArea inArea ) const
+Board::isOccupiedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 {
 	if ( !isTile( inCol, inRow ) )
 	{
@@ -346,6 +284,47 @@ Board::isOccupiedCity( unsigned inCol, unsigned inRow, FRCArea::CityArea inArea 
 	return false;
 }
 
+bool
+Board::isOccupiedField( PlacedField const & inField ) const
+{
+	if ( !isTile( inField.col, inField.row ) )
+	{
+		return false;
+	}
+	Tile::ContiguousField field = getTile( inField.col, inField.row )->getContiguousField( inField.area );
+	std::vector< PlacedField > toCheckQueue;
+	for ( Tile::ContiguousField::const_iterator it = field.begin(); it != field.end(); ++it )
+	{
+		toCheckQueue.push_back( PlacedField( inField.col, inField.row, *it ) );
+	}
+	unsigned index = 0;
+	while ( index < toCheckQueue.size() )
+	{
+		PlacedField thisField = toCheckQueue[ index ];
+		if ( isTile( thisField.col, thisField.row )
+			&& getTile( thisField.col, thisField.row )->hasPiece( thisField.area ) )
+		{
+			return true;
+		}
+		PlacedField neighbor = getNeighbor( thisField );
+		if ( isTile( neighbor.col, neighbor.row ) )
+		{
+			if ( std::find( toCheckQueue.begin(), toCheckQueue.end(), neighbor ) == toCheckQueue.end() )
+			{
+				Tile::ContiguousField contField = getTile( neighbor.col, neighbor.row )->getContiguousField( neighbor.area );
+				for ( Tile::ContiguousField::const_iterator contFieldIt = contField.begin();
+					contFieldIt != contField.end();
+					++contFieldIt )
+				{
+					toCheckQueue.push_back( PlacedField( neighbor.col, neighbor.row, *contFieldIt ) );
+				}
+			}
+		}
+		++index;
+	}
+	return false;
+}
+
 std::vector< PlacedPiece >
 Board::removePieces( unsigned inCol, unsigned inRow, Area::Area inArea )
 {
@@ -370,7 +349,7 @@ Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 	std::vector< Tile::ContiguousCity > contiguousCities = getTile( inCol, inRow )->getContiguousCities();
 	for ( unsigned city = 0; city < contiguousCities.size(); ++city )
 	{
-		// Start a tempQueue and add all CityAreas from this ContCity to it
+		// Start a tempQueue and add all Areas from this ContCity to it
 		std::vector< PlacedCity > tempQueue;
 		for ( unsigned i = 0; i < contiguousCities[city].size(); ++i )
 		{
@@ -379,7 +358,7 @@ Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 				PlacedCity( inCol, inRow, contiguousCities[city][i] )
 			);
 		}
-		// Go over tempQueue, adding ContinuationCityAreas to it as we go
+		// Go over tempQueue, adding ContinuationAreas to it as we go
 		unsigned i = 0;
 		bool finished = true;
 		while ( i < tempQueue.size() )
@@ -388,7 +367,7 @@ Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 			PlacedCity neighbor = getNeighbor( currentCity );
 			if ( isTile( neighbor.col, neighbor.row ) )
 			{
-				// If not already in tempQueue, add continuation and all of its contiguous CityAreas to tempQueue
+				// If not already in tempQueue, add continuation and all of its contiguous Areas to tempQueue
 				if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 				{
 					Tile::ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
@@ -423,7 +402,7 @@ Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 	std::vector< Tile::ContiguousRoad > contiguousRoads = getTile( inCol, inRow )->getContiguousRoads();
 	for ( unsigned road = 0; road < contiguousRoads.size(); ++road )
 	{
-		// Start a tempQueue and add all RoadAreas from this ContRoad to it
+		// Start a tempQueue and add all Areas from this ContRoad to it
 		std::vector< PlacedRoad > tempQueue;
 		for ( unsigned i = 0; i < contiguousRoads[road].size(); ++i )
 		{
@@ -432,7 +411,7 @@ Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 				PlacedRoad( inCol, inRow, contiguousRoads[road][i] )
 			);
 		}
-		// Go over tempQueue, adding ContinuationRoadAreas to it as we go
+		// Go over tempQueue, adding ContinuationAreas to it as we go
 		unsigned i = 0;
 		bool finished = true;
 		while ( i < tempQueue.size() )
@@ -441,7 +420,7 @@ Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 			PlacedRoad neighbor = getNeighbor( currentRoad );
 			if ( isTile( neighbor.col, neighbor.row ) )
 			{
-				// If not already in tempQueue, add continuation and all of its contiguous RoadAreas to tempQueue
+				// If not already in tempQueue, add continuation and all of its contiguous Areas to tempQueue
 				if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 				{
 					Tile::ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
@@ -748,100 +727,4 @@ Board::addColsRight( unsigned inNrOfCols )
 		}
 	}
 	mNrCols += inNrOfCols;
-}
-
-bool
-Board::isContinueued( LocatedCity inLocatedCity ) const
-{
-	unsigned neighbor = getNeighborLocation( inLocatedCity );
-	if ( mBoard[neighbor] )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool
-Board::isContinueued( LocatedField inLocatedField ) const
-{
-	unsigned neighbor = getNeighborLocation( inLocatedField );
-	if ( mBoard[neighbor] )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-unsigned
-Board::getNeighborLocation( LocatedCity inLocatedCity ) const
-{
-	unsigned location = inLocatedCity.first;
-	FRCArea::CityArea cityArea = inLocatedCity.second;
-	unsigned neighborLocation = (unsigned) -1;
-	switch ( cityArea )
-	{
-		case FRCArea::Top:
-		{
-			if ( location > mNrCols )
-			{
-				neighborLocation = location - mNrCols;
-			}
-			break;
-		}
-		case FRCArea::Right:
-		{
-			if ( location % mNrCols < mNrCols - 1 )
-			{
-				neighborLocation = location + 1;
-			}
-			break;
-		}
-		case FRCArea::Bottom:
-		{
-			if ( location < (mNrRows - 1) * mNrCols )
-			{
-				neighborLocation = location + mNrCols;
-			}
-			break;
-		}
-		case FRCArea::Left:
-		{
-			if ( location % mNrCols > 0 )
-			{
-				neighborLocation = location - 1;
-			}
-			break;
-		}
-	}
-	return neighborLocation;
-}
-
-unsigned
-Board::getNeighborLocation( LocatedField inLocatedField ) const
-{
-	unsigned location = inLocatedField.first;
-	FRCArea::FieldArea fieldArea = inLocatedField.second;
-	switch ( fieldArea )
-	{
-		case FRCArea::TopLeft:
-		case FRCArea::TopRight:
-			return (location - mNrCols);
-		case FRCArea::RightTop:
-		case FRCArea::RightBottom:
-			return (location + 1);
-		case FRCArea::BottomRight:
-		case FRCArea::BottomLeft:
-			return (location + mNrCols);
-		case FRCArea::LeftBottom:
-		case FRCArea::LeftTop:
-			return (location - 1);
-		default:
-			return (unsigned)-1;
-	}
 }
