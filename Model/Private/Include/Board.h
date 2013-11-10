@@ -40,6 +40,8 @@ public:
 	void checkForFinishedCities( unsigned inCol, unsigned inRow );
 	void checkForFinishedRoads( unsigned inCol, unsigned inRow );
 	void checkForFinishedCloisters( unsigned inCol, unsigned inRow );
+	bool isFinishedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const;
+	PlacedCity getUpperLeftPlacedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const;
 	bool isFinishedCloister( unsigned inCol, unsigned inRow ) const;
 	bool isFullySurrounded( unsigned inCol, unsigned inRow ) const;
 
@@ -49,6 +51,7 @@ public:
 	unsigned getPointsForCloister( unsigned inCol, unsigned inRow ) const;
 	std::vector< PlacedRoad > getCompleteRoad( PlacedRoad const & inPlacedRoad ) const;
 	std::vector< PlacedCity > getCompleteCity( PlacedCity const & inPlacedCity ) const;
+	std::vector< PlacedField > getCompleteField( PlacedField const & inPlacedField ) const;
 
 signals:
 	void finishedCloister( unsigned inCol, unsigned inRow );

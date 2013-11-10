@@ -47,7 +47,7 @@ int main(int argc, char * argv[])
 		a.setStyleSheet( styleSheet );
 		
 		// GameController gc( "BKDAD" );
-		GameController gc( "ABCEFGHIJKLMNOPQRSTUVWXD" );
+		GameController gc( "EEED" );
 
 		return a.exec();
 	}

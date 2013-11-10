@@ -8,13 +8,14 @@
 namespace
 {
 	int const kSize = 5;
-	unsigned const kPointsForFinishedCloister = 9;
-	unsigned const kPointsPerTileFinishedRoad = 1;
-	unsigned const kPointsPerTileFinishedCity = 2;
-	unsigned const kPointsPerTileFinishedShield = 2;
-	unsigned const kPointsPerTileUnfinishedRoad = 1;
-	unsigned const kPointsPerTileUnfinishedCity = 1;
-	unsigned const kPointsPerTileUnfinishedShield = 1;
+	unsigned const kMonkPointsForFinishedCloister = 9;
+	unsigned const kBrigandPointsPerTileFinishedRoad = 1;
+	unsigned const kBrigandPointsPerTileUnfinishedRoad = 1;
+	unsigned const kKnightPointsPerTileFinishedCity = 2;
+	unsigned const kKnightPointsPerTileFinishedShield = 2;
+	unsigned const kKnightPointsPerTileUnfinishedCity = 1;
+	unsigned const kKnightPointsPerTileUnfinishedShield = 1;
+	unsigned const kFarmerPointsPerFinishedCity = 3;
 	unsigned const kInvalid = -1;
 
 	std::set< Color::Color >
@@ -381,7 +382,7 @@ Game::calculateEndPoints()
 					}
 					else if ( tile->isRoad( it->getArea() ) )
 					{
-						PlacedRoad roadPart( col, row, Area::Area( it->getArea() ) );
+						PlacedRoad roadPart( col, row, it->getArea() );
 						std::vector< PlacedRoad > const road = mBoard.getCompleteRoad( roadPart );
 						// Remove all pieces
 						std::vector< PlacedPiece > allPieces;
@@ -391,20 +392,20 @@ Game::calculateEndPoints()
 							++rIt )
 						{
 							usedTiles.insert( std::make_pair( rIt->col, rIt->row ) );
-							std::vector< PlacedPiece > pieces = mBoard.getTile( rIt->col, rIt->row )->removePieces( Area::Area( rIt->area ) );
+							std::vector< PlacedPiece > pieces = mBoard.removePieces( rIt->col, rIt->row, rIt->area );
 							returnPieces( pieces, rIt->col, rIt->row );
 							allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
 						}
 						// Calculate winner of unfinished road
 						std::set< Color::Color > winningColors = getWinningColors( allPieces );
 						// Calculate points
-						unsigned points = usedTiles.size() * kPointsPerTileUnfinishedRoad;
+						unsigned points = usedTiles.size() * kBrigandPointsPerTileUnfinishedRoad;
 						// Award points
 						awardPoints( winningColors, points );
 					}
 					else if ( tile->isCity( it->getArea() ) )
 					{
-						PlacedCity cityPart( col, row, Area::Area( it->getArea() ) );
+						PlacedCity cityPart( col, row, it->getArea() );
 						std::vector< PlacedCity > const city = mBoard.getCompleteCity( cityPart );
 						// Calculate winner of unfinished city
 						std::vector< PlacedPiece > allPieces;
@@ -423,7 +424,7 @@ Game::calculateEndPoints()
                                 allShields.insert( *cIt );
 							}
 							// Remove all pieces from this PlacedCity
-							std::vector< PlacedPiece > pieces = mBoard.getTile( cIt->col, cIt->row )->removePieces( Area::Area( cIt->area ) );
+							std::vector< PlacedPiece > pieces = mBoard.removePieces( cIt->col, cIt->row, cIt->area );
 							// Return removed pieces to corresponding Players
 							returnPieces( pieces, cIt->col, cIt->row );
 							// Insert in allPieces to calculate winning colors
@@ -432,7 +433,54 @@ Game::calculateEndPoints()
 						// Calculate winner of unfinished city
 						std::set< Color::Color > winningColors = getWinningColors( allPieces );
 						// Calculate points
-						unsigned points = usedTiles.size() * kPointsPerTileUnfinishedCity + allShields.size() * kPointsPerTileUnfinishedShield;
+						unsigned points = usedTiles.size() * kKnightPointsPerTileUnfinishedCity + allShields.size() * kKnightPointsPerTileUnfinishedShield;
+						// Award points
+						awardPoints( winningColors, points );
+					}
+					else if ( tile->isField( it->getArea() ) )
+					{
+						// Calculate winner of field
+						std::cout << "Calculate winner of a field." << std::endl;
+						PlacedField fieldPart( col, row, it->getArea() );
+						std::vector< PlacedField > const field = mBoard.getCompleteField( fieldPart );
+						std::vector< PlacedPiece > allPieces;
+						std::set< PlacedCity > finishedCities;
+						for ( std::vector< PlacedField >::const_iterator fIt = field.begin();
+							fIt != field.end();
+							++fIt )
+						{
+							// Get all cities for fIt
+							std::vector< Tile::ContiguousCity > const cities = mBoard.getTile( fIt->col, fIt->row )->getCitiesPerField( fIt->area );
+							// Per city
+							// If city is finished
+							//	Calculate upperleft PlacedCity
+							//	Add to finishedCities
+							for ( std::vector< Tile::ContiguousCity >::const_iterator cIt = cities.begin();
+								cIt != cities.end();
+								++cIt )
+							{
+								if ( mBoard.isFinishedCity( fIt->col, fIt->row, *cIt->begin() ) )
+								{
+									PlacedCity const upperLeft = mBoard.getUpperLeftPlacedCity( fIt->col, fIt->row, *cIt->begin() );
+									finishedCities.insert( upperLeft );
+									std::cout << "Found a finished city." << std::endl;
+								}
+								else
+								{
+									std::cout << "Found an unfinished city." << std::endl;
+								}
+							}
+							// Remove all pieces from this PlacedField
+							std::vector< PlacedPiece > pieces = mBoard.removePieces( fIt->col, fIt->row, fIt->area );
+							// Return removed pieces to corresponding Players
+							returnPieces( pieces, fIt->col, fIt->row );
+							// Insert in allPieces to calculate winning colors
+							allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
+						}
+						std::set< Color::Color > winningColors = getWinningColors( allPieces );
+						// Calculate points
+						unsigned points = finishedCities.size() * kFarmerPointsPerFinishedCity;
+						std::cout << "Awarding " << points << " points for a field." << std::endl;
 						// Award points
 						awardPoints( winningColors, points );
 					}
@@ -485,7 +533,7 @@ Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
 	// Find winning player for this cloister
 	std::set< Color::Color > winningColors = getWinningColors( pieces );
 	// Award points
-	awardPoints( winningColors, kPointsForFinishedCloister );
+	awardPoints( winningColors, kMonkPointsForFinishedCloister );
 	emit finishedCloister( inCol, inRow );
 }
 
@@ -499,14 +547,14 @@ Game::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
 		// Add to usedTiles (will not add doubles)
 		usedTiles.insert( std::make_pair( it->col, it->row ) );
 		// Remove all pieces from this PlacedRoad
-		std::vector< PlacedPiece > pieces = mBoard.getTile( it->col, it->row )->removePieces( Area::Area( it->area ) );
+		std::vector< PlacedPiece > pieces = mBoard.getTile( it->col, it->row )->removePieces( it->area );
 		// Return removed pieces to corresponding Players
 		returnPieces( pieces, it->col, it->row );
 		// Insert in allPieces to calculate winning colors
 		allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
 	}
 	std::set< Color::Color > winningColors = getWinningColors( allPieces );
-	awardPoints( winningColors, usedTiles.size() * kPointsPerTileFinishedRoad );
+	awardPoints( winningColors, usedTiles.size() * kBrigandPointsPerTileFinishedRoad );
 }
 
 void
@@ -526,14 +574,14 @@ Game::onFinishedCity( std::vector< PlacedCity > const & inCity )
 			allShields.insert( *it );
 		}
 		// Remove all pieces from this PlacedCity
-		std::vector< PlacedPiece > pieces = mBoard.getTile( it->col, it->row )->removePieces( Area::Area( it->area ) );
+		std::vector< PlacedPiece > pieces = mBoard.getTile( it->col, it->row )->removePieces( it->area );
 		// Return removed pieces to corresponding Players
 		returnPieces( pieces, it->col, it->row );
 		// Insert in allPieces to calculate winning colors
 		allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
 	}
 	std::set< Color::Color > winningColors = getWinningColors( allPieces );
-	awardPoints( winningColors, usedTiles.size() * kPointsPerTileFinishedCity + allShields.size() * kPointsPerTileFinishedShield );
+	awardPoints( winningColors, usedTiles.size() * kKnightPointsPerTileFinishedCity + allShields.size() * kKnightPointsPerTileFinishedShield );
 }
 
 void
@@ -670,11 +718,11 @@ Game::isOccupied( Area::Area inArea ) const
 	if ( mCurrentPlacedTile->isRoad( inArea ) )
 	{
 		// A road is occupied if there is a piece somewhere on this road
-		Tile::ContiguousRoad road = mCurrentPlacedTile->getContiguousRoad( Area::Area( inArea ) );
+		Tile::ContiguousRoad road = mCurrentPlacedTile->getContiguousRoad( inArea );
 		std::vector< PlacedRoad > roadsToCheck;
 		for ( Tile::ContiguousRoad::const_iterator it = road.begin(); it != road.end(); ++it )
 		{
-			if ( mCurrentPlacedTile->hasPiece( Area::Area( *it ) ) )
+			if ( mCurrentPlacedTile->hasPiece( *it ) )
 			{
 				return true;
 			}
@@ -695,11 +743,11 @@ Game::isOccupied( Area::Area inArea ) const
 	if ( mCurrentPlacedTile->isCity( inArea ) )
 	{
 		// A city is occupied if there is a piece somewhere on this city
-		Tile::ContiguousCity city = mCurrentPlacedTile->getContiguousCity( Area::Area( inArea ) );
+		Tile::ContiguousCity city = mCurrentPlacedTile->getContiguousCity( inArea );
 		std::vector< PlacedCity > citiesToCheck;
 		for ( Tile::ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
 		{
-			if ( mCurrentPlacedTile->hasPiece( Area::Area( *it ) ) )
+			if ( mCurrentPlacedTile->hasPiece( *it ) )
 			{
 				return true;
 			}
@@ -719,7 +767,6 @@ Game::isOccupied( Area::Area inArea ) const
 	// Field
 	if ( mCurrentPlacedTile->isField( inArea ) )
 	{
-		std::cout << "It's a field!" << std::endl;
 		// A field is occupied if there is a piece somewhere on this city
 		Tile::ContiguousField field = mCurrentPlacedTile->getContiguousField( inArea );
 		std::vector< PlacedField > fieldsToCheck;
