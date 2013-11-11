@@ -21,6 +21,14 @@ namespace
 				&&
 				inFirst.col < inSecond.col
 			)
+			||
+			(
+				inFirst.row == inSecond.row
+				&&
+				inFirst.col == inSecond.col
+				&&
+				inFirst.area < inSecond.area
+			)
 		);
 	}
 
