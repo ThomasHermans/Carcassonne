@@ -14,20 +14,20 @@ namespace
 		switch ( inColor )
 		{
 			case Gui::kRed:
-				return Color::Red;
+				return Color::kRed;
 			case Gui::kGreen:
-				return Color::Green;
+				return Color::kGreen;
 			case Gui::kBlue:
-				return Color::Blue;
+				return Color::kBlue;
 			case Gui::kYellow:
-				return Color::Yellow;
+				return Color::kYellow;
 			case Gui::kBlack:
-				return Color::Black;
+				return Color::kBlack;
 			case Gui::kGray:
-				return Color::Gray;
+				return Color::kGray;
 		}
 		assert( !"Invalid Gui::Color" );
-		return Color::Red;
+		return Color::kRed;
 	}
 
 	std::vector< Player >

@@ -12,10 +12,10 @@ class Piece
 public:
 	enum PieceType
 	{
-		Follower,
-		LargeFollower,
-		Builder,
-		Pig
+		kFollower,
+		kLargeFollower,
+		kBuilder,
+		kPig
 	};
 
 public:

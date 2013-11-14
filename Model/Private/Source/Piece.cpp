@@ -2,9 +2,32 @@
 
 #include "PlacedPiece.h"
 
+#include <cassert>
+
+namespace
+{
+	std::string
+	convertToString( Piece::PieceType inType )
+	{
+		switch ( inType )
+		{
+		case Piece::kFollower:
+			return "Follower";
+		case Piece::kLargeFollower:
+			return "Large Follower";
+		case Piece::kBuilder:
+			return "Builder";
+		case Piece::kPig:
+			return "Pig";
+		}
+		assert( !"Invalid PieceType to translate!" );
+		return "Follower";
+	}
+}
+
 Piece::Piece():
-	mType( Piece::Follower ),
-	mColor( Color::Red )
+	mType( Piece::kFollower ),
+	mColor( Color::kRed )
 {
 }
 
@@ -54,12 +77,12 @@ Piece::getPoints() const
 {
 	switch ( mType )
 	{
-	case Follower:
+	case kFollower:
 		return 1;
-	case LargeFollower:
+	case kLargeFollower:
 		return 2;
-	case Builder:
-	case Pig:
+	case kBuilder:
+	case kPig:
 	default:
 		return 0;
 	}
@@ -70,18 +93,6 @@ Piece::toString() const
 {
 	std::string res = Color::colorToString( mColor );
 	res.append( " " );
-	switch ( mType )
-	{
-	case Follower:
-		res.append( "Follower" );
-	case LargeFollower:
-		res.append( "Large Follower" );
-	case Builder:
-		res.append( "Builder" );
-	case Pig:
-		res.append( "Pig" );
-	default:
-		res.append( "Not a valid Piece" );
-	}
+	res.append( convertToString( mType ) );
 	return res;
 }

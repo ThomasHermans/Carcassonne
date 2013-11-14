@@ -1,23 +1,25 @@
 #include "Model/Color.h"
 
+#include <cassert>
+
 std::string
-Color::colorToString(Color inColor)
+Color::colorToString( Color inColor )
 {
-    switch (inColor)
-    {
-    case Red:
-        return "Red";
-    case Green:
-        return "Green";
-    case Blue:
-        return "Blue";
-    case Yellow:
-        return "Yellow";
-    case Black:
-        return "Black";
-    case Gray:
-        return "Gray";
-    default:
-        return "Invalid color";
-    }
+	switch ( inColor )
+	{
+	case kRed:
+		return "Red";
+	case kGreen:
+		return "Green";
+	case kBlue:
+		return "Blue";
+	case kYellow:
+		return "Yellow";
+	case kBlack:
+		return "Black";
+	case kGray:
+		return "Gray";
+	}
+	assert( !"Invalid Color to translate" );
+	return "Red";
 }

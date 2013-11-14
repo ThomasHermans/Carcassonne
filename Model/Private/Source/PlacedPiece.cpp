@@ -9,16 +9,16 @@ namespace
 	{
         switch ( inPiece.getType() )
 		{
-		case Piece::Follower:
-		case Piece::LargeFollower:
+		case Piece::kFollower:
+		case Piece::kLargeFollower:
 			return true;
-		case Piece::Builder:
+		case Piece::kBuilder:
 			return (
 				( inArea == Area::Top )
 				|| (inArea == Area::Right )
 				|| (inArea == Area::Bottom )
 				|| (inArea == Area::Left ) );
-		case Piece::Pig:
+		case Piece::kPig:
 			return (
 				( inArea == Area::TopLeft )
 				|| ( inArea == Area::TopRight )

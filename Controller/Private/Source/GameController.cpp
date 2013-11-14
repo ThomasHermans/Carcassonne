@@ -171,20 +171,20 @@ namespace
 		switch ( inColor )
 		{
 			case Dragging::kRed:
-				return Color::Red;
+				return Color::kRed;
 			case Dragging::kGreen:
-				return Color::Green;
+				return Color::kGreen;
 			case Dragging::kBlue:
-				return Color::Blue;
+				return Color::kBlue;
 			case Dragging::kYellow:
-				return Color::Yellow;
+				return Color::kYellow;
 			case Dragging::kBlack:
-				return Color::Black;
+				return Color::kBlack;
 			case Dragging::kGray:
-				return Color::Gray;
+				return Color::kGray;
 		}
 		assert( !"Invalid Dragging Color" );
-		return Color::Red;
+		return Color::kRed;
 	}
 
 	Dragging::Color
@@ -192,17 +192,17 @@ namespace
 	{
 		switch ( inColor )
 		{
-			case Color::Red:
+			case Color::kRed:
 				return Dragging::kRed;
-			case Color::Green:
+			case Color::kGreen:
 				return Dragging::kGreen;
-			case Color::Blue:
+			case Color::kBlue:
 				return Dragging::kBlue;
-			case Color::Yellow:
+			case Color::kYellow:
 				return Dragging::kYellow;
-			case Color::Black:
+			case Color::kBlack:
 				return Dragging::kBlack;
-			case Color::Gray:
+			case Color::kGray:
 				return Dragging::kGray;
 		}
 		assert( !"Invalid Color Color" );
@@ -215,16 +215,16 @@ namespace
 		switch ( inPiece )
 		{
 			case Dragging::kFollower:
-				return Piece::Follower;
+				return Piece::kFollower;
 			case Dragging::kLargeFollower:
-				return Piece::LargeFollower;
+				return Piece::kLargeFollower;
 			case Dragging::kBuilder:
-				return Piece::Builder;
+				return Piece::kBuilder;
 			case Dragging::kPig:
-				return Piece::Pig;
+				return Piece::kPig;
 		}
 		assert( !"Invalid Dragging Piece" );
-		return Piece::Follower;
+		return Piece::kFollower;
 	}
 
 	QColor
@@ -232,17 +232,17 @@ namespace
 	{
 		switch ( inColor )
 		{
-			case Color::Red:
+			case Color::kRed:
 				return Qt::red;
-			case Color::Green:
+			case Color::kGreen:
 				return Qt::green;
-			case Color::Blue:
+			case Color::kBlue:
 				return Qt::blue;
-			case Color::Yellow:
+			case Color::kYellow:
 				return Qt::yellow;
-			case Color::Black:
+			case Color::kBlack:
 				return Qt::black;
-			case Color::Gray:
+			case Color::kGray:
 				return Qt::gray;
 		}
 		assert( !"Invalid Color Color" );

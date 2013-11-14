@@ -88,8 +88,8 @@ Game::Game( QObject * inParent )
 		mBag.pop_back();
 	}
 	// Initialize players
-	mPlayers.push_back( Player( "Thomas", Color::Blue ) );
-	mPlayers.push_back( Player( "Gijs", Color::Red ) );
+	mPlayers.push_back( Player( "Thomas", Color::kBlue ) );
+	mPlayers.push_back( Player( "Gijs", Color::kRed ) );
 	connectPlayerSignals();
 	emit currentPlayerChanged( mPlayers.front() );
 }
@@ -126,8 +126,8 @@ Game::Game( std::string const & inTiles, QObject * inParent )
 		mBag.pop_back();
 	}
 	// Initialize players
-	mPlayers.push_back( Player( "Thomas", Color::Blue ) );
-	mPlayers.push_back( Player( "Gijs", Color::Red ) );
+	mPlayers.push_back( Player( "Thomas", Color::kBlue ) );
+	mPlayers.push_back( Player( "Gijs", Color::kRed ) );
 	connectPlayerSignals();
 	emit currentPlayerChanged( mPlayers.front() );
 }

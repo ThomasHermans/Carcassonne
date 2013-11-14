@@ -1190,7 +1190,7 @@ createBaseGamePieces( Color::Color inColor )
 	std::vector< Piece > pieces;
 	for ( unsigned int i = 0; i < 6; ++i)
 	{
-		pieces.push_back( Piece( Piece::Follower, inColor ) );
+		pieces.push_back( Piece( Piece::kFollower, inColor ) );
 	}
 	return pieces;
 }

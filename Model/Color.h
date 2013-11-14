@@ -7,15 +7,15 @@ namespace Color
 {
     enum Color
     {
-        Red = 0,
-        Green,
-        Blue,
-        Yellow,
-        Black,
-        Gray
+        kRed = 0,
+        kGreen,
+        kBlue,
+        kYellow,
+        kBlack,
+        kGray
     };
 
-    std::string colorToString(Color inColor);
+    std::string colorToString( Color inColor );
 }
 
 #endif // COLOR_H
