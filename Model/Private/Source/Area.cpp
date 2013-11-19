@@ -3,35 +3,35 @@
 #include <cassert>
 
 std::string
-Area::areaToString(Area inArea)
+Area::areaToString( Area inArea )
 {
-	switch (inArea)
+	switch ( inArea )
 	{
-	case TopLeft:
+	case kTopLeft:
 		return "AreaTopLeft";
-	case TopRight:
+	case kTopRight:
 		return "AreaTopRight";
-	case RightTop:
+	case kRightTop:
 		return "AreaRightTop";
-	case RightBottom:
+	case kRightBottom:
 		return "AreaRightBottom";
-	case BottomRight:
+	case kBottomRight:
 		return "AreaBottomRight";
-	case BottomLeft:
+	case kBottomLeft:
 		return "AreaBottomLeft";
-	case LeftBottom:
+	case kLeftBottom:
 		return "AreaLeftBottom";
-	case LeftTop:
+	case kLeftTop:
 		return "AreaLeftTop";
-	case Central:
+	case kCentral:
 		return "AreaCentral";
-	case Top:
+	case kTop:
 		return "AreaTop";
-	case Right:
+	case kRight:
 		return "AreaRight";
-	case Bottom:
+	case kBottom:
 		return "AreaBottom";
-	case Left:
+	case kLeft:
 		return "AreaLeft";
 	}
 	assert( !"Invalid Area" );
@@ -43,33 +43,33 @@ Area::oppositeSide( Area inArea )
 {
 	switch ( inArea )
 	{
-	case TopLeft:
-		return BottomLeft;
-	case Top:
-		return Bottom;
-	case TopRight:
-		return BottomRight;
-	case RightTop:
-		return LeftTop;
-	case Right:
-		return Left;
-	case RightBottom:
-		return LeftBottom;
-	case BottomRight:
-		return TopRight;
-	case Bottom:
-		return Top;
-	case BottomLeft:
-		return TopLeft;
-	case LeftBottom:
-		return RightBottom;
-	case Left:
-		return Right;
-	case LeftTop:
-		return RightTop;
-	case Central:
-		return Central;
+	case kTopLeft:
+		return kBottomLeft;
+	case kTop:
+		return kBottom;
+	case kTopRight:
+		return kBottomRight;
+	case kRightTop:
+		return kLeftTop;
+	case kRight:
+		return kLeft;
+	case kRightBottom:
+		return kLeftBottom;
+	case kBottomRight:
+		return kTopRight;
+	case kBottom:
+		return kTop;
+	case kBottomLeft:
+		return kTopLeft;
+	case kLeftBottom:
+		return kRightBottom;
+	case kLeft:
+		return kRight;
+	case kLeftTop:
+		return kRightTop;
+	case kCentral:
+		return kCentral;
 	}
 	assert( !"Invalid Area" );
-	return Top;
+	return kTop;
 }

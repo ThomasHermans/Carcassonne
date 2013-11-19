@@ -11,7 +11,7 @@ countRoads(Tile inTile, Area::Area inArea)
 	int count = 0;
 	for (unsigned int i = 0; i < inTile.getContiguousRoads().size(); ++i)
 	{
-		Tile::ContiguousRoad contRoad = inTile.getContiguousRoads()[i];
+		ContiguousRoad contRoad = inTile.getContiguousRoads()[i];
 		for (unsigned int j = 0; j < contRoad.size(); ++j)
 		{
 			if (contRoad[j] == inArea)
@@ -29,7 +29,7 @@ countCities(Tile inTile, Area::Area inArea)
 	int count = 0;
 	for (unsigned int i = 0; i < inTile.getContiguousCities().size(); ++i)
 	{
-		Tile::ContiguousCity contCity = inTile.getContiguousCities()[i];
+		ContiguousCity contCity = inTile.getContiguousCities()[i];
 		for (unsigned int j = 0; j < contCity.size(); ++j)
 		{
 			if (contCity[j] == inArea)
@@ -47,7 +47,7 @@ countFields( Tile inTile, Area::Area inFieldArea )
 	int count = 0;
 	for (unsigned int i = 0; i < inTile.getContiguousFields().size(); ++i)
 	{
-		Tile::ContiguousField contField = inTile.getContiguousFields()[i];
+		ContiguousField contField = inTile.getContiguousFields()[i];
 		for (unsigned int j = 0; j < contField.size(); ++j)
 		{
 			if (contField[j] == inFieldArea)
@@ -97,89 +97,94 @@ verifyInstanceCounts(Tile inTile, Tile::Side inSide, int inRoads, int inCities, 
 	bool res = true;
 	if (inTile.getTop() == inSide)
 	{
-		res = res && countInstances(inTile, Area::Top, Area::TopLeft, Area::TopRight, inRoads, inCities, inFields);
+		res = res && countInstances(inTile, Area::kTop, Area::kTopLeft, Area::kTopRight, inRoads, inCities, inFields);
 	}
 	if (inTile.getRight() == inSide)
 	{
-		res = res && countInstances(inTile, Area::Right, Area::RightTop, Area::RightBottom, inRoads, inCities, inFields);
+		res = res && countInstances(inTile, Area::kRight, Area::kRightTop, Area::kRightBottom, inRoads, inCities, inFields);
 	}
 	if (inTile.getBottom() == inSide)
 	{
-		res = res && countInstances(inTile, Area::Bottom, Area::BottomRight, Area::BottomLeft, inRoads, inCities, inFields);
+		res = res && countInstances(inTile, Area::kBottom, Area::kBottomRight, Area::kBottomLeft, inRoads, inCities, inFields);
 	}
 	if (inTile.getLeft() == inSide)
 	{
-		res = res && countInstances(inTile, Area::Left, Area::LeftBottom, Area::LeftTop, inRoads, inCities, inFields);
+		res = res && countInstances(inTile, Area::kLeft, Area::kLeftBottom, Area::kLeftTop, inRoads, inCities, inFields);
 	}
 	return res;
 }
 
 bool
-sidesMatch(Tile inTile)
+sidesMatch( Tile const & inTile )
 {
-	bool match = true;
-	// If a Area is part of a Contiguous Road, then that Side must be a Road
-	for (unsigned int i = 0; i < inTile.getContiguousRoads().size(); ++i)
+	// If an Area is part of a Contiguous Road, then that Side must be a Road
+	for ( unsigned i = 0; i < inTile.getContiguousRoads().size(); ++i )
 	{
-		Tile::ContiguousRoad contRoad = inTile.getContiguousRoads()[i];
-		for (unsigned int j = 0; j < contRoad.size(); ++j)
+		ContiguousRoad contRoad = inTile.getContiguousRoads()[i];
+		for ( unsigned j = 0; j < contRoad.size(); ++j )
 		{
-			if (((contRoad[j] == Area::Top) && (inTile.getTop() != Tile::Road))
-					||
-					((contRoad[j] == Area::Right) && (inTile.getRight() != Tile::Road))
-					||
-					((contRoad[j] == Area::Bottom) && (inTile.getBottom() != Tile::Road))
-					||
-					((contRoad[j] == Area::Left) && (inTile.getLeft() != Tile::Road))
-					)
+			if
+			(
+				( contRoad[j] == Area::kTop && inTile.getTop() != Tile::kSideRoad )
+				||
+				( contRoad[j] == Area::kRight && inTile.getRight() != Tile::kSideRoad )
+				||
+				( contRoad[j] == Area::kBottom && inTile.getBottom() != Tile::kSideRoad )
+				||
+				( contRoad[j] == Area::kLeft && inTile.getLeft() != Tile::kSideRoad )
+			)
 			{
-				match = false;
+				return false;
 			}
 		}
 	}
-	// If a Area is part of a Contiguous City, then that Side must be a City
-	for (unsigned int i = 0; i < inTile.getContiguousCities().size(); ++i)
+	// If an Area is part of a Contiguous City, then that Side must be a City
+	for ( unsigned i = 0; i < inTile.getContiguousCities().size(); ++i )
 	{
-		Tile::ContiguousCity contCity = inTile.getContiguousCities()[i];
-		for (unsigned int j = 0; j < contCity.size(); ++j)
+		ContiguousCity contCity = inTile.getContiguousCities()[i];
+		for ( unsigned j = 0; j < contCity.size(); ++j )
 		{
-			if (((contCity[j] == Area::Top) && (inTile.getTop() != Tile::City))
-					||
-					((contCity[j] == Area::Right) && (inTile.getRight() != Tile::City))
-					||
-					((contCity[j] == Area::Bottom) && (inTile.getBottom() != Tile::City))
-					||
-					((contCity[j] == Area::Left) && (inTile.getLeft() != Tile::City))
-					)
+			if
+			(
+				( contCity[j] == Area::kTop && inTile.getTop() != Tile::kSideCity )
+				||
+				( contCity[j] == Area::kRight && inTile.getRight() != Tile::kSideCity )
+				||
+				( contCity[j] == Area::kBottom && inTile.getBottom() != Tile::kSideCity )
+				||
+				( contCity[j] == Area::kLeft && inTile.getLeft() != Tile::kSideCity )
+			)
 			{
-				match = false;
+				return false;
 			}
 		}
 	}
-	// If a Area is part of a Contiguous Field, then that Side must be a Field or a Road
-	for (unsigned int i = 0; i < inTile.getContiguousFields().size(); ++i)
+	// If an Area is part of a Contiguous Field, then that Side must be a Field or a Road
+	for ( unsigned i = 0; i < inTile.getContiguousFields().size(); ++i )
 	{
-		Tile::ContiguousField contField = inTile.getContiguousFields()[i];
-		for (unsigned int j = 0; j < contField.size(); ++j)
+		ContiguousField contField = inTile.getContiguousFields()[i];
+		for ( unsigned j = 0; j < contField.size(); ++j )
 		{
-			if (((contField[j] == Area::TopLeft) && !((inTile.getTop() == Tile::Field) || (inTile.getTop() == Tile::Road)))
-					||
-					((contField[j] == Area::TopRight) && !((inTile.getTop() == Tile::Field) || (inTile.getTop() == Tile::Road)))
-					||
-					((contField[j] == Area::RightTop) && !((inTile.getRight() == Tile::Field) || (inTile.getRight() == Tile::Road)))
-					||
-					((contField[j] == Area::RightBottom) && !((inTile.getRight() == Tile::Field) || (inTile.getRight() == Tile::Road)))
-					||
-					((contField[j] == Area::BottomRight) && !((inTile.getBottom() == Tile::Field) || (inTile.getBottom() == Tile::Road)))
-					||
-					((contField[j] == Area::BottomLeft) && !((inTile.getBottom() == Tile::Field) || (inTile.getBottom() == Tile::Road)))
-					||
-					((contField[j] == Area::LeftBottom) && !((inTile.getLeft() == Tile::Field) || (inTile.getLeft() == Tile::Road)))
-					||
-					((contField[j] == Area::LeftTop) && !((inTile.getLeft() == Tile::Field) || (inTile.getLeft() == Tile::Road)))
-					)
+			if
+			(
+				( contField[j] == Area::kTopLeft && !( inTile.getTop() == Tile::kSideField || inTile.getTop() == Tile::kSideRoad ) )
+				||
+				( contField[j] == Area::kTopRight && !( inTile.getTop() == Tile::kSideField || inTile.getTop() == Tile::kSideRoad ) )
+				||
+				( contField[j] == Area::kRightTop && !( inTile.getRight() == Tile::kSideField || inTile.getRight() == Tile::kSideRoad ) )
+				||
+				( contField[j] == Area::kRightBottom && !( inTile.getRight() == Tile::kSideField || inTile.getRight() == Tile::kSideRoad ) )
+				||
+				( contField[j] == Area::kBottomRight && !( inTile.getBottom() == Tile::kSideField || inTile.getBottom() == Tile::kSideRoad ) )
+				||
+				( contField[j] == Area::kBottomLeft && !( inTile.getBottom() == Tile::kSideField || inTile.getBottom() == Tile::kSideRoad ) )
+				||
+				( contField[j] == Area::kLeftBottom && !( inTile.getLeft() == Tile::kSideField || inTile.getLeft() == Tile::kSideRoad ) )
+				||
+				( contField[j] == Area::kLeftTop && !( inTile.getLeft() == Tile::kSideField || inTile.getLeft() == Tile::kSideRoad ) )
+			)
 			{
-				match = false;
+				return false;
 			}
 		}
 	}
@@ -187,18 +192,27 @@ sidesMatch(Tile inTile)
 	//  that Area must be in one ContiguousRoad,
 	//  those two FieldAreas must each be in one ContiguousField (maybe the same, but maybe not),
 	//  that Area must not be in any ContiguousCity
-	match = match && verifyInstanceCounts(inTile, Tile::Road, 1, 0, 1);
+	if ( !verifyInstanceCounts( inTile, Tile::kSideRoad, 1, 0, 1 ) )
+	{
+		return false;
+	}
 	// If a Side is a City, then
 	//  that Area must be in one ContiguousCity,
 	//  that Area must not be in any ContiguousRoad,
 	//  those two FieldAreas must not be in any ContiguousField
-	match = match && verifyInstanceCounts(inTile, Tile::City, 0, 1, 0);
+	if ( !verifyInstanceCounts( inTile, Tile::kSideCity, 0, 1, 0 ) )
+	{
+		return false;
+	}
 	// If a Side is a Field, then
 	//  those two FieldAreas must be in the same ContiguousField,
 	//  that Area must not be in any ContiguousRoad,
 	//  that Area must not be in any ContiguousCity
-	match = match && verifyInstanceCounts(inTile, Tile::Field, 0, 0, 1);
-	return match;
+	if ( !verifyInstanceCounts( inTile, Tile::kSideField, 0, 0, 1 ) )
+	{
+		return false;
+	}
+	return true;
 }
 }
 
@@ -214,11 +228,11 @@ TEST("Tile creator via id, check sides and center")
 {
 	Tile a = createTileA();
 	CHECK(a.getID() == "A");
-	CHECK(a.getTop() == Tile::Field);
-	CHECK(a.getLeft() == Tile::Field);
-	CHECK(a.getRight() == Tile::Field);
-	CHECK(a.getBottom() == Tile::Road);
-	CHECK(a.getCenter() == Tile::Cloister);
+	CHECK(a.getTop() == Tile::kSideField);
+	CHECK(a.getLeft() == Tile::kSideField);
+	CHECK(a.getRight() == Tile::kSideField);
+	CHECK(a.getBottom() == Tile::kSideRoad);
+	CHECK(a.getCenter() == Tile::kCenterCloister);
 }
 
 TEST("Tile creator via id, check id")

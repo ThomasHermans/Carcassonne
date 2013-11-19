@@ -251,9 +251,9 @@ Board::isOccupiedRoad( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 	{
 		return false;
 	}
-	Tile::ContiguousRoad road = getTile( inCol, inRow )->getContiguousRoad( inArea );
+	ContiguousRoad road = getTile( inCol, inRow )->getContiguousRoad( inArea );
 	std::vector< PlacedRoad > toCheckQueue;
-	for ( Tile::ContiguousRoad::const_iterator it = road.begin(); it != road.end(); ++it )
+	for ( ContiguousRoad::const_iterator it = road.begin(); it != road.end(); ++it )
 	{
 		toCheckQueue.push_back( PlacedRoad( inCol, inRow, *it ) );
 	}
@@ -270,8 +270,8 @@ Board::isOccupiedRoad( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 		{
 			if ( std::find( toCheckQueue.begin(), toCheckQueue.end(), neighbor ) == toCheckQueue.end() )
 			{
-				Tile::ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
-				for ( Tile::ContiguousRoad::const_iterator contRoadIt = contRoad.begin(); contRoadIt != contRoad.end(); ++contRoadIt )
+				ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
+				for ( ContiguousRoad::const_iterator contRoadIt = contRoad.begin(); contRoadIt != contRoad.end(); ++contRoadIt )
 				{
 					toCheckQueue.push_back( PlacedRoad( neighbor.col, neighbor.row, *contRoadIt ) );
 				}
@@ -289,9 +289,9 @@ Board::isOccupiedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 	{
 		return false;
 	}
-	Tile::ContiguousCity city = getTile( inCol, inRow )->getContiguousCity( inArea );
+	ContiguousCity city = getTile( inCol, inRow )->getContiguousCity( inArea );
 	std::vector< PlacedCity > toCheckQueue;
-	for ( Tile::ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
+	for ( ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
 	{
 		toCheckQueue.push_back( PlacedCity( inCol, inRow, *it ) );
 	}
@@ -308,8 +308,8 @@ Board::isOccupiedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 		{
 			if ( std::find( toCheckQueue.begin(), toCheckQueue.end(), neighbor ) == toCheckQueue.end() )
 			{
-				Tile::ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
-				for ( Tile::ContiguousCity::const_iterator contCityIt = contCity.begin(); contCityIt != contCity.end(); ++contCityIt )
+				ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+				for ( ContiguousCity::const_iterator contCityIt = contCity.begin(); contCityIt != contCity.end(); ++contCityIt )
 				{
 					toCheckQueue.push_back( PlacedCity( neighbor.col, neighbor.row, *contCityIt ) );
 				}
@@ -327,9 +327,9 @@ Board::isOccupiedField( PlacedField const & inField ) const
 	{
 		return false;
 	}
-	Tile::ContiguousField field = getTile( inField.col, inField.row )->getContiguousField( inField.area );
+	ContiguousField field = getTile( inField.col, inField.row )->getContiguousField( inField.area );
 	std::vector< PlacedField > toCheckQueue;
-	for ( Tile::ContiguousField::const_iterator it = field.begin(); it != field.end(); ++it )
+	for ( ContiguousField::const_iterator it = field.begin(); it != field.end(); ++it )
 	{
 		toCheckQueue.push_back( PlacedField( inField.col, inField.row, *it ) );
 	}
@@ -347,8 +347,8 @@ Board::isOccupiedField( PlacedField const & inField ) const
 		{
 			if ( std::find( toCheckQueue.begin(), toCheckQueue.end(), neighbor ) == toCheckQueue.end() )
 			{
-				Tile::ContiguousField contField = getTile( neighbor.col, neighbor.row )->getContiguousField( neighbor.area );
-				for ( Tile::ContiguousField::const_iterator contFieldIt = contField.begin();
+				ContiguousField contField = getTile( neighbor.col, neighbor.row )->getContiguousField( neighbor.area );
+				for ( ContiguousField::const_iterator contFieldIt = contField.begin();
 					contFieldIt != contField.end();
 					++contFieldIt )
 				{
@@ -382,7 +382,7 @@ Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 	{
 		return;
 	}
-	std::vector< Tile::ContiguousCity > contiguousCities = getTile( inCol, inRow )->getContiguousCities();
+	std::vector< ContiguousCity > contiguousCities = getTile( inCol, inRow )->getContiguousCities();
 	for ( unsigned city = 0; city < contiguousCities.size(); ++city )
 	{
 		// Start a tempQueue and add all Areas from this ContCity to it
@@ -406,8 +406,8 @@ Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 				// If not already in tempQueue, add continuation and all of its contiguous Areas to tempQueue
 				if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 				{
-					Tile::ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
-					for ( Tile::ContiguousCity::const_iterator it = contCity.begin(); it != contCity.end(); ++it )
+					ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+					for ( ContiguousCity::const_iterator it = contCity.begin(); it != contCity.end(); ++it )
 					{
 						tempQueue.push_back( PlacedCity( neighbor.col, neighbor.row, *it ) );
 					}
@@ -435,7 +435,7 @@ Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 	{
 		return;
 	}
-	std::vector< Tile::ContiguousRoad > contiguousRoads = getTile( inCol, inRow )->getContiguousRoads();
+	std::vector< ContiguousRoad > contiguousRoads = getTile( inCol, inRow )->getContiguousRoads();
 	for ( unsigned road = 0; road < contiguousRoads.size(); ++road )
 	{
 		// Start a tempQueue and add all Areas from this ContRoad to it
@@ -459,8 +459,8 @@ Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 				// If not already in tempQueue, add continuation and all of its contiguous Areas to tempQueue
 				if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 				{
-					Tile::ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
-					for ( Tile::ContiguousRoad::const_iterator it = contRoad.begin(); it != contRoad.end(); ++it )
+					ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
+					for ( ContiguousRoad::const_iterator it = contRoad.begin(); it != contRoad.end(); ++it )
 					{
 						tempQueue.push_back( PlacedRoad( neighbor.col, neighbor.row, *it ) );
 					}
@@ -507,10 +507,10 @@ Board::isFinishedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 	{
 		return false;
 	}
-	Tile::ContiguousCity city = getTile( inCol, inRow )->getContiguousCity( inArea );
+	ContiguousCity city = getTile( inCol, inRow )->getContiguousCity( inArea );
 	// Start a tempQueue and add all Areas from this ContCity to it
 	std::vector< PlacedCity > tempQueue;
-	for ( Tile::ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
+	for ( ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
 	{
 		tempQueue.push_back( PlacedCity( inCol, inRow, *it ) );
 	}
@@ -526,8 +526,8 @@ Board::isFinishedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 			// If not already in tempQueue, add continuation and all of its contiguous Areas to tempQueue
 			if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 			{
-				Tile::ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
-				for ( Tile::ContiguousCity::const_iterator it = contCity.begin(); it != contCity.end(); ++it )
+				ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+				for ( ContiguousCity::const_iterator it = contCity.begin(); it != contCity.end(); ++it )
 				{
 					tempQueue.push_back( PlacedCity( neighbor.col, neighbor.row, *it ) );
 				}
@@ -551,10 +551,10 @@ Board::getUpperLeftPlacedCity( unsigned inCol, unsigned inRow, Area::Area inArea
 	{
 		return PlacedCity( inCol, inRow, inArea );
 	}
-	Tile::ContiguousCity city = getTile( inCol, inRow )->getContiguousCity( inArea );
+	ContiguousCity city = getTile( inCol, inRow )->getContiguousCity( inArea );
 	// Start a completeCity and add all Areas from this ContCity to it
 	std::vector< PlacedCity > completeCity;
-	for ( Tile::ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
+	for ( ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
 	{
 		completeCity.push_back( PlacedCity( inCol, inRow, *it ) );
 	}
@@ -568,8 +568,8 @@ Board::getUpperLeftPlacedCity( unsigned inCol, unsigned inRow, Area::Area inArea
 			// If not already in completeCity, add continuation and all of its contiguous Areas to completeCity
 			if ( std::find( completeCity.begin(), completeCity.end(), neighbor ) == completeCity.end() )
 			{
-				Tile::ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
-				for ( Tile::ContiguousCity::const_iterator it = contCity.begin(); it != contCity.end(); ++it )
+				ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+				for ( ContiguousCity::const_iterator it = contCity.begin(); it != contCity.end(); ++it )
 				{
 					completeCity.push_back( PlacedRoad( neighbor.col, neighbor.row, *it ) );
 				}
@@ -587,7 +587,7 @@ Board::isFinishedCloister( unsigned inCol, unsigned inRow ) const
 	{
 		return false;
 	}
-	if ( getTile( inCol, inRow )->getCenter() == Tile::Cloister )
+	if ( getTile( inCol, inRow )->getCenter() == Tile::kCenterCloister )
 	{
 		if ( isFullySurrounded( inCol, inRow ) )
 		{
@@ -673,9 +673,9 @@ Board::getCompleteRoad( PlacedRoad const & inPlacedRoad ) const
 	{
 		return std::vector< PlacedRoad >();
 	}
-	Tile::ContiguousRoad contiguousRoad = getTile( col, row )->getContiguousRoad( inPlacedRoad.area );
+	ContiguousRoad contiguousRoad = getTile( col, row )->getContiguousRoad( inPlacedRoad.area );
 	std::vector< PlacedRoad > completeRoad;
-	for ( Tile::ContiguousRoad::const_iterator it = contiguousRoad.begin();
+	for ( ContiguousRoad::const_iterator it = contiguousRoad.begin();
 		it != contiguousRoad.end();
 		++it )
 	{
@@ -690,8 +690,8 @@ Board::getCompleteRoad( PlacedRoad const & inPlacedRoad ) const
 		{
 			if ( std::find( completeRoad.begin(), completeRoad.end(), neighbor ) == completeRoad.end() )
 			{
-				Tile::ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
-				for ( Tile::ContiguousRoad::const_iterator it = contRoad.begin();
+				ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
+				for ( ContiguousRoad::const_iterator it = contRoad.begin();
 					it != contRoad.end();
 					++it )
 				{
@@ -713,9 +713,9 @@ Board::getCompleteCity( PlacedCity const & inPlacedCity ) const
 	{
 		return std::vector< PlacedCity >();
 	}
-	Tile::ContiguousCity contiguousCity = getTile( col, row )->getContiguousCity( inPlacedCity.area );
+	ContiguousCity contiguousCity = getTile( col, row )->getContiguousCity( inPlacedCity.area );
 	std::vector< PlacedCity > completeCity;
-	for ( Tile::ContiguousCity::const_iterator it = contiguousCity.begin();
+	for ( ContiguousCity::const_iterator it = contiguousCity.begin();
 		it != contiguousCity.end();
 		++it )
 	{
@@ -730,8 +730,8 @@ Board::getCompleteCity( PlacedCity const & inPlacedCity ) const
 		{
 			if ( std::find( completeCity.begin(), completeCity.end(), neighbor ) == completeCity.end() )
 			{
-				Tile::ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
-				for ( Tile::ContiguousCity::const_iterator it = contCity.begin();
+				ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+				for ( ContiguousCity::const_iterator it = contCity.begin();
 					it != contCity.end();
 					++it )
 				{
@@ -753,9 +753,9 @@ Board::getCompleteField( PlacedField const & inPlacedField ) const
 	{
 		return std::vector< PlacedField >();
 	}
-	Tile::ContiguousField contiguousField = getTile( col, row )->getContiguousField( inPlacedField.area );
+	ContiguousField contiguousField = getTile( col, row )->getContiguousField( inPlacedField.area );
 	std::vector< PlacedField > completeField;
-	for ( Tile::ContiguousField::const_iterator it = contiguousField.begin();
+	for ( ContiguousField::const_iterator it = contiguousField.begin();
 		it != contiguousField.end();
 		++it )
 	{
@@ -769,8 +769,8 @@ Board::getCompleteField( PlacedField const & inPlacedField ) const
 		{
 			if ( std::find( completeField.begin(), completeField.end(), neighbor ) == completeField.end() )
 			{
-				Tile::ContiguousField contField = getTile( neighbor.col, neighbor.row )->getContiguousField( neighbor.area );
-				for ( Tile::ContiguousField::const_iterator it = contField.begin();
+				ContiguousField contField = getTile( neighbor.col, neighbor.row )->getContiguousField( neighbor.area );
+				for ( ContiguousField::const_iterator it = contField.begin();
 					it != contField.end();
 					++it )
 				{

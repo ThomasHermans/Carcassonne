@@ -14,21 +14,21 @@ namespace
 			return true;
 		case Piece::kBuilder:
 			return (
-				( inArea == Area::Top )
-				|| (inArea == Area::Right )
-				|| (inArea == Area::Bottom )
-				|| (inArea == Area::Left ) );
+				( inArea == Area::kTop )
+				|| (inArea == Area::kRight )
+				|| (inArea == Area::kBottom )
+				|| (inArea == Area::kLeft ) );
 		case Piece::kPig:
 			return (
-				( inArea == Area::TopLeft )
-				|| ( inArea == Area::TopRight )
-				|| ( inArea == Area::RightTop )
-				|| ( inArea == Area::RightBottom )
-				|| ( inArea == Area::BottomRight )
-				|| ( inArea == Area::BottomLeft )
-				|| ( inArea == Area::LeftBottom )
-				|| ( inArea == Area::LeftTop )
-				|| ( inArea == Area::Central ) );
+				( inArea == Area::kTopLeft )
+				|| ( inArea == Area::kTopRight )
+				|| ( inArea == Area::kRightTop )
+				|| ( inArea == Area::kRightBottom )
+				|| ( inArea == Area::kBottomRight )
+				|| ( inArea == Area::kBottomLeft )
+				|| ( inArea == Area::kLeftBottom )
+				|| ( inArea == Area::kLeftTop )
+				|| ( inArea == Area::kCentral ) );
 		}
 		assert( !"Invalid PieceType" );
 		return false;

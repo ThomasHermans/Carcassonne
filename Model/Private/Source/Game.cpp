@@ -450,12 +450,12 @@ Game::calculateEndPoints()
 							++fIt )
 						{
 							// Get all cities for fIt
-							std::vector< Tile::ContiguousCity > const cities = mBoard.getTile( fIt->col, fIt->row )->getCitiesPerField( fIt->area );
+							std::vector< ContiguousCity > const cities = mBoard.getTile( fIt->col, fIt->row )->getCitiesPerField( fIt->area );
 							// Per city
 							// If city is finished
 							//	Calculate upperleft PlacedCity
 							//	Add to finishedCities
-							for ( std::vector< Tile::ContiguousCity >::const_iterator cIt = cities.begin();
+							for ( std::vector< ContiguousCity >::const_iterator cIt = cities.begin();
 								cIt != cities.end();
 								++cIt )
 							{
@@ -528,7 +528,7 @@ Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
 {
 	std::cout << "onFinishedCloister" << std::endl;
 	// Remove all pieces
-	std::vector< PlacedPiece > pieces = mBoard.removePieces( inCol, inRow, Area::Central );
+	std::vector< PlacedPiece > pieces = mBoard.removePieces( inCol, inRow, Area::kCentral );
 	returnPieces( pieces, inCol, inRow );	
 	// Find winning player for this cloister
 	std::set< Color::Color > winningColors = getWinningColors( pieces );
@@ -718,9 +718,9 @@ Game::isOccupied( Area::Area inArea ) const
 	if ( mCurrentPlacedTile->isRoad( inArea ) )
 	{
 		// A road is occupied if there is a piece somewhere on this road
-		Tile::ContiguousRoad road = mCurrentPlacedTile->getContiguousRoad( inArea );
+		ContiguousRoad road = mCurrentPlacedTile->getContiguousRoad( inArea );
 		std::vector< PlacedRoad > roadsToCheck;
-		for ( Tile::ContiguousRoad::const_iterator it = road.begin(); it != road.end(); ++it )
+		for ( ContiguousRoad::const_iterator it = road.begin(); it != road.end(); ++it )
 		{
 			if ( mCurrentPlacedTile->hasPiece( *it ) )
 			{
@@ -743,9 +743,9 @@ Game::isOccupied( Area::Area inArea ) const
 	if ( mCurrentPlacedTile->isCity( inArea ) )
 	{
 		// A city is occupied if there is a piece somewhere on this city
-		Tile::ContiguousCity city = mCurrentPlacedTile->getContiguousCity( inArea );
+		ContiguousCity city = mCurrentPlacedTile->getContiguousCity( inArea );
 		std::vector< PlacedCity > citiesToCheck;
-		for ( Tile::ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
+		for ( ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
 		{
 			if ( mCurrentPlacedTile->hasPiece( *it ) )
 			{
@@ -768,9 +768,9 @@ Game::isOccupied( Area::Area inArea ) const
 	if ( mCurrentPlacedTile->isField( inArea ) )
 	{
 		// A field is occupied if there is a piece somewhere on this city
-		Tile::ContiguousField field = mCurrentPlacedTile->getContiguousField( inArea );
+		ContiguousField field = mCurrentPlacedTile->getContiguousField( inArea );
 		std::vector< PlacedField > fieldsToCheck;
-		for ( Tile::ContiguousField::const_iterator it = field.begin(); it != field.end(); ++it )
+		for ( ContiguousField::const_iterator it = field.begin(); it != field.end(); ++it )
 		{
 			if ( mCurrentPlacedTile->hasPiece( *it ) )
 			{

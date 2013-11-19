@@ -38,20 +38,20 @@ public:
 	bool matchesBelow( TileOnBoard const & inTileOnBoard ) const;
 	bool matchesLeftOf( TileOnBoard const & inTileOnBoard ) const;
 
-	std::vector< Tile::ContiguousField > getContiguousFields() const;
-	std::vector< Tile::ContiguousRoad > getContiguousRoads() const;
-	std::vector< Tile::ContiguousCity > getContiguousCities() const;
+	std::vector< ContiguousField > getContiguousFields() const;
+	std::vector< ContiguousRoad > getContiguousRoads() const;
+	std::vector< ContiguousCity > getContiguousCities() const;
 
 	bool isCloister( Area::Area inArea ) const;
 	bool isRoad( Area::Area inArea ) const;
 	bool isCity( Area::Area inArea ) const;
 	bool isField( Area::Area inArea ) const;
 
-	Tile::ContiguousField getContiguousField( Area::Area inFieldArea ) const;
-	Tile::ContiguousRoad getContiguousRoad( Area::Area inArea ) const;
-	Tile::ContiguousCity getContiguousCity( Area::Area inArea ) const;
+	ContiguousField getContiguousField( Area::Area inFieldArea ) const;
+	ContiguousRoad getContiguousRoad( Area::Area inArea ) const;
+	ContiguousCity getContiguousCity( Area::Area inArea ) const;
 
-	std::vector< Tile::ContiguousCity > getCitiesPerField( Area::Area inFieldArea ) const;
+	std::vector< ContiguousCity > getCitiesPerField( Area::Area inFieldArea ) const;
 
 	bool placePiece( PlacedPiece const & inPlacedPiece);
 	bool hasPieces() const;

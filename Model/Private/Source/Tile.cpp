@@ -10,11 +10,11 @@ namespace
 	{
 		switch ( inSide )
 		{
-		case Tile::Field:
+		case Tile::kSideField:
 			return inTile.isField( inArea );
-		case Tile::Road:
+		case Tile::kSideRoad:
 			return inTile.isRoad( inArea );
-		case Tile::City:
+		case Tile::kSideCity:
 			return inTile.isCity( inArea );
 		}
 		assert( !"Invalid Tile::Side" );
@@ -59,25 +59,25 @@ namespace
 	{
 		switch ( inSide )
 		{
-		case Tile::Field:
+		case Tile::kSideField:
 		{
-			assureSideHasNo( inTile, inArea, Tile::City );
-			assureSideHasNo( inTile, inArea, Tile::Road );
-			assureSideHasAll( inTile, inArea, Tile::Field );
+			assureSideHasNo( inTile, inArea, Tile::kSideCity );
+			assureSideHasNo( inTile, inArea, Tile::kSideRoad );
+			assureSideHasAll( inTile, inArea, Tile::kSideField );
 			break;
 		}
-		case Tile::Road:
+		case Tile::kSideRoad:
 		{
-			assureSideHasNo( inTile, inArea, Tile::City );
-			assureSideHasOnlyMiddle( inTile, inArea, Tile::Road );
-			assureSideHasOnlySurround( inTile, inArea, Tile::Field );
+			assureSideHasNo( inTile, inArea, Tile::kSideCity );
+			assureSideHasOnlyMiddle( inTile, inArea, Tile::kSideRoad );
+			assureSideHasOnlySurround( inTile, inArea, Tile::kSideField );
 			break;
 		}
-		case Tile::City:
+		case Tile::kSideCity:
 		{
-			assureSideHasAll( inTile, inArea, Tile::City );
-			assureSideHasNo( inTile, inArea, Tile::Road );
-			assureSideHasNo( inTile, inArea, Tile::Field );
+			assureSideHasAll( inTile, inArea, Tile::kSideCity );
+			assureSideHasNo( inTile, inArea, Tile::kSideRoad );
+			assureSideHasNo( inTile, inArea, Tile::kSideField );
 			break;
 		}
 		}
@@ -86,21 +86,21 @@ namespace
 	void
 	assureSides( Tile const & inTile )
 	{
-		assureSide( inTile, inTile.getTop(), Area::Top );
-		assureSide( inTile, inTile.getRight(), Area::Right );
-		assureSide( inTile, inTile.getBottom(), Area::Bottom );
-		assureSide( inTile, inTile.getLeft(), Area::Left );
+		assureSide( inTile, inTile.getTop(), Area::kTop );
+		assureSide( inTile, inTile.getRight(), Area::kRight );
+		assureSide( inTile, inTile.getBottom(), Area::kBottom );
+		assureSide( inTile, inTile.getLeft(), Area::kLeft );
 	}
 }
 
 Tile::Tile()
 :
 	mID( "D" ),
-	mTop( Road ),
-	mRight( City ),
-	mBottom( Road ),
-	mLeft( Field ),
-	mCenter( Nothing ),
+	mTop( kSideRoad ),
+	mRight( kSideCity ),
+	mBottom( kSideRoad ),
+	mLeft( kSideField ),
+	mCenter( kCenterNothing ),
 	mFields(),
 	mRoads(),
 	mCities(),
@@ -109,18 +109,18 @@ Tile::Tile()
 	mInns()
 {
 	ContiguousField rightField;
-	rightField.push_back( Area::TopRight );
-	rightField.push_back( Area::BottomRight );
+	rightField.push_back( Area::kTopRight );
+	rightField.push_back( Area::kBottomRight );
 	ContiguousField leftField;
-	leftField.push_back( Area::BottomLeft );
-	leftField.push_back( Area::LeftBottom );
-	leftField.push_back( Area::LeftTop );
-	leftField.push_back( Area::TopLeft );
+	leftField.push_back( Area::kBottomLeft );
+	leftField.push_back( Area::kLeftBottom );
+	leftField.push_back( Area::kLeftTop );
+	leftField.push_back( Area::kTopLeft );
 	mFields.push_back( rightField );
 	mFields.push_back( leftField );
 
 	ContiguousCity rightCity;
-	rightCity.push_back( Area::Right );
+	rightCity.push_back( Area::kRight );
 
 	std::vector< ContiguousCity > rightFieldCities;
 	rightFieldCities.push_back( rightCity );
@@ -142,10 +142,10 @@ Tile::Tile
 )
 :
 	mID( inID ),
-	mTop( Tile::Field ),
-	mRight( Tile::Field ),
-	mBottom( Tile::Field ),
-	mLeft( Tile::Field ),
+	mTop( Tile::kSideField ),
+	mRight( Tile::kSideField ),
+	mBottom( Tile::kSideField ),
+	mLeft( Tile::kSideField ),
 	mCenter( inCenter ),
 	mFields( inFields ),
 	mRoads( inRoads ),
@@ -164,31 +164,31 @@ Tile::Tile
 		{
 			switch ( inCities[i][j] )
 			{
-			case Area::Top:
-				mTop = Tile::City;
+			case Area::kTop:
+				mTop = Tile::kSideCity;
 				++top;
 				break;
-			case Area::Right:
-				mRight = Tile::City;
+			case Area::kRight:
+				mRight = Tile::kSideCity;
 				++right;
 				break;
-			case Area::Bottom:
-				mBottom = Tile::City;
+			case Area::kBottom:
+				mBottom = Tile::kSideCity;
 				++bottom;
 				break;
-			case Area::Left:
-				mLeft = Tile::City;
+			case Area::kLeft:
+				mLeft = Tile::kSideCity;
 				++left;
 				break;
-			case Area::TopLeft:
-			case Area::TopRight:
-			case Area::RightTop:
-			case Area::RightBottom:
-			case Area::BottomRight:
-			case Area::BottomLeft:
-			case Area::LeftBottom:
-			case Area::LeftTop:
-			case Area::Central:
+			case Area::kTopLeft:
+			case Area::kTopRight:
+			case Area::kRightTop:
+			case Area::kRightBottom:
+			case Area::kBottomRight:
+			case Area::kBottomLeft:
+			case Area::kLeftBottom:
+			case Area::kLeftTop:
+			case Area::kCentral:
 				break;
 			}
 		}
@@ -199,31 +199,31 @@ Tile::Tile
 		{
 			switch ( inRoads[i][j] )
 			{
-			case Area::Top:
-				mTop = Tile::Road;
+			case Area::kTop:
+				mTop = Tile::kSideRoad;
 				++top;
 				break;
-			case Area::Right:
-				mRight = Tile::Road;
+			case Area::kRight:
+				mRight = Tile::kSideRoad;
 				++right;
 				break;
-			case Area::Bottom:
-				mBottom = Tile::Road;
+			case Area::kBottom:
+				mBottom = Tile::kSideRoad;
 				++bottom;
 				break;
-			case Area::Left:
-				mLeft = Tile::Road;
+			case Area::kLeft:
+				mLeft = Tile::kSideRoad;
 				++left;
 				break;
-			case Area::TopLeft:
-			case Area::TopRight:
-			case Area::RightTop:
-			case Area::RightBottom:
-			case Area::BottomRight:
-			case Area::BottomLeft:
-			case Area::LeftBottom:
-			case Area::LeftTop:
-			case Area::Central:
+			case Area::kTopLeft:
+			case Area::kTopRight:
+			case Area::kRightTop:
+			case Area::kRightBottom:
+			case Area::kBottomRight:
+			case Area::kBottomLeft:
+			case Area::kLeftBottom:
+			case Area::kLeftTop:
+			case Area::kCentral:
 				break;
 			}
 		}
@@ -271,31 +271,31 @@ Tile::getID() const
 	return mID;
 }
 
-std::vector< Tile::ContiguousField > const &
+std::vector< ContiguousField > const &
 Tile::getContiguousFields() const
 {
 	return mFields;
 }
 
-std::vector< Tile::ContiguousRoad > const &
+std::vector< ContiguousRoad > const &
 Tile::getContiguousRoads() const
 {
 	return mRoads;
 }
 
-std::vector< Tile::ContiguousCity > const &
+std::vector< ContiguousCity > const &
 Tile::getContiguousCities() const
 {
 	return mCities;
 }
 
-std::vector< Tile::ContiguousCity > const &
+std::vector< ContiguousCity > const &
 Tile::getCitiesPerField(const ContiguousField &inContiguousField) const
 {
 	return mCitiesPerField.at(inContiguousField);
 }
 
-std::vector< Tile::ContiguousCity > const &
+std::vector< ContiguousCity > const &
 Tile::getCitiesPerField( Area::Area inFieldArea ) const
 {
 	ContiguousField cf = getContiguousField( inFieldArea );
@@ -314,7 +314,7 @@ Tile::getInns() const
 	return mInns;
 }
 
-Tile::ContiguousField
+ContiguousField
 Tile::getContiguousField( Area::Area inFieldArea ) const
 {
 	unsigned i = 0;
@@ -331,11 +331,11 @@ Tile::getContiguousField( Area::Area inFieldArea ) const
 	}
 	else
 	{
-		return Tile::ContiguousField();
+		return ContiguousField();
 	}
 }
 
-Tile::ContiguousRoad
+ContiguousRoad
 Tile::getContiguousRoad(Area::Area inArea) const
 {
 	unsigned int i = 0;
@@ -352,11 +352,11 @@ Tile::getContiguousRoad(Area::Area inArea) const
 	}
 	else
 	{
-		return Tile::ContiguousRoad();
+		return ContiguousRoad();
 	}
 }
 
-Tile::ContiguousCity
+ContiguousCity
 Tile::getContiguousCity(Area::Area inArea) const
 {
 	unsigned int i = 0;
@@ -373,14 +373,14 @@ Tile::getContiguousCity(Area::Area inArea) const
 	}
 	else
 	{
-		return Tile::ContiguousCity();
+		return ContiguousCity();
 	}
 }
 
 bool
 Tile::isCloister( Area::Area inArea ) const
 {
-	return ( inArea == Area::Central && getCenter() == Tile::Cloister );	
+	return ( inArea == Area::kCentral && getCenter() == Tile::kCenterCloister );	
 }
 
 bool
@@ -503,35 +503,31 @@ Tile::toString() const
 }
 
 std::string
-Tile::sideToString(Side inSide)
+Tile::sideToString( Side inSide )
 {
-	switch (inSide)
+	switch ( inSide )
 	{
-	case Field:
+	case kSideField:
 		return "Field";
-	case Road:
+	case kSideRoad:
 		return "Road";
-	case City:
+	case kSideCity:
 		return "City";
-	default:
-		return "No valid side";
 	}
+	assert( !"No valid Tile::Side" );
+	return "No valid Tile::Side";
 }
 
 std::string
-Tile::centerToString(Center inCenter)
+Tile::centerToString( Center inCenter )
 {
-	switch (inCenter)
+	switch ( inCenter )
 	{
-	case Nothing:
+	case kCenterNothing:
 		return "Nothing";
-	case Cloister:
+	case kCenterCloister:
 		return "Cloister";
-	case Cathedral:
-		return "Cathedral";
-	case CentralField:
-		return "CentralField";
-	default:
-		return "No valid center";
 	}
+	assert( !"No valid Tile::Center" );
+	return "No valid Tile::Center";
 }

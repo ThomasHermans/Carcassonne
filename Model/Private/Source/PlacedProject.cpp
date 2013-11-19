@@ -56,9 +56,9 @@ getNeighbor( PlacedProject const & inProject )
 {
 	switch ( inProject.area )
 	{
-		case Area::TopLeft:
-		case Area::Top:
-		case Area::TopRight:
+		case Area::kTopLeft:
+		case Area::kTop:
+		case Area::kTopRight:
 		{
 			return PlacedProject
 			(
@@ -67,9 +67,9 @@ getNeighbor( PlacedProject const & inProject )
 				oppositeSide( inProject.area )
 			);
 		}
-		case Area::RightTop:
-		case Area::Right:
-		case Area::RightBottom:
+		case Area::kRightTop:
+		case Area::kRight:
+		case Area::kRightBottom:
 		{
 			return PlacedProject
 			(
@@ -78,9 +78,9 @@ getNeighbor( PlacedProject const & inProject )
 				oppositeSide( inProject.area )
 			);
 		}
-		case Area::BottomRight:
-		case Area::Bottom:
-		case Area::BottomLeft:
+		case Area::kBottomRight:
+		case Area::kBottom:
+		case Area::kBottomLeft:
 		{
 			return PlacedProject
 			(
@@ -89,9 +89,9 @@ getNeighbor( PlacedProject const & inProject )
 				oppositeSide( inProject.area )
 			);
 		}
-		case Area::LeftBottom:
-		case Area::Left:
-		case Area::LeftTop:
+		case Area::kLeftBottom:
+		case Area::kLeft:
+		case Area::kLeftTop:
 		{
 			return PlacedProject
 			(
@@ -100,7 +100,7 @@ getNeighbor( PlacedProject const & inProject )
 				oppositeSide( inProject.area )
 			);
 		}
-		case Area::Central:
+		case Area::kCentral:
 		{
 			return inProject;
 		}

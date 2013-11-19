@@ -12,23 +12,16 @@ class Tile
 public:
 	enum Side
 	{
-		Field,
-		Road,
-		City
+		kSideField,
+		kSideRoad,
+		kSideCity
 	};
 
 	enum Center
 	{
-		Nothing,
-		Cloister,
-		//expansion
-		Cathedral,
-		CentralField
+		kCenterNothing,
+		kCenterCloister
 	};
-
-	typedef std::vector< Area::Area > ContiguousField;
-	typedef std::vector< Area::Area > ContiguousRoad;
-	typedef std::vector< Area::Area > ContiguousCity;
 
 	Tile();
 	Tile

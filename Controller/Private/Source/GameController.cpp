@@ -37,23 +37,23 @@ namespace
 	{
 		switch ( inArea )
 		{
-			case Area::LeftTop:
-			case Area::Left:
-			case Area::LeftBottom:
+			case Area::kLeftTop:
+			case Area::kLeft:
+			case Area::kLeftBottom:
 				return .15 * Gui::kTileWidth;
-			case Area::TopLeft:
-			case Area::BottomLeft:
+			case Area::kTopLeft:
+			case Area::kBottomLeft:
 				return .3 * Gui::kTileWidth;
-			case Area::Top:
-			case Area::Central:
-			case Area::Bottom:
+			case Area::kTop:
+			case Area::kCentral:
+			case Area::kBottom:
 				return .5 * Gui::kTileWidth;
-			case Area::TopRight:
-			case Area::BottomRight:
+			case Area::kTopRight:
+			case Area::kBottomRight:
 				return .7 * Gui::kTileWidth;
-			case Area::RightTop:
-			case Area::Right:
-			case Area::RightBottom:
+			case Area::kRightTop:
+			case Area::kRight:
+			case Area::kRightBottom:
 				return .85 * Gui::kTileWidth;
 		}
 		assert( !"Invalid Area" );
@@ -65,23 +65,23 @@ namespace
 	{
 		switch ( inArea )
 		{
-			case Area::TopLeft:
-			case Area::Top:
-			case Area::TopRight:
+			case Area::kTopLeft:
+			case Area::kTop:
+			case Area::kTopRight:
 				return .15 * Gui::kTileHeight;
-			case Area::LeftTop:
-			case Area::RightTop:
+			case Area::kLeftTop:
+			case Area::kRightTop:
 				return .3 * Gui::kTileHeight;
-			case Area::Left:
-			case Area::Central:
-			case Area::Right:
+			case Area::kLeft:
+			case Area::kCentral:
+			case Area::kRight:
 				return .5 * Gui::kTileHeight;
-			case Area::LeftBottom:
-			case Area::RightBottom:
+			case Area::kLeftBottom:
+			case Area::kRightBottom:
 				return .7 * Gui::kTileHeight;
-			case Area::BottomLeft:
-			case Area::Bottom:
-			case Area::BottomRight:
+			case Area::kBottomLeft:
+			case Area::kBottom:
+			case Area::kBottomRight:
 				return .85 * Gui::kTileHeight;
 		}
 		assert( !"Invalid Area" );
@@ -119,50 +119,50 @@ namespace
 			if ( inY < kFirstBorder )
 			{
 				if ( inY < inX )
-					return Area::TopLeft;
+					return Area::kTopLeft;
 				else
-					return Area::LeftTop;
+					return Area::kLeftTop;
 			}
 			else if ( kSecondBorder < inY )
 			{
 				if ( kTileHeight - inY < inX )
-					return Area::BottomLeft;
+					return Area::kBottomLeft;
 				else
-					return Area::LeftBottom;
+					return Area::kLeftBottom;
 			}
 			else if ( kFirstBorder < inY && inY < kSecondBorder )
-				return Area::Left;
+				return Area::kLeft;
 		}
 		else if ( kSecondBorder < inX )
 		{
 			if ( inY < kFirstBorder )
 			{
 				if ( inY < kTileWidth - inX )
-					return Area::TopRight;
+					return Area::kTopRight;
 				else
-					return Area::RightTop;
+					return Area::kRightTop;
 			}
 			else if ( kSecondBorder < inY )
 			{
 				if ( kTileHeight - inY < kTileWidth - inX )
-					return Area::BottomRight;
+					return Area::kBottomRight;
 				else
-					return Area::RightBottom;
+					return Area::kRightBottom;
 			}
 			else if ( kFirstBorder < inY && inY < kSecondBorder )
-				return Area::Right;
+				return Area::kRight;
 		}
 		else if ( kFirstBorder < inX && inX < kSecondBorder )
 		{
 			if ( inY < kFirstBorder )
-				return Area::Top;
+				return Area::kTop;
 			else if ( kSecondBorder < inY )
-				return Area::Bottom;
+				return Area::kBottom;
 			if ( kFirstBorder < inY && inY < kSecondBorder )
-				return Area::Central;
+				return Area::kCentral;
 		}
 		assert( !"Invalid Area" );
-		return Area::Central;
+		return Area::kCentral;
 	}
 
 	Color::Color

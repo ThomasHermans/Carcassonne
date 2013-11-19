@@ -8,8 +8,8 @@ namespace
 	Area::Area
 	turn( Area::Area inArea, TileOnBoard::Rotation inRotation )
 	{
-		if ( inArea == Area::Central )
-			return Area::Central;
+		if ( inArea == Area::kCentral )
+			return Area::kCentral;
 		else
 			return Area::Area( (inArea + inRotation) % 12 );
 	}
@@ -17,8 +17,8 @@ namespace
 	Area::Area
 	unturn( Area::Area inArea, TileOnBoard::Rotation inRotation )
 	{
-		if ( inArea == Area::Central )
-			return Area::Central;
+		if ( inArea == Area::kCentral )
+			return Area::kCentral;
 		else
 			return Area::Area( (inArea + 12 - inRotation) % 12 );
 	}
@@ -162,15 +162,15 @@ TileOnBoard::matchesLeftOf( TileOnBoard const & inTileOnBoard) const
 	return ( this->getRight() == inTileOnBoard.getLeft() );
 }
 
-std::vector< Tile::ContiguousField >
+std::vector< ContiguousField >
 TileOnBoard::getContiguousFields() const
 {
-	std::vector< Tile::ContiguousField > result;
-	std::vector< Tile::ContiguousField > original = mTile.getContiguousFields();
+	std::vector< ContiguousField > result;
+	std::vector< ContiguousField > original = mTile.getContiguousFields();
 	for ( unsigned i = 0; i < original.size(); ++i )
 	{
-		Tile::ContiguousField turned;
-		Tile::ContiguousField origtemp = original[i];
+		ContiguousField turned;
+		ContiguousField origtemp = original[i];
 		for ( unsigned j = 0; j < origtemp.size(); ++j )
 		{
 			turned.push_back( turn( origtemp[j], mRotation ) );
@@ -180,15 +180,15 @@ TileOnBoard::getContiguousFields() const
 	return result;
 }
 
-std::vector< Tile::ContiguousRoad >
+std::vector< ContiguousRoad >
 TileOnBoard::getContiguousRoads() const
 {
-	std::vector< Tile::ContiguousRoad > result;
-	std::vector< Tile::ContiguousRoad > original = mTile.getContiguousRoads();
+	std::vector< ContiguousRoad > result;
+	std::vector< ContiguousRoad > original = mTile.getContiguousRoads();
 	for ( unsigned i = 0; i < original.size(); ++i )
 	{
-		Tile::ContiguousRoad turned;
-		Tile::ContiguousRoad origtemp = original[i];
+		ContiguousRoad turned;
+		ContiguousRoad origtemp = original[i];
 		for ( unsigned j = 0; j < origtemp.size(); ++j )
 		{
 			turned.push_back( turn( origtemp[j], mRotation ) );
@@ -198,15 +198,15 @@ TileOnBoard::getContiguousRoads() const
 	return result;
 }
 
-std::vector< Tile::ContiguousCity >
+std::vector< ContiguousCity >
 TileOnBoard::getContiguousCities() const
 {
-	std::vector< Tile::ContiguousCity > result;
-	std::vector< Tile::ContiguousCity > original = mTile.getContiguousCities();
+	std::vector< ContiguousCity > result;
+	std::vector< ContiguousCity > original = mTile.getContiguousCities();
 	for ( unsigned i = 0; i < original.size(); ++i )
 	{
-		Tile::ContiguousCity turned;
-		Tile::ContiguousCity origtemp = original[i];
+		ContiguousCity turned;
+		ContiguousCity origtemp = original[i];
 		for ( unsigned j = 0; j < origtemp.size(); ++j )
 		{
 			turned.push_back( turn( origtemp[j], mRotation ) );
@@ -240,12 +240,12 @@ TileOnBoard::isField( Area::Area inArea ) const
 	return mTile.isField( unturn( inArea, mRotation ) );
 }
 
-Tile::ContiguousField
+ContiguousField
 TileOnBoard::getContiguousField( Area::Area inArea ) const
 {
 	Area::Area unRotatedArea = unturn( inArea, mRotation );
-	Tile::ContiguousField unRotatedField = mTile.getContiguousField( unRotatedArea );
-	Tile::ContiguousField rotatedField;
+	ContiguousField unRotatedField = mTile.getContiguousField( unRotatedArea );
+	ContiguousField rotatedField;
 	for ( unsigned i = 0; i < unRotatedField.size(); ++i )
 	{
 		rotatedField.push_back( turn( unRotatedField[i], mRotation ) );
@@ -253,12 +253,12 @@ TileOnBoard::getContiguousField( Area::Area inArea ) const
 	return rotatedField;
 }
 
-Tile::ContiguousRoad
+ContiguousRoad
 TileOnBoard::getContiguousRoad( Area::Area inArea ) const
 {
 	Area::Area unRotatedArea = unturn( inArea, mRotation );
-	Tile::ContiguousRoad unRotatedRoad = mTile.getContiguousRoad( unRotatedArea );
-	Tile::ContiguousRoad rotatedRoad;
+	ContiguousRoad unRotatedRoad = mTile.getContiguousRoad( unRotatedArea );
+	ContiguousRoad rotatedRoad;
 	for ( unsigned i = 0; i < unRotatedRoad.size(); ++i )
 	{
 		rotatedRoad.push_back( turn( unRotatedRoad[i], mRotation ) );
@@ -266,12 +266,12 @@ TileOnBoard::getContiguousRoad( Area::Area inArea ) const
 	return rotatedRoad;
 }
 
-Tile::ContiguousCity
+ContiguousCity
 TileOnBoard::getContiguousCity( Area::Area inArea ) const
 {
 	Area::Area unRotatedArea = unturn( inArea, mRotation );
-	Tile::ContiguousCity unRotatedCity = mTile.getContiguousCity( unRotatedArea );
-	Tile::ContiguousCity rotatedCity;
+	ContiguousCity unRotatedCity = mTile.getContiguousCity( unRotatedArea );
+	ContiguousCity rotatedCity;
 	for ( unsigned i = 0; i < unRotatedCity.size(); ++i )
 	{
 		rotatedCity.push_back( turn( unRotatedCity[i], mRotation ) );
@@ -279,16 +279,16 @@ TileOnBoard::getContiguousCity( Area::Area inArea ) const
 	return rotatedCity;
 }
 
-std::vector< Tile::ContiguousCity >
+std::vector< ContiguousCity >
 TileOnBoard::getCitiesPerField( Area::Area inFieldArea ) const
 {
 	Area::Area tileFieldArea = unturn( inFieldArea, mRotation );
-	std::vector< Tile::ContiguousCity > tileCities = mTile.getCitiesPerField( tileFieldArea );
-	std::vector< Tile::ContiguousCity > cities;
+	std::vector< ContiguousCity > tileCities = mTile.getCitiesPerField( tileFieldArea );
+	std::vector< ContiguousCity > cities;
 	for ( unsigned i = 0; i < tileCities.size(); ++i )
 	{
-		Tile::ContiguousCity cityTemp;
-		Tile::ContiguousCity tileCityTemp = tileCities[i];
+		ContiguousCity cityTemp;
+		ContiguousCity tileCityTemp = tileCities[i];
 		for ( unsigned j = 0; j < tileCityTemp.size(); ++j )
 		{
 			cityTemp.push_back( turn( tileCityTemp[j], mRotation ) );
@@ -392,7 +392,7 @@ TileOnBoard::toString() const
 	result.append(Tile::sideToString(this->getLeft()));
 	result.append("\tCenter: ");
 	result.append(Tile::centerToString(this->getCenter()));
-	std::vector< Tile::ContiguousField > fields = this->getContiguousFields();
+	std::vector< ContiguousField > fields = this->getContiguousFields();
 	if (!fields.empty())
 	{
 		result.append("\nContiguous fields:");
@@ -406,7 +406,7 @@ TileOnBoard::toString() const
 			}
 		}
 	}
-	std::vector< Tile::ContiguousRoad > roads = this->getContiguousRoads();
+	std::vector< ContiguousRoad > roads = this->getContiguousRoads();
 	if (!roads.empty())
 	{
 		result.append("\nContiguous roads:");
@@ -420,7 +420,7 @@ TileOnBoard::toString() const
 			}
 		}
 	}
-	std::vector< Tile::ContiguousCity > cities = this->getContiguousCities();
+	std::vector< ContiguousCity > cities = this->getContiguousCities();
 	if (!cities.empty())
 	{
 		result.append("\nContiguous cities:");
