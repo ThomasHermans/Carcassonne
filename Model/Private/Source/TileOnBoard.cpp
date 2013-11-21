@@ -6,7 +6,7 @@
 namespace
 {
 	Area::Area
-	turn( Area::Area inArea, TileOnBoard::Rotation inRotation )
+	turn( Area::Area inArea, Model::Rotation inRotation )
 	{
 		if ( inArea == Area::kCentral )
 			return Area::kCentral;
@@ -15,7 +15,7 @@ namespace
 	}
 
 	Area::Area
-	unturn( Area::Area inArea, TileOnBoard::Rotation inRotation )
+	unturn( Area::Area inArea, Model::Rotation inRotation )
 	{
 		if ( inArea == Area::kCentral )
 			return Area::kCentral;
@@ -24,15 +24,15 @@ namespace
 	}
 }
 
-TileOnBoard::TileOnBoard()
+Model::TileOnBoard::TileOnBoard()
 :
 	mTile( Tile::Tile() ),
-	mRotation( TileOnBoard::kCw0 ),
+	mRotation( Model::kCw0 ),
 	mPlacedPieces()
 {
 }
 
-TileOnBoard::TileOnBoard( const Tile &inTile, Rotation inRotation )
+Model::TileOnBoard::TileOnBoard( const Tile &inTile, Rotation inRotation )
 :
 	mTile( inTile ),
 	mRotation( inRotation ),
@@ -41,7 +41,7 @@ TileOnBoard::TileOnBoard( const Tile &inTile, Rotation inRotation )
 }
 
 Tile::Side
-TileOnBoard::getTop() const
+Model::TileOnBoard::getTop() const
 {
 	switch ( mRotation )
 	{
@@ -58,7 +58,7 @@ TileOnBoard::getTop() const
 }
 
 Tile::Side
-TileOnBoard::getRight() const
+Model::TileOnBoard::getRight() const
 {
 	switch ( mRotation )
 	{
@@ -75,7 +75,7 @@ TileOnBoard::getRight() const
 }
 
 Tile::Side
-TileOnBoard::getBottom() const
+Model::TileOnBoard::getBottom() const
 {
 	switch ( mRotation )
 	{
@@ -92,7 +92,7 @@ TileOnBoard::getBottom() const
 }
 
 Tile::Side
-TileOnBoard::getLeft() const
+Model::TileOnBoard::getLeft() const
 {
 	switch ( mRotation )
 	{
@@ -109,61 +109,61 @@ TileOnBoard::getLeft() const
 }
 
 Tile::Center
-TileOnBoard::getCenter() const
+Model::TileOnBoard::getCenter() const
 {
 	return mTile.getCenter();
 }
 
 std::string const &
-TileOnBoard::getID() const
+Model::TileOnBoard::getID() const
 {
 	return mTile.getID();
 }
 
 Tile const &
-TileOnBoard::getTile() const
+Model::TileOnBoard::getTile() const
 {
 	return mTile;
 }
 
-TileOnBoard::Rotation
-TileOnBoard::getRotation() const
+Model::Rotation
+Model::TileOnBoard::getRotation() const
 {
 	return mRotation;
 }
 
 std::vector< PlacedPiece > const &
-TileOnBoard::getPlacedPieces() const
+Model::TileOnBoard::getPlacedPieces() const
 {
 	return mPlacedPieces;
 }
 
 bool
-TileOnBoard::matchesAbove( TileOnBoard const & inTileOnBoard) const
+Model::TileOnBoard::matchesAbove( TileOnBoard const & inTileOnBoard) const
 {
 	return ( this->getBottom() == inTileOnBoard.getTop() );
 }
 
 bool
-TileOnBoard::matchesRightOf( TileOnBoard const & inTileOnBoard) const
+Model::TileOnBoard::matchesRightOf( TileOnBoard const & inTileOnBoard) const
 {
 	return ( this->getLeft() == inTileOnBoard.getRight() );
 }
 
 bool
-TileOnBoard::matchesBelow( TileOnBoard const & inTileOnBoard) const
+Model::TileOnBoard::matchesBelow( TileOnBoard const & inTileOnBoard) const
 {
 	return ( this->getTop() == inTileOnBoard.getBottom() );
 }
 
 bool
-TileOnBoard::matchesLeftOf( TileOnBoard const & inTileOnBoard) const
+Model::TileOnBoard::matchesLeftOf( TileOnBoard const & inTileOnBoard) const
 {
 	return ( this->getRight() == inTileOnBoard.getLeft() );
 }
 
 std::vector< ContiguousField >
-TileOnBoard::getContiguousFields() const
+Model::TileOnBoard::getContiguousFields() const
 {
 	std::vector< ContiguousField > result;
 	std::vector< ContiguousField > original = mTile.getContiguousFields();
@@ -181,7 +181,7 @@ TileOnBoard::getContiguousFields() const
 }
 
 std::vector< ContiguousRoad >
-TileOnBoard::getContiguousRoads() const
+Model::TileOnBoard::getContiguousRoads() const
 {
 	std::vector< ContiguousRoad > result;
 	std::vector< ContiguousRoad > original = mTile.getContiguousRoads();
@@ -199,7 +199,7 @@ TileOnBoard::getContiguousRoads() const
 }
 
 std::vector< ContiguousCity >
-TileOnBoard::getContiguousCities() const
+Model::TileOnBoard::getContiguousCities() const
 {
 	std::vector< ContiguousCity > result;
 	std::vector< ContiguousCity > original = mTile.getContiguousCities();
@@ -217,31 +217,31 @@ TileOnBoard::getContiguousCities() const
 }
 
 bool
-TileOnBoard::isCloister( Area::Area inArea ) const
+Model::TileOnBoard::isCloister( Area::Area inArea ) const
 {
 	return mTile.isCloister( unturn( inArea, mRotation ) );
 }
 
 bool
-TileOnBoard::isRoad( Area::Area inArea ) const
+Model::TileOnBoard::isRoad( Area::Area inArea ) const
 {
 	return mTile.isRoad( unturn( inArea, mRotation ) );
 }
 
 bool
-TileOnBoard::isCity( Area::Area inArea ) const
+Model::TileOnBoard::isCity( Area::Area inArea ) const
 {
 	return mTile.isCity( unturn( inArea, mRotation ) );
 }
 
 bool
-TileOnBoard::isField( Area::Area inArea ) const
+Model::TileOnBoard::isField( Area::Area inArea ) const
 {
 	return mTile.isField( unturn( inArea, mRotation ) );
 }
 
 ContiguousField
-TileOnBoard::getContiguousField( Area::Area inArea ) const
+Model::TileOnBoard::getContiguousField( Area::Area inArea ) const
 {
 	Area::Area unRotatedArea = unturn( inArea, mRotation );
 	ContiguousField unRotatedField = mTile.getContiguousField( unRotatedArea );
@@ -254,7 +254,7 @@ TileOnBoard::getContiguousField( Area::Area inArea ) const
 }
 
 ContiguousRoad
-TileOnBoard::getContiguousRoad( Area::Area inArea ) const
+Model::TileOnBoard::getContiguousRoad( Area::Area inArea ) const
 {
 	Area::Area unRotatedArea = unturn( inArea, mRotation );
 	ContiguousRoad unRotatedRoad = mTile.getContiguousRoad( unRotatedArea );
@@ -267,7 +267,7 @@ TileOnBoard::getContiguousRoad( Area::Area inArea ) const
 }
 
 ContiguousCity
-TileOnBoard::getContiguousCity( Area::Area inArea ) const
+Model::TileOnBoard::getContiguousCity( Area::Area inArea ) const
 {
 	Area::Area unRotatedArea = unturn( inArea, mRotation );
 	ContiguousCity unRotatedCity = mTile.getContiguousCity( unRotatedArea );
@@ -280,7 +280,7 @@ TileOnBoard::getContiguousCity( Area::Area inArea ) const
 }
 
 std::vector< ContiguousCity >
-TileOnBoard::getCitiesPerField( Area::Area inFieldArea ) const
+Model::TileOnBoard::getCitiesPerField( Area::Area inFieldArea ) const
 {
 	Area::Area tileFieldArea = unturn( inFieldArea, mRotation );
 	std::vector< ContiguousCity > tileCities = mTile.getCitiesPerField( tileFieldArea );
@@ -299,20 +299,20 @@ TileOnBoard::getCitiesPerField( Area::Area inFieldArea ) const
 }
 
 bool
-TileOnBoard::placePiece( PlacedPiece const & inPlacedPiece )
+Model::TileOnBoard::placePiece( PlacedPiece const & inPlacedPiece )
 {
 	mPlacedPieces.push_back( inPlacedPiece );
 	return true;
 }
 
 bool
-TileOnBoard::hasPieces() const
+Model::TileOnBoard::hasPieces() const
 {
 	return !mPlacedPieces.empty();
 }
 
 bool
-TileOnBoard::hasPiece( Area::Area inArea ) const
+Model::TileOnBoard::hasPiece( Area::Area inArea ) const
 {
 	for ( std::vector< PlacedPiece >::const_iterator it = mPlacedPieces.begin();
 		it != mPlacedPieces.end();
@@ -327,7 +327,7 @@ TileOnBoard::hasPiece( Area::Area inArea ) const
 }
 
 std::vector< PlacedPiece >
-TileOnBoard::removePieces( Area::Area inArea )
+Model::TileOnBoard::removePieces( Area::Area inArea )
 {
 	std::vector< PlacedPiece > result;
 	std::vector< PlacedPiece >::iterator it = mPlacedPieces.begin();
@@ -347,7 +347,7 @@ TileOnBoard::removePieces( Area::Area inArea )
 }
 
 std::vector< PlacedPiece >
-TileOnBoard::removeAllPieces()
+Model::TileOnBoard::removeAllPieces()
 {
 	std::vector< PlacedPiece > result = mPlacedPieces;
 	mPlacedPieces.clear();
@@ -355,7 +355,7 @@ TileOnBoard::removeAllPieces()
 }
 
 std::vector< Area::Area >
-TileOnBoard::getShields() const
+Model::TileOnBoard::getShields() const
 {
 	std::vector< Area::Area > result;
 	std::vector< Area::Area > orig = mTile.getShields();
@@ -367,7 +367,7 @@ TileOnBoard::getShields() const
 }
 
 std::vector< Area::Area >
-TileOnBoard::getInns() const
+Model::TileOnBoard::getInns() const
 {
 	std::vector< Area::Area > result;
 	std::vector< Area::Area > orig = mTile.getInns();
@@ -379,7 +379,7 @@ TileOnBoard::getInns() const
 }
 
 std::string
-TileOnBoard::toString() const
+Model::TileOnBoard::toString() const
 {
 	std::string result;
 	result.append("Top: ");

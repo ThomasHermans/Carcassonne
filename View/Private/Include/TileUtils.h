@@ -13,7 +13,7 @@ namespace View
 	getPixmapForTile( std::string const & inTileId );
 
 	QPixmap
-	getPixmapForTile( std::string const & inTileId, Dragging::Rotation inRotation );
+	getPixmapForTile( std::string const & inTileId, View::Rotation inRotation );
 
 	QPixmap
 	getRotatedPixmapForTile( std::string const & inTileId, double inCwAngle );

@@ -32,7 +32,8 @@ public:
 	Player const & getCurrentPlayer() const;
 
 	void clickTile( unsigned inCol, unsigned inRow );
-	void placeTileOnBoard( unsigned inCol, unsigned inRow );
+	void dropTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation );
+	void placeTileOnBoard( unsigned inCol, unsigned inRow, Model::Rotation inRotation = Model::kCw0 );
 	void placeStartTileOnBoard();
 
 	boost::optional< Tile > getNextTile() const;
@@ -54,8 +55,8 @@ public slots:
 	void onEndCurrentTurn();
 
 signals:
-	void tileRotated( unsigned inCol, unsigned inRow, std::string inId, TileOnBoard::Rotation inRot );
-	void tilePlaced( unsigned col, unsigned row, std::string id, TileOnBoard::Rotation rot );
+	void tileRotated( unsigned inCol, unsigned inRow, std::string inId, Model::Rotation inRot );
+	void tilePlaced( unsigned col, unsigned row, std::string id, Model::Rotation rot );
 	void tileUnplaced( unsigned inCol, unsigned inRow );
 	void nextTile( std::string inNextId );
 	void tilesLeft( unsigned inNr );
@@ -114,7 +115,7 @@ private:
 	unsigned mStartRow;
 	unsigned mStartCol;
 
-	boost::optional< TileOnBoard > mCurrentPlacedTile;
+	boost::optional< Model::TileOnBoard > mCurrentPlacedTile;
 
 	unsigned mCurrentPlacedRow;
 	unsigned mCurrentPlacedCol;	

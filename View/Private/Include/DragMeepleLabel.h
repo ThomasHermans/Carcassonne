@@ -12,16 +12,16 @@ class DragMeepleLabel : public QWidget
 public:
 	DragMeepleLabel
 	(
-		Dragging::Piece inType,
+		View::Piece inType,
 		unsigned inNr,
-		Dragging::Color inColor,
+		View::Color inColor,
 		QWidget * inParent
 	);
 
 	~DragMeepleLabel();
 
 	void setNr( unsigned inNr );
-	void setColor( Dragging::Color inColor );
+	void setColor( View::Color inColor );
 
 protected:
 	void mousePressEvent( QMouseEvent * inEvent );
@@ -31,8 +31,8 @@ protected:
 private:
 	QLabel * mNrLabel;
 	unsigned mNr;
-	Dragging::Piece mType;
-	Dragging::Color mColor;
+	View::Piece mType;
+	View::Color mColor;
 	QPoint mDragStartPosition;
 };
 

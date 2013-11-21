@@ -17,7 +17,7 @@ public:
 	UserInfoWidget
 	(
 		std::string const & inName,
-		Dragging::Color inColor,
+		View::Color inColor,
 		unsigned inNumberOfFollowers,
 		QWidget * inParent
 	);

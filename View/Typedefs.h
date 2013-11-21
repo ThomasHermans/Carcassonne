@@ -19,7 +19,7 @@ namespace Gui
 	};
 }
 
-namespace Dragging
+namespace View
 {
 	enum Rotation
 	{

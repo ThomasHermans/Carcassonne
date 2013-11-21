@@ -33,7 +33,7 @@ private:
 
 private:
 	std::string mTileId;
-	Dragging::Rotation mRotation;
+	View::Rotation mRotation;
 	QPixmap mPixmap;
 	QPoint mDragStartPosition;
 	bool mFaded;

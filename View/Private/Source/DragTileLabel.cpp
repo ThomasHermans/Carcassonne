@@ -18,22 +18,22 @@
 
 namespace
 {
-	Dragging::Rotation
-	getNextRotation( Dragging::Rotation inRotation )
+	View::Rotation
+	getNextRotation( View::Rotation inRotation )
 	{
 		switch ( inRotation )
 		{
-		case Dragging::kCw0:
-			return Dragging::kCw270;
-		case Dragging::kCw90:
-			return Dragging::kCw0;
-		case Dragging::kCw180:
-			return Dragging::kCw90;
-		case Dragging::kCw270:
-			return Dragging::kCw180;
+		case View::kCw0:
+			return View::kCw270;
+		case View::kCw90:
+			return View::kCw0;
+		case View::kCw180:
+			return View::kCw90;
+		case View::kCw270:
+			return View::kCw180;
 		}
-		assert( !"Invalid Dragging::Rotation" );
-		return Dragging::kCw0;
+		assert( !"Invalid View::Rotation" );
+		return View::kCw0;
 	}
 }
 
@@ -41,7 +41,7 @@ DragTileLabel::DragTileLabel( QWidget * inParent )
 :
 	QLabel( inParent ),
 	mTileId( "" ),
-	mRotation( Dragging::kCw0 ),
+	mRotation( View::kCw0 ),
 	mPixmap(),
 	mDragStartPosition(),
 	mFaded( false )
@@ -61,7 +61,7 @@ DragTileLabel::setTile( std::string const & inTileId )
 {
 	mFaded = false;
 	mTileId = inTileId;
-	mRotation = Dragging::kCw0;
+	mRotation = View::kCw0;
 	updatePixmap();
 }
 

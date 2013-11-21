@@ -17,21 +17,21 @@
 namespace
 {
 	QColor
-	toQColor( Dragging::Color inColor )
+	toQColor( View::Color inColor )
 	{
 		switch ( inColor )
 		{
-			case Dragging::kRed:
+			case View::kRed:
 				return Qt::red;
-			case Dragging::kGreen:
+			case View::kGreen:
 				return Qt::green;
-			case Dragging::kBlue:
+			case View::kBlue:
 				return Qt::blue;
-			case Dragging::kYellow:
+			case View::kYellow:
 				return Qt::yellow;
-			case Dragging::kBlack:
+			case View::kBlack:
 				return Qt::black;
-			case Dragging::kGray:
+			case View::kGray:
 				return Qt::gray;
 			default:
 				return Qt::white;
@@ -55,9 +55,9 @@ namespace
 
 DragMeepleLabel::DragMeepleLabel
 (
-	Dragging::Piece inType,
+	View::Piece inType,
 	unsigned inNr,
-	Dragging::Color inColor,
+	View::Color inColor,
 	QWidget * inParent
 )
 :
@@ -96,7 +96,7 @@ DragMeepleLabel::setNr( unsigned inNr )
 }
 
 void
-DragMeepleLabel::setColor( Dragging::Color inColor )
+DragMeepleLabel::setColor( View::Color inColor )
 {
 	mColor = inColor;
 }

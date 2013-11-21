@@ -9,20 +9,20 @@
 namespace
 {
 	double
-	getAngle( Dragging::Rotation inRotation )
+	getAngle( View::Rotation inRotation )
 	{
 		switch ( inRotation )
 		{
-		case Dragging::kCw0:
+		case View::kCw0:
 			return 0;
-		case Dragging::kCw90:
+		case View::kCw90:
 			return 270;
-		case Dragging::kCw180:
+		case View::kCw180:
 			return 180;
-		case Dragging::kCw270:
+		case View::kCw270:
 			return 90;
 		}
-		assert( !"Invalid Dragging::Rotation" );
+		assert( !"Invalid View::Rotation" );
 		return 0;
 	}
 }
@@ -36,7 +36,7 @@ View::getPixmapForTile( std::string const & inTileId )
 }
 
 QPixmap
-View::getPixmapForTile( std::string const & inTileId, Dragging::Rotation inRotation )
+View::getPixmapForTile( std::string const & inTileId, View::Rotation inRotation )
 {
 	QPixmap pixmap = getPixmapForTile( inTileId );
 	QTransform rotation = QTransform();

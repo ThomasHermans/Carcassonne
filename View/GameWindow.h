@@ -61,7 +61,7 @@ public:
 	void addPlayer
 	(
 		std::string const & inName,
-		Dragging::Color inColor,
+		View::Color inColor,
 		unsigned inNumberOfFollowers
 	);
 
@@ -72,19 +72,21 @@ public:
 	void setActivePlayer( std::string const & inName );
 	void setScore( std::string const & inName, unsigned inScore );
 	void setFollowersLeft( std::string const & inName, unsigned inNumberOfFollowers );
+	void setNextTile( std::string const & inId );
 
 	void finishCloister( int inX, int inY );
 	
 signals:
-	void clicked( int x, int y );
+	void clicked( int inX, int inY );
+	void tileDropped( int inX, int inY, std::string const & inId, View::Rotation inRotation );
 	void endCurrentTurn();
 	void tryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY );
 	
 public slots:
 	void setTile( int inX, int inY, std::string const & inId, double inRotation );
-	void setNextTile( std::string const & inId );
 	void fadeNextTile();
 	void onClicked( int x, int y );
+	void onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
 	void placePiece( int inX, int inY, QColor inColor );
 	void returnPiece( int inX, int inY, QColor inColor );
 

@@ -1,6 +1,6 @@
 #include "View/DragData.h"
 
-Dragging::TileData::TileData( std::string const & inTile, Rotation inRotation )
+Dragging::TileData::TileData( std::string const & inTile, View::Rotation inRotation )
 :
 	QMimeData(),
 	mTile( inTile ),
@@ -13,27 +13,27 @@ Dragging::TileData::getTile() const
 	return mTile;
 }
 
-Dragging::Rotation
+View::Rotation
 Dragging::TileData::getRotation() const
 {
 	return mRotation;
 }
 
 
-Dragging::PieceData::PieceData( Piece inPiece, Color inColor )
+Dragging::PieceData::PieceData( View::Piece inPiece, View::Color inColor )
 :
 	QMimeData(),
 	mPiece( inPiece ),
 	mColor( inColor )
 {}
 
-Dragging::Piece
+View::Piece
 Dragging::PieceData::getPiece() const
 {
 	return mPiece;
 }
 
-Dragging::Color
+View::Color
 Dragging::PieceData::getColor() const
 {
 	return mColor;

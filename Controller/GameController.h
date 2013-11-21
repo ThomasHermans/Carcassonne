@@ -21,9 +21,9 @@ public:
 
 private slots:
 	// From model to view
-	void onTilePlaced( unsigned inCol, unsigned inRow, std::string const & inId, TileOnBoard::Rotation inRot );
+	void onTilePlaced( unsigned inCol, unsigned inRow, std::string const & inId, Model::Rotation inRot );
 	void onTileUnplaced( unsigned inCol, unsigned inRow );
-	void onTileRotated( unsigned inCol, unsigned inRow, std::string const & inId, TileOnBoard::Rotation inRot );
+	void onTileRotated( unsigned inCol, unsigned inRow, std::string const & inId, Model::Rotation inRot );
 	void onNextTile( std::string const & inNextId );
 	void onTilesLeft( unsigned inNr );
 
@@ -38,6 +38,7 @@ private slots:
 
 	// From view to model
 	void onClicked( int inX, int inY );
+	void onTileDropped( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
 	void onTryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY );
 
 private:

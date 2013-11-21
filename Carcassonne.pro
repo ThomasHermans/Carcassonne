@@ -12,6 +12,7 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
 	Controller\Private\Source\GameController.cpp \
+	Controller\Private\Source\ModelViewGlue.cpp \
 	Controller\Private\Source\StartController.cpp \
 	Controller\Private\Source\SupremeController.cpp \
 	test_o_matic.cpp \
@@ -26,6 +27,7 @@ SOURCES += main.cpp \
 	Model\Private\Source\PlacedPiece.cpp \
 	Model\Private\Source\PlacedProject.cpp \
 	Model\Private\Source\Player.cpp \
+	Model\Private\Source\Rotation.cpp \
 	Model\Private\Source\TileOnBoard.cpp \
 	Model\Private\Source\Tile.cpp \
 	View\Private\Source\AllScoresWidget.cpp \
@@ -43,17 +45,20 @@ SOURCES += main.cpp \
 HEADERS += \
 	Controller\GameController.h \
 	Controller\SupremeController.h \
+	Controller\Private\Include\ModelViewGlue.h \
 	Controller\Private\Include\StartController.h \
 	test_o_matic.hpp \
 	UnitTests.h \
+	Model\Area.h \
 	Model\Color.h \
 	Model\Game.h \
+	Model\Piece.h \
 	Model\Player.h \
-	Model\Private\Include\Area.h \
+	Model\Rotation.h \
 	Model\Private\Include\Board.h \
 	Model\Private\Include\CreateBaseGameTiles.h \
-	Model\Private\Include\Piece.h \
 	Model\Private\Include\PlacedPiece.h \
+	Model\Private\Include\PlacedProject.h \
 	Model\Private\Include\Tile.h \
 	Model\Private\Include\TileOnBoard.h \
 	View\DragData.h \

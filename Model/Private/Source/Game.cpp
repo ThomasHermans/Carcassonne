@@ -208,8 +208,12 @@ Game::getCurrentPlayer() const
 }
 
 void
-Game::clickTile( unsigned int inCol, unsigned int inRow )
+Game::clickTile( unsigned inCol, unsigned inRow )
 {
+	if ( inCol >= mBoard.getNrOfCols() || inRow >= mBoard.getNrOfRows() )
+	{
+		return;
+	}
 	if ( isEmptySpot( inCol, inRow ) )
 	{
 		std::cout << "Empty spot -> placeTileOnBoard" << std::endl;
@@ -223,23 +227,36 @@ Game::clickTile( unsigned int inCol, unsigned int inRow )
 }
 
 void
-Game::placeTileOnBoard( unsigned int inCol, unsigned int inRow )
+Game::dropTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation )
+{
+	if ( inCol >= mBoard.getNrOfCols() || inRow >= mBoard.getNrOfRows() )
+	{
+		return;
+	}
+	if ( mNextTile && mNextTile->getID() == inTileId && isEmptySpot( inCol, inRow ) )
+	{
+		placeTileOnBoard( inCol, inRow, inRotation );
+	}
+}
+
+void
+Game::placeTileOnBoard( unsigned inCol, unsigned inRow, Model::Rotation inRotation )
 {
 	if ( mNextTile )
 	{
 		// Delete tile that was placed earlier in current turn
-		boost::optional< TileOnBoard > earlierTile = mCurrentPlacedTile;
+		boost::optional< Model::TileOnBoard > earlierTile = mCurrentPlacedTile;
 		if ( earlierTile )
 		{
 			emit tileUnplaced( mCurrentPlacedCol, mCurrentPlacedRow );
 		}
 		// Try the newly clicked position (try all rotations until we found a good one)
-		TileOnBoard::Rotation rotation = TileOnBoard::kCw0;
-		TileOnBoard toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
+		Model::Rotation rotation = inRotation;
+		Model::TileOnBoard toBePlacedTile = Model::TileOnBoard(mNextTile.get(), rotation);
 		bool found = false;
-		for ( int i = 0; i < 4; ++i )
+		for ( unsigned i = 0; i < 4; ++i )
 		{
-			toBePlacedTile = TileOnBoard( mNextTile.get(), rotation );
+			toBePlacedTile = Model::TileOnBoard( mNextTile.get(), rotation );
 			if ( mBoard.isValidTilePlacement( toBePlacedTile, inCol, inRow ) )
 			{
 				found = true;
@@ -247,7 +264,7 @@ Game::placeTileOnBoard( unsigned int inCol, unsigned int inRow )
 			}
 			else
 			{
-				rotation = TileOnBoard::Rotation( rotation + TileOnBoard::kCw90 );
+				rotation = Model::Rotation( rotation + Model::kCw90 );
 			}
 		}
 		std::cout << "Found: " << found << std::endl;
@@ -280,8 +297,8 @@ Game::placeStartTileOnBoard()
 {
 	if (mNextTile)
 	{
-		TileOnBoard::Rotation rotation = TileOnBoard::kCw0; // TODO: get a random Rotation each time
-		TileOnBoard toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
+		Model::Rotation rotation = Model::kCw0; // TODO: get a random Rotation each time
+		Model::TileOnBoard toBePlacedTile = Model::TileOnBoard(mNextTile.get(), rotation);
 		unsigned int pos = mBoard.placeStartTile(toBePlacedTile);
 		mStartCol = pos % mBoard.getNrOfCols();
 		mStartRow = pos / mBoard.getNrOfCols();
@@ -362,7 +379,7 @@ Game::calculateEndPoints()
 		{
 			if ( mBoard.isTile( col, row ) )
 			{
-				boost::optional< TileOnBoard > const tile = mBoard.getTile( col, row );
+				boost::optional< Model::TileOnBoard > const tile = mBoard.getTile( col, row );
 				std::vector< PlacedPiece > const pieces = tile->getPlacedPieces();
 				for ( std::vector< PlacedPiece >::const_iterator it = pieces.begin();
 					it != pieces.end();
@@ -626,14 +643,14 @@ Game::rotateCurrentTile()
 {
 	if ( mCurrentPlacedTile )
 	{
-		TileOnBoard::Rotation currentRotation = mCurrentPlacedTile->getRotation();
+		Model::Rotation currentRotation = mCurrentPlacedTile->getRotation();
 		Tile tile = mCurrentPlacedTile->getTile();
-		TileOnBoard::Rotation newRotation = currentRotation;
-		TileOnBoard rotated = TileOnBoard( tile, newRotation );
+		Model::Rotation newRotation = currentRotation;
+		Model::TileOnBoard rotated = Model::TileOnBoard( tile, newRotation );
 		for ( int i = 0; i < 4; ++i )
 		{
-			newRotation = TileOnBoard::Rotation( (newRotation + TileOnBoard::kCw90) % (TileOnBoard::kCw90 * 4) );
-			rotated = TileOnBoard( tile, newRotation );
+			newRotation = Model::Rotation( (newRotation + Model::kCw90) % (Model::kCw90 * 4) );
+			rotated = Model::TileOnBoard( tile, newRotation );
 			if ( mBoard.isValidTilePlacement( rotated, mCurrentPlacedCol, mCurrentPlacedRow ) )
 			{
 				break;

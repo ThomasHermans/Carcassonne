@@ -22,15 +22,15 @@ public:
 	unsigned getNrOfRows() const;
 	unsigned getNrOfCols() const;
 	bool isTile( unsigned inCol, unsigned inRow ) const;
-	boost::optional< TileOnBoard > const & getTile( unsigned inCol, unsigned inRow ) const;
-	boost::optional< TileOnBoard > & getTile( unsigned inCol, unsigned inRow );
+	boost::optional< Model::TileOnBoard > const & getTile( unsigned inCol, unsigned inRow ) const;
+	boost::optional< Model::TileOnBoard > & getTile( unsigned inCol, unsigned inRow );
 
 	bool isPossibleTile( Tile const & inTile );
 	bool isEmptySpot( unsigned inCol, unsigned inRow ) const;
-	bool isValidTilePlacement( TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const;
-	bool isValidAlternateTilePlacement( TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const;
-	bool placeValidTile( TileOnBoard const & inTile, unsigned inCol, unsigned inRow );
-	unsigned placeStartTile( TileOnBoard const & inTile );
+	bool isValidTilePlacement( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const;
+	bool isValidAlternateTilePlacement( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const;
+	bool placeValidTile( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow );
+	unsigned placeStartTile( Model::TileOnBoard const & inTile );
 
 	bool isOccupiedRoad( unsigned inCol, unsigned inRow, Area::Area inArea ) const;
 	bool isOccupiedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const;
@@ -62,7 +62,7 @@ signals:
 	void rowsAddedTop( unsigned inNrOfRows );
 
 private:
-	bool placeTile( TileOnBoard const & inTile, unsigned inCol, unsigned inRow );
+	bool placeTile( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow );
 	bool removeTile( unsigned inCol, unsigned inRow );
 
 	void widenUp( unsigned inCol, unsigned inRow );
@@ -74,7 +74,7 @@ private:
 private:
 	unsigned mNrRows;
 	unsigned mNrCols;
-	std::vector< boost::optional< TileOnBoard > > mBoard; // one vector of size cols * rows might be easier to use than nested vectors
+	std::vector< boost::optional< Model::TileOnBoard > > mBoard; // one vector of size cols * rows might be easier to use than nested vectors
 };
 
 #endif // BOARD_H

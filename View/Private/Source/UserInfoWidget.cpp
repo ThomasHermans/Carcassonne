@@ -11,21 +11,21 @@
 namespace
 {
 	QString
-	GetColor( Dragging::Color inColor )
+	GetColor( View::Color inColor )
 	{
 		switch ( inColor )
 		{
-			case Dragging::kRed:
+			case View::kRed:
 				return "red";
-			case Dragging::kGreen:
+			case View::kGreen:
 				return "green";
-			case Dragging::kBlue:
+			case View::kBlue:
 				return "blue";
-			case Dragging::kYellow:
+			case View::kYellow:
 				return "yellow";
-			case Dragging::kBlack:
+			case View::kBlack:
 				return "black";
-			case Dragging::kGray:
+			case View::kGray:
 				return "gray";
 		}
 		assert( !"Invalid color" );
@@ -33,17 +33,17 @@ namespace
 	}
 
 	QString
-	GetBackgroundColor( Dragging::Color inColor )
+	GetBackgroundColor( View::Color inColor )
 	{
 		switch ( inColor )
 		{
-			case Dragging::kRed:
-			case Dragging::kGreen:
-			case Dragging::kBlue:
-			case Dragging::kBlack:
-			case Dragging::kGray:
+			case View::kRed:
+			case View::kGreen:
+			case View::kBlue:
+			case View::kBlack:
+			case View::kGray:
 				return "none";
-			case Dragging::kYellow:
+			case View::kYellow:
 				return "darkGray";
 		}
 		assert( !"Invalid color" );
@@ -51,7 +51,7 @@ namespace
 	}
 
 	QString
-	GetStyleSheet( Dragging::Color inColor )
+	GetStyleSheet( View::Color inColor )
 	{
 		QString styleSheet( "QLabel { color: __COLOR__; } QWidget { background-color: __BGCOLOR__; }");
 		styleSheet.replace( "__COLOR__", GetColor( inColor ) );
@@ -63,7 +63,7 @@ namespace
 UserInfoWidget::UserInfoWidget
 (
 	std::string const & inName,
-	Dragging::Color inColor,
+	View::Color inColor,
 	unsigned inNumberOfFollowers,
 	QWidget * inParent
 )
@@ -96,7 +96,7 @@ UserInfoWidget::UserInfoWidget
 
 	layout->addLayout( rowLayout );
 
-	mDragFollowersLabel = new DragMeepleLabel( Dragging::kFollower, inNumberOfFollowers, inColor, this );
+	mDragFollowersLabel = new DragMeepleLabel( View::kFollower, inNumberOfFollowers, inColor, this );
 	mDragFollowersLabel->setObjectName( "mDragFollowersLabel" );
 	layout->addWidget( mDragFollowersLabel );
 

@@ -1,4 +1,4 @@
-#include "Piece.h"
+#include "Model/Piece.h"
 
 #include "PlacedPiece.h"
 

@@ -1,7 +1,7 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "Area.h"
+#include "Model/Area.h"
 
 #include <map>
 #include <string>

@@ -42,7 +42,9 @@ GameWindow::GameWindow( QWidget *parent )
 
 	boardAndSideBarLayout->addWidget( mBoardView, 1 );
 
-	connect( mBoardView, SIGNAL(clicked(int,int)), this, SLOT(onClicked(int,int)) );
+	connect( mBoardView, SIGNAL( clicked( int, int ) ), this, SLOT( onClicked( int, int ) ) );
+	connect( mBoardView, SIGNAL( droppedTile( int, int, std::string const &, View::Rotation ) ),
+		this, SLOT( onDroppedTile( int, int, std::string const &, View::Rotation ) ) );
 
 	mSideBarLayout = new QVBoxLayout();
 	mSideBarLayout->setObjectName(QString::fromUtf8("mSideBarLayout"));
@@ -98,7 +100,7 @@ void
 GameWindow::addPlayer
 (
 	std::string const & inName,
-	Dragging::Color inColor,
+	View::Color inColor,
 	unsigned inNumberOfFollowers
 )
 {
@@ -179,6 +181,12 @@ GameWindow::setFollowersLeft( std::string const & inName, unsigned inNumberOfFol
 }
 
 void
+GameWindow::setNextTile( std::string const & inId )
+{
+	mPickedTileLabel->setTile( inId );
+}
+
+void
 GameWindow::finishCloister(int inX, int inY)
 {
 	QGraphicsEllipseItem* circle = new QGraphicsEllipseItem( inX, inY, 100, 100 );
@@ -197,22 +205,21 @@ GameWindow::setTile( int inX, int inY, std::string const & inId, double inRotati
 }
 
 void
-GameWindow::setNextTile( std::string const & inId )
-{
-	mPickedTileLabel->setTile( inId );
-}
-
-void
 GameWindow::fadeNextTile()
 {
 	mPickedTileLabel->fadeTile();
 }
 
 void
-GameWindow::onClicked(int x, int y)
+GameWindow::onClicked( int inX, int inY )
 {
-	std::cout << "GameWindow sees a click" << std::endl;
-	emit clicked(x, y);
+	emit clicked( inX, inY );
+}
+
+void
+GameWindow::onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
+{
+	emit tileDropped( inX, inY, inTileId, inRotation );
 }
 
 void

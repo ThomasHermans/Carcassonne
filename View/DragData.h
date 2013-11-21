@@ -13,14 +13,14 @@ namespace Dragging
 	{
 		Q_OBJECT
 	public:
-		TileData( std::string const & inTile, Rotation inRotation );
+		TileData( std::string const & inTile, View::Rotation inRotation );
 
 		std::string const & getTile() const;
-		Rotation getRotation() const;
+		View::Rotation getRotation() const;
 
 	private:
 		std::string mTile;
-		Rotation mRotation;
+		View::Rotation mRotation;
 	};
 
 	class PieceData : public QMimeData
@@ -28,14 +28,14 @@ namespace Dragging
 		Q_OBJECT
 
 	public:
-		PieceData( Piece inPiece, Color inColor );
+		PieceData( View::Piece inPiece, View::Color inColor );
 
-		Piece getPiece() const;
-		Color getColor() const;
+		View::Piece getPiece() const;
+		View::Color getColor() const;
 
 	private:
-		Piece mPiece;
-		Color mColor;
+		View::Piece mPiece;
+		View::Color mColor;
 	};
 }
 

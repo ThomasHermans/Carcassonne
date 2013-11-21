@@ -100,7 +100,7 @@ Board::isTile( unsigned inCol, unsigned inRow ) const
 	}
 }
 
-boost::optional< TileOnBoard > const &
+boost::optional< Model::TileOnBoard > const &
 Board::getTile( unsigned inCol, unsigned inRow ) const
 {
 	assert( inCol < mNrCols );
@@ -108,7 +108,7 @@ Board::getTile( unsigned inCol, unsigned inRow ) const
 	return mBoard[inRow * mNrCols + inCol];
 }
 
-boost::optional< TileOnBoard > &
+boost::optional< Model::TileOnBoard > &
 Board::getTile( unsigned inCol, unsigned inRow )
 {
 	assert( inCol < mNrCols );
@@ -125,7 +125,7 @@ Board::isPossibleTile( Tile const & inTile )
 		{
 			for ( unsigned rot = 0; rot < 4; ++rot )
 			{
-				TileOnBoard tileOnBoard( inTile, TileOnBoard::Rotation(rot * 3) );
+				Model::TileOnBoard tileOnBoard( inTile, Model::Rotation(rot * 3) );
 				if ( isValidTilePlacement( tileOnBoard, col, row ) )
 				{
 					return true;
@@ -143,7 +143,7 @@ Board::isEmptySpot( unsigned inCol, unsigned inRow ) const
 }
 
 bool
-Board::isValidTilePlacement( TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const
+Board::isValidTilePlacement( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const
 {
 	if ( isEmptySpot( inCol, inRow ) )
 	{
@@ -153,7 +153,7 @@ Board::isValidTilePlacement( TileOnBoard const & inTile, unsigned inCol, unsigne
 }
 
 bool
-Board::isValidAlternateTilePlacement( TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const
+Board::isValidAlternateTilePlacement( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const
 {
 	// Check if one of four neighbors is placed
 	int nrOfNeighbors = 0;
@@ -206,7 +206,7 @@ Board::isValidAlternateTilePlacement( TileOnBoard const & inTile, unsigned inCol
 }
 
 bool
-Board::placeValidTile( TileOnBoard const & inTile, unsigned inCol, unsigned inRow )
+Board::placeValidTile( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow )
 {
 	if ( isValidTilePlacement( inTile, inCol, inRow ) )
 	{
@@ -220,7 +220,7 @@ Board::placeValidTile( TileOnBoard const & inTile, unsigned inCol, unsigned inRo
 }
 
 unsigned
-Board::placeStartTile( TileOnBoard const & inTile )
+Board::placeStartTile( Model::TileOnBoard const & inTile )
 {
 	bool empty = true;
 	for ( unsigned row = 0; row < mNrRows; ++row )
@@ -364,7 +364,7 @@ Board::isOccupiedField( PlacedField const & inField ) const
 std::vector< PlacedPiece >
 Board::removePieces( unsigned inCol, unsigned inRow, Area::Area inArea )
 {
-	boost::optional< TileOnBoard > & tile = getTile( inCol, inRow );
+	boost::optional< Model::TileOnBoard > & tile = getTile( inCol, inRow );
 	if ( tile )
 	{
 		return tile->removePieces( inArea );
@@ -783,11 +783,11 @@ Board::getCompleteField( PlacedField const & inPlacedField ) const
 }
 
 bool
-Board::placeTile( const TileOnBoard &inTile, unsigned inCol, unsigned inRow )
+Board::placeTile( const Model::TileOnBoard &inTile, unsigned inCol, unsigned inRow )
 {
 	if ( inCol < mNrCols && inRow < mNrRows && !isTile( inCol, inRow ) )
 	{
-		getTile( inCol, inRow ) = boost::optional< TileOnBoard >( inTile );
+		getTile( inCol, inRow ) = boost::optional< Model::TileOnBoard >( inTile );
 		checkForFinishedCloisters( inCol, inRow );
 		checkForFinishedCities( inCol, inRow );
 		checkForFinishedRoads( inCol, inRow );
@@ -848,7 +848,7 @@ Board::addRowsBelow( unsigned inNrOfRows )
 void
 Board::addColsLeft( unsigned inNrOfCols )
 {
-	std::vector< boost::optional< TileOnBoard > >::iterator it = mBoard.begin();
+	std::vector< boost::optional< Model::TileOnBoard > >::iterator it = mBoard.begin();
 	for( unsigned i = 0; i < mNrRows; ++i )
 	{
 		for ( unsigned j = 0; j < inNrOfCols; ++j )
@@ -867,7 +867,7 @@ Board::addColsLeft( unsigned inNrOfCols )
 void
 Board::addColsRight( unsigned inNrOfCols )
 {
-	std::vector< boost::optional< TileOnBoard > >::iterator it = mBoard.begin();
+	std::vector< boost::optional< Model::TileOnBoard > >::iterator it = mBoard.begin();
 	for ( unsigned i = 0; i < mNrRows; ++i)
 	{
 		for ( unsigned j = 0; j < mNrCols; ++j )

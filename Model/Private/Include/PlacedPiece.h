@@ -1,7 +1,7 @@
 #ifndef PLACEDPIECE_H
 #define PLACEDPIECE_H
 
-#include "Piece.h"
+#include "Model/Piece.h"
 #include "Tile.h"
 
 #include <string>

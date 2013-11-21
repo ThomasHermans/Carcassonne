@@ -1,6 +1,8 @@
 #ifndef BOARDVIEW_H
 #define BOARDVIEW_H
 
+#include "View/Typedefs.h"
+
 #include <QGraphicsView>
 
 class QDragEnterEvent;
@@ -14,6 +16,7 @@ class QWidget;
 namespace Dragging
 {
 	class PieceData;
+	class TileData;
 }
 
 class BoardView : public QGraphicsView
@@ -25,6 +28,7 @@ public:
 
 signals:
 	void clicked( int x, int y );
+	void droppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
 	void enterPressed();
 	void spacePressed();
 	void dropped( Dragging::PieceData const & inData, int inX, int inY );

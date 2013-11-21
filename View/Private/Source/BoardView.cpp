@@ -55,10 +55,17 @@ BoardView::keyPressEvent( QKeyEvent * inEvent )
 void
 BoardView::dragEnterEvent( QDragEnterEvent * inEvent )
 {
-	const Dragging::PieceData * droppedData = qobject_cast< const Dragging::PieceData * >( inEvent->mimeData() );
-	if ( droppedData )
+	Dragging::TileData const * tileData = qobject_cast< Dragging::TileData const * >( inEvent->mimeData() );
+	if ( tileData )
 	{
 		inEvent->acceptProposedAction();
+		return;
+	}
+	Dragging::PieceData const * pieceData = qobject_cast< Dragging::PieceData const * >( inEvent->mimeData() );
+	if ( pieceData )
+	{
+		inEvent->acceptProposedAction();
+		return;
 	}
 }
 
@@ -70,10 +77,19 @@ BoardView::dragMoveEvent( QDragMoveEvent * inEvent )
 void
 BoardView::dropEvent( QDropEvent * inEvent )
 {
-	const Dragging::PieceData * droppedData = qobject_cast< const Dragging::PieceData * >( inEvent->mimeData() );
-	if ( droppedData )
+	Dragging::TileData const * tileData = qobject_cast< Dragging::TileData const * >( inEvent->mimeData() );
+	if ( tileData )
 	{
 		QPointF dropPoint = mapToScene( inEvent->pos() );
-		emit dropped( *droppedData, dropPoint.x(), dropPoint.y() );
+		emit droppedTile( dropPoint.x(), dropPoint.y(), tileData->getTile(), tileData->getRotation() );
+		std::cout << "Dropped tile" << std::endl;
+		return;
+	}
+	Dragging::PieceData const * pieceData = qobject_cast< Dragging::PieceData const * >( inEvent->mimeData() );
+	if ( pieceData )
+	{
+		QPointF dropPoint = mapToScene( inEvent->pos() );
+		emit dropped( *pieceData, dropPoint.x(), dropPoint.y() );
+		return;
 	}
 }

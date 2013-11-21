@@ -1,7 +1,7 @@
 #ifndef PLACEDPROJECT_H
 #define PLACEDPROJECT_H
 
-#include "Area.h"
+#include "Model/Area.h"
 
 struct PlacedProject
 {
