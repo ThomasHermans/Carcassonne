@@ -404,7 +404,7 @@ GameController::onClicked( int inX, int inY )
 }
 
 void
-GameController::onTryToPlacePiece( DragData const & inData, int inX, int inY )
+GameController::onTryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY )
 {
 	unsigned col = colFromX( inX, mGame->getStartCol() );
 	unsigned row = rowFromY( inY, mGame->getStartRow() );
@@ -454,7 +454,7 @@ GameController::makeConnections()
 	connect( mGame, SIGNAL( finishedCloister(uint, uint) ), this, SLOT( onFinishedCloister(uint, uint) ) );
 
 	connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
-	connect( mWindow, SIGNAL( tryToPlacePiece( DragData, int, int ) ), this, SLOT( onTryToPlacePiece( DragData, int, int ) ) );
+	connect( mWindow, SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ), this, SLOT( onTryToPlacePiece( Dragging::PieceData, int, int ) ) );
 	connect( mWindow, SIGNAL( endCurrentTurn() ), mGame, SLOT( onEndCurrentTurn() ) );
 
 	connect( mGame, SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );

@@ -55,7 +55,7 @@ BoardView::keyPressEvent( QKeyEvent * inEvent )
 void
 BoardView::dragEnterEvent( QDragEnterEvent * inEvent )
 {
-	const DragData * droppedData = qobject_cast< const DragData * >( inEvent->mimeData() );
+	const Dragging::PieceData * droppedData = qobject_cast< const Dragging::PieceData * >( inEvent->mimeData() );
 	if ( droppedData )
 	{
 		inEvent->acceptProposedAction();
@@ -70,7 +70,7 @@ BoardView::dragMoveEvent( QDragMoveEvent * inEvent )
 void
 BoardView::dropEvent( QDropEvent * inEvent )
 {
-	const DragData * droppedData = qobject_cast< const DragData * >( inEvent->mimeData() );
+	const Dragging::PieceData * droppedData = qobject_cast< const Dragging::PieceData * >( inEvent->mimeData() );
 	if ( droppedData )
 	{
 		QPointF dropPoint = mapToScene( inEvent->pos() );

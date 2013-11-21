@@ -21,6 +21,14 @@ namespace Gui
 
 namespace Dragging
 {
+	enum Rotation
+	{
+		kCw0,
+		kCw90,
+		kCw180,
+		kCw270
+	};
+
 	enum Color
 	{
 		kRed,

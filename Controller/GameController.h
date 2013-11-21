@@ -6,7 +6,10 @@
 
 #include <QObject>
 
-class DragData;
+namespace Dragging
+{
+	class PieceData;
+}
 
 class GameController : public QObject
 {
@@ -35,7 +38,7 @@ private slots:
 
 	// From view to model
 	void onClicked( int inX, int inY );
-	void onTryToPlacePiece( DragData const & inData, int inX, int inY );
+	void onTryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY );
 
 private:
 	void addPlayers();

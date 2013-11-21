@@ -2,6 +2,7 @@
 
 #include "AllScoresWidget.h"
 #include "DragMeepleLabel.h"
+#include "DragTileLabel.h"
 #include "UserInfoWidget.h"
 
 #include <QBrush>
@@ -12,20 +13,6 @@
 
 #include <iostream>
 #include <sstream>
-
-namespace
-{
-
-QPixmap
-getPixmapFromId( std::string inId )
-{
-	std::stringstream sstr;
-	sstr << ":/tiles/" << inId << ".png";
-	const QPixmap pm(QString::fromStdString(sstr.str()));
-	return pm;
-}
-
-} // end of nameless namespace
 
 GameWindow::GameWindow( QWidget *parent )
 :
@@ -50,8 +37,8 @@ GameWindow::GameWindow( QWidget *parent )
 
 	connect( mBoardView, SIGNAL( enterPressed() ), this, SIGNAL( endCurrentTurn() ) );
 	connect( mBoardView, SIGNAL( spacePressed() ), this, SIGNAL( endCurrentTurn() ) );
-	connect( mBoardView, SIGNAL( dropped( DragData, int, int ) ),
-		this, SIGNAL( tryToPlacePiece( DragData, int, int ) ) );
+	connect( mBoardView, SIGNAL( dropped( Dragging::PieceData, int, int ) ),
+		this, SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ) );
 
 	boardAndSideBarLayout->addWidget( mBoardView, 1 );
 
@@ -67,12 +54,9 @@ GameWindow::GameWindow( QWidget *parent )
 	mTilesLeft->setText("X tiles left");
 	mSideBarLayout->addWidget(mTilesLeft);
 
-	mPickedTileLabel = new QLabel(centralWidget);
-	mPickedTileLabel->setObjectName(QString::fromUtf8("mPickedTileLabel"));
-	mPickedTileLabel->setFixedSize( QSize(100, 100) );
-	mPickedTileLabel->setText(".");
-	mPickedTileLabel->setAlignment(Qt::AlignCenter);
-	mSideBarLayout->addWidget(mPickedTileLabel);
+	mPickedTileLabel = new DragTileLabel( centralWidget );
+	mPickedTileLabel->setObjectName( QString::fromUtf8( "mPickedTileLabel" ) );
+	mSideBarLayout->addWidget( mPickedTileLabel );
 
 	mUserInfo = new QStackedWidget( centralWidget );
 	mSideBarLayout->addWidget( mUserInfo, 0 );
@@ -143,19 +127,15 @@ GameWindow::clearTile(int x, int y)
 }
 
 void
-GameWindow::rotateTile(int x, int y, std::string inId, int inRotation)
+GameWindow::rotateTile( int inX, int inY, std::string const & inId, int inRotation )
 {
-	std::vector< TileItem * >::iterator it = mTiles.end();
-	while (it != mTiles.begin())
+	for ( std::vector< TileItem * >::reverse_iterator it = mTiles.rbegin();
+		it != mTiles.rend();
+		++it )
 	{
-		--it;
-		if ((*it)->scenePos() == QPointF(x, y))
+		if ( (*it)->scenePos() == QPointF( inX, inY ) )
 		{
-			QPixmap pixmap = getPixmapFromId( inId );
-			QTransform rotation = QTransform();
-			rotation.rotate( inRotation );
-			pixmap = pixmap.transformed( rotation );
-			(*it)->setPixmap( pixmap );
+			(*it)->setTile( inId, inRotation );
 			break;
 		}
 	}
@@ -207,37 +187,25 @@ GameWindow::finishCloister(int inX, int inY)
 }
 
 void
-GameWindow::setTile(int inX, int inY, std::string inId, int inRotation)
+GameWindow::setTile( int inX, int inY, std::string const & inId, double inRotation )
 {
-	QPixmap pixmap = getPixmapFromId( inId );
-	QTransform rotation = QTransform();
-	rotation.rotate( inRotation );
-	pixmap = pixmap.transformed( rotation );
-	TileItem *item = new TileItem( pixmap );
-	item->moveBy(inX, inY);
+	TileItem *item = new TileItem( inId, inRotation );
+	item->moveBy( inX, inY );
 	mTiles.push_back( item );
 	mBoardScene->addItem( item );
 	updateSceneRect();
 }
 
 void
-GameWindow::setNextTile(std::string inId)
+GameWindow::setNextTile( std::string const & inId )
 {
-	QPixmap pixmap = getPixmapFromId( inId );
-	mPickedTileLabel->setPixmap( pixmap );
+	mPickedTileLabel->setTile( inId );
 }
 
 void
 GameWindow::fadeNextTile()
 {
-	if ( mPickedTileLabel->pixmap() == 0)
-		return;
-	QPixmap pixmap( *mPickedTileLabel->pixmap() );
-	QPainter painter( &pixmap );
-	QPen pen(Qt::black, 2, Qt::SolidLine);
-	painter.setPen(pen);
-	painter.drawLine( 0, pixmap.height(), pixmap.width(), 0 );
-	mPickedTileLabel->setPixmap( pixmap );
+	mPickedTileLabel->fadeTile();
 }
 
 void

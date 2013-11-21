@@ -13,10 +13,10 @@ class TileOnBoard
 public:
 	enum Rotation
 	{
-		cw0 = 0,
-		cw90 = 3,
-		cw180 = 6,
-		cw270 = 9
+		kCw0 = 0,
+		kCw90 = 3,
+		kCw180 = 6,
+		kCw270 = 9
 	};
 
 public:

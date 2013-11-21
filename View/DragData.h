@@ -5,20 +5,38 @@
 
 #include <QMimeData>
 
-class DragData : public QMimeData
+#include <string>
+
+namespace Dragging
 {
-	Q_OBJECT
+	class TileData : public QMimeData
+	{
+		Q_OBJECT
+	public:
+		TileData( std::string const & inTile, Rotation inRotation );
 
-public:
-	DragData( Dragging::Piece inPiece, Dragging::Color inColor );
-	~DragData();
+		std::string const & getTile() const;
+		Rotation getRotation() const;
 
-	Dragging::Piece getPiece() const;
-	Dragging::Color getColor() const;
+	private:
+		std::string mTile;
+		Rotation mRotation;
+	};
 
-private:
-	Dragging::Piece mPiece;
-	Dragging::Color mColor;
-};
+	class PieceData : public QMimeData
+	{
+		Q_OBJECT
+
+	public:
+		PieceData( Piece inPiece, Color inColor );
+
+		Piece getPiece() const;
+		Color getColor() const;
+
+	private:
+		Piece mPiece;
+		Color mColor;
+	};
+}
 
 #endif // DRAGDATA_VIEW_THHR_20130818

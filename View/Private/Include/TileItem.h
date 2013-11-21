@@ -6,11 +6,22 @@
 class TileItem : public QGraphicsPixmapItem
 {
 public:
-    explicit TileItem(QGraphicsItem *parent = 0);
-    explicit TileItem(QPixmap inPixmap, QGraphicsItem *parent = 0);
+	explicit TileItem
+	(
+		QGraphicsItem * inParent = 0
+	);
+	
+	explicit TileItem
+	(
+		std::string const & inId,
+		int inRotation,
+		QGraphicsItem * inParent = 0
+	);
+
+	void setTile( std::string const & inId, int inRotation );
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+	void mousePressEvent( QGraphicsSceneMouseEvent * inEvent );
 };
 
-#endif // TILEITEM_H
+#endif

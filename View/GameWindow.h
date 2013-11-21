@@ -24,11 +24,16 @@
 #include <map>
 
 class AllScoresWidget;
-class DragData;
 class DragMeepleLabel;
+class DragTileLabel;
 class UserInfoWidget;
 
 class QStackedWidget;
+
+namespace Dragging
+{
+	class PieceData;
+}
 
 struct GuiPlacedPiece
 {
@@ -61,7 +66,7 @@ public:
 	);
 
 	void clearTile( int x, int y );
-	void rotateTile( int x, int y, std::string inId, int inRotation );
+	void rotateTile( int inX, int inY, std::string const & inId, int inRotation );
 	void displayTilesLeft( unsigned int inNr );
 
 	void setActivePlayer( std::string const & inName );
@@ -73,11 +78,11 @@ public:
 signals:
 	void clicked( int x, int y );
 	void endCurrentTurn();
-	void tryToPlacePiece( DragData const & inData, int inX, int inY );
+	void tryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY );
 	
 public slots:
-	void setTile( int inX, int inY, std::string inId, int inRotation );
-	void setNextTile( std::string inId );
+	void setTile( int inX, int inY, std::string const & inId, double inRotation );
+	void setNextTile( std::string const & inId );
 	void fadeNextTile();
 	void onClicked( int x, int y );
 	void placePiece( int inX, int inY, QColor inColor );
@@ -93,7 +98,7 @@ private:
 	std::vector< GuiPlacedPiece > mMeeples;
 	QVBoxLayout *mSideBarLayout;
 	QLabel *mTilesLeft;
-	QLabel *mPickedTileLabel;
+	DragTileLabel *mPickedTileLabel;
 	QStackedWidget * mUserInfo;
 	std::map< std::string, UserInfoWidget * > mUserInfoMap;
 	QPushButton *mEndTurnButton;

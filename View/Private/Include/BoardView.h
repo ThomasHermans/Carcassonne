@@ -11,7 +11,10 @@ class QKeyEvent;
 class QMouseEvent;
 class QWidget;
 
-class DragData;
+namespace Dragging
+{
+	class PieceData;
+}
 
 class BoardView : public QGraphicsView
 {
@@ -24,7 +27,7 @@ signals:
 	void clicked( int x, int y );
 	void enterPressed();
 	void spacePressed();
-	void dropped( DragData const & inData, int inX, int inY );
+	void dropped( Dragging::PieceData const & inData, int inX, int inY );
 
 protected:
 	void mousePressEvent( QMouseEvent * inEvent );

@@ -27,7 +27,7 @@ namespace
 TileOnBoard::TileOnBoard()
 :
 	mTile( Tile::Tile() ),
-	mRotation( TileOnBoard::cw0 ),
+	mRotation( TileOnBoard::kCw0 ),
 	mPlacedPieces()
 {
 }
@@ -45,13 +45,13 @@ TileOnBoard::getTop() const
 {
 	switch ( mRotation )
 	{
-		case cw90:
+		case kCw90:
 			return mTile.getLeft();
-		case cw180:
+		case kCw180:
 			return mTile.getBottom();
-		case cw270:
+		case kCw270:
 			return mTile.getRight();
-		case cw0:
+		case kCw0:
 		default:
 			return mTile.getTop();
 	}
@@ -62,13 +62,13 @@ TileOnBoard::getRight() const
 {
 	switch ( mRotation )
 	{
-		case cw90:
+		case kCw90:
 			return mTile.getTop();
-		case cw180:
+		case kCw180:
 			return mTile.getLeft();
-		case cw270:
+		case kCw270:
 			return mTile.getBottom();
-		case cw0:
+		case kCw0:
 		default:
 			return mTile.getRight();
 	}
@@ -79,13 +79,13 @@ TileOnBoard::getBottom() const
 {
 	switch ( mRotation )
 	{
-		case cw90:
+		case kCw90:
 			return mTile.getRight();
-		case cw180:
+		case kCw180:
 			return mTile.getTop();
-		case cw270:
+		case kCw270:
 			return mTile.getLeft();
-		case cw0:
+		case kCw0:
 		default:
 			return mTile.getBottom();
 	}
@@ -96,13 +96,13 @@ TileOnBoard::getLeft() const
 {
 	switch ( mRotation )
 	{
-		case cw90:
+		case kCw90:
 			return mTile.getBottom();
-		case cw180:
+		case kCw180:
 			return mTile.getRight();
-		case cw270:
+		case kCw270:
 			return mTile.getTop();
-		case cw0:
+		case kCw0:
 		default:
 			return mTile.getLeft();
 	}

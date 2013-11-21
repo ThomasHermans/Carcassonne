@@ -234,7 +234,7 @@ Game::placeTileOnBoard( unsigned int inCol, unsigned int inRow )
 			emit tileUnplaced( mCurrentPlacedCol, mCurrentPlacedRow );
 		}
 		// Try the newly clicked position (try all rotations until we found a good one)
-		TileOnBoard::Rotation rotation = TileOnBoard::cw0;
+		TileOnBoard::Rotation rotation = TileOnBoard::kCw0;
 		TileOnBoard toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
 		bool found = false;
 		for ( int i = 0; i < 4; ++i )
@@ -247,7 +247,7 @@ Game::placeTileOnBoard( unsigned int inCol, unsigned int inRow )
 			}
 			else
 			{
-				rotation = TileOnBoard::Rotation( rotation + TileOnBoard::cw90 );
+				rotation = TileOnBoard::Rotation( rotation + TileOnBoard::kCw90 );
 			}
 		}
 		std::cout << "Found: " << found << std::endl;
@@ -280,7 +280,7 @@ Game::placeStartTileOnBoard()
 {
 	if (mNextTile)
 	{
-		TileOnBoard::Rotation rotation = TileOnBoard::cw0; // TODO: get a random Rotation each time
+		TileOnBoard::Rotation rotation = TileOnBoard::kCw0; // TODO: get a random Rotation each time
 		TileOnBoard toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
 		unsigned int pos = mBoard.placeStartTile(toBePlacedTile);
 		mStartCol = pos % mBoard.getNrOfCols();
@@ -632,7 +632,7 @@ Game::rotateCurrentTile()
 		TileOnBoard rotated = TileOnBoard( tile, newRotation );
 		for ( int i = 0; i < 4; ++i )
 		{
-			newRotation = TileOnBoard::Rotation( (newRotation + TileOnBoard::cw90) % (TileOnBoard::cw90 * 4) );
+			newRotation = TileOnBoard::Rotation( (newRotation + TileOnBoard::kCw90) % (TileOnBoard::kCw90 * 4) );
 			rotated = TileOnBoard( tile, newRotation );
 			if ( mBoard.isValidTilePlacement( rotated, mCurrentPlacedCol, mCurrentPlacedRow ) )
 			{

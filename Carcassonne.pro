@@ -32,10 +32,12 @@ SOURCES += main.cpp \
 	View\Private\Source\BoardView.cpp \
 	View\Private\Source\DragData.cpp \
 	View\Private\Source\DragMeepleLabel.cpp \
+	View\Private\Source\DragTileLabel.cpp \
 	View\Private\Source\GameWindow.cpp \
 	View\Private\Source\StartScreen.cpp \
 	View\Private\Source\StartScreenRow.cpp \
 	View\Private\Source\TileItem.cpp \
+	View\Private\Source\TileUtils.cpp \
 	View\Private\Source\UserInfoWidget.cpp \
 
 HEADERS += \
@@ -60,8 +62,10 @@ HEADERS += \
 	View\Private\Include\AllScoresWidget.h \
 	View\Private\Include\BoardView.h \
 	View\Private\Include\DragMeepleLabel.h \
+	View\Private\Include\DragTileLabel.h \
 	View\Private\Include\StartScreenRow.h \
 	View\Private\Include\TileItem.h \
+	View\Private\Include\TileUtils.h \
 	View\Private\Include\Typedefs.h \
 	View\Private\Include\UserInfoWidget.h \
 
