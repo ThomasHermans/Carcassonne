@@ -31,7 +31,7 @@ public:
 	unsigned getStartCol() const;
 	Player const & getCurrentPlayer() const;
 
-	void clickTile( unsigned inCol, unsigned inRow );
+	void clickTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation );
 	void dropTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation );
 	void placeTileOnBoard( unsigned inCol, unsigned inRow, Model::Rotation inRotation = Model::kCw0 );
 	void placeStartTileOnBoard();

@@ -56,6 +56,18 @@ DragTileLabel::~DragTileLabel()
 {
 }
 
+std::string const &
+DragTileLabel::getCurrentTile() const
+{
+	return mTileId;
+}
+
+View::Rotation
+DragTileLabel::getCurrentRotation() const
+{
+	return mRotation;
+}
+
 void
 DragTileLabel::setTile( std::string const & inTileId )
 {

@@ -37,7 +37,7 @@ private slots:
 	void onEndOfGame( unsigned inTilesLeft );
 
 	// From view to model
-	void onClicked( int inX, int inY );
+	void onClicked( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
 	void onTileDropped( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
 	void onTryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY );
 

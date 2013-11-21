@@ -150,14 +150,14 @@ GameController::onEndOfGame( unsigned inTilesLeft )
 }
 
 void
-GameController::onClicked( int inX, int inY )
+GameController::onClicked( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
 {
 	unsigned col = Controller::colFromX( inX, mGame->getStartCol() );
 	unsigned row = Controller::rowFromY( inY, mGame->getStartRow() );
 	std::cout << "GameController sees a click at x, y: " << inX << ", " << inY << ", which is col, row: " << col << ", " << row << std::endl;
 	if ( col < mGame->getNrOfCols() && row < mGame->getNrOfRows() )
 	{
-		mGame->clickTile(col, row);
+		mGame->clickTile( col, row, inTileId, Controller::modelFromView( inRotation ) );
 	}
 }
 
@@ -212,16 +212,23 @@ GameController::makeConnections()
 	connect( mGame, SIGNAL( nextTile(std::string) ), this, SLOT( onNextTile(std::string) ) );
 	connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
 
-	connect( mGame, SIGNAL( piecePlaced(uint, uint, Area::Area, Player) ), this, SLOT( onPiecePlaced(uint, uint, Area::Area, Player ) ) );
-	connect( mGame, SIGNAL( pieceReturned(uint, uint, Area::Area, Player) ), this, SLOT( onPieceReturned(uint, uint, Area::Area, Player ) ) );
-	connect( mGame, SIGNAL( playerInfoChanged(Player) ), this, SLOT( onPlayerInfoChanged(Player) ) );
-	connect( mGame, SIGNAL( currentPlayerChanged(Player) ), this, SLOT( onCurrentPlayerChanged(Player) ) );
+	connect( mGame, SIGNAL( piecePlaced(uint, uint, Area::Area, Player) ),
+		this, SLOT( onPiecePlaced(uint, uint, Area::Area, Player ) ) );
+	connect( mGame, SIGNAL( pieceReturned(uint, uint, Area::Area, Player) ),
+		this, SLOT( onPieceReturned(uint, uint, Area::Area, Player ) ) );
+	connect( mGame, SIGNAL( playerInfoChanged(Player) ),
+		this, SLOT( onPlayerInfoChanged(Player) ) );
+	connect( mGame, SIGNAL( currentPlayerChanged(Player) ),
+		this, SLOT( onCurrentPlayerChanged(Player) ) );
 
 	connect( mGame, SIGNAL( finishedCloister(uint, uint) ), this, SLOT( onFinishedCloister(uint, uint) ) );
 
-	connect( mWindow, SIGNAL( clicked(int,int) ), this, SLOT( onClicked(int,int) ) );
-	connect( mWindow, SIGNAL( tileDropped( int, int, std::string const &, View::Rotation ) ), this, SLOT( onTileDropped( int, int, std::string const &, View::Rotation ) ) );
-	connect( mWindow, SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ), this, SLOT( onTryToPlacePiece( Dragging::PieceData, int, int ) ) );
+	connect( mWindow, SIGNAL( clicked( int, int, std::string const &, View::Rotation ) ),
+		this, SLOT( onClicked( int, int, std::string const &, View::Rotation ) ) );
+	connect( mWindow, SIGNAL( tileDropped( int, int, std::string const &, View::Rotation ) ),
+		this, SLOT( onTileDropped( int, int, std::string const &, View::Rotation ) ) );
+	connect( mWindow, SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ),
+		this, SLOT( onTryToPlacePiece( Dragging::PieceData, int, int ) ) );
 	connect( mWindow, SIGNAL( endCurrentTurn() ), mGame, SLOT( onEndCurrentTurn() ) );
 
 	connect( mGame, SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );

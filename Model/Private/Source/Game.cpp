@@ -208,16 +208,16 @@ Game::getCurrentPlayer() const
 }
 
 void
-Game::clickTile( unsigned inCol, unsigned inRow )
+Game::clickTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation )
 {
 	if ( inCol >= mBoard.getNrOfCols() || inRow >= mBoard.getNrOfRows() )
 	{
 		return;
 	}
-	if ( isEmptySpot( inCol, inRow ) )
+	if ( mNextTile && mNextTile->getID() == inTileId && isEmptySpot( inCol, inRow ) )
 	{
 		std::cout << "Empty spot -> placeTileOnBoard" << std::endl;
-		placeTileOnBoard( inCol, inRow );
+		placeTileOnBoard( inCol, inRow, inRotation );
 	}
 	else if ( isCurrentSpot( inCol, inRow ) )
 	{

@@ -213,7 +213,7 @@ GameWindow::fadeNextTile()
 void
 GameWindow::onClicked( int inX, int inY )
 {
-	emit clicked( inX, inY );
+	emit clicked( inX, inY, mPickedTileLabel->getCurrentTile(), mPickedTileLabel->getCurrentRotation() );
 }
 
 void

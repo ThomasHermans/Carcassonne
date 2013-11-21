@@ -20,6 +20,9 @@ public:
 	DragTileLabel( QWidget * inParent );
 	~DragTileLabel();
 
+	std::string const & getCurrentTile() const;
+	View::Rotation getCurrentRotation() const;
+
 	void setTile( std::string const & inTileId );
 	void fadeTile();
 

@@ -77,7 +77,7 @@ public:
 	void finishCloister( int inX, int inY );
 	
 signals:
-	void clicked( int inX, int inY );
+	void clicked( int inX, int inY, std::string const & inId, View::Rotation inRotation );
 	void tileDropped( int inX, int inY, std::string const & inId, View::Rotation inRotation );
 	void endCurrentTurn();
 	void tryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY );
