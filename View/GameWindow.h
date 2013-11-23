@@ -24,6 +24,7 @@
 #include <map>
 
 class AllScoresWidget;
+struct GuiPlacedPiece;
 class DragMeepleLabel;
 class DragTileLabel;
 class UserInfoWidget;
@@ -34,22 +35,6 @@ namespace Dragging
 {
 	class PieceData;
 }
-
-struct GuiPlacedPiece
-{
-	QGraphicsPolygonItem* mItem;
-	int mX;
-	int mY;
-	QColor mColor;
-	
-	GuiPlacedPiece( QGraphicsPolygonItem* inItem, int inX, int inY, QColor inColor )
-	:
-	mItem( inItem ),
-	mX( inX ),
-	mY( inY ),
-	mColor( inColor )
-	{}
-};
 
 class GameWindow : public QMainWindow
 {

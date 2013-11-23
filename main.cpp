@@ -17,7 +17,7 @@ namespace
 
 int main(int argc, char * argv[])
 {
-	int const gameOption = kDebugSpecificGame;
+	int const gameOption = kPlay;
 
 	if ( gameOption == kPlay )
 	{

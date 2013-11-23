@@ -7,6 +7,8 @@ namespace Gui
 	int const kTileWidth = kTileHeight;
 	double const kFirstBorder = .375 * kTileHeight;
 	double const kSecondBorder = kTileHeight - kFirstBorder;
+	int const kMeepleWidth = 25;
+	int const kMeepleHeight = 30;
 
 	enum Color
 	{

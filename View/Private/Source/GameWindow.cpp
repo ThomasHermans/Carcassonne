@@ -14,9 +14,53 @@
 #include <iostream>
 #include <sstream>
 
+namespace
+{
+	QPixmap
+	getMeeplePixmap( QColor const & inColor )
+	{
+		QPixmap pixmap( Gui::kMeepleWidth, Gui::kMeepleHeight );
+		pixmap.fill( QColor( 0, 0, 0, 0 ) );
+		QPainter painter( &pixmap );
+		QPainterPath path;
+		path.addEllipse( QRectF( 0, 0, Gui::kMeepleWidth, Gui::kMeepleHeight ) );
+		painter.fillPath( path, QBrush( inColor ) );
+		return pixmap;
+	}
+}
+
+struct GuiPlacedPiece
+{
+	QGraphicsPixmapItem* mItem;
+	int mX;
+	int mY;
+	QColor mColor;
+	
+	GuiPlacedPiece( QGraphicsPixmapItem* inItem, int inX, int inY, QColor inColor );
+};
+
+GuiPlacedPiece::GuiPlacedPiece( QGraphicsPixmapItem * inItem, int inX, int inY, QColor inColor )
+:
+	mItem( inItem ),
+	mX( inX ),
+	mY( inY ),
+	mColor( inColor )
+{}
+
 GameWindow::GameWindow( QWidget *parent )
 :
-	QMainWindow( parent )
+	QMainWindow( parent ),
+	mBoardScene(),
+	mBoardView(),
+	mTiles(),
+	mMeeples(),
+	mSideBarLayout(),
+	mTilesLeft(),
+	mPickedTileLabel(),
+	mUserInfo(),
+	mUserInfoMap(),
+	mEndTurnButton(),
+	mAllScoresWidget()
 {
 	this->resize( 800, 500 );
 	QWidget * centralWidget = new QWidget( this );
@@ -225,12 +269,9 @@ GameWindow::onDroppedTile( int inX, int inY, std::string const & inTileId, View:
 void
 GameWindow::placePiece( int inX, int inY, QColor inColor )
 {
-	QVector< QPointF > points;
-	points << QPointF( 0, 0 ) << QPointF( -5, -25 ) << QPointF( 10, -35 ) << QPointF( 25, -25 ) << QPointF( 20, 0 ) << QPointF( 0, 0 );
-	QPolygonF polygon( points );
-	QGraphicsPolygonItem* meeple = new QGraphicsPolygonItem( polygon );
-	meeple->moveBy( inX + Gui::kTileWidth / 2 - 12, inY + Gui::kTileHeight / 2 + 17 );
-	meeple->setPen( QPen( QBrush( inColor ), 2 ) );
+	QGraphicsPixmapItem * meeple = new QGraphicsPixmapItem( getMeeplePixmap( inColor ) );
+	meeple->moveBy( inX + Gui::kTileWidth / 2 - Gui::kMeepleWidth / 2, inY + Gui::kTileHeight / 2 - Gui::kMeepleHeight / 2 );
+	// meeple->setPen( QPen( QBrush( inColor ), 2 ) );
 	mBoardScene->addItem( meeple );
 	mMeeples.push_back( GuiPlacedPiece( meeple, inX, inY, inColor ) );
 }
