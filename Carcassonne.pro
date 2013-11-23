@@ -36,6 +36,7 @@ SOURCES += main.cpp \
 	View\Private\Source\DragMeepleLabel.cpp \
 	View\Private\Source\DragTileLabel.cpp \
 	View\Private\Source\GameWindow.cpp \
+	View\Private\Source\MeepleUtils.cpp \
 	View\Private\Source\StartScreen.cpp \
 	View\Private\Source\StartScreenRow.cpp \
 	View\Private\Source\TileItem.cpp \
@@ -68,6 +69,7 @@ HEADERS += \
 	View\Private\Include\BoardView.h \
 	View\Private\Include\DragMeepleLabel.h \
 	View\Private\Include\DragTileLabel.h \
+	View\Private\Include\MeepleUtils.h \
 	View\Private\Include\StartScreenRow.h \
 	View\Private\Include\TileItem.h \
 	View\Private\Include\TileUtils.h \

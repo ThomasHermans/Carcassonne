@@ -1,5 +1,7 @@
 #include "DragMeepleLabel.h"
 
+#include "MeepleUtils.h"
+
 #include "View/DragData.h"
 #include "View/Typedefs.h"
 
@@ -36,20 +38,6 @@ namespace
 			default:
 				return Qt::white;
 		}
-	}
-
-	QPainterPath
-	getMeeplePath( int inX, int inY, int inWidth, int inHeight )
-	{
-		QPainterPath path;
-		path.moveTo( inX + .5 * inWidth, inY + 0 );
-		path.lineTo( inX + .8 * inWidth, inY + inHeight );
-		path.lineTo( inX + 0, inY + .4 * inHeight );
-		path.lineTo( inX + inWidth, inY + .4 * inHeight );
-		path.lineTo( inX + .2 * inWidth, inY + inHeight );
-		path.lineTo( inX + .5 * inWidth, inY + 0 );
-		path.setFillRule( Qt::WindingFill );
-		return path;
 	}
 }
 
@@ -133,5 +121,6 @@ void
 DragMeepleLabel::paintEvent( QPaintEvent * inEvent )
 {
 	QPainter painter( this );
-	painter.fillPath( getMeeplePath( 0, 5, 30, 30 ), toQColor( mColor ) );
+	static QPainterPath path = View::getMeeplePath( 0, 5, Gui::kMeepleWidth, Gui::kMeepleHeight );
+	painter.fillPath( path, toQColor( mColor ) );
 }

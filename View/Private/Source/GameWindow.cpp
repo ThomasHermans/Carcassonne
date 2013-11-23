@@ -3,6 +3,7 @@
 #include "AllScoresWidget.h"
 #include "DragMeepleLabel.h"
 #include "DragTileLabel.h"
+#include "MeepleUtils.h"
 #include "UserInfoWidget.h"
 
 #include <QBrush>
@@ -22,8 +23,7 @@ namespace
 		QPixmap pixmap( Gui::kMeepleWidth, Gui::kMeepleHeight );
 		pixmap.fill( QColor( 0, 0, 0, 0 ) );
 		QPainter painter( &pixmap );
-		QPainterPath path;
-		path.addEllipse( QRectF( 0, 0, Gui::kMeepleWidth, Gui::kMeepleHeight ) );
+		static QPainterPath path = View::getMeeplePath( 0, 0, Gui::kMeepleWidth, Gui::kMeepleHeight );
 		painter.fillPath( path, QBrush( inColor ) );
 		return pixmap;
 	}
