@@ -58,6 +58,9 @@ public:
 	void setScore( std::string const & inName, unsigned inScore );
 	void setFollowersLeft( std::string const & inName, unsigned inNumberOfFollowers );
 	void setNextTile( std::string const & inId );
+	
+	void placePiece( int inX, int inY, View::Color inColor );
+	void returnPiece( int inX, int inY, View::Color inColor );
 
 	void finishCloister( int inX, int inY );
 	
@@ -72,8 +75,6 @@ public slots:
 	void fadeNextTile();
 	void onClicked( int x, int y );
 	void onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
-	void placePiece( int inX, int inY, QColor inColor );
-	void returnPiece( int inX, int inY, QColor inColor );
 
 private:
 	void updateSceneRect();

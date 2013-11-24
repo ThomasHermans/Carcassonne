@@ -102,7 +102,7 @@ GameController::onPiecePlaced( unsigned inCol, unsigned inRow, Area::Area inArea
 	int y = Controller::yFromRow( inRow, mGame->getStartRow() );
 	x += Controller::xFromArea( inArea ) - .5 * Gui::kTileWidth;
 	y += Controller::yFromArea( inArea ) - .5 * Gui::kTileHeight;
-	mWindow->placePiece( x, y, Controller::toQColor( inCurrentPlayer.getColor() ) );
+	mWindow->placePiece( x, y, Controller::viewFromModel( inCurrentPlayer.getColor() ) );
 }
 
 void
@@ -113,7 +113,7 @@ GameController::onPieceReturned( unsigned inCol, unsigned inRow, Area::Area inAr
 	int y = Controller::yFromRow( inRow, mGame->getStartRow() );
 	x += Controller::xFromArea( inArea ) - .5 * Gui::kTileWidth;
 	y += Controller::yFromArea( inArea ) - .5 * Gui::kTileHeight;
-	mWindow->returnPiece( x, y, Controller::toQColor( inPlayer.getColor() ) );
+	mWindow->returnPiece( x, y, Controller::viewFromModel( inPlayer.getColor() ) );
 }
 
 void

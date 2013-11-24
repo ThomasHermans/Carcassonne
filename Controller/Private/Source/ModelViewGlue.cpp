@@ -238,25 +238,3 @@ Controller::modelFromView( View::Rotation inRotation )
 	assert( !"Invalid View Rotation" );
 	return Model::kCw0;
 }
-
-QColor
-Controller::toQColor( Color::Color inColor )
-{
-	switch ( inColor )
-	{
-	case Color::kRed:
-		return Qt::red;
-	case Color::kGreen:
-		return Qt::green;
-	case Color::kBlue:
-		return Qt::blue;
-	case Color::kYellow:
-		return Qt::yellow;
-	case Color::kBlack:
-		return Qt::black;
-	case Color::kGray:
-		return Qt::gray;
-	}
-	assert( !"Invalid Color Color" );
-	return Qt::white;
-}

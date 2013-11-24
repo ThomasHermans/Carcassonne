@@ -4,6 +4,7 @@
 #include "DragMeepleLabel.h"
 #include "DragTileLabel.h"
 #include "MeepleUtils.h"
+#include "QtGlue.h"
 #include "UserInfoWidget.h"
 
 #include <QBrush>
@@ -12,34 +13,46 @@
 #include <QPen>
 #include <QStackedWidget>
 
+#include <boost/bind.hpp>
+
+#include <algorithm>
 #include <iostream>
 #include <sstream>
-
-namespace
-{
-	QPixmap
-	getMeeplePixmap( QColor const & inColor )
-	{
-		QPixmap pixmap( Gui::kMeepleWidth, Gui::kMeepleHeight );
-		pixmap.fill( QColor( 0, 0, 0, 0 ) );
-		QPainter painter( &pixmap );
-		static QPainterPath path = View::getMeeplePath( 0, 0, Gui::kMeepleWidth, Gui::kMeepleHeight );
-		painter.fillPath( path, QBrush( inColor ) );
-		return pixmap;
-	}
-}
 
 struct GuiPlacedPiece
 {
 	QGraphicsPixmapItem* mItem;
 	int mX;
 	int mY;
-	QColor mColor;
+	View::Color mColor;
 	
-	GuiPlacedPiece( QGraphicsPixmapItem* inItem, int inX, int inY, QColor inColor );
+	GuiPlacedPiece( QGraphicsPixmapItem* inItem, int inX, int inY, View::Color inColor );
 };
 
-GuiPlacedPiece::GuiPlacedPiece( QGraphicsPixmapItem * inItem, int inX, int inY, QColor inColor )
+namespace
+{
+	QPixmap
+	getMeeplePixmap( View::Color inColor )
+	{
+		QPixmap pixmap( Gui::kMeepleWidth, Gui::kMeepleHeight );
+		pixmap.fill( QColor( 0, 0, 0, 0 ) );
+		QPainter painter( &pixmap );
+		static QPainterPath path = View::getMeeplePath( 0, 0, Gui::kMeepleWidth, Gui::kMeepleHeight );
+		QColor const color = View::toQColor( inColor );
+		painter.setPen( QPen( color.darker( 200 ), 2 ) );
+		painter.setBrush( color );
+		painter.drawPath( path );
+		return pixmap;
+	}
+
+	bool
+	HasMembers( GuiPlacedPiece const & inPiece, int inX, int inY, View::Color inColor )
+	{
+		return ( inPiece.mX == inX && inPiece.mY == inY && inPiece.mColor == inColor );
+	}
+}
+
+GuiPlacedPiece::GuiPlacedPiece( QGraphicsPixmapItem * inItem, int inX, int inY, View::Color inColor )
 :
 	mItem( inItem ),
 	mX( inX ),
@@ -231,6 +244,30 @@ GameWindow::setNextTile( std::string const & inId )
 }
 
 void
+GameWindow::placePiece( int inX, int inY, View::Color inColor )
+{
+	QGraphicsPixmapItem * meeple = new QGraphicsPixmapItem( getMeeplePixmap( inColor ) );
+	meeple->moveBy( inX + Gui::kTileWidth / 2 - Gui::kMeepleWidth / 2, inY + Gui::kTileHeight / 2 - Gui::kMeepleHeight / 2 );
+	mBoardScene->addItem( meeple );
+	mMeeples.push_back( GuiPlacedPiece( meeple, inX, inY, inColor ) );
+}
+
+void
+GameWindow::returnPiece( int inX, int inY, View::Color inColor )
+{
+	std::vector< GuiPlacedPiece >::iterator it = std::find_if
+	(
+		mMeeples.begin(), mMeeples.end(),
+		boost::bind( &HasMembers, _1, inX, inY, inColor )
+	);
+	if ( it != mMeeples.end() )
+	{
+		mBoardScene->removeItem( it->mItem );
+		mMeeples.erase( it );
+	}
+}
+
+void
 GameWindow::finishCloister(int inX, int inY)
 {
 	QGraphicsEllipseItem* circle = new QGraphicsEllipseItem( inX, inY, 100, 100 );
@@ -264,31 +301,6 @@ void
 GameWindow::onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
 {
 	emit tileDropped( inX, inY, inTileId, inRotation );
-}
-
-void
-GameWindow::placePiece( int inX, int inY, QColor inColor )
-{
-	QGraphicsPixmapItem * meeple = new QGraphicsPixmapItem( getMeeplePixmap( inColor ) );
-	meeple->moveBy( inX + Gui::kTileWidth / 2 - Gui::kMeepleWidth / 2, inY + Gui::kTileHeight / 2 - Gui::kMeepleHeight / 2 );
-	// meeple->setPen( QPen( QBrush( inColor ), 2 ) );
-	mBoardScene->addItem( meeple );
-	mMeeples.push_back( GuiPlacedPiece( meeple, inX, inY, inColor ) );
-}
-
-void
-GameWindow::returnPiece( int inX, int inY, QColor inColor )
-{
-	// QList< QGraphicsItem * > items = mBoardScene->items( QPointF( inX, inY ), Qt::IntersectsItemShape, Qt::AscendingOrder );
-	for ( std::vector< GuiPlacedPiece >::iterator it = mMeeples.begin(); it != mMeeples.end(); ++it )
-	{
-		if ( it->mX == inX && it->mY == inY && it->mColor == inColor )
-		{
-			mBoardScene->removeItem( it->mItem );
-			mMeeples.erase( it );
-			break;
-		}
-	}
 }
 
 void

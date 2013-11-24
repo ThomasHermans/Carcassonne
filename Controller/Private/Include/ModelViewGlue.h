@@ -50,9 +50,6 @@ namespace Controller
 
 	Model::Rotation
 	modelFromView( View::Rotation inRotation );
-
-	QColor
-	toQColor( Color::Color inColor );
 }
 
 #endif

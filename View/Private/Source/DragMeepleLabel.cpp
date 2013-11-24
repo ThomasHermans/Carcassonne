@@ -1,6 +1,7 @@
 #include "DragMeepleLabel.h"
 
 #include "MeepleUtils.h"
+#include "QtGlue.h"
 
 #include "View/DragData.h"
 #include "View/Typedefs.h"
@@ -15,31 +16,6 @@
 #include <QPaintEvent>
 #include <QString>
 #include <QWidget>
-
-namespace
-{
-	QColor
-	toQColor( View::Color inColor )
-	{
-		switch ( inColor )
-		{
-			case View::kRed:
-				return Qt::red;
-			case View::kGreen:
-				return Qt::green;
-			case View::kBlue:
-				return Qt::blue;
-			case View::kYellow:
-				return Qt::yellow;
-			case View::kBlack:
-				return Qt::black;
-			case View::kGray:
-				return Qt::gray;
-			default:
-				return Qt::white;
-		}
-	}
-}
 
 DragMeepleLabel::DragMeepleLabel
 (
@@ -122,5 +98,5 @@ DragMeepleLabel::paintEvent( QPaintEvent * inEvent )
 {
 	QPainter painter( this );
 	static QPainterPath path = View::getMeeplePath( 0, 5, Gui::kMeepleWidth, Gui::kMeepleHeight );
-	painter.fillPath( path, toQColor( mColor ) );
+	painter.fillPath( path, View::toQColor( mColor ) );
 }
