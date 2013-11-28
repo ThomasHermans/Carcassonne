@@ -82,14 +82,13 @@ BoardView::dropEvent( QDropEvent * inEvent )
 	{
 		QPointF dropPoint = mapToScene( inEvent->pos() );
 		emit droppedTile( dropPoint.x(), dropPoint.y(), tileData->getTile(), tileData->getRotation() );
-		std::cout << "Dropped tile" << std::endl;
 		return;
 	}
 	Dragging::PieceData const * pieceData = qobject_cast< Dragging::PieceData const * >( inEvent->mimeData() );
 	if ( pieceData )
 	{
 		QPointF dropPoint = mapToScene( inEvent->pos() );
-		emit dropped( *pieceData, dropPoint.x(), dropPoint.y() );
+		emit droppedPiece( *pieceData, dropPoint.x(), dropPoint.y() );
 		return;
 	}
 }

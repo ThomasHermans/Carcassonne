@@ -31,20 +31,6 @@ struct GuiPlacedPiece
 
 namespace
 {
-	QPixmap
-	getMeeplePixmap( View::Color inColor )
-	{
-		QPixmap pixmap( Gui::kMeepleWidth, Gui::kMeepleHeight );
-		pixmap.fill( QColor( 0, 0, 0, 0 ) );
-		QPainter painter( &pixmap );
-		static QPainterPath path = View::getMeeplePath( 0, 0, Gui::kMeepleWidth, Gui::kMeepleHeight );
-		QColor const color = View::toQColor( inColor );
-		painter.setPen( QPen( color.darker( 200 ), 2 ) );
-		painter.setBrush( color );
-		painter.drawPath( path );
-		return pixmap;
-	}
-
 	bool
 	HasMembers( GuiPlacedPiece const & inPiece, int inX, int inY, View::Color inColor )
 	{
@@ -94,7 +80,7 @@ GameWindow::GameWindow( QWidget *parent )
 
 	connect( mBoardView, SIGNAL( enterPressed() ), this, SIGNAL( endCurrentTurn() ) );
 	connect( mBoardView, SIGNAL( spacePressed() ), this, SIGNAL( endCurrentTurn() ) );
-	connect( mBoardView, SIGNAL( dropped( Dragging::PieceData, int, int ) ),
+	connect( mBoardView, SIGNAL( droppedPiece( Dragging::PieceData, int, int ) ),
 		this, SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ) );
 
 	boardAndSideBarLayout->addWidget( mBoardView, 1 );

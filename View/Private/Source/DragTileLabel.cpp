@@ -99,6 +99,7 @@ DragTileLabel::mouseMoveEvent( QMouseEvent * inEvent )
 	QDrag * drag = new QDrag( this );
 	Dragging::TileData * tileData = new Dragging::TileData( mTileId, mRotation );
 	drag->setMimeData( tileData );
+	drag->setPixmap( mPixmap );
 	drag->exec( Qt::MoveAction );
 }
 
@@ -127,12 +128,15 @@ DragTileLabel::mouseReleaseEvent( QMouseEvent * inEvent )
 void
 DragTileLabel::updatePixmap()
 {
-	mPixmap = View::getPixmapForTile( mTileId, mRotation );
-	if ( mFaded )
+	if ( !mTileId.empty() )
 	{
-		QPainter painter( &mPixmap );
-		QColor color( 0, 0, 0, 128 );
-		painter.fillRect( 0, 0, mPixmap.width(), mPixmap.height(), color );
+		mPixmap = View::getPixmapForTile( mTileId, mRotation );
+		if ( mFaded )
+		{
+			QPainter painter( &mPixmap );
+			QColor color( 0, 0, 0, 128 );
+			painter.fillRect( 0, 0, mPixmap.width(), mPixmap.height(), color );
+		}
+		setPixmap( mPixmap );
 	}
-	setPixmap( mPixmap );
 }

@@ -89,6 +89,7 @@ DragMeepleLabel::mouseMoveEvent( QMouseEvent * inEvent )
 	QDrag * drag = new QDrag( this );
 	Dragging::PieceData * dragData = new Dragging::PieceData( mType, mColor );
 	drag->setMimeData( dragData );
+	drag->setPixmap( getMeeplePixmap( mColor ) );
 
 	drag->exec( Qt::MoveAction );
 }

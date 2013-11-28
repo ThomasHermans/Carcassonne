@@ -1,4 +1,10 @@
 #include "MeepleUtils.h"
+#include "MeepleUtils.h"
+
+#include "QtGlue.h"
+
+#include <QPainter>
+#include <QPen>
 
 QPainterPath
 View::getMeeplePath( int inX, int inY, int inWidth, int inHeight )
@@ -37,4 +43,18 @@ View::getMeeplePath( int inX, int inY, int inWidth, int inHeight )
 	path.cubicTo( leftAboveHand, leftShoulder, leftShoulder );
 	path.cubicTo( leftShoulder, topLShoulder1, top );
 	return path;
+}
+
+QPixmap
+View::getMeeplePixmap( View::Color inColor )
+{
+	QPixmap pixmap( Gui::kMeepleWidth, Gui::kMeepleHeight );
+	pixmap.fill( QColor( 0, 0, 0, 0 ) );
+	QPainter painter( &pixmap );
+	static QPainterPath path = View::getMeeplePath( 0, 0, Gui::kMeepleWidth, Gui::kMeepleHeight );
+	QColor const color = View::toQColor( inColor );
+	painter.setPen( QPen( color.darker( 200 ), 2 ) );
+	painter.setBrush( color );
+	painter.drawPath( path );
+	return pixmap;
 }

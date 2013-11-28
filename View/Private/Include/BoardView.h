@@ -28,10 +28,10 @@ public:
 
 signals:
 	void clicked( int x, int y );
+	void droppedPiece( Dragging::PieceData const & inData, int inX, int inY );
 	void droppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
 	void enterPressed();
 	void spacePressed();
-	void dropped( Dragging::PieceData const & inData, int inX, int inY );
 
 protected:
 	void mousePressEvent( QMouseEvent * inEvent );
