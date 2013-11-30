@@ -46,7 +46,7 @@ GuiPlacedPiece::GuiPlacedPiece( QGraphicsPixmapItem * inItem, int inX, int inY, 
 	mColor( inColor )
 {}
 
-GameWindow::GameWindow( QWidget *parent )
+View::GameWindow::GameWindow( QWidget *parent )
 :
 	QMainWindow( parent ),
 	mBoardScene(),
@@ -135,12 +135,12 @@ GameWindow::GameWindow( QWidget *parent )
 //    setStatusBar(mStatusBar);
 }
 
-GameWindow::~GameWindow()
+View::GameWindow::~GameWindow()
 {
 }
 
 void
-GameWindow::addPlayer
+View::GameWindow::addPlayer
 (
 	std::string const & inName,
 	View::Color inColor,
@@ -156,7 +156,17 @@ GameWindow::addPlayer
 }
 
 void
-GameWindow::clearTile(int x, int y)
+View::GameWindow::setTile( int inX, int inY, std::string const & inId, int inRotation )
+{
+	TileItem *item = new TileItem( inId, inRotation );
+	item->moveBy( inX, inY );
+	mTiles.push_back( item );
+	mBoardScene->addItem( item );
+	updateSceneRect();
+}
+
+void
+View::GameWindow::clearTile(int x, int y)
 {
 	std::vector< TileItem * >::iterator it = mTiles.end();
 	while (it != mTiles.begin())
@@ -172,7 +182,7 @@ GameWindow::clearTile(int x, int y)
 }
 
 void
-GameWindow::rotateTile( int inX, int inY, std::string const & inId, int inRotation )
+View::GameWindow::rotateTile( int inX, int inY, std::string const & inId, int inRotation )
 {
 	for ( std::vector< TileItem * >::reverse_iterator it = mTiles.rbegin();
 		it != mTiles.rend();
@@ -187,13 +197,13 @@ GameWindow::rotateTile( int inX, int inY, std::string const & inId, int inRotati
 }
 
 void
-GameWindow::displayTilesLeft( unsigned int inNr )
+View::GameWindow::displayTilesLeft( unsigned inNr )
 {
 	mTilesLeft->setText( QString::number( inNr ).append( " tiles left." ) );
 }
 
 void
-GameWindow::setActivePlayer( std::string const & inName )
+View::GameWindow::setActivePlayer( std::string const & inName )
 {
 	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
 	if ( it != mUserInfoMap.end() )
@@ -203,7 +213,7 @@ GameWindow::setActivePlayer( std::string const & inName )
 }
 
 void
-GameWindow::setScore( std::string const & inName, unsigned inScore )
+View::GameWindow::setScore( std::string const & inName, unsigned inScore )
 {
 	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
 	if ( it != mUserInfoMap.end() )
@@ -214,7 +224,7 @@ GameWindow::setScore( std::string const & inName, unsigned inScore )
 }
 
 void
-GameWindow::setFollowersLeft( std::string const & inName, unsigned inNumberOfFollowers )
+View::GameWindow::setFollowersLeft( std::string const & inName, unsigned inNumberOfFollowers )
 {
 	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
 	if ( it != mUserInfoMap.end() )
@@ -224,13 +234,13 @@ GameWindow::setFollowersLeft( std::string const & inName, unsigned inNumberOfFol
 }
 
 void
-GameWindow::setNextTile( std::string const & inId )
+View::GameWindow::setNextTile( std::string const & inId )
 {
 	mPickedTileLabel->setTile( inId );
 }
 
 void
-GameWindow::placePiece( int inX, int inY, View::Color inColor )
+View::GameWindow::placePiece( int inX, int inY, View::Color inColor )
 {
 	QGraphicsPixmapItem * meeple = new QGraphicsPixmapItem( getMeeplePixmap( inColor ) );
 	meeple->moveBy( inX + Gui::kTileWidth / 2 - Gui::kMeepleWidth / 2, inY + Gui::kTileHeight / 2 - Gui::kMeepleHeight / 2 );
@@ -239,7 +249,7 @@ GameWindow::placePiece( int inX, int inY, View::Color inColor )
 }
 
 void
-GameWindow::returnPiece( int inX, int inY, View::Color inColor )
+View::GameWindow::returnPiece( int inX, int inY, View::Color inColor )
 {
 	std::vector< GuiPlacedPiece >::iterator it = std::find_if
 	(
@@ -254,7 +264,7 @@ GameWindow::returnPiece( int inX, int inY, View::Color inColor )
 }
 
 void
-GameWindow::finishCloister(int inX, int inY)
+View::GameWindow::finishCloister(int inX, int inY)
 {
 	QGraphicsEllipseItem* circle = new QGraphicsEllipseItem( inX, inY, 100, 100 );
 	circle->setPen( QPen( QBrush( Qt::blue ), 2 ) );
@@ -262,35 +272,25 @@ GameWindow::finishCloister(int inX, int inY)
 }
 
 void
-GameWindow::setTile( int inX, int inY, std::string const & inId, double inRotation )
-{
-	TileItem *item = new TileItem( inId, inRotation );
-	item->moveBy( inX, inY );
-	mTiles.push_back( item );
-	mBoardScene->addItem( item );
-	updateSceneRect();
-}
-
-void
-GameWindow::fadeNextTile()
+View::GameWindow::fadeNextTile()
 {
 	mPickedTileLabel->fadeTile();
 }
 
 void
-GameWindow::onClicked( int inX, int inY )
+View::GameWindow::onClicked( int inX, int inY )
 {
 	emit clicked( inX, inY, mPickedTileLabel->getCurrentTile(), mPickedTileLabel->getCurrentRotation() );
 }
 
 void
-GameWindow::onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
+View::GameWindow::onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
 {
 	emit tileDropped( inX, inY, inTileId, inRotation );
 }
 
 void
-GameWindow::updateSceneRect()
+View::GameWindow::updateSceneRect()
 {
 	QRectF bounding = mBoardScene->itemsBoundingRect();
 	bounding.adjust( -Gui::kTileWidth, -Gui::kTileHeight, Gui::kTileWidth, Gui::kTileHeight );

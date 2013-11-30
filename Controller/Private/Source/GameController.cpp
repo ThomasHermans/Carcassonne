@@ -12,7 +12,7 @@ GameController::GameController( QObject *parent )
 :
 	QObject( parent ),
 	mGame( new Game( this ) ),
-	mWindow( new GameWindow() )
+	mWindow( new View::GameWindow() )
 {
 	addPlayers();
 	makeConnections();
@@ -23,7 +23,7 @@ GameController::GameController( std::string const & inTiles, QObject * inParent 
 :
 	QObject( inParent ),
 	mGame( new Game( inTiles, this ) ),
-	mWindow( new GameWindow() )
+	mWindow( new View::GameWindow() )
 {
 	addPlayers();
 	makeConnections();
@@ -34,7 +34,7 @@ GameController::GameController( std::vector< Player > const & inPlayers, QObject
 :
 	QObject( inParent ),
 	mGame( new Game( inPlayers, this ) ),
-	mWindow( new GameWindow() )
+	mWindow( new View::GameWindow() )
 {
 	addPlayers();
 	makeConnections();

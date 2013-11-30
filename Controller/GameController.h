@@ -48,8 +48,7 @@ private:
 
 private:
 	Game *mGame;
-	GameWindow *mWindow;
-	
+	View::GameWindow *mWindow;
 };
 
 #endif // GAMECONTROLLER_H
