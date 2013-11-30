@@ -6,7 +6,7 @@
 
 #include <cassert>
 
-AllScoresWidget::AllScoresWidget( QWidget * inParent )
+View::AllScoresWidget::AllScoresWidget( QWidget * inParent )
 :
 	QWidget( inParent ),
 	mLayout( new QVBoxLayout() ),
@@ -17,12 +17,12 @@ AllScoresWidget::AllScoresWidget( QWidget * inParent )
 	setLayout( mLayout );
 }
 
-AllScoresWidget::~AllScoresWidget()
+View::AllScoresWidget::~AllScoresWidget()
 {
 }
 
 void
-AllScoresWidget::addPlayer( std::string const & inName )
+View::AllScoresWidget::addPlayer( std::string const & inName )
 {
 	QHBoxLayout * row = new QHBoxLayout();
 	QLabel * name = new QLabel( QString::fromUtf8( inName.c_str() ), this );
@@ -37,7 +37,7 @@ AllScoresWidget::addPlayer( std::string const & inName )
 }
 
 void
-AllScoresWidget::setScore( std::string const & inName, unsigned inScore )
+View::AllScoresWidget::setScore( std::string const & inName, unsigned inScore )
 {
 	assert( mScores.find( inName ) != mScores.end() );
 	mScores[ inName ]->setText( QString::number( inScore ) );

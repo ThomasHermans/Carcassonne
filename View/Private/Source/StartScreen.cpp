@@ -9,7 +9,7 @@
 #include <cassert>
 #include <set>
 
-StartScreen::StartScreen( QWidget * inParent )
+View::StartScreen::StartScreen( QWidget * inParent )
 :
 	QDialog( inParent ),
 	mLayout( new QVBoxLayout() ),
@@ -31,12 +31,12 @@ StartScreen::StartScreen( QWidget * inParent )
 	loadDefaultPlayers();
 }
 
-StartScreen::~StartScreen()
+View::StartScreen::~StartScreen()
 {
 }
 
 Gui::Color
-StartScreen::findUnusedColor() const
+View::StartScreen::findUnusedColor() const
 {
 	std::set< Gui::Color > colors;
 	colors.insert( Gui::kRed );
@@ -56,7 +56,7 @@ StartScreen::findUnusedColor() const
 }
 
 void
-StartScreen::loadDefaultPlayers()
+View::StartScreen::loadDefaultPlayers()
 {
 	addPlayer();
 	addPlayer();
@@ -67,7 +67,7 @@ StartScreen::loadDefaultPlayers()
 }
 
 void
-StartScreen::addPlayer()
+View::StartScreen::addPlayer()
 {
 	if ( mPlayerRows.size() < 6 )
 	{
@@ -82,7 +82,7 @@ StartScreen::addPlayer()
 }
 
 void
-StartScreen::removePlayer()
+View::StartScreen::removePlayer()
 {
 	StartScreenRow * senderRow = qobject_cast< StartScreenRow * >( QObject::sender() );
 	if ( senderRow )
@@ -103,7 +103,7 @@ StartScreen::removePlayer()
 }
 
 void
-StartScreen::updateColors( Gui::Color inColor )
+View::StartScreen::updateColors( Gui::Color inColor )
 {
 	StartScreenRow * senderRow = qobject_cast< StartScreenRow * >( QObject::sender() );
 	if ( senderRow )
@@ -122,7 +122,7 @@ StartScreen::updateColors( Gui::Color inColor )
 }
 
 void
-StartScreen::playClicked()
+View::StartScreen::playClicked()
 {
 	std::map< Gui::Color, std::string > players;
 	for ( std::vector< StartScreenRow * >::const_iterator it = mPlayerRows.begin();

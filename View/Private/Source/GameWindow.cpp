@@ -73,7 +73,7 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mBoardScene = new QGraphicsScene( centralWidget );
 	mBoardScene->setObjectName( QString::fromUtf8("mBoardScene") );
 
-	mBoardView = new BoardView( mBoardScene, this );
+	mBoardView = new View::BoardView( mBoardScene, this );
 	mBoardView->setObjectName( QString::fromUtf8("mBoardView") );
 	mBoardView->setFrameStyle( QFrame::NoFrame );
 	mBoardView->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
@@ -99,7 +99,7 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mTilesLeft->setText("X tiles left");
 	mSideBarLayout->addWidget(mTilesLeft);
 
-	mPickedTileLabel = new DragTileLabel( centralWidget );
+	mPickedTileLabel = new View::DragTileLabel( centralWidget );
 	mPickedTileLabel->setObjectName( QString::fromUtf8( "mPickedTileLabel" ) );
 	mSideBarLayout->addWidget( mPickedTileLabel );
 
@@ -114,7 +114,7 @@ View::GameWindow::GameWindow( QWidget *parent )
 
 	mSideBarLayout->addStretch();
 
-	mAllScoresWidget = new AllScoresWidget( centralWidget );
+	mAllScoresWidget = new View::AllScoresWidget( centralWidget );
 	mAllScoresWidget->setObjectName( QString::fromUtf8( "mAllScoresWidget" ) );
 	mSideBarLayout->addWidget( mAllScoresWidget );
 

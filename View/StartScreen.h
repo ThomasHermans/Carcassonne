@@ -11,33 +11,36 @@
 #include <string>
 #include <vector>
 
-class StartScreenRow;
-
-class StartScreen : public QDialog
+namespace View
 {
-	Q_OBJECT
-public:
-	explicit StartScreen( QWidget * inParent = 0 );
-	~StartScreen();
+	class StartScreenRow;
 
-signals:
-	void startGame( std::map< Gui::Color, std::string > const & inPlayers );
+	class StartScreen : public QDialog
+	{
+		Q_OBJECT
+	public:
+		explicit StartScreen( QWidget * inParent = 0 );
+		~StartScreen();
 
-private:
-	Gui::Color findUnusedColor() const;
-	void loadDefaultPlayers();
+	signals:
+		void startGame( std::map< Gui::Color, std::string > const & inPlayers );
 
-private slots:
-	void addPlayer();
-	void removePlayer();
-	void updateColors( Gui::Color inColor );
-	void playClicked();
+	private:
+		Gui::Color findUnusedColor() const;
+		void loadDefaultPlayers();
 
-private:
-	QVBoxLayout * mLayout;
-	std::vector< StartScreenRow * > mPlayerRows;
-	QPushButton * mAddPlayerButton;
-	QPushButton * mPlayButton;
-};
+	private slots:
+		void addPlayer();
+		void removePlayer();
+		void updateColors( Gui::Color inColor );
+		void playClicked();
+
+	private:
+		QVBoxLayout * mLayout;
+		std::vector< StartScreenRow * > mPlayerRows;
+		QPushButton * mAddPlayerButton;
+		QPushButton * mPlayButton;
+	};
+}
 
 #endif // STARTSCREEN_H

@@ -14,32 +14,35 @@ QT_BEGIN_NAMESPACE
 	class QWidget;
 QT_END_NAMESPACE
 
-class DragTileLabel : public QLabel
+namespace View
 {
-public:
-	DragTileLabel( QWidget * inParent );
-	~DragTileLabel();
+	class DragTileLabel : public QLabel
+	{
+	public:
+		DragTileLabel( QWidget * inParent );
+		~DragTileLabel();
 
-	std::string const & getCurrentTile() const;
-	View::Rotation getCurrentRotation() const;
+		std::string const & getCurrentTile() const;
+		View::Rotation getCurrentRotation() const;
 
-	void setTile( std::string const & inTileId );
-	void fadeTile();
+		void setTile( std::string const & inTileId );
+		void fadeTile();
 
-protected:
-	void mouseMoveEvent( QMouseEvent * inEvent );
-	void mousePressEvent( QMouseEvent * inEvent );
-	void mouseReleaseEvent( QMouseEvent * inEvent );
+	protected:
+		void mouseMoveEvent( QMouseEvent * inEvent );
+		void mousePressEvent( QMouseEvent * inEvent );
+		void mouseReleaseEvent( QMouseEvent * inEvent );
 
-private:
-	void updatePixmap();
+	private:
+		void updatePixmap();
 
-private:
-	std::string mTileId;
-	View::Rotation mRotation;
-	QPixmap mPixmap;
-	QPoint mDragStartPosition;
-	bool mFaded;
-};
+	private:
+		std::string mTileId;
+		View::Rotation mRotation;
+		QPixmap mPixmap;
+		QPoint mDragStartPosition;
+		bool mFaded;
+	};
+}
 
 #endif

@@ -5,7 +5,7 @@
 #include <QStyle>
 #include <QStyleOption>
 
-StartScreenRow::StartScreenRow( QWidget * inParent )
+View::StartScreenRow::StartScreenRow( QWidget * inParent )
 :
 	QWidget( inParent ),
 	mNameLineEdit( new QLineEdit( this ) ),
@@ -31,42 +31,42 @@ StartScreenRow::StartScreenRow( QWidget * inParent )
 	mNameLineEdit->setFocus();
 }
 
-StartScreenRow::~StartScreenRow()
+View::StartScreenRow::~StartScreenRow()
 {
 }
 
 QString
-StartScreenRow::getName() const
+View::StartScreenRow::getName() const
 {
 	return mNameLineEdit->text();
 }
 
 Gui::Color
-StartScreenRow::getColor() const
+View::StartScreenRow::getColor() const
 {
 	return Gui::Color( mColorComboBox->currentIndex() );
 }
 
 void
-StartScreenRow::setName( QString const & inName )
+View::StartScreenRow::setName( QString const & inName )
 {
 	mNameLineEdit->setText( inName );
 }
 
 void
-StartScreenRow::setColor( Gui::Color inColor )
+View::StartScreenRow::setColor( Gui::Color inColor )
 {
 	mColorComboBox->setCurrentIndex( int( inColor ) );
 }
 
 void
-StartScreenRow::onCurrentIndexChanged( int inIndex )
+View::StartScreenRow::onCurrentIndexChanged( int inIndex )
 {
 	emit colorChanged( Gui::Color( inIndex ) );
 }
 
 void
-StartScreenRow::paintEvent( QPaintEvent * inEvent )
+View::StartScreenRow::paintEvent( QPaintEvent * inEvent )
 {
 	QStyleOption opt;
 	opt.init(this);

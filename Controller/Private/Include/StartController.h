@@ -10,7 +10,10 @@
 #include <map>
 #include <string>
 
-class StartScreen;
+namespace View
+{
+	class StartScreen;
+}
 
 class StartController : public QObject
 {
@@ -26,7 +29,7 @@ private slots:
 	void onTryToStartGame( std::map< Gui::Color, std::string > const & inPlayers );
 
 private:
-	boost::scoped_ptr< StartScreen > mStartScreen;
+	boost::scoped_ptr< View::StartScreen > mStartScreen;
 };
 
 #endif // STARTCONTROLLER_H

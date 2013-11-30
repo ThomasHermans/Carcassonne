@@ -15,20 +15,20 @@
 
 #include <iostream>
 
-BoardView::BoardView( QWidget *parent ) :
+View::BoardView::BoardView( QWidget *parent ) :
 	QGraphicsView( parent )
 {
 	setAcceptDrops( true );
 }
 
-BoardView::BoardView( QGraphicsScene *scene, QWidget *parent ) :
+View::BoardView::BoardView( QGraphicsScene *scene, QWidget *parent ) :
 	QGraphicsView( scene, parent )
 {
 	setAcceptDrops( true );
 }
 
 void
-BoardView::mousePressEvent( QMouseEvent * inEvent )
+View::BoardView::mousePressEvent( QMouseEvent * inEvent )
 {
 	QPointF scenePos = mapToScene( inEvent->pos() );
 	double scenex = scenePos.x();
@@ -40,7 +40,7 @@ BoardView::mousePressEvent( QMouseEvent * inEvent )
 }
 
 void
-BoardView::keyPressEvent( QKeyEvent * inEvent )
+View::BoardView::keyPressEvent( QKeyEvent * inEvent )
 {
 	if ( inEvent->key() == Qt::Key_Enter || inEvent->key() == Qt::Key_Return )
 	{
@@ -53,7 +53,7 @@ BoardView::keyPressEvent( QKeyEvent * inEvent )
 }
 
 void
-BoardView::dragEnterEvent( QDragEnterEvent * inEvent )
+View::BoardView::dragEnterEvent( QDragEnterEvent * inEvent )
 {
 	Dragging::TileData const * tileData = qobject_cast< Dragging::TileData const * >( inEvent->mimeData() );
 	if ( tileData )
@@ -70,12 +70,12 @@ BoardView::dragEnterEvent( QDragEnterEvent * inEvent )
 }
 
 void
-BoardView::dragMoveEvent( QDragMoveEvent * inEvent )
+View::BoardView::dragMoveEvent( QDragMoveEvent * inEvent )
 {
 }
 
 void
-BoardView::dropEvent( QDropEvent * inEvent )
+View::BoardView::dropEvent( QDropEvent * inEvent )
 {
 	Dragging::TileData const * tileData = qobject_cast< Dragging::TileData const * >( inEvent->mimeData() );
 	if ( tileData )

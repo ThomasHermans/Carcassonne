@@ -17,7 +17,7 @@
 #include <QString>
 #include <QWidget>
 
-DragMeepleLabel::DragMeepleLabel
+View::DragMeepleLabel::DragMeepleLabel
 (
 	View::Piece inType,
 	unsigned inNr,
@@ -49,24 +49,24 @@ DragMeepleLabel::DragMeepleLabel
 	setFixedHeight( 40 );
 }
 
-DragMeepleLabel::~DragMeepleLabel()
+View::DragMeepleLabel::~DragMeepleLabel()
 {}
 
 void
-DragMeepleLabel::setNr( unsigned inNr )
+View::DragMeepleLabel::setNr( unsigned inNr )
 {
 	mNr = inNr;
 	mNrLabel->setText( QString::number( mNr ) );
 }
 
 void
-DragMeepleLabel::setColor( View::Color inColor )
+View::DragMeepleLabel::setColor( View::Color inColor )
 {
 	mColor = inColor;
 }
 
 void
-DragMeepleLabel::mousePressEvent( QMouseEvent * inEvent )
+View::DragMeepleLabel::mousePressEvent( QMouseEvent * inEvent )
 {
 	if ( inEvent->button() == Qt::LeftButton )
 	{
@@ -75,7 +75,7 @@ DragMeepleLabel::mousePressEvent( QMouseEvent * inEvent )
 }
 
 void
-DragMeepleLabel::mouseMoveEvent( QMouseEvent * inEvent )
+View::DragMeepleLabel::mouseMoveEvent( QMouseEvent * inEvent )
 {
 	if ( !( inEvent->buttons() & Qt::LeftButton ) )
 	{
@@ -95,7 +95,7 @@ DragMeepleLabel::mouseMoveEvent( QMouseEvent * inEvent )
 }
 
 void
-DragMeepleLabel::paintEvent( QPaintEvent * inEvent )
+View::DragMeepleLabel::paintEvent( QPaintEvent * inEvent )
 {
 	QPainter painter( this );
 	static QPainterPath path = View::getMeeplePath( 0, 5, Gui::kMeepleWidth, Gui::kMeepleHeight );

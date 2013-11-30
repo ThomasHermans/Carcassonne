@@ -9,7 +9,7 @@
 #include <iostream>
 #include <sstream>
 
-TileItem::TileItem
+View::TileItem::TileItem
 (
 	QGraphicsItem *inParent
 )
@@ -18,7 +18,7 @@ TileItem::TileItem
 {
 }
 
-TileItem::TileItem
+View::TileItem::TileItem
 (
 	std::string const & inId,
 	int inRotation,
@@ -31,13 +31,13 @@ TileItem::TileItem
 }
 
 void
-TileItem::setTile( std::string const & inId, int inRotation )
+View::TileItem::setTile( std::string const & inId, int inRotation )
 {
 	setPixmap( View::getRotatedPixmapForTile( inId, inRotation ) );
 }
 
 void
-TileItem::mousePressEvent( QGraphicsSceneMouseEvent * inEvent )
+View::TileItem::mousePressEvent( QGraphicsSceneMouseEvent * inEvent )
 {
 	double const x = inEvent->pos().x();
 	double const y = inEvent->pos().y();

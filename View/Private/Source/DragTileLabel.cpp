@@ -37,7 +37,7 @@ namespace
 	}
 }
 
-DragTileLabel::DragTileLabel( QWidget * inParent )
+View::DragTileLabel::DragTileLabel( QWidget * inParent )
 :
 	QLabel( inParent ),
 	mTileId( "" ),
@@ -52,24 +52,24 @@ DragTileLabel::DragTileLabel( QWidget * inParent )
 	setAlignment( Qt::AlignCenter );
 }
 
-DragTileLabel::~DragTileLabel()
+View::DragTileLabel::~DragTileLabel()
 {
 }
 
 std::string const &
-DragTileLabel::getCurrentTile() const
+View::DragTileLabel::getCurrentTile() const
 {
 	return mTileId;
 }
 
 View::Rotation
-DragTileLabel::getCurrentRotation() const
+View::DragTileLabel::getCurrentRotation() const
 {
 	return mRotation;
 }
 
 void
-DragTileLabel::setTile( std::string const & inTileId )
+View::DragTileLabel::setTile( std::string const & inTileId )
 {
 	mFaded = false;
 	mTileId = inTileId;
@@ -78,14 +78,14 @@ DragTileLabel::setTile( std::string const & inTileId )
 }
 
 void
-DragTileLabel::fadeTile()
+View::DragTileLabel::fadeTile()
 {
 	mFaded = true;
 	updatePixmap();
 }
 
 void
-DragTileLabel::mouseMoveEvent( QMouseEvent * inEvent )
+View::DragTileLabel::mouseMoveEvent( QMouseEvent * inEvent )
 {
 	if ( !( inEvent->buttons() & Qt::LeftButton ) )
 	{
@@ -104,7 +104,7 @@ DragTileLabel::mouseMoveEvent( QMouseEvent * inEvent )
 }
 
 void
-DragTileLabel::mousePressEvent( QMouseEvent * inEvent )
+View::DragTileLabel::mousePressEvent( QMouseEvent * inEvent )
 {
 	if ( inEvent->button() == Qt::LeftButton )
 	{
@@ -113,7 +113,7 @@ DragTileLabel::mousePressEvent( QMouseEvent * inEvent )
 }
 
 void
-DragTileLabel::mouseReleaseEvent( QMouseEvent * inEvent )
+View::DragTileLabel::mouseReleaseEvent( QMouseEvent * inEvent )
 {
 	if ( inEvent->button() == Qt::LeftButton )
 	{
@@ -126,7 +126,7 @@ DragTileLabel::mouseReleaseEvent( QMouseEvent * inEvent )
 }
 
 void
-DragTileLabel::updatePixmap()
+View::DragTileLabel::updatePixmap()
 {
 	if ( !mTileId.empty() )
 	{

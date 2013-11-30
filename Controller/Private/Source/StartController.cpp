@@ -5,7 +5,7 @@
 StartController::StartController( QObject * inParent )
 :
 	QObject( inParent ),
-	mStartScreen( new StartScreen() )
+	mStartScreen( new View::StartScreen() )
 {
 	connect
 	(

@@ -7,29 +7,34 @@
 
 #include <string>
 
-class DragMeepleLabel;
+QT_BEGIN_NAMESPACE
+	class QLabel;
+QT_END_NAMESPACE
 
-class QLabel;
-
-class UserInfoWidget : public QWidget
+namespace View
 {
-public:
-	UserInfoWidget
-	(
-		std::string const & inName,
-		View::Color inColor,
-		unsigned inNumberOfFollowers,
-		QWidget * inParent
-	);
-	~UserInfoWidget();
+	class DragMeepleLabel;
 
-	void setScore( unsigned inScore );
-	void setNumberOfFollowers( unsigned inNumberOfFollowers );
+	class UserInfoWidget : public QWidget
+	{
+	public:
+		UserInfoWidget
+		(
+			std::string const & inName,
+			View::Color inColor,
+			unsigned inNumberOfFollowers,
+			QWidget * inParent
+		);
+		~UserInfoWidget();
 
-private:
-	QLabel * mNameLabel;
-	QLabel * mScoreLabel;
-	DragMeepleLabel * mDragFollowersLabel;
-};
+		void setScore( unsigned inScore );
+		void setNumberOfFollowers( unsigned inNumberOfFollowers );
+
+	private:
+		QLabel * mNameLabel;
+		QLabel * mScoreLabel;
+		DragMeepleLabel * mDragFollowersLabel;
+	};
+}
 
 #endif // USERINFOWIDGET_THHR_20130824

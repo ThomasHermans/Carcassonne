@@ -23,13 +23,11 @@
 
 #include <map>
 
-class AllScoresWidget;
-struct GuiPlacedPiece;
-class DragMeepleLabel;
-class DragTileLabel;
-class UserInfoWidget;
+QT_BEGIN_NAMESPACE
+	class QStackedWidget;
+QT_END_NAMESPACE
 
-class QStackedWidget;
+struct GuiPlacedPiece;
 
 namespace Dragging
 {
@@ -38,6 +36,11 @@ namespace Dragging
 
 namespace View
 {
+	class AllScoresWidget;
+	class DragMeepleLabel;
+	class DragTileLabel;
+	class UserInfoWidget;
+
 	class GameWindow : public QMainWindow
 	{
 		Q_OBJECT

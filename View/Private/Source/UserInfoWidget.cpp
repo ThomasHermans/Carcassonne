@@ -60,7 +60,7 @@ namespace
 	}
 }
 
-UserInfoWidget::UserInfoWidget
+View::UserInfoWidget::UserInfoWidget
 (
 	std::string const & inName,
 	View::Color inColor,
@@ -106,18 +106,18 @@ UserInfoWidget::UserInfoWidget
 	setStyleSheet( GetStyleSheet( inColor ) );
 }
 
-UserInfoWidget::~UserInfoWidget()
+View::UserInfoWidget::~UserInfoWidget()
 {
 }
 
 void
-UserInfoWidget::setScore( unsigned inScore )
+View::UserInfoWidget::setScore( unsigned inScore )
 {
 	mScoreLabel->setText( QString::number( inScore ) );
 }
 
 void
-UserInfoWidget::setNumberOfFollowers( unsigned inNumberOfFollowers )
+View::UserInfoWidget::setNumberOfFollowers( unsigned inNumberOfFollowers )
 {
 	mDragFollowersLabel->setNr( inNumberOfFollowers );
 }

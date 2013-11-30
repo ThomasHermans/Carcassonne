@@ -3,25 +3,28 @@
 
 #include <QGraphicsPixmapItem>
 
-class TileItem : public QGraphicsPixmapItem
+namespace View
 {
-public:
-	explicit TileItem
-	(
-		QGraphicsItem * inParent = 0
-	);
-	
-	explicit TileItem
-	(
-		std::string const & inId,
-		int inRotation,
-		QGraphicsItem * inParent = 0
-	);
+	class TileItem : public QGraphicsPixmapItem
+	{
+	public:
+		explicit TileItem
+		(
+			QGraphicsItem * inParent = 0
+		);
+		
+		explicit TileItem
+		(
+			std::string const & inId,
+			int inRotation,
+			QGraphicsItem * inParent = 0
+		);
 
-	void setTile( std::string const & inId, int inRotation );
+		void setTile( std::string const & inId, int inRotation );
 
-protected:
-	void mousePressEvent( QGraphicsSceneMouseEvent * inEvent );
-};
+	protected:
+		void mousePressEvent( QGraphicsSceneMouseEvent * inEvent );
+	};
+}
 
 #endif
