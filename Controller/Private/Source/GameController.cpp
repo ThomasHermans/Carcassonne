@@ -130,15 +130,6 @@ GameController::onCurrentPlayerChanged( Player const & inCurrentPlayer )
 }
 
 void
-GameController::onFinishedCloister( unsigned inCol, unsigned inRow )
-{
-	std::cout << "Finished cloister on tile " << inCol << ", " << inRow << std::endl;
-	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
-	int y = Controller::yFromRow( inRow, mGame->getStartRow() );
-	mWindow->finishCloister( x, y );
-}
-
-void
 GameController::onEndOfGame( unsigned inTilesLeft )
 {
 	mGame->calculateEndPoints();
@@ -220,8 +211,6 @@ GameController::makeConnections()
 		this, SLOT( onPlayerInfoChanged(Player) ) );
 	connect( mGame, SIGNAL( currentPlayerChanged(Player) ),
 		this, SLOT( onCurrentPlayerChanged(Player) ) );
-
-	connect( mGame, SIGNAL( finishedCloister(uint, uint) ), this, SLOT( onFinishedCloister(uint, uint) ) );
 
 	connect( mWindow, SIGNAL( clicked( int, int, std::string const &, View::Rotation ) ),
 		this, SLOT( onClicked( int, int, std::string const &, View::Rotation ) ) );

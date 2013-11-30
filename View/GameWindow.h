@@ -92,17 +92,34 @@ namespace View
 		void displayTilesLeft( unsigned inNr );
 
 		/**
-		 *	Set the player with the given name as active player.
+		 *	Set the specified player as active player.
 		 */
 		void setActivePlayer( std::string const & inName );
+
+		/**
+		 *	Set the score for the specified player.
+		 */
 		void setScore( std::string const & inName, unsigned inScore );
+
+		/**
+		 *	Set the amount of followers the specified player has left.
+		 */
 		void setFollowersLeft( std::string const & inName, unsigned inNumberOfFollowers );
+		
+		/**
+		 *	Show the specified tile as the next to be played tile.
+		 */
 		void setNextTile( std::string const & inId );
 		
+		/**
+		 *	Place a piece on the board.
+		 */
 		void placePiece( int inX, int inY, View::Color inColor );
-		void returnPiece( int inX, int inY, View::Color inColor );
 
-		void finishCloister( int inX, int inY );
+		/**
+		 *	Remove a piece from the board.
+		 */
+		void returnPiece( int inX, int inY, View::Color inColor );
 		
 	signals:
 		void clicked( int inX, int inY, std::string const & inId, View::Rotation inRotation );
@@ -111,6 +128,9 @@ namespace View
 		void tryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY );
 		
 	public slots:
+		/**
+		 *	Fade the tile shown as next tile, since it has been placed on the board.
+		 */
 		void fadeNextTile();
 		void onClicked( int x, int y );
 		void onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );

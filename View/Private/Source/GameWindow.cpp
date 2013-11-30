@@ -261,14 +261,7 @@ View::GameWindow::returnPiece( int inX, int inY, View::Color inColor )
 		mBoardScene->removeItem( it->mItem );
 		mMeeples.erase( it );
 	}
-}
-
-void
-View::GameWindow::finishCloister(int inX, int inY)
-{
-	QGraphicsEllipseItem* circle = new QGraphicsEllipseItem( inX, inY, 100, 100 );
-	circle->setPen( QPen( QBrush( Qt::blue ), 2 ) );
-	mBoardScene->addItem( circle );
+	mBoardView->update();
 }
 
 void

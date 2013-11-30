@@ -32,8 +32,6 @@ private slots:
 	void onPlayerInfoChanged( Player const & inNewInfo );
 	void onCurrentPlayerChanged( Player const & inCurrentPlayer);
 
-	void onFinishedCloister( unsigned inCol, unsigned inRow );
-
 	void onEndOfGame( unsigned inTilesLeft );
 
 	// From view to model
