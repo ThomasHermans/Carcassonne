@@ -21,9 +21,9 @@ public:
 
 private slots:
 	// From model to view
-	void onTilePlaced( unsigned inCol, unsigned inRow, std::string const & inId, Model::Rotation inRot );
+	void onTilePlaced( unsigned inCol, unsigned inRow, std::string const & inId, Model::Rotation inRotation );
 	void onTileUnplaced( unsigned inCol, unsigned inRow );
-	void onTileRotated( unsigned inCol, unsigned inRow, std::string const & inId, Model::Rotation inRot );
+	void onTileRotated( unsigned inCol, unsigned inRow, std::string const & inId, Model::Rotation inRotation );
 	void onNextTile( std::string const & inNextId );
 	void onTilesLeft( unsigned inNr );
 

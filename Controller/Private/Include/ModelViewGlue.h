@@ -50,6 +50,9 @@ namespace Controller
 
 	Model::Rotation
 	modelFromView( View::Rotation inRotation );
+
+	View::Rotation
+	viewFromModel( Model::Rotation inRotation );
 }
 
 #endif

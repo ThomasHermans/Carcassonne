@@ -68,10 +68,11 @@ namespace View
 		);
 
 		/**
-		 *	Place a tile on the board at the specified location.
+		 *	Place a tile on the board at the specified location in scene
+		 *	coordinates.
 		 */
 		void
-		setTile( int inX, int inY, std::string const & inId, int inRotation );
+		setTile( int inX, int inY, std::string const & inId, Rotation inRotation );
 
 		/**
 		 *	Clear a tile from the board at the specified location.
@@ -84,7 +85,7 @@ namespace View
 		 *	The tile at the specified location will be replaced with a tile with
 		 *	the given id and given rotation.
 		 */
-		void rotateTile( int inX, int inY, std::string const & inId, int inRotation );
+		void rotateTile( int inX, int inY, std::string const & inId, Rotation inRotation );
 
 		/**
 		 *	Display the number of tiles there are left in the bag.
@@ -132,6 +133,12 @@ namespace View
 		 *	Fade the tile shown as next tile, since it has been placed on the board.
 		 */
 		void fadeNextTile();
+
+		/**
+		 *	End the current turn.
+		 */
+		void onEndCurrentTurn();
+
 		void onClicked( int x, int y );
 		void onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
 

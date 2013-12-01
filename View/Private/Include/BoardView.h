@@ -5,6 +5,10 @@
 
 #include <QGraphicsView>
 
+#include <boost/optional.hpp>
+
+#include <string>
+
 QT_BEGIN_NAMESPACE
 	class QDragEnterEvent;
 	class QDragMoveEvent;
@@ -30,6 +34,9 @@ namespace View
 		explicit BoardView( QWidget *parent = 0 );
 		explicit BoardView( QGraphicsScene *inScene, QWidget *parent = 0 );
 
+		void placeTile( int inX, int inY, std::string const & inId, Rotation inRotation );
+		void clearCurrentTile();
+
 	signals:
 		void clicked( int x, int y );
 		void droppedPiece( Dragging::PieceData const & inData, int inX, int inY );
@@ -39,11 +46,22 @@ namespace View
 
 	protected:
 		void mousePressEvent( QMouseEvent * inEvent );
+		void mouseMoveEvent( QMouseEvent * inEvent );
+		void mouseReleaseEvent( QMouseEvent * inEvent );
 		void keyPressEvent( QKeyEvent * inEvent );
 
 		void dragEnterEvent( QDragEnterEvent * inEvent );
 		void dragMoveEvent( QDragMoveEvent * inEvent );
 		void dropEvent( QDropEvent * inEvent );
+
+	private:
+		bool startedOnCurrentTile() const;
+
+	private:
+		QPointF mPressPosition;
+		boost::optional< QPoint > mCurrentTilePosition;
+		std::string mCurrentTile;
+		Rotation mRotation;
 	};
 }
 

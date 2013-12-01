@@ -1,7 +1,10 @@
 #include "BoardView.h"
 
+#include "TileUtils.h"
+
 #include "View/DragData.h"
 
+#include <QApplication>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QGraphicsItem>
@@ -16,27 +19,87 @@
 #include <iostream>
 
 View::BoardView::BoardView( QWidget *parent ) :
-	QGraphicsView( parent )
+	QGraphicsView( parent ),
+	mPressPosition(),
+	mCurrentTilePosition( boost::none ),
+	mCurrentTile(),
+	mRotation( View::kCw0 )
+
 {
 	setAcceptDrops( true );
 }
 
 View::BoardView::BoardView( QGraphicsScene *scene, QWidget *parent ) :
-	QGraphicsView( scene, parent )
+	QGraphicsView( scene, parent ),
+	mPressPosition(),
+	mCurrentTilePosition( boost::none ),
+	mCurrentTile(),
+	mRotation( View::kCw0 )
+
 {
 	setAcceptDrops( true );
 }
 
 void
+View::BoardView::placeTile( int inX, int inY, std::string const & inId, Rotation inRotation )
+{
+	mCurrentTilePosition = QPoint( inX, inY );
+	mCurrentTile = inId;
+	mRotation = inRotation;
+}
+
+void
+View::BoardView::clearCurrentTile()
+{
+	mCurrentTilePosition = boost::none;
+}
+
+void
 View::BoardView::mousePressEvent( QMouseEvent * inEvent )
 {
-	QPointF scenePos = mapToScene( inEvent->pos() );
-	double scenex = scenePos.x();
-	double sceney = scenePos.y();
-	std::cout << "BoardView clicked at [" << scenex << ", " << sceney << "] in the scene." << std::endl;
-	// TODO: get position of click.
-	QGraphicsView::mousePressEvent( inEvent );
-	emit clicked( scenex, sceney );
+	if ( inEvent->button() == Qt::LeftButton )
+	{
+		mPressPosition = mapToScene( inEvent->pos() );
+	}
+}
+
+void
+View::BoardView::mouseMoveEvent( QMouseEvent * inEvent )
+{
+	if ( !( inEvent->buttons() & Qt::LeftButton ) )
+	{
+		return;
+	}
+	if ( !startedOnCurrentTile() )
+	{
+		return;
+	}
+	if ( (inEvent->pos() - mPressPosition).manhattanLength() < QApplication::startDragDistance() )
+	{
+		return;
+	}
+
+	QDrag * drag = new QDrag( this );
+	Dragging::TileData * tileData = new Dragging::TileData( mCurrentTile, mRotation );
+	drag->setMimeData( tileData );
+	drag->setPixmap( getPixmapForTile( mCurrentTile, mRotation ) );
+	drag->exec( Qt::MoveAction );
+}
+
+void
+View::BoardView::mouseReleaseEvent( QMouseEvent * inEvent )
+{
+	if ( inEvent->button() == Qt::LeftButton )
+	{
+		if ( (mapToScene( inEvent->pos() ) - mPressPosition).manhattanLength() < QApplication::startDragDistance() )
+		{
+			QPointF const scenePos = mapToScene( inEvent->pos() );
+			double const scenex = scenePos.x();
+			double const sceney = scenePos.y();
+			std::cout << "BoardView clicked at [" << scenex << ", " << sceney << "] in the scene." << std::endl;
+			emit clicked( scenex, sceney );
+		}
+	}
 }
 
 void
@@ -91,4 +154,26 @@ View::BoardView::dropEvent( QDropEvent * inEvent )
 		emit droppedPiece( *pieceData, dropPoint.x(), dropPoint.y() );
 		return;
 	}
+}
+
+bool
+View::BoardView::startedOnCurrentTile() const
+{
+	if ( !mCurrentTilePosition )
+	{
+		return false;
+	}
+	int const pressedX = mPressPosition.x();
+	int const pressedY = mPressPosition.y();
+	int const tileX = mCurrentTilePosition->x();
+	int const tileY = mCurrentTilePosition->y();
+	if ( pressedX < tileX || pressedX > tileX + Gui::kTileWidth )
+	{
+		return false;
+	}
+	if ( pressedY < tileY || pressedY > tileY + Gui::kTileHeight )
+	{
+		return false;
+	}
+	return true;
 }

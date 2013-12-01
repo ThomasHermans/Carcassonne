@@ -78,8 +78,8 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mBoardView->setFrameStyle( QFrame::NoFrame );
 	mBoardView->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
-	connect( mBoardView, SIGNAL( enterPressed() ), this, SIGNAL( endCurrentTurn() ) );
-	connect( mBoardView, SIGNAL( spacePressed() ), this, SIGNAL( endCurrentTurn() ) );
+	connect( mBoardView, SIGNAL( enterPressed() ), this, SLOT( onEndCurrentTurn() ) );
+	connect( mBoardView, SIGNAL( spacePressed() ), this, SLOT( onEndCurrentTurn() ) );
 	connect( mBoardView, SIGNAL( droppedPiece( Dragging::PieceData, int, int ) ),
 		this, SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ) );
 
@@ -109,7 +109,7 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mEndTurnButton = new QPushButton(centralWidget);
 	mEndTurnButton->setObjectName(QString::fromUtf8("mEndTurnButton"));
 	mEndTurnButton->setText("End Turn");
-	connect( mEndTurnButton, SIGNAL( clicked() ), this, SIGNAL( endCurrentTurn() ) );
+	connect( mEndTurnButton, SIGNAL( clicked() ), this, SLOT( onEndCurrentTurn() ) );
 	mSideBarLayout->addWidget( mEndTurnButton );
 
 	mSideBarLayout->addStretch();
@@ -156,12 +156,13 @@ View::GameWindow::addPlayer
 }
 
 void
-View::GameWindow::setTile( int inX, int inY, std::string const & inId, int inRotation )
+View::GameWindow::setTile( int inX, int inY, std::string const & inId, Rotation inRotation )
 {
 	TileItem *item = new TileItem( inId, inRotation );
 	item->moveBy( inX, inY );
 	mTiles.push_back( item );
 	mBoardScene->addItem( item );
+	mBoardView->placeTile( inX, inY, inId, inRotation );
 	updateSceneRect();
 }
 
@@ -182,7 +183,7 @@ View::GameWindow::clearTile(int x, int y)
 }
 
 void
-View::GameWindow::rotateTile( int inX, int inY, std::string const & inId, int inRotation )
+View::GameWindow::rotateTile( int inX, int inY, std::string const & inId, Rotation inRotation )
 {
 	for ( std::vector< TileItem * >::reverse_iterator it = mTiles.rbegin();
 		it != mTiles.rend();
@@ -268,6 +269,13 @@ void
 View::GameWindow::fadeNextTile()
 {
 	mPickedTileLabel->fadeTile();
+}
+
+void
+View::GameWindow::onEndCurrentTurn()
+{
+	mBoardView->clearCurrentTile();
+	emit endCurrentTurn();
 }
 
 void

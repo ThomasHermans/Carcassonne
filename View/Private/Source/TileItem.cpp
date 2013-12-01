@@ -21,7 +21,7 @@ View::TileItem::TileItem
 View::TileItem::TileItem
 (
 	std::string const & inId,
-	int inRotation,
+	Rotation inRotation,
 	QGraphicsItem *inParent
 )
 :
@@ -31,9 +31,9 @@ View::TileItem::TileItem
 }
 
 void
-View::TileItem::setTile( std::string const & inId, int inRotation )
+View::TileItem::setTile( std::string const & inId, Rotation inRotation )
 {
-	setPixmap( View::getRotatedPixmapForTile( inId, inRotation ) );
+	setPixmap( View::getPixmapForTile( inId, inRotation ) );
 }
 
 void

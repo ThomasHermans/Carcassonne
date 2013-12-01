@@ -238,3 +238,21 @@ Controller::modelFromView( View::Rotation inRotation )
 	assert( !"Invalid View Rotation" );
 	return Model::kCw0;
 }
+
+View::Rotation
+Controller::viewFromModel( Model::Rotation inRotation )
+{
+	switch ( inRotation )
+	{
+	case Model::kCw0:
+		return View::kCw0;
+	case Model::kCw90:
+		return View::kCw90;
+	case Model::kCw180:
+		return View::kCw180;
+	case Model::kCw270:
+		return View::kCw270;
+	}
+	assert( !"Invalid Model Rotation" );
+	return View::kCw0;
+}

@@ -4,13 +4,13 @@
 #include "View/Typedefs.h"
 
 #include <QLabel>
+#include <QPoint>
+#include <QPixmap>
 
 #include <string>
 
 QT_BEGIN_NAMESPACE
 	class QMouseEvent;
-	class QPixmap;
-	class QPoint;
 	class QWidget;
 QT_END_NAMESPACE
 

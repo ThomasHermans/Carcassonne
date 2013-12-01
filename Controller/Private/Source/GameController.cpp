@@ -47,12 +47,12 @@ GameController::onTilePlaced
 	unsigned inCol,
 	unsigned inRow,
 	std::string const & inId,
-	Model::Rotation inRot
+	Model::Rotation inRotation
 )
 {
 	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
 	int y = Controller::yFromRow( inRow, mGame->getStartRow() );
-	mWindow->setTile( x, y, inId, inRot * 30 );
+	mWindow->setTile( x, y, inId, Controller::viewFromModel( inRotation ) );
 	mWindow->fadeNextTile();
 }
 
@@ -74,12 +74,12 @@ GameController::onTileRotated
 	unsigned inCol,
 	unsigned inRow,
 	std::string const & inId,
-	Model::Rotation inRot
+	Model::Rotation inRotation
 )
 {
 	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
 	int y = Controller::yFromRow( inRow, mGame->getStartRow() );
-	mWindow->rotateTile( x, y, inId, inRot * 30 );
+	mWindow->rotateTile( x, y, inId, Controller::viewFromModel( inRotation ) );
 }
 
 void
