@@ -18,6 +18,11 @@
 
 #include <iostream>
 
+namespace
+{
+	double const kScaleFactor = 1.41421356237; // sqrt 2
+}
+
 View::BoardView::BoardView( QWidget *parent ) :
 	QGraphicsView( parent ),
 	mPressPosition(),
@@ -112,6 +117,14 @@ View::BoardView::keyPressEvent( QKeyEvent * inEvent )
 	else if ( inEvent->key() == Qt::Key_Space )
 	{
 		emit spacePressed();
+	}
+	else if ( inEvent->key() == Qt::Key_Plus && inEvent->modifiers().testFlag( Qt::ControlModifier ) )
+	{
+		scale( kScaleFactor, kScaleFactor );
+	}
+	else if ( inEvent->key() == Qt::Key_Minus && inEvent->modifiers().testFlag( Qt::ControlModifier ) )
+	{
+		scale( 1. / kScaleFactor, 1. / kScaleFactor );
 	}
 }
 
