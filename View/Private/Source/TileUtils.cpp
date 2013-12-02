@@ -1,5 +1,7 @@
 #include "TileUtils.h"
 
+#include "View/Typedefs.h"
+
 #include <QString>
 #include <QTransform>
 
@@ -25,20 +27,25 @@ namespace
 		assert( !"Invalid View::Rotation" );
 		return 0;
 	}
-}
 
-QPixmap
-View::getPixmapForTile( std::string const & inTileId )
-{
-	std::stringstream stream;
-	stream << ":/tiles/" << inTileId << ".png";
-	return QPixmap( QString::fromStdString( stream.str() ) );
+	QPixmap
+	getPixmap( std::string const & inTileId )
+	{
+		std::stringstream stream;
+		stream << ":/tiles/" << inTileId << ".png";
+		QPixmap const pixmap( QString::fromStdString( stream.str() ) );
+		QTransform scaling;
+		double const widthFactor = 1.0 * Gui::kTileWidth / pixmap.width();
+		double const heightFactor = 1.0 * Gui::kTileHeight / pixmap.height();
+		scaling.scale( widthFactor, heightFactor );
+		return pixmap.transformed( scaling );
+	}
 }
 
 QPixmap
 View::getPixmapForTile( std::string const & inTileId, View::Rotation inRotation )
 {
-	QPixmap pixmap = getPixmapForTile( inTileId );
+	QPixmap const pixmap = getPixmap( inTileId );
 	QTransform rotation = QTransform();
 	rotation.rotate( getAngle( inRotation ) );
 	return pixmap.transformed( rotation );
