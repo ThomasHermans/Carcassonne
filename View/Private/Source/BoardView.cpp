@@ -13,6 +13,7 @@
 #include <QList>
 #include <QMimeData>
 #include <QMouseEvent>
+#include <QScrollBar>
 #include <QString>
 #include <QWidget>
 
@@ -29,6 +30,9 @@ namespace
 View::BoardView::BoardView( QWidget *parent ) :
 	QGraphicsView( parent ),
 	mPressPosition(),
+	mPanning( false ),
+	mPanX( 0 ),
+	mPanY( 0 ),
 	mCurrentTilePosition( boost::none ),
 	mCurrentTile(),
 	mRotation( View::kCw0 )
@@ -40,6 +44,9 @@ View::BoardView::BoardView( QWidget *parent ) :
 View::BoardView::BoardView( QGraphicsScene *scene, QWidget *parent ) :
 	QGraphicsView( scene, parent ),
 	mPressPosition(),
+	mPanning( false ),
+	mPanX( 0 ),
+	mPanY( 0 ),
 	mCurrentTilePosition( boost::none ),
 	mCurrentTile(),
 	mRotation( View::kCw0 )
@@ -68,6 +75,18 @@ View::BoardView::mousePressEvent( QMouseEvent * inEvent )
 	if ( inEvent->button() == Qt::LeftButton )
 	{
 		mPressPosition = mapToScene( inEvent->pos() );
+		if ( dragStartedOnNoTile() )
+		{
+			mPanning = true;
+			mPanX = inEvent->x();
+			mPanY = inEvent->y();
+		}
+		else
+		{
+			mPanning = false;
+		}
+		inEvent->accept();
+		return;
 	}
 }
 
@@ -78,20 +97,29 @@ View::BoardView::mouseMoveEvent( QMouseEvent * inEvent )
 	{
 		return;
 	}
-	if ( !startedOnCurrentTile() )
+	if ( dragStartedOnCurrentlyPlacedTile() )
 	{
+		if ( (inEvent->pos() - mPressPosition).manhattanLength() > QApplication::startDragDistance() )
+		{
+			// Drag the currently placed tile to another location
+			QDrag * drag = new QDrag( this );
+			Dragging::TileData * tileData = new Dragging::TileData( mCurrentTile, mRotation );
+			drag->setMimeData( tileData );
+			drag->setPixmap( getPixmapForTile( mCurrentTile, mRotation ) );
+			drag->exec( Qt::MoveAction );
+		}
+	}
+	if ( mPanning )
+	{
+		setCursor( Qt::ClosedHandCursor );
+		horizontalScrollBar()->setValue( horizontalScrollBar()->value() - (inEvent->x() - mPanX ) );
+		verticalScrollBar()->setValue( verticalScrollBar()->value() - (inEvent->y() - mPanY ) );
+		mPanX = inEvent->x();
+		mPanY = inEvent->y();
+		inEvent->accept();
 		return;
 	}
-	if ( (inEvent->pos() - mPressPosition).manhattanLength() < QApplication::startDragDistance() )
-	{
-		return;
-	}
-
-	QDrag * drag = new QDrag( this );
-	Dragging::TileData * tileData = new Dragging::TileData( mCurrentTile, mRotation );
-	drag->setMimeData( tileData );
-	drag->setPixmap( getPixmapForTile( mCurrentTile, mRotation ) );
-	drag->exec( Qt::MoveAction );
+	QGraphicsView::mouseMoveEvent( inEvent );
 }
 
 void
@@ -99,6 +127,8 @@ View::BoardView::mouseReleaseEvent( QMouseEvent * inEvent )
 {
 	if ( inEvent->button() == Qt::LeftButton )
 	{
+		mPanning = false;
+		setCursor( Qt::ArrowCursor );
 		if ( (mapToScene( inEvent->pos() ) - mPressPosition).manhattanLength() < QApplication::startDragDistance() )
 		{
 			QPointF const scenePos = mapToScene( inEvent->pos() );
@@ -116,19 +146,24 @@ View::BoardView::keyPressEvent( QKeyEvent * inEvent )
 	if ( inEvent->key() == Qt::Key_Enter || inEvent->key() == Qt::Key_Return )
 	{
 		emit enterPressed();
+		return;
 	}
 	else if ( inEvent->key() == Qt::Key_Space )
 	{
 		emit spacePressed();
+		return;
 	}
 	else if ( inEvent->key() == Qt::Key_Plus && inEvent->modifiers().testFlag( Qt::ControlModifier ) )
 	{
 		zoomIn();
+		return;
 	}
 	else if ( inEvent->key() == Qt::Key_Minus && inEvent->modifiers().testFlag( Qt::ControlModifier ) )
 	{
 		zoomOut();
+		return;
 	}
+	QGraphicsView::keyPressEvent( inEvent );
 }
 
 void
@@ -173,7 +208,20 @@ View::BoardView::dropEvent( QDropEvent * inEvent )
 }
 
 bool
-View::BoardView::startedOnCurrentTile() const
+View::BoardView::dragStartedOnNoTile() const
+{
+	if ( scene()->itemAt( mPressPosition ) )
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool
+View::BoardView::dragStartedOnCurrentlyPlacedTile() const
 {
 	if ( !mCurrentTilePosition )
 	{

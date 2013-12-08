@@ -55,12 +55,16 @@ namespace View
 		void dropEvent( QDropEvent * inEvent );
 
 	private:
-		bool startedOnCurrentTile() const;
+		bool dragStartedOnNoTile() const;
+		bool dragStartedOnCurrentlyPlacedTile() const;
 		void zoomIn();
 		void zoomOut();
 
 	private:
 		QPointF mPressPosition;
+		bool mPanning;
+		int mPanX;
+		int mPanY;
 		boost::optional< QPoint > mCurrentTilePosition;
 		std::string mCurrentTile;
 		Rotation mRotation;
