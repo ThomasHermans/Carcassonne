@@ -16,11 +16,14 @@
 #include <QString>
 #include <QWidget>
 
+#include <cmath>
 #include <iostream>
 
 namespace
 {
 	double const kScaleFactor = 1.41421356237; // sqrt 2
+	double const kMaxScale = std::pow( kScaleFactor, 4 );
+	double const kMinScale = 1. / kMaxScale;
 }
 
 View::BoardView::BoardView( QWidget *parent ) :
@@ -120,11 +123,11 @@ View::BoardView::keyPressEvent( QKeyEvent * inEvent )
 	}
 	else if ( inEvent->key() == Qt::Key_Plus && inEvent->modifiers().testFlag( Qt::ControlModifier ) )
 	{
-		scale( kScaleFactor, kScaleFactor );
+		zoomIn();
 	}
 	else if ( inEvent->key() == Qt::Key_Minus && inEvent->modifiers().testFlag( Qt::ControlModifier ) )
 	{
-		scale( 1. / kScaleFactor, 1. / kScaleFactor );
+		zoomOut();
 	}
 }
 
@@ -189,4 +192,22 @@ View::BoardView::startedOnCurrentTile() const
 		return false;
 	}
 	return true;
+}
+
+void
+View::BoardView::zoomIn()
+{
+	if ( transform().m11() < kMaxScale )
+	{
+		scale( kScaleFactor, kScaleFactor );
+	}
+}
+
+void
+View::BoardView::zoomOut()
+{
+	if ( transform().m11() > kMinScale )
+	{
+		scale( 1. / kScaleFactor, 1. / kScaleFactor );
+	}
 }

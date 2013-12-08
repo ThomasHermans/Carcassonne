@@ -56,6 +56,8 @@ namespace View
 
 	private:
 		bool startedOnCurrentTile() const;
+		void zoomIn();
+		void zoomOut();
 
 	private:
 		QPointF mPressPosition;
