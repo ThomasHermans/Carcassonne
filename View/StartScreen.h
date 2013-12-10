@@ -20,19 +20,19 @@ namespace View
 		Q_OBJECT
 	public:
 		explicit StartScreen( QWidget * inParent = 0 );
-		~StartScreen();
+
+		bool addPlayer( QString const & inName, Color inColor );
 
 	signals:
-		void startGame( std::map< Gui::Color, std::string > const & inPlayers );
+		void startGame( std::map< View::Color, std::string > const & inPlayers );
 
 	private:
-		Gui::Color findUnusedColor() const;
-		void loadDefaultPlayers();
+		Color findUnusedColor() const;
 
 	private slots:
-		void addPlayer();
+		bool addPlayer();
 		void removePlayer();
-		void updateColors( Gui::Color inColor );
+		void updateColors( Color inColor );
 		void playClicked();
 
 	private:

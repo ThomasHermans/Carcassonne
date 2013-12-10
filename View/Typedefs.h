@@ -1,6 +1,8 @@
 #ifndef TYPEDEFS_VIEW_THHR_20130817
 #define TYPEDEFS_VIEW_THHR_20130817
 
+#include <QMetaType>
+
 namespace Gui
 {
 	int const kTileHeight = 100;
@@ -9,16 +11,6 @@ namespace Gui
 	double const kSecondBorder = kTileHeight - kFirstBorder;
 	int const kMeepleWidth = 25;
 	int const kMeepleHeight = 30;
-
-	enum Color
-	{
-		kRed,
-		kGreen,
-		kBlue,
-		kYellow,
-		kBlack,
-		kGray
-	};
 }
 
 namespace View
@@ -49,5 +41,7 @@ namespace View
 		kPig
 	};
 }
+
+Q_DECLARE_METATYPE( View::Color )
 
 #endif // TYPEDEFS_VIEW_THHR_20130817

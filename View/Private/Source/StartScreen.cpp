@@ -27,24 +27,33 @@ View::StartScreen::StartScreen( QWidget * inParent )
 	mLayout->addWidget( mAddPlayerButton );
 	mLayout->addWidget( mPlayButton );
 	mLayout->addStretch();
-
-	loadDefaultPlayers();
 }
 
-View::StartScreen::~StartScreen()
+bool
+View::StartScreen::addPlayer( QString const & inName, Color inColor )
 {
+	if ( addPlayer() )
+	{
+		mPlayerRows.back()->setName( inName );
+		mPlayerRows.back()->setColor( inColor );
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
-Gui::Color
+View::Color
 View::StartScreen::findUnusedColor() const
 {
-	std::set< Gui::Color > colors;
-	colors.insert( Gui::kRed );
-	colors.insert( Gui::kGreen );
-	colors.insert( Gui::kBlue );
-	colors.insert( Gui::kYellow );
-	colors.insert( Gui::kBlack );
-	colors.insert( Gui::kGray );
+	std::set< Color > colors;
+	colors.insert( kRed );
+	colors.insert( kGreen );
+	colors.insert( kBlue );
+	colors.insert( kYellow );
+	colors.insert( kBlack );
+	colors.insert( kGray );
 	for ( std::vector< StartScreenRow * >::const_iterator it = mPlayerRows.begin();
 		it != mPlayerRows.end();
 		++it )
@@ -55,29 +64,23 @@ View::StartScreen::findUnusedColor() const
 	return *colors.begin();
 }
 
-void
-View::StartScreen::loadDefaultPlayers()
-{
-	addPlayer();
-	addPlayer();
-	mPlayerRows[0]->setName( QString::fromUtf8( "Thomas" ) );
-	mPlayerRows[0]->setColor( Gui::kRed );
-	mPlayerRows[1]->setName( QString::fromUtf8( "Yumi" ) );
-	mPlayerRows[1]->setColor( Gui::kBlue );
-}
-
-void
+bool
 View::StartScreen::addPlayer()
 {
 	if ( mPlayerRows.size() < 6 )
 	{
 		StartScreenRow * row = new StartScreenRow( this );
-		Gui::Color color = findUnusedColor();
+		Color color = findUnusedColor();
 		row->setColor( color );
 		connect( row, SIGNAL( removed() ), this, SLOT( removePlayer() ) );
-		connect( row, SIGNAL( colorChanged( Gui::Color ) ), this, SLOT( updateColors( Gui::Color ) ) );
+		connect( row, SIGNAL( colorChanged( Color ) ), this, SLOT( updateColors( Color ) ) );
 		mLayout->insertWidget( mPlayerRows.size(), row );
 		mPlayerRows.push_back( row );
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
@@ -103,7 +106,7 @@ View::StartScreen::removePlayer()
 }
 
 void
-View::StartScreen::updateColors( Gui::Color inColor )
+View::StartScreen::updateColors( Color inColor )
 {
 	StartScreenRow * senderRow = qobject_cast< StartScreenRow * >( QObject::sender() );
 	if ( senderRow )
@@ -114,7 +117,7 @@ View::StartScreen::updateColors( Gui::Color inColor )
 		{
 			if ( senderRow != *it && (*it)->getColor() == inColor )
 			{
-				Gui::Color color = findUnusedColor();
+				Color const color = findUnusedColor();
 				(*it)->setColor( color );
 			}
 		}
@@ -124,7 +127,7 @@ View::StartScreen::updateColors( Gui::Color inColor )
 void
 View::StartScreen::playClicked()
 {
-	std::map< Gui::Color, std::string > players;
+	std::map< Color, std::string > players;
 	for ( std::vector< StartScreenRow * >::const_iterator it = mPlayerRows.begin();
 		it != mPlayerRows.end();
 		++it )

@@ -28,7 +28,7 @@ int main(int argc, char * argv[])
 		QApplication a(argc, argv);
 		a.setStyleSheet( styleSheet );
 		
-		SupremeController controller;
+		Controller::SupremeController controller;
 
 		return a.exec();
 	}
@@ -47,7 +47,7 @@ int main(int argc, char * argv[])
 		a.setStyleSheet( styleSheet );
 		
 		// GameController gc( "BKDAD" );
-		GameController gc( "EEED" );
+		Controller::GameController gc( "EEED" );
 
 		return a.exec();
 	}

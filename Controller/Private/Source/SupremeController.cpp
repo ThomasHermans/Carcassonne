@@ -9,32 +9,32 @@
 namespace
 {
 	Color::Color
-	convertToColor( Gui::Color inColor )
+	convertToColor( View::Color inColor )
 	{
 		switch ( inColor )
 		{
-			case Gui::kRed:
+			case View::kRed:
 				return Color::kRed;
-			case Gui::kGreen:
+			case View::kGreen:
 				return Color::kGreen;
-			case Gui::kBlue:
+			case View::kBlue:
 				return Color::kBlue;
-			case Gui::kYellow:
+			case View::kYellow:
 				return Color::kYellow;
-			case Gui::kBlack:
+			case View::kBlack:
 				return Color::kBlack;
-			case Gui::kGray:
+			case View::kGray:
 				return Color::kGray;
 		}
-		assert( !"Invalid Gui::Color" );
+		assert( !"Invalid View::Color" );
 		return Color::kRed;
 	}
 
 	std::vector< Player >
-	convertToPlayers( std::map< Gui::Color, std::string > const & inPlayers )
+	convertToPlayers( std::map< View::Color, std::string > const & inPlayers )
 	{
 		std::vector< Player > players;
-		for ( std::map< Gui::Color, std::string >::const_iterator it = inPlayers.begin();
+		for ( std::map< View::Color, std::string >::const_iterator it = inPlayers.begin();
 			it != inPlayers.end();
 			++it )
 		{
@@ -44,7 +44,7 @@ namespace
 	}
 }
 
-SupremeController::SupremeController( QObject * inParent )
+Controller::SupremeController::SupremeController( QObject * inParent )
 :
 	QObject( inParent ),
 	mStartController( new StartController() ),
@@ -52,17 +52,17 @@ SupremeController::SupremeController( QObject * inParent )
 {
 	connect
 	(
-		mStartController.get(), SIGNAL( startGame( std::map< Gui::Color, std::string > ) ),
-		this, SLOT( startGame( std::map< Gui::Color, std::string > ) )
+		mStartController.get(), SIGNAL( startGame( std::map< View::Color, std::string > ) ),
+		this, SLOT( startGame( std::map< View::Color, std::string > ) )
 	);
 }
 
-SupremeController::~SupremeController()
+Controller::SupremeController::~SupremeController()
 {
 }
 
 void
-SupremeController::startGame( std::map< Gui::Color, std::string > const & inPlayers )
+Controller::SupremeController::startGame( std::map< View::Color, std::string > const & inPlayers )
 {
 	std::vector< Player > players = convertToPlayers( inPlayers );
 	mGameController.reset( new GameController( players ) );

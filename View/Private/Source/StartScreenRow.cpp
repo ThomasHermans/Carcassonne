@@ -41,10 +41,10 @@ View::StartScreenRow::getName() const
 	return mNameLineEdit->text();
 }
 
-Gui::Color
+View::Color
 View::StartScreenRow::getColor() const
 {
-	return Gui::Color( mColorComboBox->currentIndex() );
+	return Color( mColorComboBox->currentIndex() );
 }
 
 void
@@ -54,7 +54,7 @@ View::StartScreenRow::setName( QString const & inName )
 }
 
 void
-View::StartScreenRow::setColor( Gui::Color inColor )
+View::StartScreenRow::setColor( Color inColor )
 {
 	mColorComboBox->setCurrentIndex( int( inColor ) );
 }
@@ -62,7 +62,7 @@ View::StartScreenRow::setColor( Gui::Color inColor )
 void
 View::StartScreenRow::onCurrentIndexChanged( int inIndex )
 {
-	emit colorChanged( Gui::Color( inIndex ) );
+	emit colorChanged( Color( inIndex ) );
 }
 
 void

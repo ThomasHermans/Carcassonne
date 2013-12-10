@@ -23,3 +23,34 @@ View::toQColor( Color inColor )
 	assert( !"Invalid View::Color" );
 	return Qt::red;
 }
+
+View::Color
+View::fromQColor( QColor inColor )
+{
+	if ( inColor == Qt::red )
+	{
+		return kRed;
+	}
+	else if ( inColor == Qt::green )
+	{
+		return kGreen;
+	}
+	else if ( inColor == Qt::blue )
+	{
+		return kBlue;
+	}
+	else if ( inColor == Qt::yellow )
+	{
+		return kYellow;
+	}
+	else if ( inColor == Qt::black )
+	{
+		return kBlack;
+	}
+	else if ( inColor == Qt::gray )
+	{
+		return kGray;
+	}
+	assert( !"Invalid View::Color" );
+	return kRed;
+}

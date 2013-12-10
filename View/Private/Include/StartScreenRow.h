@@ -19,14 +19,14 @@ namespace View
 		~StartScreenRow();
 
 		QString getName() const;
-		Gui::Color getColor() const;
+		Color getColor() const;
 
 		void setName( QString const & inName );
-		void setColor( Gui::Color inColor );
+		void setColor( Color inColor );
 
 	signals:
 		void removed();
-		void colorChanged( Gui::Color inColor );
+		void colorChanged( Color inColor );
 
 	private slots:
 		void onCurrentIndexChanged( int inIndex );

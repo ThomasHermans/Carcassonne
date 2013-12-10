@@ -15,21 +15,24 @@ namespace View
 	class StartScreen;
 }
 
-class StartController : public QObject
+namespace Controller
 {
-	Q_OBJECT
-public:
-	StartController( QObject * inParent = 0 );
-	~StartController();
+	class StartController : public QObject
+	{
+		Q_OBJECT
+	public:
+		StartController( QObject * inParent = 0 );
+		~StartController();
 
-signals:
-	void startGame( std::map< Gui::Color, std::string > const & inPlayers );
+	signals:
+		void startGame( std::map< View::Color, std::string > const & inPlayers );
 
-private slots:
-	void onTryToStartGame( std::map< Gui::Color, std::string > const & inPlayers );
+	private slots:
+		void onTryToStartGame( std::map< View::Color, std::string > const & inPlayers );
 
-private:
-	boost::scoped_ptr< View::StartScreen > mStartScreen;
-};
+	private:
+		boost::scoped_ptr< View::StartScreen > mStartScreen;
+	};
+}
 
 #endif // STARTCONTROLLER_H

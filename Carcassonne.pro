@@ -14,6 +14,7 @@ SOURCES += main.cpp \
 	Controller\Private\Source\GameController.cpp \
 	Controller\Private\Source\ModelViewGlue.cpp \
 	Controller\Private\Source\StartController.cpp \
+	Controller\Private\Source\Settings.cpp \
 	Controller\Private\Source\SupremeController.cpp \
 	test_o_matic.cpp \
 	TileUnitTests.cpp \
@@ -48,6 +49,7 @@ HEADERS += \
 	Controller\GameController.h \
 	Controller\SupremeController.h \
 	Controller\Private\Include\ModelViewGlue.h \
+	Controller\Private\Include\Settings.h \
 	Controller\Private\Include\StartController.h \
 	test_o_matic.hpp \
 	UnitTests.h \

@@ -8,7 +8,7 @@
 
 #include <cassert>
 
-GameController::GameController( QObject *parent )
+Controller::GameController::GameController( QObject *parent )
 :
 	QObject( parent ),
 	mGame( new Game( this ) ),
@@ -19,7 +19,7 @@ GameController::GameController( QObject *parent )
 	startGame();
 }
 
-GameController::GameController( std::string const & inTiles, QObject * inParent )
+Controller::GameController::GameController( std::string const & inTiles, QObject * inParent )
 :
 	QObject( inParent ),
 	mGame( new Game( inTiles, this ) ),
@@ -30,7 +30,7 @@ GameController::GameController( std::string const & inTiles, QObject * inParent 
 	startGame();
 }
 
-GameController::GameController( std::vector< Player > const & inPlayers, QObject * inParent )
+Controller::GameController::GameController( std::vector< Player > const & inPlayers, QObject * inParent )
 :
 	QObject( inParent ),
 	mGame( new Game( inPlayers, this ) ),
@@ -42,7 +42,7 @@ GameController::GameController( std::vector< Player > const & inPlayers, QObject
 }
 
 void
-GameController::onTilePlaced
+Controller::GameController::onTilePlaced
 (
 	unsigned inCol,
 	unsigned inRow,
@@ -57,7 +57,7 @@ GameController::onTilePlaced
 }
 
 void
-GameController::onTileUnplaced
+Controller::GameController::onTileUnplaced
 (
 	unsigned inCol,
 	unsigned inRow
@@ -69,7 +69,7 @@ GameController::onTileUnplaced
 }
 
 void
-GameController::onTileRotated
+Controller::GameController::onTileRotated
 (
 	unsigned inCol,
 	unsigned inRow,
@@ -83,19 +83,19 @@ GameController::onTileRotated
 }
 
 void
-GameController::onNextTile( std::string const & inNextId )
+Controller::GameController::onNextTile( std::string const & inNextId )
 {
 	mWindow->setNextTile( inNextId );
 }
 
 void
-GameController::onTilesLeft( unsigned inNr )
+Controller::GameController::onTilesLeft( unsigned inNr )
 {
 	mWindow->displayTilesLeft(inNr);
 }
 
 void
-GameController::onPiecePlaced( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer )
+Controller::GameController::onPiecePlaced( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer )
 {
 	std::cout << inCurrentPlayer.getName() << " placed a piece." << std::endl;
 	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
@@ -106,7 +106,7 @@ GameController::onPiecePlaced( unsigned inCol, unsigned inRow, Area::Area inArea
 }
 
 void
-GameController::onPieceReturned( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inPlayer )
+Controller::GameController::onPieceReturned( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inPlayer )
 {
 	std::cout << inPlayer.getName() << " got a piece back." << std::endl;
 	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
@@ -117,20 +117,20 @@ GameController::onPieceReturned( unsigned inCol, unsigned inRow, Area::Area inAr
 }
 
 void
-GameController::onPlayerInfoChanged( Player const & inNewInfo )
+Controller::GameController::onPlayerInfoChanged( Player const & inNewInfo )
 {
 	mWindow->setFollowersLeft( inNewInfo.getName(), inNewInfo.getNumberOfFreePieces() );
 	mWindow->setScore( inNewInfo.getName(), inNewInfo.getScore() );
 }
 
 void
-GameController::onCurrentPlayerChanged( Player const & inCurrentPlayer )
+Controller::GameController::onCurrentPlayerChanged( Player const & inCurrentPlayer )
 {
 	mWindow->setActivePlayer( inCurrentPlayer.getName() );
 }
 
 void
-GameController::onEndOfGame( unsigned inTilesLeft )
+Controller::GameController::onEndOfGame( unsigned inTilesLeft )
 {
 	mGame->calculateEndPoints();
 	std::cout << "Game has ended." << std::endl;
@@ -141,7 +141,7 @@ GameController::onEndOfGame( unsigned inTilesLeft )
 }
 
 void
-GameController::onClicked( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
+Controller::GameController::onClicked( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
 {
 	unsigned col = Controller::colFromX( inX, mGame->getStartCol() );
 	unsigned row = Controller::rowFromY( inY, mGame->getStartRow() );
@@ -153,7 +153,7 @@ GameController::onClicked( int inX, int inY, std::string const & inTileId, View:
 }
 
 void
-GameController::onTileDropped( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
+Controller::GameController::onTileDropped( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
 {
 	unsigned col = Controller::colFromX( inX, mGame->getStartCol() );
 	unsigned row = Controller::rowFromY( inY, mGame->getStartRow() );
@@ -161,7 +161,7 @@ GameController::onTileDropped( int inX, int inY, std::string const & inTileId, V
 }
 
 void
-GameController::onTryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY )
+Controller::GameController::onTryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY )
 {
 	unsigned col = Controller::colFromX( inX, mGame->getStartCol() );
 	unsigned row = Controller::rowFromY( inY, mGame->getStartRow() );
@@ -181,7 +181,7 @@ GameController::onTryToPlacePiece( Dragging::PieceData const & inData, int inX, 
 }
 
 void
-GameController::addPlayers()
+Controller::GameController::addPlayers()
 {
 	for ( std::vector< Player >::const_iterator it = mGame->getPlayers().begin();
 		it != mGame->getPlayers().end();
@@ -192,7 +192,7 @@ GameController::addPlayers()
 }
 
 void
-GameController::makeConnections()
+Controller::GameController::makeConnections()
 {
 	connect( mGame, SIGNAL( tilePlaced(unsigned int, unsigned int, std::string, Model::Rotation) ),
 			this, SLOT( onTilePlaced(unsigned int, unsigned int, std::string, Model::Rotation) ) );
@@ -224,7 +224,7 @@ GameController::makeConnections()
 }
 
 void
-GameController::startGame()
+Controller::GameController::startGame()
 {
 	onCurrentPlayerChanged( mGame->getCurrentPlayer() );
 	mWindow->show();

@@ -9,6 +9,9 @@ namespace View
 {
 	QColor
 	toQColor( Color inColor );
+
+	Color
+	fromQColor( QColor inColor );
 }
 
 #endif

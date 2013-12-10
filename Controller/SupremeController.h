@@ -10,22 +10,25 @@
 #include <map>
 #include <string>
 
-class GameController;
-class StartController;
-
-class SupremeController : QObject
+namespace  Controller
 {
-	Q_OBJECT
-public:
-	SupremeController( QObject * inParent = 0 );
-	~SupremeController();
+	class GameController;
+	class StartController;
 
-private slots:
-	void startGame( std::map< Gui::Color, std::string > const & inPlayers );
+	class SupremeController : QObject
+	{
+		Q_OBJECT
+	public:
+		SupremeController( QObject * inParent = 0 );
+		~SupremeController();
 
-private:
-	boost::scoped_ptr< StartController > mStartController;
-	boost::scoped_ptr< GameController > mGameController;
-};
+	private slots:
+		void startGame( std::map< View::Color, std::string > const & inPlayers );
+
+	private:
+		boost::scoped_ptr< StartController > mStartController;
+		boost::scoped_ptr< GameController > mGameController;
+	};
+}
 
 #endif // SUPREMECONTROLLER_H
