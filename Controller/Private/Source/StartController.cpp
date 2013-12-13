@@ -1,6 +1,9 @@
 #include "StartController.h"
 
+#include "ModelViewGlue.h"
 #include "Settings.h"
+
+#include "Model/Player.h"
 
 #include "View/StartScreen.h"
 #include "View/Typedefs.h"
@@ -40,13 +43,13 @@ Controller::StartController::StartController( QObject * inParent )
 	for ( int i = 0; i < nrOfPlayers; ++i )
 	{
 		QString const playerName = settings.value( getPlayerNameKey( i ), "" ).toString();
-		View::Color const playerColor = settings.value( getPlayerColorKey( i ), View::kRed ).value< View::Color >();
+		View::Color const playerColor = View::Color( settings.value( getPlayerColorKey( i ), 0 ).toInt() );
 		mStartScreen->addPlayer( playerName, playerColor );
 	}
 	connect
 	(
-		mStartScreen.get(), SIGNAL( startGame( std::map< View::Color, std::string > ) ),
-		this, SLOT( onTryToStartGame( std::map< View::Color, std::string > ) )
+		mStartScreen.get(), SIGNAL( startGame( std::vector< View::PlayerInfo > ) ),
+		this, SLOT( onTryToStartGame( std::vector< View::PlayerInfo > ) )
 	);
 	mStartScreen->show();
 }
@@ -56,18 +59,20 @@ Controller::StartController::~StartController()
 }
 
 void
-Controller::StartController::onTryToStartGame( std::map< View::Color, std::string > const & inPlayers )
+Controller::StartController::onTryToStartGame( std::vector< View::PlayerInfo > const & inPlayers )
 {
 	QSettings & settings = getSettings();
 	settings.setValue( kNrOfPlayers, inPlayers.size() );
 	int index = 0;
-	for ( std::map< View::Color, std::string >::const_iterator it = inPlayers.begin();
+	std::vector< Player > players;
+	for ( std::vector< View::PlayerInfo >::const_iterator it = inPlayers.begin();
 		it != inPlayers.end();
 		++it, ++index )
 	{
-		settings.setValue( getPlayerNameKey( index ), QString::fromStdString( it->second ) );
-		settings.setValue( getPlayerColorKey( index ), it->first );
+		settings.setValue( getPlayerNameKey( index ), QString::fromStdString( it->name ) );
+		settings.setValue( getPlayerColorKey( index ), int( it->color ) );
+		players.push_back( Player( it->name, modelFromView( it->color ) ) );
 	}
 	mStartScreen->hide();
-	emit startGame( inPlayers );
+	emit startGame( players );
 }

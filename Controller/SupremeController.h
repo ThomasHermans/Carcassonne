@@ -1,14 +1,14 @@
 #ifndef SUPREMECONTROLLER_H
 #define SUPREMECONTROLLER_H
 
-#include "View/Typedefs.h"
-
 #include <QObject>
 
 #include <boost/scoped_ptr.hpp>
 
-#include <map>
 #include <string>
+#include <vector>
+
+class Player;
 
 namespace  Controller
 {
@@ -23,7 +23,7 @@ namespace  Controller
 		~SupremeController();
 
 	private slots:
-		void startGame( std::map< View::Color, std::string > const & inPlayers );
+		void startGame( std::vector< Player > const & inPlayers );
 
 	private:
 		boost::scoped_ptr< StartController > mStartController;

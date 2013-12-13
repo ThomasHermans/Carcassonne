@@ -9,6 +9,13 @@
 #include <cassert>
 #include <set>
 
+View::PlayerInfo::PlayerInfo( std::string const & inName, Color inColor )
+:
+	name( inName ),
+	color( inColor )
+{
+}
+
 View::StartScreen::StartScreen( QWidget * inParent )
 :
 	QDialog( inParent ),
@@ -29,13 +36,17 @@ View::StartScreen::StartScreen( QWidget * inParent )
 	mLayout->addStretch();
 }
 
+View::StartScreen::~StartScreen()
+{
+}
+
 bool
 View::StartScreen::addPlayer( QString const & inName, Color inColor )
 {
 	if ( addPlayer() )
 	{
-		mPlayerRows.back()->setName( inName );
-		mPlayerRows.back()->setColor( inColor );
+		mPlayerRows.back().setName( inName );
+		mPlayerRows.back().setColor( inColor );
 		return true;
 	}
 	else
@@ -54,11 +65,11 @@ View::StartScreen::findUnusedColor() const
 	colors.insert( kYellow );
 	colors.insert( kBlack );
 	colors.insert( kGray );
-	for ( std::vector< StartScreenRow * >::const_iterator it = mPlayerRows.begin();
+	for ( boost::ptr_vector< StartScreenRow >::const_iterator it = mPlayerRows.begin();
 		it != mPlayerRows.end();
 		++it )
 	{
-		colors.erase( (*it)->getColor() );
+		colors.erase( it->getColor() );
 	}
 	assert( !colors.empty() );
 	return *colors.begin();
@@ -90,11 +101,11 @@ View::StartScreen::removePlayer()
 	StartScreenRow * senderRow = qobject_cast< StartScreenRow * >( QObject::sender() );
 	if ( senderRow )
 	{
-		for ( std::vector< StartScreenRow * >::iterator it = mPlayerRows.begin();
+		for ( boost::ptr_vector< StartScreenRow >::iterator it = mPlayerRows.begin();
 			it != mPlayerRows.end();
 			++it )
 		{
-			if ( senderRow == *it )
+			if ( senderRow == &(*it) )
 			{
 				mLayout->removeWidget( senderRow );
 				senderRow->deleteLater();
@@ -111,14 +122,14 @@ View::StartScreen::updateColors( Color inColor )
 	StartScreenRow * senderRow = qobject_cast< StartScreenRow * >( QObject::sender() );
 	if ( senderRow )
 	{
-		for ( std::vector< StartScreenRow * >::iterator it = mPlayerRows.begin();
+		for ( boost::ptr_vector< StartScreenRow >::iterator it = mPlayerRows.begin();
 			it != mPlayerRows.end();
 			++it )
 		{
-			if ( senderRow != *it && (*it)->getColor() == inColor )
+			if ( senderRow != &(*it) && it->getColor() == inColor )
 			{
 				Color const color = findUnusedColor();
-				(*it)->setColor( color );
+				it->setColor( color );
 			}
 		}
 	}
@@ -127,12 +138,12 @@ View::StartScreen::updateColors( Color inColor )
 void
 View::StartScreen::playClicked()
 {
-	std::map< Color, std::string > players;
-	for ( std::vector< StartScreenRow * >::const_iterator it = mPlayerRows.begin();
+	std::vector< PlayerInfo > players;
+	for ( boost::ptr_vector< StartScreenRow >::const_iterator it = mPlayerRows.begin();
 		it != mPlayerRows.end();
 		++it )
 	{
-		players[ (*it)->getColor() ] = (*it)->getName().toUtf8().constData();
+		players.push_back( PlayerInfo( it->getName().toStdString(), it->getColor() ) );
 	}
 	emit startGame( players );
 }

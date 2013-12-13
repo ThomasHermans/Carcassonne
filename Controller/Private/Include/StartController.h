@@ -7,11 +7,14 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#include <map>
 #include <string>
+#include <vector>
+
+class Player;
 
 namespace View
 {
+	struct PlayerInfo;
 	class StartScreen;
 }
 
@@ -25,10 +28,10 @@ namespace Controller
 		~StartController();
 
 	signals:
-		void startGame( std::map< View::Color, std::string > const & inPlayers );
+		void startGame( std::vector< Player > const & inPlayers );
 
 	private slots:
-		void onTryToStartGame( std::map< View::Color, std::string > const & inPlayers );
+		void onTryToStartGame( std::vector< View::PlayerInfo > const & inPlayers );
 
 	private:
 		boost::scoped_ptr< View::StartScreen > mStartScreen;

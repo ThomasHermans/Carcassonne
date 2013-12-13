@@ -7,7 +7,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include <map>
+#include <boost/ptr_container/ptr_vector.hpp>
+
 #include <string>
 #include <vector>
 
@@ -15,16 +16,25 @@ namespace View
 {
 	class StartScreenRow;
 
+	struct PlayerInfo
+	{
+		std::string name;
+		Color color;
+
+		PlayerInfo( std::string const & inName, Color inColor );
+	};
+
 	class StartScreen : public QDialog
 	{
 		Q_OBJECT
 	public:
 		explicit StartScreen( QWidget * inParent = 0 );
+		~StartScreen();
 
 		bool addPlayer( QString const & inName, Color inColor );
 
 	signals:
-		void startGame( std::map< View::Color, std::string > const & inPlayers );
+		void startGame( std::vector< View::PlayerInfo > const & inPlayers );
 
 	private:
 		Color findUnusedColor() const;
@@ -37,7 +47,7 @@ namespace View
 
 	private:
 		QVBoxLayout * mLayout;
-		std::vector< StartScreenRow * > mPlayerRows;
+		boost::ptr_vector< StartScreenRow > mPlayerRows;
 		QPushButton * mAddPlayerButton;
 		QPushButton * mPlayButton;
 	};
