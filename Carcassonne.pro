@@ -90,3 +90,5 @@ FORMS    += mainwindow.ui
 
 RESOURCES += \
 	Resources.qrc
+
+RC_FILE = Carcassonne.rc
