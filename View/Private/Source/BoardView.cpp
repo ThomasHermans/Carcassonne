@@ -163,6 +163,11 @@ View::BoardView::keyPressEvent( QKeyEvent * inEvent )
 		zoomOut();
 		return;
 	}
+	else if ( inEvent->key() == Qt::Key_0 && inEvent->modifiers().testFlag( Qt::ControlModifier ) )
+	{
+		zoomTo100();
+		return;
+	}
 	QGraphicsView::keyPressEvent( inEvent );
 }
 
@@ -258,4 +263,10 @@ View::BoardView::zoomOut()
 	{
 		scale( 1. / kScaleFactor, 1. / kScaleFactor );
 	}
+}
+
+void
+View::BoardView::zoomTo100()
+{
+	resetTransform();
 }

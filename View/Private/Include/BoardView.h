@@ -59,6 +59,7 @@ namespace View
 		bool dragStartedOnCurrentlyPlacedTile() const;
 		void zoomIn();
 		void zoomOut();
+		void zoomTo100();
 
 	private:
 		QPointF mPressPosition;
