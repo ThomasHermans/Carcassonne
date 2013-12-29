@@ -27,27 +27,27 @@ Controller::yFromRow( unsigned inRow, unsigned inStartRow )
 }
 
 int
-Controller::xFromArea( Area::Area inArea )
+Controller::xFromArea( Model::Area::Area inArea )
 {
 	switch ( inArea )
 	{
-	case Area::kLeftTop:
-	case Area::kLeft:
-	case Area::kLeftBottom:
+	case Model::Area::kLeftTop:
+	case Model::Area::kLeft:
+	case Model::Area::kLeftBottom:
 		return .15 * Gui::kTileWidth;
-	case Area::kTopLeft:
-	case Area::kBottomLeft:
+	case Model::Area::kTopLeft:
+	case Model::Area::kBottomLeft:
 		return .3 * Gui::kTileWidth;
-	case Area::kTop:
-	case Area::kCentral:
-	case Area::kBottom:
+	case Model::Area::kTop:
+	case Model::Area::kCentral:
+	case Model::Area::kBottom:
 		return .5 * Gui::kTileWidth;
-	case Area::kTopRight:
-	case Area::kBottomRight:
+	case Model::Area::kTopRight:
+	case Model::Area::kBottomRight:
 		return .7 * Gui::kTileWidth;
-	case Area::kRightTop:
-	case Area::kRight:
-	case Area::kRightBottom:
+	case Model::Area::kRightTop:
+	case Model::Area::kRight:
+	case Model::Area::kRightBottom:
 		return .85 * Gui::kTileWidth;
 	}
 	assert( !"Invalid Area" );
@@ -55,27 +55,27 @@ Controller::xFromArea( Area::Area inArea )
 }
 
 int
-Controller::yFromArea( Area::Area inArea )
+Controller::yFromArea( Model::Area::Area inArea )
 {
 	switch ( inArea )
 	{
-	case Area::kTopLeft:
-	case Area::kTop:
-	case Area::kTopRight:
+	case Model::Area::kTopLeft:
+	case Model::Area::kTop:
+	case Model::Area::kTopRight:
 		return .15 * Gui::kTileHeight;
-	case Area::kLeftTop:
-	case Area::kRightTop:
+	case Model::Area::kLeftTop:
+	case Model::Area::kRightTop:
 		return .3 * Gui::kTileHeight;
-	case Area::kLeft:
-	case Area::kCentral:
-	case Area::kRight:
+	case Model::Area::kLeft:
+	case Model::Area::kCentral:
+	case Model::Area::kRight:
 		return .5 * Gui::kTileHeight;
-	case Area::kLeftBottom:
-	case Area::kRightBottom:
+	case Model::Area::kLeftBottom:
+	case Model::Area::kRightBottom:
 		return .7 * Gui::kTileHeight;
-	case Area::kBottomLeft:
-	case Area::kBottom:
-	case Area::kBottomRight:
+	case Model::Area::kBottomLeft:
+	case Model::Area::kBottom:
+	case Model::Area::kBottomRight:
 		return .85 * Gui::kTileHeight;
 	}
 	assert( !"Invalid Area" );
@@ -104,7 +104,7 @@ Controller::posYFromY( int inY )
 	return res;
 }
 
-Area::Area
+Model::Area::Area
 Controller::areaFromPos( int inX, int inY )
 {
 	using namespace Gui;
@@ -113,112 +113,112 @@ Controller::areaFromPos( int inX, int inY )
 		if ( inY < kFirstBorder )
 		{
 			if ( inY < inX )
-				return Area::kTopLeft;
+				return Model::Area::kTopLeft;
 			else
-				return Area::kLeftTop;
+				return Model::Area::kLeftTop;
 		}
 		else if ( kSecondBorder < inY )
 		{
 			if ( kTileHeight - inY < inX )
-				return Area::kBottomLeft;
+				return Model::Area::kBottomLeft;
 			else
-				return Area::kLeftBottom;
+				return Model::Area::kLeftBottom;
 		}
 		else if ( kFirstBorder < inY && inY < kSecondBorder )
-			return Area::kLeft;
+			return Model::Area::kLeft;
 	}
 	else if ( kSecondBorder < inX )
 	{
 		if ( inY < kFirstBorder )
 		{
 			if ( inY < kTileWidth - inX )
-				return Area::kTopRight;
+				return Model::Area::kTopRight;
 			else
-				return Area::kRightTop;
+				return Model::Area::kRightTop;
 		}
 		else if ( kSecondBorder < inY )
 		{
 			if ( kTileHeight - inY < kTileWidth - inX )
-				return Area::kBottomRight;
+				return Model::Area::kBottomRight;
 			else
-				return Area::kRightBottom;
+				return Model::Area::kRightBottom;
 		}
 		else if ( kFirstBorder < inY && inY < kSecondBorder )
-			return Area::kRight;
+			return Model::Area::kRight;
 	}
 	else if ( kFirstBorder < inX && inX < kSecondBorder )
 	{
 		if ( inY < kFirstBorder )
-			return Area::kTop;
+			return Model::Area::kTop;
 		else if ( kSecondBorder < inY )
-			return Area::kBottom;
+			return Model::Area::kBottom;
 		if ( kFirstBorder < inY && inY < kSecondBorder )
-			return Area::kCentral;
+			return Model::Area::kCentral;
 	}
 	assert( !"Invalid Area" );
-	return Area::kCentral;
+	return Model::Area::kCentral;
 }
 
-Color::Color
+Model::Color::Color
 Controller::modelFromView( View::Color inColor )
 {
 	switch ( inColor )
 	{
 	case View::kRed:
-		return Color::kRed;
+		return Model::Color::kRed;
 	case View::kGreen:
-		return Color::kGreen;
+		return Model::Color::kGreen;
 	case View::kBlue:
-		return Color::kBlue;
+		return Model::Color::kBlue;
 	case View::kYellow:
-		return Color::kYellow;
+		return Model::Color::kYellow;
 	case View::kBlack:
-		return Color::kBlack;
+		return Model::Color::kBlack;
 	case View::kGray:
-		return Color::kGray;
+		return Model::Color::kGray;
 	}
 	assert( !"Invalid Dragging Color" );
-	return Color::kRed;
+	return Model::Color::kRed;
 }
 
 View::Color
-Controller::viewFromModel( Color::Color inColor )
+Controller::viewFromModel( Model::Color::Color inColor )
 {
 	switch ( inColor )
 	{
-	case Color::kRed:
+	case Model::Color::kRed:
 		return View::kRed;
-	case Color::kGreen:
+	case Model::Color::kGreen:
 		return View::kGreen;
-	case Color::kBlue:
+	case Model::Color::kBlue:
 		return View::kBlue;
-	case Color::kYellow:
+	case Model::Color::kYellow:
 		return View::kYellow;
-	case Color::kBlack:
+	case Model::Color::kBlack:
 		return View::kBlack;
-	case Color::kGray:
+	case Model::Color::kGray:
 		return View::kGray;
 	}
 	assert( !"Invalid Color Color" );
 	return View::kRed;
 }
 
-Piece::PieceType
+Model::Piece::PieceType
 Controller::modelFromView( View::Piece inPiece )
 {
 	switch ( inPiece )
 	{
 	case View::kFollower:
-		return Piece::kFollower;
+		return Model::Piece::kFollower;
 	case View::kLargeFollower:
-		return Piece::kLargeFollower;
+		return Model::Piece::kLargeFollower;
 	case View::kBuilder:
-		return Piece::kBuilder;
+		return Model::Piece::kBuilder;
 	case View::kPig:
-		return Piece::kPig;
+		return Model::Piece::kPig;
 	}
 	assert( !"Invalid Dragging Piece" );
-	return Piece::kFollower;
+	return Model::Piece::kFollower;
 }
 
 Model::Rotation

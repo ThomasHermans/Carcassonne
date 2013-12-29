@@ -5,37 +5,37 @@
 namespace
 {
 	bool
-	isValid( Piece inPiece, Area::Area inArea )
+	isValid( Model::Piece inPiece, Model::Area::Area inArea )
 	{
         switch ( inPiece.getType() )
 		{
-		case Piece::kFollower:
-		case Piece::kLargeFollower:
+		case Model::Piece::kFollower:
+		case Model::Piece::kLargeFollower:
 			return true;
-		case Piece::kBuilder:
+		case Model::Piece::kBuilder:
 			return (
-				( inArea == Area::kTop )
-				|| (inArea == Area::kRight )
-				|| (inArea == Area::kBottom )
-				|| (inArea == Area::kLeft ) );
-		case Piece::kPig:
+				( inArea == Model::Area::kTop )
+				|| (inArea == Model::Area::kRight )
+				|| (inArea == Model::Area::kBottom )
+				|| (inArea == Model::Area::kLeft ) );
+		case Model::Piece::kPig:
 			return (
-				( inArea == Area::kTopLeft )
-				|| ( inArea == Area::kTopRight )
-				|| ( inArea == Area::kRightTop )
-				|| ( inArea == Area::kRightBottom )
-				|| ( inArea == Area::kBottomRight )
-				|| ( inArea == Area::kBottomLeft )
-				|| ( inArea == Area::kLeftBottom )
-				|| ( inArea == Area::kLeftTop )
-				|| ( inArea == Area::kCentral ) );
+				( inArea == Model::Area::kTopLeft )
+				|| ( inArea == Model::Area::kTopRight )
+				|| ( inArea == Model::Area::kRightTop )
+				|| ( inArea == Model::Area::kRightBottom )
+				|| ( inArea == Model::Area::kBottomRight )
+				|| ( inArea == Model::Area::kBottomLeft )
+				|| ( inArea == Model::Area::kLeftBottom )
+				|| ( inArea == Model::Area::kLeftTop )
+				|| ( inArea == Model::Area::kCentral ) );
 		}
 		assert( !"Invalid PieceType" );
 		return false;
 	}
 }
 
-PlacedPiece::PlacedPiece( const Piece & inPiece, Area::Area inArea )
+Model::PlacedPiece::PlacedPiece( const Piece & inPiece, Area::Area inArea )
 :
 	mPiece( inPiece ),
 	mArea( inArea )
@@ -46,35 +46,35 @@ PlacedPiece::PlacedPiece( const Piece & inPiece, Area::Area inArea )
 	}
 }
 
-Piece
-PlacedPiece::getPiece() const
+Model::Piece
+Model::PlacedPiece::getPiece() const
 {
 	return mPiece;
 }
 
-Piece::PieceType
-PlacedPiece::getType() const
+Model::Piece::PieceType
+Model::PlacedPiece::getType() const
 {
 	return mPiece.getType();
 }
 
-Color::Color
-PlacedPiece::getColor() const
+Model::Color::Color
+Model::PlacedPiece::getColor() const
 {
 	return mPiece.getColor();
 }
 
-Area::Area
-PlacedPiece::getArea() const
+Model::Area::Area
+Model::PlacedPiece::getArea() const
 {
 	return mArea;
 }
 
 std::string
-PlacedPiece::toString() const
+Model::PlacedPiece::toString() const
 {
 	std::string res = mPiece.toString();
 	res.append(" on ");
-	res.append(Area::areaToString(mArea));
+	res.append( areaToString( mArea ) );
 	return res;
 }

@@ -6,94 +6,94 @@
 namespace
 {
 	bool
-	tileHas( Tile const & inTile, Area::Area inArea, Tile::Side inSide )
+	tileHas( Model::Tile const & inTile, Model::Area::Area inArea, Model::Tile::Side inSide )
 	{
 		switch ( inSide )
 		{
-		case Tile::kSideField:
+		case Model::Tile::kSideField:
 			return inTile.isField( inArea );
-		case Tile::kSideRoad:
+		case Model::Tile::kSideRoad:
 			return inTile.isRoad( inArea );
-		case Tile::kSideCity:
+		case Model::Tile::kSideCity:
 			return inTile.isCity( inArea );
 		}
-		assert( !"Invalid Tile::Side" );
+		assert( !"Invalid Model::Tile::Side" );
 		return false;
 	}
 
 	void
-	assureSideHasNo( Tile const & inTile, Area::Area inArea, Tile::Side inSide )
+	assureSideHasNo( Model::Tile const & inTile, Model::Area::Area inArea, Model::Tile::Side inSide )
 	{
 		// Make sure inTile has nothing of inSide at inArea
-		assert( !tileHas( inTile, Area::Area( inArea - 1 ), inSide ) );
-		assert( !tileHas( inTile, Area::Area( inArea ), inSide ) );
-		assert( !tileHas( inTile, Area::Area( inArea + 1 ), inSide ) );
+		assert( !tileHas( inTile, Model::Area::Area( inArea - 1 ), inSide ) );
+		assert( !tileHas( inTile, Model::Area::Area( inArea ), inSide ) );
+		assert( !tileHas( inTile, Model::Area::Area( inArea + 1 ), inSide ) );
 	}
 	void
-	assureSideHasAll( Tile const & inTile, Area::Area inArea, Tile::Side inSide )
+	assureSideHasAll( Model::Tile const & inTile, Model::Area::Area inArea, Model::Tile::Side inSide )
 	{
 		// Make sure inTile has nothing of inSide at inArea
-		assert( tileHas( inTile, Area::Area( inArea - 1 ), inSide ) );
-		assert( tileHas( inTile, Area::Area( inArea ), inSide ) );
-		assert( tileHas( inTile, Area::Area( inArea + 1 ), inSide ) );
+		assert( tileHas( inTile, Model::Area::Area( inArea - 1 ), inSide ) );
+		assert( tileHas( inTile, Model::Area::Area( inArea ), inSide ) );
+		assert( tileHas( inTile, Model::Area::Area( inArea + 1 ), inSide ) );
 	}
 	void
-	assureSideHasOnlyMiddle( Tile const & inTile, Area::Area inArea, Tile::Side inSide )
+	assureSideHasOnlyMiddle( Model::Tile const & inTile, Model::Area::Area inArea, Model::Tile::Side inSide )
 	{
 		// Make sure inTile has nothing of inSide at inArea
-		assert( !tileHas( inTile, Area::Area( inArea - 1 ), inSide ) );
-		assert( tileHas( inTile, Area::Area( inArea ), inSide ) );
-		assert( !tileHas( inTile, Area::Area( inArea + 1 ), inSide ) );
+		assert( !tileHas( inTile, Model::Area::Area( inArea - 1 ), inSide ) );
+		assert( tileHas( inTile, Model::Area::Area( inArea ), inSide ) );
+		assert( !tileHas( inTile, Model::Area::Area( inArea + 1 ), inSide ) );
 	}
 	void
-	assureSideHasOnlySurround( Tile const & inTile, Area::Area inArea, Tile::Side inSide )
+	assureSideHasOnlySurround( Model::Tile const & inTile, Model::Area::Area inArea, Model::Tile::Side inSide )
 	{
 		// Make sure inTile has nothing of inSide at inArea
-		assert( tileHas( inTile, Area::Area( inArea - 1 ), inSide ) );
-		assert( !tileHas( inTile, Area::Area( inArea ), inSide ) );
-		assert( tileHas( inTile, Area::Area( inArea + 1 ), inSide ) );
+		assert( tileHas( inTile, Model::Area::Area( inArea - 1 ), inSide ) );
+		assert( !tileHas( inTile, Model::Area::Area( inArea ), inSide ) );
+		assert( tileHas( inTile, Model::Area::Area( inArea + 1 ), inSide ) );
 	}
 
 	void
-	assureSide( Tile const & inTile, Tile::Side inSide, Area::Area inArea )
+	assureSide( Model::Tile const & inTile, Model::Tile::Side inSide, Model::Area::Area inArea )
 	{
 		switch ( inSide )
 		{
-		case Tile::kSideField:
+		case Model::Tile::kSideField:
 		{
-			assureSideHasNo( inTile, inArea, Tile::kSideCity );
-			assureSideHasNo( inTile, inArea, Tile::kSideRoad );
-			assureSideHasAll( inTile, inArea, Tile::kSideField );
+			assureSideHasNo( inTile, inArea, Model::Tile::kSideCity );
+			assureSideHasNo( inTile, inArea, Model::Tile::kSideRoad );
+			assureSideHasAll( inTile, inArea, Model::Tile::kSideField );
 			break;
 		}
-		case Tile::kSideRoad:
+		case Model::Tile::kSideRoad:
 		{
-			assureSideHasNo( inTile, inArea, Tile::kSideCity );
-			assureSideHasOnlyMiddle( inTile, inArea, Tile::kSideRoad );
-			assureSideHasOnlySurround( inTile, inArea, Tile::kSideField );
+			assureSideHasNo( inTile, inArea, Model::Tile::kSideCity );
+			assureSideHasOnlyMiddle( inTile, inArea, Model::Tile::kSideRoad );
+			assureSideHasOnlySurround( inTile, inArea, Model::Tile::kSideField );
 			break;
 		}
-		case Tile::kSideCity:
+		case Model::Tile::kSideCity:
 		{
-			assureSideHasAll( inTile, inArea, Tile::kSideCity );
-			assureSideHasNo( inTile, inArea, Tile::kSideRoad );
-			assureSideHasNo( inTile, inArea, Tile::kSideField );
+			assureSideHasAll( inTile, inArea, Model::Tile::kSideCity );
+			assureSideHasNo( inTile, inArea, Model::Tile::kSideRoad );
+			assureSideHasNo( inTile, inArea, Model::Tile::kSideField );
 			break;
 		}
 		}
 	}
 
 	void
-	assureSides( Tile const & inTile )
+	assureSides( Model::Tile const & inTile )
 	{
-		assureSide( inTile, inTile.getTop(), Area::kTop );
-		assureSide( inTile, inTile.getRight(), Area::kRight );
-		assureSide( inTile, inTile.getBottom(), Area::kBottom );
-		assureSide( inTile, inTile.getLeft(), Area::kLeft );
+		assureSide( inTile, inTile.getTop(), Model::Area::kTop );
+		assureSide( inTile, inTile.getRight(), Model::Area::kRight );
+		assureSide( inTile, inTile.getBottom(), Model::Area::kBottom );
+		assureSide( inTile, inTile.getLeft(), Model::Area::kLeft );
 	}
 }
 
-Tile::Tile()
+Model::Tile::Tile()
 :
 	mID( "D" ),
 	mTop( kSideRoad ),
@@ -129,7 +129,7 @@ Tile::Tile()
 	mCitiesPerField[ leftField ] = leftFieldCities;
 }
 
-Tile::Tile
+Model::Tile::Tile
 (
 	Center inCenter,
 	std::string const & inID,
@@ -142,10 +142,10 @@ Tile::Tile
 )
 :
 	mID( inID ),
-	mTop( Tile::kSideField ),
-	mRight( Tile::kSideField ),
-	mBottom( Tile::kSideField ),
-	mLeft( Tile::kSideField ),
+	mTop( Model::Tile::kSideField ),
+	mRight( Model::Tile::kSideField ),
+	mBottom( Model::Tile::kSideField ),
+	mLeft( Model::Tile::kSideField ),
 	mCenter( inCenter ),
 	mFields( inFields ),
 	mRoads( inRoads ),
@@ -165,19 +165,19 @@ Tile::Tile
 			switch ( inCities[i][j] )
 			{
 			case Area::kTop:
-				mTop = Tile::kSideCity;
+				mTop = Model::Tile::kSideCity;
 				++top;
 				break;
 			case Area::kRight:
-				mRight = Tile::kSideCity;
+				mRight = Model::Tile::kSideCity;
 				++right;
 				break;
 			case Area::kBottom:
-				mBottom = Tile::kSideCity;
+				mBottom = Model::Tile::kSideCity;
 				++bottom;
 				break;
 			case Area::kLeft:
-				mLeft = Tile::kSideCity;
+				mLeft = Model::Tile::kSideCity;
 				++left;
 				break;
 			case Area::kTopLeft:
@@ -200,19 +200,19 @@ Tile::Tile
 			switch ( inRoads[i][j] )
 			{
 			case Area::kTop:
-				mTop = Tile::kSideRoad;
+				mTop = Model::Tile::kSideRoad;
 				++top;
 				break;
 			case Area::kRight:
-				mRight = Tile::kSideRoad;
+				mRight = Model::Tile::kSideRoad;
 				++right;
 				break;
 			case Area::kBottom:
-				mBottom = Tile::kSideRoad;
+				mBottom = Model::Tile::kSideRoad;
 				++bottom;
 				break;
 			case Area::kLeft:
-				mLeft = Tile::kSideRoad;
+				mLeft = Model::Tile::kSideRoad;
 				++left;
 				break;
 			case Area::kTopLeft:
@@ -235,87 +235,87 @@ Tile::Tile
 	assureSides( *this );
 }
 
-Tile::Side
-Tile::getTop() const
+Model::Tile::Side
+Model::Tile::getTop() const
 {
 	return mTop;
 }
 
-Tile::Side
-Tile::getRight() const
+Model::Tile::Side
+Model::Tile::getRight() const
 {
 	return mRight;
 }
 
-Tile::Side
-Tile::getBottom() const
+Model::Tile::Side
+Model::Tile::getBottom() const
 {
 	return mBottom;
 }
 
-Tile::Side
-Tile::getLeft() const
+Model::Tile::Side
+Model::Tile::getLeft() const
 {
 	return mLeft;
 }
 
-Tile::Center
-Tile::getCenter() const
+Model::Tile::Center
+Model::Tile::getCenter() const
 {
 	return mCenter;
 }
 
 std::string const &
-Tile::getID() const
+Model::Tile::getID() const
 {
 	return mID;
 }
 
-std::vector< ContiguousField > const &
-Tile::getContiguousFields() const
+std::vector< Model::ContiguousField > const &
+Model::Tile::getContiguousFields() const
 {
 	return mFields;
 }
 
-std::vector< ContiguousRoad > const &
-Tile::getContiguousRoads() const
+std::vector< Model::ContiguousRoad > const &
+Model::Tile::getContiguousRoads() const
 {
 	return mRoads;
 }
 
-std::vector< ContiguousCity > const &
-Tile::getContiguousCities() const
+std::vector< Model::ContiguousCity > const &
+Model::Tile::getContiguousCities() const
 {
 	return mCities;
 }
 
-std::vector< ContiguousCity > const &
-Tile::getCitiesPerField(const ContiguousField &inContiguousField) const
+std::vector< Model::ContiguousCity > const &
+Model::Tile::getCitiesPerField(const ContiguousField &inContiguousField) const
 {
 	return mCitiesPerField.at(inContiguousField);
 }
 
-std::vector< ContiguousCity > const &
-Tile::getCitiesPerField( Area::Area inFieldArea ) const
+std::vector< Model::ContiguousCity > const &
+Model::Tile::getCitiesPerField( Area::Area inFieldArea ) const
 {
 	ContiguousField cf = getContiguousField( inFieldArea );
 	return mCitiesPerField.at(cf);
 }
 
-std::vector< Area::Area > const &
-Tile::getShields() const
+std::vector< Model::Area::Area > const &
+Model::Tile::getShields() const
 {
 	return mShields;
 }
 
-std::vector< Area::Area > const &
-Tile::getInns() const
+std::vector< Model::Area::Area > const &
+Model::Tile::getInns() const
 {
 	return mInns;
 }
 
-ContiguousField
-Tile::getContiguousField( Area::Area inFieldArea ) const
+Model::ContiguousField
+Model::Tile::getContiguousField( Area::Area inFieldArea ) const
 {
 	unsigned i = 0;
 	for (; i < mFields.size(); ++i)
@@ -335,8 +335,8 @@ Tile::getContiguousField( Area::Area inFieldArea ) const
 	}
 }
 
-ContiguousRoad
-Tile::getContiguousRoad(Area::Area inArea) const
+Model::ContiguousRoad
+Model::Tile::getContiguousRoad( Area::Area inArea ) const
 {
 	unsigned int i = 0;
 	for (; i < mRoads.size(); ++i)
@@ -356,8 +356,8 @@ Tile::getContiguousRoad(Area::Area inArea) const
 	}
 }
 
-ContiguousCity
-Tile::getContiguousCity(Area::Area inArea) const
+Model::ContiguousCity
+Model::Tile::getContiguousCity(Area::Area inArea) const
 {
 	unsigned int i = 0;
 	for (; i < mCities.size(); ++i)
@@ -378,13 +378,13 @@ Tile::getContiguousCity(Area::Area inArea) const
 }
 
 bool
-Tile::isCloister( Area::Area inArea ) const
+Model::Tile::isCloister( Area::Area inArea ) const
 {
-	return ( inArea == Area::kCentral && getCenter() == Tile::kCenterCloister );	
+	return ( inArea == Area::kCentral && getCenter() == Model::Tile::kCenterCloister );	
 }
 
 bool
-Tile::isRoad( Area::Area inArea ) const
+Model::Tile::isRoad( Area::Area inArea ) const
 {
 	for ( std::vector< ContiguousRoad >::const_iterator it = mRoads.begin();
 		it != mRoads.end();
@@ -399,7 +399,7 @@ Tile::isRoad( Area::Area inArea ) const
 }
 
 bool
-Tile::isCity( Area::Area inArea ) const
+Model::Tile::isCity( Area::Area inArea ) const
 {
 	for ( std::vector< ContiguousCity >::const_iterator it = mCities.begin();
 		it != mCities.end();
@@ -414,7 +414,7 @@ Tile::isCity( Area::Area inArea ) const
 }
 
 bool
-Tile::isField( Area::Area inArea ) const
+Model::Tile::isField( Area::Area inArea ) const
 {
 	for ( std::vector< ContiguousField >::const_iterator it = mFields.begin();
 		it != mFields.end();
@@ -429,7 +429,7 @@ Tile::isField( Area::Area inArea ) const
 }
 
 std::string
-Tile::toString() const
+Model::Tile::toString() const
 {
 	std::string result;
 	result.append("Top: ");
@@ -450,7 +450,7 @@ Tile::toString() const
 			result.append("\n\t- ");
 			for (unsigned int j = 0; j < mFields[i].size(); j++)
 			{
-				result.append(Area::areaToString(mFields[i][j]));
+				result.append( areaToString( mFields[i][j] ) );
 				result.append(" ");
 			}
 		}
@@ -463,7 +463,7 @@ Tile::toString() const
 			result.append("\n\t- ");
 			for (unsigned int j = 0; j < mRoads[i].size(); j++)
 			{
-				result.append(Area::areaToString(mRoads[i][j]));
+				result.append( areaToString( mRoads[i][j] ) );
 				result.append(" ");
 			}
 		}
@@ -476,7 +476,7 @@ Tile::toString() const
 			result.append("\n\t- ");
 			for (unsigned int j = 0; j < mCities[i].size(); j++)
 			{
-				result.append(Area::areaToString(mCities[i][j]));
+				result.append( areaToString( mCities[i][j] ) );
 				result.append(" ");
 			}
 		}
@@ -486,7 +486,7 @@ Tile::toString() const
 		result.append("\nShields at:\n\t- ");
 		for (unsigned int i = 0; i < mShields.size(); i++)
 		{
-			result.append(Area::areaToString(mShields[i]));
+			result.append( areaToString( mShields[i] ) );
 			result.append(" ");
 		}
 	}
@@ -495,7 +495,7 @@ Tile::toString() const
 		result.append("\nInns at:\n\t- ");
 		for (unsigned int i = 0; i < mInns.size(); i++)
 		{
-			result.append(Area::areaToString(mInns[i]));
+			result.append( areaToString( mInns[i] ) );
 			result.append(" ");
 		}
 	}
@@ -503,7 +503,7 @@ Tile::toString() const
 }
 
 std::string
-Tile::sideToString( Side inSide )
+Model::Tile::sideToString( Side inSide )
 {
 	switch ( inSide )
 	{
@@ -514,12 +514,12 @@ Tile::sideToString( Side inSide )
 	case kSideCity:
 		return "City";
 	}
-	assert( !"No valid Tile::Side" );
-	return "No valid Tile::Side";
+	assert( !"No valid Model::Tile::Side" );
+	return "No valid Model::Tile::Side";
 }
 
 std::string
-Tile::centerToString( Center inCenter )
+Model::Tile::centerToString( Center inCenter )
 {
 	switch ( inCenter )
 	{
@@ -528,6 +528,6 @@ Tile::centerToString( Center inCenter )
 	case kCenterCloister:
 		return "Cloister";
 	}
-	assert( !"No valid Tile::Center" );
-	return "No valid Tile::Center";
+	assert( !"No valid Model::Tile::Center" );
+	return "No valid Model::Tile::Center";
 }

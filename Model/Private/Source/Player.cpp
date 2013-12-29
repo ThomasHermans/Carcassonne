@@ -5,7 +5,7 @@
 
 #include <cassert>
 
-Player::Player( std::string inName, Color::Color inColor )
+Model::Player::Player( std::string inName, Color::Color inColor )
 :
 mName( inName ),
 mColor( inColor ),
@@ -14,7 +14,7 @@ mFreePieces( createBaseGamePieces( inColor ) )
 {
 }
 
-Player::Player( Player const & inPlayer )
+Model::Player::Player( Player const & inPlayer )
 :
 mName( inPlayer.mName ),
 mColor( inPlayer.mColor ),
@@ -23,12 +23,12 @@ mFreePieces( inPlayer.mFreePieces )
 {
 }
 
-Player::~Player()
+Model::Player::~Player()
 {
 }
 
-Player &
-Player::operator = ( Player const & inPlayer )
+Model::Player &
+Model::Player::operator = ( Player const & inPlayer )
 {
 	if ( this != &inPlayer )
 	{
@@ -41,37 +41,37 @@ Player::operator = ( Player const & inPlayer )
 }
 
 std::string
-Player::getName() const
+Model::Player::getName() const
 {
 	return mName;
 }
 
-Color::Color
-Player::getColor() const
+Model::Color::Color
+Model::Player::getColor() const
 {
 	return mColor;
 }
 
 unsigned
-Player::getScore() const
+Model::Player::getScore() const
 {
 	return mScore;
 }
 
 unsigned
-Player::getNumberOfFreePieces() const
+Model::Player::getNumberOfFreePieces() const
 {
 	return mFreePieces.size();
 }
 
 bool
-Player::hasFreePieces() const
+Model::Player::hasFreePieces() const
 {
 	return !mFreePieces.empty();
 }
 
-Piece
-Player::getPieceToPlace()
+Model::Piece
+Model::Player::getPieceToPlace()
 {
 	assert( hasFreePieces() );
 	Piece result = mFreePieces.back();
@@ -81,14 +81,14 @@ Player::getPieceToPlace()
 }
 
 void
-Player::returnPiece( Piece inPiece )
+Model::Player::returnPiece( Piece inPiece )
 {
 	mFreePieces.push_back( inPiece );
 	emit nrOfFreePiecesChanged( *this, mFreePieces.size() );
 }
 
 void
-Player::awardPoints( unsigned inPoints )
+Model::Player::awardPoints( unsigned inPoints )
 {
 	mScore += inPoints;
 	emit scoreChanged( *this, mScore );

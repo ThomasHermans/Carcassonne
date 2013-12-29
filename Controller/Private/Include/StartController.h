@@ -10,7 +10,10 @@
 #include <string>
 #include <vector>
 
-class Player;
+namespace Model
+{
+	class Player;
+}
 
 namespace View
 {
@@ -28,7 +31,7 @@ namespace Controller
 		~StartController();
 
 	signals:
-		void startGame( std::vector< Player > const & inPlayers );
+		void startGame( std::vector< Model::Player > const & inPlayers );
 
 	private slots:
 		void onTryToStartGame( std::vector< View::PlayerInfo > const & inPlayers );

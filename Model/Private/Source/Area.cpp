@@ -3,73 +3,73 @@
 #include <cassert>
 
 std::string
-Area::areaToString( Area inArea )
+Model::areaToString( Area::Area inArea )
 {
 	switch ( inArea )
 	{
-	case kTopLeft:
+	case Area::kTopLeft:
 		return "AreaTopLeft";
-	case kTopRight:
+	case Area::kTopRight:
 		return "AreaTopRight";
-	case kRightTop:
+	case Area::kRightTop:
 		return "AreaRightTop";
-	case kRightBottom:
+	case Area::kRightBottom:
 		return "AreaRightBottom";
-	case kBottomRight:
+	case Area::kBottomRight:
 		return "AreaBottomRight";
-	case kBottomLeft:
+	case Area::kBottomLeft:
 		return "AreaBottomLeft";
-	case kLeftBottom:
+	case Area::kLeftBottom:
 		return "AreaLeftBottom";
-	case kLeftTop:
+	case Area::kLeftTop:
 		return "AreaLeftTop";
-	case kCentral:
+	case Area::kCentral:
 		return "AreaCentral";
-	case kTop:
+	case Area::kTop:
 		return "AreaTop";
-	case kRight:
+	case Area::kRight:
 		return "AreaRight";
-	case kBottom:
+	case Area::kBottom:
 		return "AreaBottom";
-	case kLeft:
+	case Area::kLeft:
 		return "AreaLeft";
 	}
 	assert( !"Invalid Area" );
 	return "Invalid Area";
 }
 
-Area::Area
-Area::oppositeSide( Area inArea )
+Model::Area::Area
+Model::oppositeSide( Area::Area inArea )
 {
 	switch ( inArea )
 	{
-	case kTopLeft:
-		return kBottomLeft;
-	case kTop:
-		return kBottom;
-	case kTopRight:
-		return kBottomRight;
-	case kRightTop:
-		return kLeftTop;
-	case kRight:
-		return kLeft;
-	case kRightBottom:
-		return kLeftBottom;
-	case kBottomRight:
-		return kTopRight;
-	case kBottom:
-		return kTop;
-	case kBottomLeft:
-		return kTopLeft;
-	case kLeftBottom:
-		return kRightBottom;
-	case kLeft:
-		return kRight;
-	case kLeftTop:
-		return kRightTop;
-	case kCentral:
-		return kCentral;
+	case Area::kTopLeft:
+		return Area::kBottomLeft;
+	case Area::kTop:
+		return Area::kBottom;
+	case Area::kTopRight:
+		return Area::kBottomRight;
+	case Area::kRightTop:
+		return Area::kLeftTop;
+	case Area::kRight:
+		return Area::kLeft;
+	case Area::kRightBottom:
+		return Area::kLeftBottom;
+	case Area::kBottomRight:
+		return Area::kTopRight;
+	case Area::kBottom:
+		return Area::kTop;
+	case Area::kBottomLeft:
+		return Area::kTopLeft;
+	case Area::kLeftBottom:
+		return Area::kRightBottom;
+	case Area::kLeft:
+		return Area::kRight;
+	case Area::kLeftTop:
+		return Area::kRightTop;
+	case Area::kCentral:
+		return Area::kCentral;
 	}
 	assert( !"Invalid Area" );
-	return kTop;
+	return Area::kTop;
 }

@@ -3,29 +3,32 @@
 
 #include "Model/Area.h"
 
-struct PlacedProject
+namespace Model
 {
-	unsigned col;
-	unsigned row;
-	Area::Area area;
+	struct PlacedProject
+	{
+		unsigned col;
+		unsigned row;
+		Area::Area area;
 
-	PlacedProject( unsigned inCol, unsigned inRow, Area::Area inArea );
-};
+		PlacedProject( unsigned inCol, unsigned inRow, Area::Area inArea );
+	};
 
-bool
-operator == ( PlacedProject const & inLeft, PlacedProject const & inRight );
+	bool
+	operator == ( PlacedProject const & inLeft, PlacedProject const & inRight );
 
-bool
-operator != ( PlacedProject const & inLeft, PlacedProject const & inRight );
+	bool
+	operator != ( PlacedProject const & inLeft, PlacedProject const & inRight );
 
-bool
-operator < ( PlacedProject const & inLeft, PlacedProject const & inRight );
+	bool
+	operator < ( PlacedProject const & inLeft, PlacedProject const & inRight );
 
-PlacedProject
-getNeighbor( PlacedProject const & inPlacedRoad );
+	PlacedProject
+	getNeighbor( PlacedProject const & inPlacedRoad );
 
-typedef PlacedProject PlacedRoad;
-typedef PlacedProject PlacedField;
-typedef PlacedProject PlacedCity;
+	typedef PlacedProject PlacedRoad;
+	typedef PlacedProject PlacedField;
+	typedef PlacedProject PlacedCity;
+}
 
 #endif // PLACEDPROJECT_H

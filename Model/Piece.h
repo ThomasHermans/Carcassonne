@@ -5,35 +5,38 @@
 
 #include <string>
 
-class PlacedPiece;
-
-class Piece
+namespace Model
 {
-public:
-	enum PieceType
+	class PlacedPiece;
+
+	class Piece
 	{
-		kFollower,
-		kLargeFollower,
-		kBuilder,
-		kPig
+	public:
+		enum PieceType
+		{
+			kFollower,
+			kLargeFollower,
+			kBuilder,
+			kPig
+		};
+
+	public:
+		Piece();
+		Piece( const Piece & inPiece );
+		Piece( const PlacedPiece & inPlacedPiece );
+		Piece( PieceType inType, Color::Color inColor );
+		Piece & operator = ( const Piece & inPiece );
+
+		PieceType getType() const;
+		Color::Color getColor() const;
+		int getPoints() const;
+
+		std::string toString() const;
+
+	private:
+		PieceType mType;
+		Color::Color mColor;
 	};
-
-public:
-	Piece();
-	Piece( const Piece & inPiece );
-	Piece( const PlacedPiece & inPlacedPiece );
-	Piece( PieceType inType, Color::Color inColor );
-	Piece & operator = ( const Piece & inPiece );
-
-	PieceType getType() const;
-	Color::Color getColor() const;
-	int getPoints() const;
-
-	std::string toString() const;
-
-private:
-	PieceType mType;
-	Color::Color mColor;
-};
+}
 
 #endif // PIECE_H

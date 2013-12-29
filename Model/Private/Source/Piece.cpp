@@ -7,17 +7,17 @@
 namespace
 {
 	std::string
-	convertToString( Piece::PieceType inType )
+	convertToString( Model::Piece::PieceType inType )
 	{
 		switch ( inType )
 		{
-		case Piece::kFollower:
+		case Model::Piece::kFollower:
 			return "Follower";
-		case Piece::kLargeFollower:
+		case Model::Piece::kLargeFollower:
 			return "Large Follower";
-		case Piece::kBuilder:
+		case Model::Piece::kBuilder:
 			return "Builder";
-		case Piece::kPig:
+		case Model::Piece::kPig:
 			return "Pig";
 		}
 		assert( !"Invalid PieceType to translate!" );
@@ -25,32 +25,36 @@ namespace
 	}
 }
 
-Piece::Piece():
-	mType( Piece::kFollower ),
+Model::Piece::Piece()
+:
+	mType( kFollower ),
 	mColor( Color::kRed )
 {
 }
 
-Piece::Piece( const Piece & inPiece ):
+Model::Piece::Piece( const Piece & inPiece )
+:
 	mType( inPiece.getType() ),
 	mColor( inPiece.getColor() )
 {
 }
 
-Piece::Piece( const PlacedPiece & inPlacedPiece ) :
+Model::Piece::Piece( const PlacedPiece & inPlacedPiece )
+:
 	mType( inPlacedPiece.getType() ),
 	mColor( inPlacedPiece.getColor() )
 {
 }
 
-Piece::Piece( PieceType inType, Color::Color inColor ):
+Model::Piece::Piece( PieceType inType, Color::Color inColor )
+:
 	mType( inType ),
 	mColor( inColor )
 {
 }
 
-Piece&
-Piece::operator = ( const Piece & inPiece )
+Model::Piece &
+Model::Piece::operator = ( const Piece & inPiece )
 {
 	if ( this != &inPiece )
 	{
@@ -60,20 +64,20 @@ Piece::operator = ( const Piece & inPiece )
 	return *this;
 }
 
-Piece::PieceType
-Piece::getType() const
+Model::Piece::PieceType
+Model::Piece::getType() const
 {
 	return mType;
 }
 
-Color::Color
-Piece::getColor() const
+Model::Color::Color
+Model::Piece::getColor() const
 {
 	return mColor;
 }
 
 int
-Piece::getPoints() const
+Model::Piece::getPoints() const
 {
 	switch ( mType )
 	{
@@ -89,9 +93,9 @@ Piece::getPoints() const
 }
 
 std::string
-Piece::toString() const
+Model::Piece::toString() const
 {
-	std::string res = Color::colorToString( mColor );
+	std::string res = colorToString( mColor );
 	res.append( " " );
 	res.append( convertToString( mType ) );
 	return res;

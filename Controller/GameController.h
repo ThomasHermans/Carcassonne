@@ -19,7 +19,7 @@ namespace Controller
 	public:
 		explicit GameController( QObject * inParent = 0 );
 		explicit GameController( std::string const & inTiles, QObject * inParent = 0 );
-		explicit GameController( std::vector< Player > const & inPlayer, QObject * inParent = 0 );
+		explicit GameController( std::vector< Model::Player > const & inPlayer, QObject * inParent = 0 );
 
 	private slots:
 		// From model to view
@@ -29,10 +29,10 @@ namespace Controller
 		void onNextTile( std::string const & inNextId );
 		void onTilesLeft( unsigned inNr );
 
-		void onPiecePlaced( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer );
-		void onPieceReturned( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer );
-		void onPlayerInfoChanged( Player const & inNewInfo );
-		void onCurrentPlayerChanged( Player const & inCurrentPlayer);
+		void onPiecePlaced( unsigned inCol, unsigned inRow, Model::Area::Area inArea, Model::Player const & inCurrentPlayer );
+		void onPieceReturned( unsigned inCol, unsigned inRow, Model::Area::Area inArea, Model::Player const & inCurrentPlayer );
+		void onPlayerInfoChanged( Model::Player const & inNewInfo );
+		void onCurrentPlayerChanged( Model::Player const & inCurrentPlayer);
 
 		void onEndOfGame( unsigned inTilesLeft );
 
@@ -47,7 +47,7 @@ namespace Controller
 		void startGame();
 
 	private:
-		Game *mGame;
+		Model::Game *mGame;
 		View::GameWindow *mWindow;
 	};
 }

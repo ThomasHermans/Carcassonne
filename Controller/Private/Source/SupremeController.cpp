@@ -14,8 +14,8 @@ Controller::SupremeController::SupremeController( QObject * inParent )
 {
 	connect
 	(
-		mStartController.get(), SIGNAL( startGame( std::vector< Player > ) ),
-		this, SLOT( startGame( std::vector< Player > ) )
+		mStartController.get(), SIGNAL( startGame( std::vector< Model::Player > ) ),
+		this, SLOT( startGame( std::vector< Model::Player > ) )
 	);
 }
 
@@ -24,7 +24,7 @@ Controller::SupremeController::~SupremeController()
 }
 
 void
-Controller::SupremeController::startGame( std::vector< Player > const & inPlayers )
+Controller::SupremeController::startGame( std::vector< Model::Player > const & inPlayers )
 {
 	mGameController.reset( new GameController( inPlayers ) );
 }

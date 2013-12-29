@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <ctime>
 
-Tile
-cbgt::createTileA()
+Model::Tile
+Model::createTileA()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -37,8 +37,8 @@ cbgt::createTileA()
 	return tileA;
 }
 
-Tile
-cbgt::createTileB()
+Model::Tile
+Model::createTileB()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -69,8 +69,8 @@ cbgt::createTileB()
 	return tileB;
 }
 
-Tile
-cbgt::createTileC()
+Model::Tile
+Model::createTileC()
 {
 	std::vector< ContiguousField > fields;
 
@@ -103,8 +103,8 @@ cbgt::createTileC()
 	return tileC;
 }
 
-Tile
-cbgt::createTileD()
+Model::Tile
+Model::createTileD()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -146,8 +146,8 @@ cbgt::createTileD()
 	return tileD;
 }
 
-Tile
-cbgt::createTileE()
+Model::Tile
+Model::createTileE()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -183,8 +183,8 @@ cbgt::createTileE()
 	return tileE;
 }
 
-Tile
-cbgt::createTileF()
+Model::Tile
+Model::createTileF()
 {
 	std::vector< ContiguousField > fields;
 
@@ -230,8 +230,8 @@ cbgt::createTileF()
 	return tileF;
 }
 
-Tile
-cbgt::createTileG()
+Model::Tile
+Model::createTileG()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -272,8 +272,8 @@ cbgt::createTileG()
 	return tileG;
 }
 
-Tile
-cbgt::createTileH()
+Model::Tile
+Model::createTileH()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -312,8 +312,8 @@ cbgt::createTileH()
 	return tileH;
 }
 
-Tile
-cbgt::createTileI()
+Model::Tile
+Model::createTileI()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -352,8 +352,8 @@ cbgt::createTileI()
 	return tileI;
 }
 
-Tile
-cbgt::createTileJ()
+Model::Tile
+Model::createTileJ()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -394,8 +394,8 @@ cbgt::createTileJ()
 	return tileJ;
 }
 
-Tile
-cbgt::createTileK()
+Model::Tile
+Model::createTileK()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -437,8 +437,8 @@ cbgt::createTileK()
 	return tileK;
 }
 
-Tile
-cbgt::createTileL()
+Model::Tile
+Model::createTileL()
 {
 	std::vector< ContiguousCity > cities;
 	std::vector< Area::Area > firstCity;
@@ -487,8 +487,8 @@ cbgt::createTileL()
 	return tileL;
 }
 
-Tile
-cbgt::createTileM()
+Model::Tile
+Model::createTileM()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -526,8 +526,8 @@ cbgt::createTileM()
 	return tileM;
 }
 
-Tile
-cbgt::createTileN()
+Model::Tile
+Model::createTileN()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -562,8 +562,8 @@ cbgt::createTileN()
 	return tileN;
 }
 
-Tile
-cbgt::createTileO()
+Model::Tile
+Model::createTileO()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -609,8 +609,8 @@ cbgt::createTileO()
 	return tileO;
 }
 
-Tile
-cbgt::createTileP()
+Model::Tile
+Model::createTileP()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -653,8 +653,8 @@ cbgt::createTileP()
 	return tileP;
 }
 
-Tile
-cbgt::createTileQ()
+Model::Tile
+Model::createTileQ()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -692,8 +692,8 @@ cbgt::createTileQ()
 	return tileQ;
 }
 
-Tile
-cbgt::createTileR()
+Model::Tile
+Model::createTileR()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -728,8 +728,8 @@ cbgt::createTileR()
 	return tileR;
 }
 
-Tile
-cbgt::createTileS()
+Model::Tile
+Model::createTileS()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -774,8 +774,8 @@ cbgt::createTileS()
 	return tileS;
 }
 
-Tile
-cbgt::createTileT()
+Model::Tile
+Model::createTileT()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -817,8 +817,8 @@ cbgt::createTileT()
 	return tileT;
 }
 
-Tile
-cbgt::createTileU()
+Model::Tile
+Model::createTileU()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -856,8 +856,8 @@ cbgt::createTileU()
 	return tileU;
 }
 
-Tile
-cbgt::createTileV()
+Model::Tile
+Model::createTileV()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -895,8 +895,8 @@ cbgt::createTileV()
 	return tileV;
 }
 
-Tile
-cbgt::createTileW()
+Model::Tile
+Model::createTileW()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -941,8 +941,8 @@ cbgt::createTileW()
 	return tileW;
 }
 
-Tile
-cbgt::createTileX()
+Model::Tile
+Model::createTileX()
 {
 	std::vector< ContiguousField > fields;
 	ContiguousField firstField;
@@ -993,8 +993,8 @@ cbgt::createTileX()
 	return tileX;
 }
 
-Tile
-cbgt::createTile( char inChar )
+Model::Tile
+Model::createTile( char inChar )
 {
 	switch ( inChar )
 	{
@@ -1075,10 +1075,9 @@ cbgt::createTile( char inChar )
 	}
 }
 
-std::vector< Tile >
-createBaseGameTiles()
+std::vector< Model::Tile >
+Model::createBaseGameTiles()
 {
-	using namespace cbgt;
 	std::vector< Tile > tiles;
 	for (int i = 0; i < 2; ++i)
 	{
@@ -1171,21 +1170,21 @@ createBaseGameTiles()
 	return tiles;
 }
 
-std::vector< Tile >
-createTiles( std::string const & inTiles )
+std::vector< Model::Tile >
+Model::createTiles( std::string const & inTiles )
 {
 	std::vector< Tile > tiles;
 
 	for ( std::string::const_iterator it = inTiles.begin(); it != inTiles.end(); ++it )
 	{
-		tiles.push_back( cbgt::createTile( *it ) );
+		tiles.push_back( createTile( *it ) );
 	}
 
 	return tiles;
 }
 
-std::vector< Piece >
-createBaseGamePieces( Color::Color inColor )
+std::vector< Model::Piece >
+Model::createBaseGamePieces( Color::Color inColor )
 {
 	std::vector< Piece > pieces;
 	for ( unsigned int i = 0; i < 6; ++i)

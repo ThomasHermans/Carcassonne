@@ -25,10 +25,10 @@ namespace Controller
 	yFromRow( unsigned inRow, unsigned inStartRow );
 
 	int
-	xFromArea( Area::Area inArea );
+	xFromArea( Model::Area::Area inArea );
 
 	int
-	yFromArea( Area::Area inArea );
+	yFromArea( Model::Area::Area inArea );
 
 	int
 	posXFromX( int inX );
@@ -36,16 +36,16 @@ namespace Controller
 	int
 	posYFromY( int inY );
 
-	Area::Area
+	Model::Area::Area
 	areaFromPos( int inX, int inY );
 
-	Color::Color
+	Model::Color::Color
 	modelFromView( View::Color inColor );
 
 	View::Color
-	viewFromModel( Color::Color inColor );
+	viewFromModel( Model::Color::Color inColor );
 
-	Piece::PieceType
+	Model::Piece::PieceType
 	modelFromView( View::Piece inPiece );
 
 	Model::Rotation

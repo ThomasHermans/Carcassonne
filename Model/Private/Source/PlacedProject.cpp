@@ -2,7 +2,12 @@
 
 #include <cassert>
 
-PlacedProject::PlacedProject( unsigned inCol, unsigned inRow, Area::Area inArea )
+Model::PlacedProject::PlacedProject
+(
+	unsigned inCol,
+	unsigned inRow,
+	Area::Area inArea
+)
 :
 	col( inCol ),
 	row( inRow ),
@@ -10,7 +15,7 @@ PlacedProject::PlacedProject( unsigned inCol, unsigned inRow, Area::Area inArea 
 {}
 
 bool
-operator == ( PlacedProject const & inLeft, PlacedProject const & inRight )
+Model::operator == ( PlacedProject const & inLeft, PlacedProject const & inRight )
 {
 	return
 	(
@@ -23,13 +28,13 @@ operator == ( PlacedProject const & inLeft, PlacedProject const & inRight )
 }
 
 bool
-operator != ( PlacedProject const & inLeft, PlacedProject const & inRight )
+Model::operator != ( PlacedProject const & inLeft, PlacedProject const & inRight )
 {
 	return !( inLeft == inRight );
 }
 
 bool
-operator < ( PlacedProject const & inLeft, PlacedProject const & inRight )
+Model::operator < ( PlacedProject const & inLeft, PlacedProject const & inRight )
 {
 	return
 	(
@@ -51,8 +56,8 @@ operator < ( PlacedProject const & inLeft, PlacedProject const & inRight )
 	);
 }
 
-PlacedProject
-getNeighbor( PlacedProject const & inProject )
+Model::PlacedProject
+Model::getNeighbor( PlacedProject const & inProject )
 {
 	switch ( inProject.area )
 	{

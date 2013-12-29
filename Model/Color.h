@@ -3,19 +3,22 @@
 
 #include <string>
 
-namespace Color
+namespace Model
 {
-    enum Color
-    {
-        kRed = 0,
-        kGreen,
-        kBlue,
-        kYellow,
-        kBlack,
-        kGray
-    };
+	namespace Color
+	{
+		enum Color
+		{
+			kRed = 0,
+			kGreen,
+			kBlue,
+			kYellow,
+			kBlack,
+			kGray
+		};
+	}
 
-    std::string colorToString( Color inColor );
+	std::string colorToString( Color::Color inColor );
 }
 
 #endif // COLOR_H

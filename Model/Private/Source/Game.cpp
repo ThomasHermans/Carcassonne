@@ -18,16 +18,16 @@ namespace
 	unsigned const kFarmerPointsPerFinishedCity = 3;
 	unsigned const kInvalid = -1;
 
-	std::set< Color::Color >
-	getWinningColors( std::vector< PlacedPiece > const & inPieces )
+	std::set< Model::Color::Color >
+	getWinningColors( std::vector< Model::PlacedPiece > const & inPieces )
 	{
-		typedef std::map< Color::Color, unsigned > Counts;
+		typedef std::map< Model::Color::Color, unsigned > Counts;
 		Counts counts;
-		for ( std::vector< PlacedPiece >::const_iterator it = inPieces.begin();
+		for ( std::vector< Model::PlacedPiece >::const_iterator it = inPieces.begin();
 			it != inPieces.end();
 			++it )
 		{
-			Color::Color color = it->getPiece().getColor();
+			Model::Color::Color color = it->getPiece().getColor();
 			Counts::iterator countIt = counts.find( color );
 			if ( countIt == counts.end() )
 			{
@@ -38,7 +38,7 @@ namespace
 				++countIt->second;
 			}
 		}
-		std::set< Color::Color > winningColors;
+		std::set< Model::Color::Color > winningColors;
 		unsigned winningAmount = 0;
 		for ( Counts::const_iterator it = counts.begin(); it != counts.end(); ++it )
 		{
@@ -56,7 +56,7 @@ namespace
 	}
 }
 
-Game::Game( QObject * inParent )
+Model::Game::Game( QObject * inParent )
 :
 	QObject( inParent ),
 	mBoard( Board( kSize ) ),
@@ -94,7 +94,7 @@ Game::Game( QObject * inParent )
 	emit currentPlayerChanged( mPlayers.front() );
 }
 
-Game::Game( std::string const & inTiles, QObject * inParent )
+Model::Game::Game( std::string const & inTiles, QObject * inParent )
 :
 	QObject( inParent ),
 	mBoard( Board( kSize ) ),
@@ -132,7 +132,7 @@ Game::Game( std::string const & inTiles, QObject * inParent )
 	emit currentPlayerChanged( mPlayers.front() );
 }
 
-Game::Game( std::vector< Player > const & inPlayers, QObject * inParent )
+Model::Game::Game( std::vector< Player > const & inPlayers, QObject * inParent )
 :
 	QObject( inParent ),
 	mBoard( Board( kSize ) ),
@@ -168,47 +168,47 @@ Game::Game( std::vector< Player > const & inPlayers, QObject * inParent )
 	emit currentPlayerChanged( mPlayers.front() );
 }
 
-Game::~Game()
+Model::Game::~Game()
 {}
 
-std::vector< Player > const &
-Game::getPlayers()
+std::vector< Model::Player > const &
+Model::Game::getPlayers()
 {
 	return mPlayers;
 }
 
 unsigned int
-Game::getNrOfRows() const
+Model::Game::getNrOfRows() const
 {
 	return mBoard.getNrOfRows();
 }
 
 unsigned int
-Game::getNrOfCols() const
+Model::Game::getNrOfCols() const
 {
 	return mBoard.getNrOfCols();
 }
 
 unsigned int
-Game::getStartRow() const
+Model::Game::getStartRow() const
 {
 	return mStartRow;
 }
 
 unsigned int
-Game::getStartCol() const
+Model::Game::getStartCol() const
 {
 	return mStartCol;
 }
 
-Player const &
-Game::getCurrentPlayer() const
+Model::Player const &
+Model::Game::getCurrentPlayer() const
 {
 	return mPlayers[mCurrentPlayer];
 }
 
 void
-Game::clickTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation )
+Model::Game::clickTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation )
 {
 	if ( inCol >= mBoard.getNrOfCols() || inRow >= mBoard.getNrOfRows() )
 	{
@@ -227,7 +227,7 @@ Game::clickTile( unsigned inCol, unsigned inRow, std::string const & inTileId, M
 }
 
 void
-Game::dropTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation )
+Model::Game::dropTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation )
 {
 	if ( inCol >= mBoard.getNrOfCols() || inRow >= mBoard.getNrOfRows() )
 	{
@@ -240,7 +240,7 @@ Game::dropTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Mo
 }
 
 void
-Game::placeTileOnBoard( unsigned inCol, unsigned inRow, Model::Rotation inRotation )
+Model::Game::placeTileOnBoard( unsigned inCol, unsigned inRow, Model::Rotation inRotation )
 {
 	if ( mNextTile )
 	{
@@ -293,7 +293,7 @@ Game::placeTileOnBoard( unsigned inCol, unsigned inRow, Model::Rotation inRotati
 }
 
 void
-Game::placeStartTileOnBoard()
+Model::Game::placeStartTileOnBoard()
 {
 	if (mNextTile)
 	{
@@ -311,14 +311,14 @@ Game::placeStartTileOnBoard()
 	}
 }
 
-boost::optional< Tile >
-Game::getNextTile() const
+boost::optional< Model::Tile >
+Model::Game::getNextTile() const
 {
 	return mNextTile;
 }
 
 void
-Game::tryToPlacePiece
+Model::Game::tryToPlacePiece
 (
 	Color::Color inColor,
 	Piece::PieceType inType,
@@ -363,7 +363,7 @@ Game::tryToPlacePiece
 }
 
 void
-Game::endTurn()
+Model::Game::endTurn()
 {
 	mCurrentPlayer = (mCurrentPlayer + 1) % mPlayers.size();
 	mPiecesPlacedInCurrentTurn = 0;
@@ -371,7 +371,7 @@ Game::endTurn()
 }
 
 void
-Game::calculateEndPoints()
+Model::Game::calculateEndPoints()
 {
 	for ( unsigned row = 0; row < mBoard.getNrOfRows(); ++row )
 	{
@@ -508,7 +508,7 @@ Game::calculateEndPoints()
 }
 
 void
-Game::onEndCurrentTurn()
+Model::Game::onEndCurrentTurn()
 {
 	std::cout << "onEndCurrentTurn" << std::endl;
 	if ( mCurrentPlacedRow != kInvalid && mCurrentPlacedCol != kInvalid && mCurrentPlacedTile )
@@ -529,19 +529,19 @@ Game::onEndCurrentTurn()
 }
 
 void
-Game::addColsLeft( unsigned inNrOfCols )
+Model::Game::addColsLeft( unsigned inNrOfCols )
 {
 	mStartCol += inNrOfCols;
 }
 
 void
-Game::addRowsTop( unsigned inNrOfRows )
+Model::Game::addRowsTop( unsigned inNrOfRows )
 {
 	mStartRow += inNrOfRows;
 }
 
 void
-Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
+Model::Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
 {
 	std::cout << "onFinishedCloister" << std::endl;
 	// Remove all pieces
@@ -555,7 +555,7 @@ Game::onFinishedCloister( unsigned int inCol, unsigned int inRow )
 }
 
 void
-Game::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
+Model::Game::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
 {
 	std::vector< PlacedPiece > allPieces;
 	std::set< std::pair< unsigned, unsigned > > usedTiles;
@@ -575,7 +575,7 @@ Game::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
 }
 
 void
-Game::onFinishedCity( std::vector< PlacedCity > const & inCity )
+Model::Game::onFinishedCity( std::vector< PlacedCity > const & inCity )
 {
 	std::vector< PlacedPiece > allPieces;
 	std::set< std::pair< unsigned, unsigned > > usedTiles;
@@ -602,7 +602,7 @@ Game::onFinishedCity( std::vector< PlacedCity > const & inCity )
 }
 
 void
-Game::pickNextTile()
+Model::Game::pickNextTile()
 {
 	std::cout << "pickNextTile" << std::endl;
 	if (!mBag.empty())
@@ -639,7 +639,7 @@ Game::pickNextTile()
 }
 
 void
-Game::rotateCurrentTile()
+Model::Game::rotateCurrentTile()
 {
 	if ( mCurrentPlacedTile )
 	{
@@ -669,8 +669,8 @@ Game::rotateCurrentTile()
 	}
 }
 
-Player &
-Game::getPlayer( Color::Color inColor )
+Model::Player &
+Model::Game::getPlayer( Color::Color inColor )
 {
 	for ( std::vector< Player >::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it )
 	{
@@ -683,7 +683,7 @@ Game::getPlayer( Color::Color inColor )
 }
 
 void
-Game::returnPieces
+Model::Game::returnPieces
 (
 	std::vector< PlacedPiece > const & inPieces,
 	unsigned inCol,
@@ -700,7 +700,7 @@ Game::returnPieces
 }
 
 void
-Game::awardPoints( std::set< Color::Color > const & inColors, unsigned inPoints )
+Model::Game::awardPoints( std::set< Color::Color > const & inColors, unsigned inPoints )
 {
 	for ( std::set< Color::Color >::const_iterator it = inColors.begin();
 		it != inColors.end();
@@ -711,19 +711,19 @@ Game::awardPoints( std::set< Color::Color > const & inColors, unsigned inPoints 
 }
 
 bool
-Game::isEmptySpot( unsigned inCol, unsigned inRow ) const
+Model::Game::isEmptySpot( unsigned inCol, unsigned inRow ) const
 {
 	return ( !isCurrentSpot( inCol, inRow ) && mBoard.isEmptySpot( inCol, inRow ) );
 }
 
 bool
-Game::isCurrentSpot( unsigned inCol, unsigned inRow ) const
+Model::Game::isCurrentSpot( unsigned inCol, unsigned inRow ) const
 {
 	return ( inCol == mCurrentPlacedCol && inRow == mCurrentPlacedRow );
 }
 
 bool
-Game::isOccupied( Area::Area inArea ) const
+Model::Game::isOccupied( Area::Area inArea ) const
 {
 	// Cloister
 	if ( mCurrentPlacedTile->isCloister( inArea ) )
@@ -810,25 +810,25 @@ Game::isOccupied( Area::Area inArea ) const
 }
 
 void
-Game::connectPlayerSignals()
+Model::Game::connectPlayerSignals()
 {
 	for ( std::vector< Player >::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it )
 	{
 		connect
 		(
-			&(*it), SIGNAL( nrOfFreePiecesChanged( Player, uint ) ),
-			this, SIGNAL( playerInfoChanged( Player ) )
+			&(*it), SIGNAL( nrOfFreePiecesChanged( Model::Player, uint ) ),
+			this, SIGNAL( playerInfoChanged( Model::Player ) )
 		);
 		connect
 		(
-			&(*it), SIGNAL( scoreChanged( Player, uint ) ),
-			this, SIGNAL( playerInfoChanged( Player ) )
+			&(*it), SIGNAL( scoreChanged( Model::Player, uint ) ),
+			this, SIGNAL( playerInfoChanged( Model::Player ) )
 		);
 	}
 }
 
 void
-Game::connectGameSignals()
+Model::Game::connectGameSignals()
 {
 	connect
 	(

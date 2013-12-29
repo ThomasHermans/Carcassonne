@@ -3,21 +3,21 @@
 #include <cassert>
 
 std::string
-Color::colorToString( Color inColor )
+Model::colorToString( Color::Color inColor )
 {
 	switch ( inColor )
 	{
-	case kRed:
+	case Color::kRed:
 		return "Red";
-	case kGreen:
+	case Color::kGreen:
 		return "Green";
-	case kBlue:
+	case Color::kBlue:
 		return "Blue";
-	case kYellow:
+	case Color::kYellow:
 		return "Yellow";
-	case kBlack:
+	case Color::kBlack:
 		return "Black";
-	case kGray:
+	case Color::kGray:
 		return "Gray";
 	}
 	assert( !"Invalid Color to translate" );

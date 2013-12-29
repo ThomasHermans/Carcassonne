@@ -11,7 +11,7 @@
 Controller::GameController::GameController( QObject *parent )
 :
 	QObject( parent ),
-	mGame( new Game( this ) ),
+	mGame( new Model::Game( this ) ),
 	mWindow( new View::GameWindow() )
 {
 	addPlayers();
@@ -22,7 +22,7 @@ Controller::GameController::GameController( QObject *parent )
 Controller::GameController::GameController( std::string const & inTiles, QObject * inParent )
 :
 	QObject( inParent ),
-	mGame( new Game( inTiles, this ) ),
+	mGame( new Model::Game( inTiles, this ) ),
 	mWindow( new View::GameWindow() )
 {
 	addPlayers();
@@ -30,10 +30,10 @@ Controller::GameController::GameController( std::string const & inTiles, QObject
 	startGame();
 }
 
-Controller::GameController::GameController( std::vector< Player > const & inPlayers, QObject * inParent )
+Controller::GameController::GameController( std::vector< Model::Player > const & inPlayers, QObject * inParent )
 :
 	QObject( inParent ),
-	mGame( new Game( inPlayers, this ) ),
+	mGame( new Model::Game( inPlayers, this ) ),
 	mWindow( new View::GameWindow() )
 {
 	addPlayers();
@@ -95,7 +95,7 @@ Controller::GameController::onTilesLeft( unsigned inNr )
 }
 
 void
-Controller::GameController::onPiecePlaced( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inCurrentPlayer )
+Controller::GameController::onPiecePlaced( unsigned inCol, unsigned inRow, Model::Area::Area inArea, Model::Player const & inCurrentPlayer )
 {
 	std::cout << inCurrentPlayer.getName() << " placed a piece." << std::endl;
 	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
@@ -106,7 +106,7 @@ Controller::GameController::onPiecePlaced( unsigned inCol, unsigned inRow, Area:
 }
 
 void
-Controller::GameController::onPieceReturned( unsigned inCol, unsigned inRow, Area::Area inArea, Player const & inPlayer )
+Controller::GameController::onPieceReturned( unsigned inCol, unsigned inRow, Model::Area::Area inArea, Model::Player const & inPlayer )
 {
 	std::cout << inPlayer.getName() << " got a piece back." << std::endl;
 	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
@@ -117,14 +117,14 @@ Controller::GameController::onPieceReturned( unsigned inCol, unsigned inRow, Are
 }
 
 void
-Controller::GameController::onPlayerInfoChanged( Player const & inNewInfo )
+Controller::GameController::onPlayerInfoChanged( Model::Player const & inNewInfo )
 {
 	mWindow->setFollowersLeft( inNewInfo.getName(), inNewInfo.getNumberOfFreePieces() );
 	mWindow->setScore( inNewInfo.getName(), inNewInfo.getScore() );
 }
 
 void
-Controller::GameController::onCurrentPlayerChanged( Player const & inCurrentPlayer )
+Controller::GameController::onCurrentPlayerChanged( Model::Player const & inCurrentPlayer )
 {
 	mWindow->setActivePlayer( inCurrentPlayer.getName() );
 }
@@ -155,26 +155,26 @@ Controller::GameController::onClicked( int inX, int inY, std::string const & inT
 void
 Controller::GameController::onTileDropped( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
 {
-	unsigned col = Controller::colFromX( inX, mGame->getStartCol() );
-	unsigned row = Controller::rowFromY( inY, mGame->getStartRow() );
-	mGame->dropTile( col, row, inTileId, Controller::modelFromView( inRotation ) );
+	unsigned col = colFromX( inX, mGame->getStartCol() );
+	unsigned row = rowFromY( inY, mGame->getStartRow() );
+	mGame->dropTile( col, row, inTileId, modelFromView( inRotation ) );
 }
 
 void
 Controller::GameController::onTryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY )
 {
-	unsigned col = Controller::colFromX( inX, mGame->getStartCol() );
-	unsigned row = Controller::rowFromY( inY, mGame->getStartRow() );
+	unsigned col = colFromX( inX, mGame->getStartCol() );
+	unsigned row = rowFromY( inY, mGame->getStartRow() );
 	std::cout << "GameController sees drop at x, y: " << inX << ", " << inY << ", which is col, row: " << col << ", " << row << std::endl;
-	std::cout << "Which is at " << Controller::posXFromX( inX ) << ", " << Controller::posYFromY( inY ) << " at that tile." << std::endl;
-	std::cout << "Which is at Area::" << Controller::areaFromPos( Controller::posXFromX( inX ), Controller::posYFromY( inY ) ) << std::endl;
+	std::cout << "Which is at " << posXFromX( inX ) << ", " << posYFromY( inY ) << " at that tile." << std::endl;
+	std::cout << "Which is at Area::" << areaFromPos( posXFromX( inX ), posYFromY( inY ) ) << std::endl;
 	std::cout << "Drop contains " << inData.getColor() << " " << inData.getPiece() << std::endl;
 	if ( col < mGame->getNrOfCols() && row < mGame->getNrOfRows() )
 	{
 		// Decipher data
-		Color::Color color = Controller::modelFromView( inData.getColor() );
-		Piece::PieceType type = Controller::modelFromView( inData.getPiece() );
-		Area::Area area = Controller::areaFromPos( Controller::posXFromX( inX ), Controller::posYFromY( inY ) );
+		Model::Color::Color color = modelFromView( inData.getColor() );
+		Model::Piece::PieceType type = modelFromView( inData.getPiece() );
+		Model::Area::Area area = areaFromPos( posXFromX( inX ), posYFromY( inY ) );
 		// Send to mGame
 		mGame->tryToPlacePiece( color, type, col, row, area );
 	}
@@ -183,34 +183,34 @@ Controller::GameController::onTryToPlacePiece( Dragging::PieceData const & inDat
 void
 Controller::GameController::addPlayers()
 {
-	for ( std::vector< Player >::const_iterator it = mGame->getPlayers().begin();
+	for ( std::vector< Model::Player >::const_iterator it = mGame->getPlayers().begin();
 		it != mGame->getPlayers().end();
 		++it )
 	{
-		mWindow->addPlayer( it->getName(), Controller::viewFromModel( it->getColor() ), it->getNumberOfFreePieces() );
+		mWindow->addPlayer( it->getName(), viewFromModel( it->getColor() ), it->getNumberOfFreePieces() );
 	}
 }
 
 void
 Controller::GameController::makeConnections()
 {
-	connect( mGame, SIGNAL( tilePlaced(unsigned int, unsigned int, std::string, Model::Rotation) ),
-			this, SLOT( onTilePlaced(unsigned int, unsigned int, std::string, Model::Rotation) ) );
-	connect( mGame, SIGNAL( tileUnplaced(unsigned int, unsigned int) ),
-			this, SLOT( onTileUnplaced(unsigned int, unsigned int) ) );
-	connect( mGame, SIGNAL( tileRotated(uint,uint,std::string,Model::Rotation) ),
-			this, SLOT( onTileRotated(uint,uint,std::string,Model::Rotation) ) );
-	connect( mGame, SIGNAL( nextTile(std::string) ), this, SLOT( onNextTile(std::string) ) );
-	connect( mGame, SIGNAL( tilesLeft(uint) ), this, SLOT( onTilesLeft(uint) ) );
+	connect( mGame, SIGNAL( tilePlaced( unsigned int, unsigned int, std::string, Model::Rotation ) ),
+			this, SLOT( onTilePlaced( unsigned int, unsigned int, std::string, Model::Rotation ) ) );
+	connect( mGame, SIGNAL( tileUnplaced( unsigned int, unsigned int ) ),
+			this, SLOT( onTileUnplaced( unsigned int, unsigned int ) ) );
+	connect( mGame, SIGNAL( tileRotated( uint,uint,std::string,Model::Rotation ) ),
+			this, SLOT( onTileRotated( uint,uint,std::string,Model::Rotation ) ) );
+	connect( mGame, SIGNAL( nextTile( std::string ) ), this, SLOT( onNextTile( std::string ) ) );
+	connect( mGame, SIGNAL( tilesLeft( uint ) ), this, SLOT( onTilesLeft( uint ) ) );
 
-	connect( mGame, SIGNAL( piecePlaced(uint, uint, Area::Area, Player) ),
-		this, SLOT( onPiecePlaced(uint, uint, Area::Area, Player ) ) );
-	connect( mGame, SIGNAL( pieceReturned(uint, uint, Area::Area, Player) ),
-		this, SLOT( onPieceReturned(uint, uint, Area::Area, Player ) ) );
-	connect( mGame, SIGNAL( playerInfoChanged(Player) ),
-		this, SLOT( onPlayerInfoChanged(Player) ) );
-	connect( mGame, SIGNAL( currentPlayerChanged(Player) ),
-		this, SLOT( onCurrentPlayerChanged(Player) ) );
+	connect( mGame, SIGNAL( piecePlaced( uint, uint, Model::Area::Area, Model::Player ) ),
+		this, SLOT( onPiecePlaced( uint, uint, Model::Area::Area, Model::Player ) ) );
+	connect( mGame, SIGNAL( pieceReturned( uint, uint, Model::Area::Area, Model::Player ) ),
+		this, SLOT( onPieceReturned( uint, uint, Model::Area::Area, Model::Player ) ) );
+	connect( mGame, SIGNAL( playerInfoChanged( Model::Player ) ),
+		this, SLOT( onPlayerInfoChanged( Model::Player ) ) );
+	connect( mGame, SIGNAL( currentPlayerChanged( Model::Player ) ),
+		this, SLOT( onCurrentPlayerChanged( Model::Player ) ) );
 
 	connect( mWindow, SIGNAL( clicked( int, int, std::string const &, View::Rotation ) ),
 		this, SLOT( onClicked( int, int, std::string const &, View::Rotation ) ) );

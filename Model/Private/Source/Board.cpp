@@ -10,7 +10,11 @@ namespace
 	unsigned const kInvalid = -1;
 
 	bool
-	upperLeftIncreasingCompare( PlacedCity const & inFirst, PlacedCity const & inSecond )
+	upperLeftIncreasingCompare
+	(
+		Model::PlacedCity const & inFirst,
+		Model::PlacedCity const & inSecond
+	)
 	{
 		return
 		(
@@ -46,25 +50,25 @@ namespace
 	}
 }
 
-Board::Board( unsigned inSize )
+Model::Board::Board( unsigned inSize )
 :
 	mNrRows( makeUneven( inSize ) ),
 	mNrCols( makeUneven( inSize ) ),
 	mBoard( mNrCols * mNrRows, boost::none )
 {}
 
-Board::Board( Board const & inBoard )
+Model::Board::Board( Board const & inBoard )
 :
 	mNrRows( inBoard.mNrRows ),
 	mNrCols( inBoard.mNrCols ),
 	mBoard( inBoard.mBoard )
 {}
 
-Board::~Board()
+Model::Board::~Board()
 {}
 
-Board &
-Board::operator = ( Board const & inBoard )
+Model::Board &
+Model::Board::operator = ( Board const & inBoard )
 {
 	if ( this != &inBoard )
 	{
@@ -76,19 +80,19 @@ Board::operator = ( Board const & inBoard )
 }
 
 unsigned
-Board::getNrOfRows() const
+Model::Board::getNrOfRows() const
 {
 	return mNrRows;
 }
 
 unsigned
-Board::getNrOfCols() const
+Model::Board::getNrOfCols() const
 {
 	return mNrCols;
 }
 
 bool
-Board::isTile( unsigned inCol, unsigned inRow ) const
+Model::Board::isTile( unsigned inCol, unsigned inRow ) const
 {
 	if ( inCol < mNrCols && inRow < mNrRows )
 	{
@@ -101,7 +105,7 @@ Board::isTile( unsigned inCol, unsigned inRow ) const
 }
 
 boost::optional< Model::TileOnBoard > const &
-Board::getTile( unsigned inCol, unsigned inRow ) const
+Model::Board::getTile( unsigned inCol, unsigned inRow ) const
 {
 	assert( inCol < mNrCols );
 	assert( inRow < mNrRows );
@@ -109,7 +113,7 @@ Board::getTile( unsigned inCol, unsigned inRow ) const
 }
 
 boost::optional< Model::TileOnBoard > &
-Board::getTile( unsigned inCol, unsigned inRow )
+Model::Board::getTile( unsigned inCol, unsigned inRow )
 {
 	assert( inCol < mNrCols );
 	assert( inRow < mNrRows );
@@ -117,7 +121,7 @@ Board::getTile( unsigned inCol, unsigned inRow )
 }
 
 bool
-Board::isPossibleTile( Tile const & inTile )
+Model::Board::isPossibleTile( Tile const & inTile )
 {
 	for ( unsigned row = 0; row < mNrRows; ++row )
 	{
@@ -125,7 +129,7 @@ Board::isPossibleTile( Tile const & inTile )
 		{
 			for ( unsigned rot = 0; rot < 4; ++rot )
 			{
-				Model::TileOnBoard tileOnBoard( inTile, Model::Rotation(rot * 3) );
+				TileOnBoard tileOnBoard( inTile, Rotation(rot * 3) );
 				if ( isValidTilePlacement( tileOnBoard, col, row ) )
 				{
 					return true;
@@ -137,13 +141,13 @@ Board::isPossibleTile( Tile const & inTile )
 }
 
 bool
-Board::isEmptySpot( unsigned inCol, unsigned inRow ) const
+Model::Board::isEmptySpot( unsigned inCol, unsigned inRow ) const
 {
 	return !isTile( inCol, inRow );
 }
 
 bool
-Board::isValidTilePlacement( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const
+Model::Board::isValidTilePlacement( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const
 {
 	if ( isEmptySpot( inCol, inRow ) )
 	{
@@ -153,7 +157,7 @@ Board::isValidTilePlacement( Model::TileOnBoard const & inTile, unsigned inCol, 
 }
 
 bool
-Board::isValidAlternateTilePlacement( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const
+Model::Board::isValidAlternateTilePlacement( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow ) const
 {
 	// Check if one of four neighbors is placed
 	int nrOfNeighbors = 0;
@@ -206,7 +210,7 @@ Board::isValidAlternateTilePlacement( Model::TileOnBoard const & inTile, unsigne
 }
 
 bool
-Board::placeValidTile( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow )
+Model::Board::placeValidTile( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow )
 {
 	if ( isValidTilePlacement( inTile, inCol, inRow ) )
 	{
@@ -220,7 +224,7 @@ Board::placeValidTile( Model::TileOnBoard const & inTile, unsigned inCol, unsign
 }
 
 unsigned
-Board::placeStartTile( Model::TileOnBoard const & inTile )
+Model::Board::placeStartTile( Model::TileOnBoard const & inTile )
 {
 	bool empty = true;
 	for ( unsigned row = 0; row < mNrRows; ++row )
@@ -245,7 +249,7 @@ Board::placeStartTile( Model::TileOnBoard const & inTile )
 }
 
 bool
-Board::isOccupiedRoad( unsigned inCol, unsigned inRow, Area::Area inArea ) const
+Model::Board::isOccupiedRoad( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 {
 	if ( !isTile( inCol, inRow ) )
 	{
@@ -283,7 +287,7 @@ Board::isOccupiedRoad( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 }
 
 bool
-Board::isOccupiedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
+Model::Board::isOccupiedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 {
 	if ( !isTile( inCol, inRow ) )
 	{
@@ -321,7 +325,7 @@ Board::isOccupiedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 }
 
 bool
-Board::isOccupiedField( PlacedField const & inField ) const
+Model::Board::isOccupiedField( PlacedField const & inField ) const
 {
 	if ( !isTile( inField.col, inField.row ) )
 	{
@@ -361,8 +365,8 @@ Board::isOccupiedField( PlacedField const & inField ) const
 	return false;
 }
 
-std::vector< PlacedPiece >
-Board::removePieces( unsigned inCol, unsigned inRow, Area::Area inArea )
+std::vector< Model::PlacedPiece >
+Model::Board::removePieces( unsigned inCol, unsigned inRow, Area::Area inArea )
 {
 	boost::optional< Model::TileOnBoard > & tile = getTile( inCol, inRow );
 	if ( tile )
@@ -376,7 +380,7 @@ Board::removePieces( unsigned inCol, unsigned inRow, Area::Area inArea )
 }
 
 void
-Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
+Model::Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 {
 	if ( !isTile( inCol, inRow ) )
 	{
@@ -429,7 +433,7 @@ Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 }
 
 void
-Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
+Model::Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 {
 	if ( !isTile( inCol, inRow ) )
 	{
@@ -482,7 +486,7 @@ Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 }
 
 void
-Board::checkForFinishedCloisters( unsigned inCol, unsigned inRow )
+Model::Board::checkForFinishedCloisters( unsigned inCol, unsigned inRow )
 {
 	unsigned leftCol = std::max( inCol, (unsigned)1 ) - 1;
 	unsigned rightCol = std::min( inCol + 1, mNrCols );
@@ -501,7 +505,7 @@ Board::checkForFinishedCloisters( unsigned inCol, unsigned inRow )
 }
 
 bool
-Board::isFinishedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
+Model::Board::isFinishedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 {
 	if ( !isTile( inCol, inRow ) || !getTile( inCol, inRow )->isCity( inArea ) )
 	{
@@ -544,8 +548,8 @@ Board::isFinishedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 	return finished;
 }
 
-PlacedCity
-Board::getUpperLeftPlacedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
+Model::PlacedCity
+Model::Board::getUpperLeftPlacedCity( unsigned inCol, unsigned inRow, Area::Area inArea ) const
 {
 	if ( !isTile( inCol, inRow ) || !getTile( inCol, inRow )->isCity( inArea ) )
 	{
@@ -581,7 +585,7 @@ Board::getUpperLeftPlacedCity( unsigned inCol, unsigned inRow, Area::Area inArea
 }
 
 bool
-Board::isFinishedCloister( unsigned inCol, unsigned inRow ) const
+Model::Board::isFinishedCloister( unsigned inCol, unsigned inRow ) const
 {
 	if ( !isTile( inCol, inRow ) )
 	{
@@ -598,7 +602,7 @@ Board::isFinishedCloister( unsigned inCol, unsigned inRow ) const
 }
 
 bool
-Board::isFullySurrounded( unsigned inCol, unsigned inRow ) const
+Model::Board::isFullySurrounded( unsigned inCol, unsigned inRow ) const
 {
 	if ( inCol <= 0 || inCol >= mNrCols - 1 || inRow <= 0 || inRow >= mNrRows - 1 )
 	{
@@ -618,7 +622,7 @@ Board::isFullySurrounded( unsigned inCol, unsigned inRow ) const
 }
 
 std::string
-Board::toString() const
+Model::Board::toString() const
 {
 	std::stringstream res;
 	for ( unsigned r = 0; r < mNrRows; ++r )
@@ -633,7 +637,7 @@ Board::toString() const
 }
 
 std::string
-Board::shortPrint( unsigned inCol, unsigned inRow ) const
+Model::Board::shortPrint( unsigned inCol, unsigned inRow ) const
 {
 	std::stringstream res;
 	if ( isTile( inCol, inRow ) )
@@ -648,7 +652,7 @@ Board::shortPrint( unsigned inCol, unsigned inRow ) const
 }
 
 unsigned
-Board::getPointsForCloister( unsigned inCol, unsigned inRow ) const
+Model::Board::getPointsForCloister( unsigned inCol, unsigned inRow ) const
 {
 	unsigned points = 0;
 	for ( unsigned row = inRow - 1; row <= inRow + 1; ++row )
@@ -664,8 +668,8 @@ Board::getPointsForCloister( unsigned inCol, unsigned inRow ) const
 	return points;
 }
 
-std::vector< PlacedRoad >
-Board::getCompleteRoad( PlacedRoad const & inPlacedRoad ) const
+std::vector< Model::PlacedRoad >
+Model::Board::getCompleteRoad( PlacedRoad const & inPlacedRoad ) const
 {
 	unsigned col = inPlacedRoad.col;
 	unsigned row = inPlacedRoad.row;
@@ -704,8 +708,8 @@ Board::getCompleteRoad( PlacedRoad const & inPlacedRoad ) const
 	return completeRoad;
 }
 
-std::vector< PlacedCity >
-Board::getCompleteCity( PlacedCity const & inPlacedCity ) const
+std::vector< Model::PlacedCity >
+Model::Board::getCompleteCity( PlacedCity const & inPlacedCity ) const
 {
 	unsigned col = inPlacedCity.col;
 	unsigned row = inPlacedCity.row;
@@ -744,8 +748,8 @@ Board::getCompleteCity( PlacedCity const & inPlacedCity ) const
 	return completeCity;
 }
 
-std::vector< PlacedField >
-Board::getCompleteField( PlacedField const & inPlacedField ) const
+std::vector< Model::PlacedField >
+Model::Board::getCompleteField( PlacedField const & inPlacedField ) const
 {
 	unsigned col = inPlacedField.col;
 	unsigned row = inPlacedField.row;
@@ -783,7 +787,7 @@ Board::getCompleteField( PlacedField const & inPlacedField ) const
 }
 
 bool
-Board::placeTile( const Model::TileOnBoard &inTile, unsigned inCol, unsigned inRow )
+Model::Board::placeTile( const Model::TileOnBoard &inTile, unsigned inCol, unsigned inRow )
 {
 	if ( inCol < mNrCols && inRow < mNrRows && !isTile( inCol, inRow ) )
 	{
@@ -798,7 +802,7 @@ Board::placeTile( const Model::TileOnBoard &inTile, unsigned inCol, unsigned inR
 }
 
 bool
-Board::removeTile( unsigned inCol, unsigned inRow )
+Model::Board::removeTile( unsigned inCol, unsigned inRow )
 {
 	if ( inCol < mNrCols && inRow < mNrRows && isTile( inCol, inRow ) )
 	{
@@ -809,7 +813,7 @@ Board::removeTile( unsigned inCol, unsigned inRow )
 }
 
 void
-Board::widenUp( unsigned inCol, unsigned inRow )
+Model::Board::widenUp( unsigned inCol, unsigned inRow )
 {
 	if ( inCol == 0 )
 	{
@@ -832,21 +836,21 @@ Board::widenUp( unsigned inCol, unsigned inRow )
 }
 
 void
-Board::addRowsOnTop( unsigned inNrOfRows )
+Model::Board::addRowsOnTop( unsigned inNrOfRows )
 {
 	mBoard.insert( mBoard.begin(), mNrCols * inNrOfRows, boost::none );
 	mNrRows += inNrOfRows;
 }
 
 void
-Board::addRowsBelow( unsigned inNrOfRows )
+Model::Board::addRowsBelow( unsigned inNrOfRows )
 {
 	mBoard.insert( mBoard.end(), mNrCols * inNrOfRows, boost::none );
 	mNrRows += inNrOfRows;
 }
 
 void
-Board::addColsLeft( unsigned inNrOfCols )
+Model::Board::addColsLeft( unsigned inNrOfCols )
 {
 	std::vector< boost::optional< Model::TileOnBoard > >::iterator it = mBoard.begin();
 	for( unsigned i = 0; i < mNrRows; ++i )
@@ -865,7 +869,7 @@ Board::addColsLeft( unsigned inNrOfCols )
 }
 
 void
-Board::addColsRight( unsigned inNrOfCols )
+Model::Board::addColsRight( unsigned inNrOfCols )
 {
 	std::vector< boost::optional< Model::TileOnBoard > >::iterator it = mBoard.begin();
 	for ( unsigned i = 0; i < mNrRows; ++i)
