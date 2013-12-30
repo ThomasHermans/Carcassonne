@@ -33,7 +33,7 @@ namespace Model
 		unsigned getStartCol() const;
 		Player const & getCurrentPlayer() const;
 
-		void clickTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation );
+		void rotateTile( unsigned inCol, unsigned inRow );
 		void dropTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation );
 		void placeTileOnBoard( unsigned inCol, unsigned inRow, Model::Rotation inRotation = Model::kCw0 );
 		void placeStartTileOnBoard();
@@ -84,8 +84,6 @@ namespace Model
 	private:
 		void pickNextTile();
 		void updateOccupations();
-
-		void rotateCurrentTile();
 
 		Player & getPlayer( Color::Color inColor );
 

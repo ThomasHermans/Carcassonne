@@ -208,21 +208,37 @@ Model::Game::getCurrentPlayer() const
 }
 
 void
-Model::Game::clickTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation )
+Model::Game::rotateTile( unsigned inCol, unsigned inRow )
 {
 	if ( inCol >= mBoard.getNrOfCols() || inRow >= mBoard.getNrOfRows() )
 	{
 		return;
 	}
-	if ( mNextTile && mNextTile->getID() == inTileId && isEmptySpot( inCol, inRow ) )
+	if ( isCurrentSpot( inCol, inRow ) )
 	{
-		std::cout << "Empty spot -> placeTileOnBoard" << std::endl;
-		placeTileOnBoard( inCol, inRow, inRotation );
-	}
-	else if ( isCurrentSpot( inCol, inRow ) )
-	{
-		std::cout << "Non-empty spot -> rotateCurrentTile" << std::endl;
-		rotateCurrentTile();
+		Rotation currentRotation = mCurrentPlacedTile->getRotation();
+		Tile tile = mCurrentPlacedTile->getTile();
+		Rotation newRotation = currentRotation;
+		TileOnBoard rotated = TileOnBoard( tile, newRotation );
+		for ( int i = 0; i < 4; ++i )
+		{
+			newRotation = Rotation( (newRotation + kCw90) % (kCw90 * 4) );
+			rotated = TileOnBoard( tile, newRotation );
+			if ( mBoard.isValidTilePlacement( rotated, mCurrentPlacedCol, mCurrentPlacedRow ) )
+			{
+				break;
+			}
+		}
+		if ( mBoard.isValidTilePlacement( rotated, mCurrentPlacedCol, mCurrentPlacedRow ) )
+		{
+			if ( mCurrentPlacedTile->hasPieces() )
+			{
+				mPiecesPlacedInCurrentTurn = 0;
+				returnPieces( mCurrentPlacedTile->removeAllPieces(), mCurrentPlacedCol, mCurrentPlacedRow );
+			}
+			mCurrentPlacedTile = rotated;
+			emit tileRotated( mCurrentPlacedCol, mCurrentPlacedRow, mCurrentPlacedTile->getID(), mCurrentPlacedTile->getRotation() );
+		}
 	}
 }
 
@@ -328,7 +344,7 @@ Model::Game::tryToPlacePiece
 )
 {
 	// You can only place a piece on the current placed tile
-	if ( isCurrentSpot( inCol, inRow ) && mCurrentPlacedTile )
+	if ( isCurrentSpot( inCol, inRow ) )
 	{
 		// Only the active player can place a piece
 		// The active player needs a free piece to place
@@ -638,37 +654,6 @@ Model::Game::pickNextTile()
 	}
 }
 
-void
-Model::Game::rotateCurrentTile()
-{
-	if ( mCurrentPlacedTile )
-	{
-		Model::Rotation currentRotation = mCurrentPlacedTile->getRotation();
-		Tile tile = mCurrentPlacedTile->getTile();
-		Model::Rotation newRotation = currentRotation;
-		Model::TileOnBoard rotated = Model::TileOnBoard( tile, newRotation );
-		for ( int i = 0; i < 4; ++i )
-		{
-			newRotation = Model::Rotation( (newRotation + Model::kCw90) % (Model::kCw90 * 4) );
-			rotated = Model::TileOnBoard( tile, newRotation );
-			if ( mBoard.isValidTilePlacement( rotated, mCurrentPlacedCol, mCurrentPlacedRow ) )
-			{
-				break;
-			}
-		}
-		if ( mBoard.isValidTilePlacement( rotated, mCurrentPlacedCol, mCurrentPlacedRow ) )
-		{
-			if ( mCurrentPlacedTile->hasPieces() )
-			{
-				mPiecesPlacedInCurrentTurn = 0;
-				returnPieces( mCurrentPlacedTile->removeAllPieces(), mCurrentPlacedCol, mCurrentPlacedRow );
-			}
-			mCurrentPlacedTile = rotated;
-			emit tileRotated( mCurrentPlacedCol, mCurrentPlacedRow, mCurrentPlacedTile->getID(), mCurrentPlacedTile->getRotation() );
-		}
-	}
-}
-
 Model::Player &
 Model::Game::getPlayer( Color::Color inColor )
 {
@@ -719,7 +704,7 @@ Model::Game::isEmptySpot( unsigned inCol, unsigned inRow ) const
 bool
 Model::Game::isCurrentSpot( unsigned inCol, unsigned inRow ) const
 {
-	return ( inCol == mCurrentPlacedCol && inRow == mCurrentPlacedRow );
+	return ( mCurrentPlacedTile && inCol == mCurrentPlacedCol && inRow == mCurrentPlacedRow );
 }
 
 bool

@@ -85,7 +85,7 @@ View::GameWindow::GameWindow( QWidget *parent )
 
 	boardAndSideBarLayout->addWidget( mBoardView, 1 );
 
-	connect( mBoardView, SIGNAL( clicked( int, int ) ), this, SLOT( onClicked( int, int ) ) );
+	connect( mBoardView, SIGNAL( clicked( int, int ) ), this, SIGNAL( clicked( int, int ) ) );
 	connect( mBoardView, SIGNAL( droppedTile( int, int, std::string const &, View::Rotation ) ),
 		this, SLOT( onDroppedTile( int, int, std::string const &, View::Rotation ) ) );
 
@@ -276,12 +276,6 @@ View::GameWindow::onEndCurrentTurn()
 {
 	mBoardView->clearCurrentTile();
 	emit endCurrentTurn();
-}
-
-void
-View::GameWindow::onClicked( int inX, int inY )
-{
-	emit clicked( inX, inY, mPickedTileLabel->getCurrentTile(), mPickedTileLabel->getCurrentRotation() );
 }
 
 void

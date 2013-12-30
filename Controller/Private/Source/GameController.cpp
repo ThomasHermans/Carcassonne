@@ -141,15 +141,11 @@ Controller::GameController::onEndOfGame( unsigned inTilesLeft )
 }
 
 void
-Controller::GameController::onClicked( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
+Controller::GameController::onClicked( int inX, int inY )
 {
-	unsigned col = Controller::colFromX( inX, mGame->getStartCol() );
-	unsigned row = Controller::rowFromY( inY, mGame->getStartRow() );
-	std::cout << "GameController sees a click at x, y: " << inX << ", " << inY << ", which is col, row: " << col << ", " << row << std::endl;
-	if ( col < mGame->getNrOfCols() && row < mGame->getNrOfRows() )
-	{
-		mGame->clickTile( col, row, inTileId, Controller::modelFromView( inRotation ) );
-	}
+	unsigned col = colFromX( inX, mGame->getStartCol() );
+	unsigned row = rowFromY( inY, mGame->getStartRow() );
+	mGame->rotateTile( col, row );
 }
 
 void
@@ -212,8 +208,7 @@ Controller::GameController::makeConnections()
 	connect( mGame, SIGNAL( currentPlayerChanged( Model::Player ) ),
 		this, SLOT( onCurrentPlayerChanged( Model::Player ) ) );
 
-	connect( mWindow, SIGNAL( clicked( int, int, std::string const &, View::Rotation ) ),
-		this, SLOT( onClicked( int, int, std::string const &, View::Rotation ) ) );
+	connect( mWindow, SIGNAL( clicked( int, int ) ), this, SLOT( onClicked( int, int ) ) );
 	connect( mWindow, SIGNAL( tileDropped( int, int, std::string const &, View::Rotation ) ),
 		this, SLOT( onTileDropped( int, int, std::string const &, View::Rotation ) ) );
 	connect( mWindow, SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ),

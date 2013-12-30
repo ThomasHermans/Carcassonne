@@ -27,23 +27,10 @@ namespace
 	double const kMinScale = 1. / kMaxScale;
 }
 
-View::BoardView::BoardView( QWidget *parent ) :
-	QGraphicsView( parent ),
-	mPressPosition(),
-	mPanning( false ),
-	mPanX( 0 ),
-	mPanY( 0 ),
-	mCurrentTilePosition( boost::none ),
-	mCurrentTile(),
-	mRotation( View::kCw0 )
-
-{
-	setAcceptDrops( true );
-}
-
 View::BoardView::BoardView( QGraphicsScene *scene, QWidget *parent ) :
 	QGraphicsView( scene, parent ),
 	mPressPosition(),
+	mDragging( false ),
 	mPanning( false ),
 	mPanX( 0 ),
 	mPanY( 0 ),
@@ -75,14 +62,16 @@ View::BoardView::mousePressEvent( QMouseEvent * inEvent )
 	if ( inEvent->button() == Qt::LeftButton )
 	{
 		mPressPosition = mapToScene( inEvent->pos() );
-		if ( dragStartedOnNoTile() )
+		if ( pressedOnNoTile() )
 		{
+			mDragging = false;
 			mPanning = true;
 			mPanX = inEvent->x();
 			mPanY = inEvent->y();
 		}
 		else
 		{
+			mDragging = pressedOnCurrentlyPlacedTile();
 			mPanning = false;
 		}
 		inEvent->accept();
@@ -97,7 +86,7 @@ View::BoardView::mouseMoveEvent( QMouseEvent * inEvent )
 	{
 		return;
 	}
-	if ( dragStartedOnCurrentlyPlacedTile() )
+	if ( mDragging )
 	{
 		if ( (inEvent->pos() - mPressPosition).manhattanLength() > QApplication::startDragDistance() )
 		{
@@ -125,18 +114,13 @@ View::BoardView::mouseMoveEvent( QMouseEvent * inEvent )
 void
 View::BoardView::mouseReleaseEvent( QMouseEvent * inEvent )
 {
-	if ( inEvent->button() == Qt::LeftButton )
+	mDragging = false;
+	mPanning = false;
+	setCursor( Qt::ArrowCursor );
+	if ( pressedOnCurrentlyPlacedTile() )
 	{
-		mPanning = false;
-		setCursor( Qt::ArrowCursor );
-		if ( (mapToScene( inEvent->pos() ) - mPressPosition).manhattanLength() < QApplication::startDragDistance() )
-		{
-			QPointF const scenePos = mapToScene( inEvent->pos() );
-			double const scenex = scenePos.x();
-			double const sceney = scenePos.y();
-			std::cout << "BoardView clicked at [" << scenex << ", " << sceney << "] in the scene." << std::endl;
-			emit clicked( scenex, sceney );
-		}
+		QPointF const scenePos = mapToScene( inEvent->pos() );
+		emit clicked( scenePos.x(), scenePos.y() );
 	}
 }
 
@@ -213,7 +197,7 @@ View::BoardView::dropEvent( QDropEvent * inEvent )
 }
 
 bool
-View::BoardView::dragStartedOnNoTile() const
+View::BoardView::pressedOnNoTile() const
 {
 	if ( scene()->itemAt( mPressPosition ) )
 	{
@@ -226,7 +210,7 @@ View::BoardView::dragStartedOnNoTile() const
 }
 
 bool
-View::BoardView::dragStartedOnCurrentlyPlacedTile() const
+View::BoardView::pressedOnCurrentlyPlacedTile() const
 {
 	if ( !mCurrentTilePosition )
 	{

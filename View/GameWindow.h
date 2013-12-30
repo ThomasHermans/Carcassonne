@@ -123,7 +123,7 @@ namespace View
 		void returnPiece( int inX, int inY, View::Color inColor );
 		
 	signals:
-		void clicked( int inX, int inY, std::string const & inId, View::Rotation inRotation );
+		void clicked( int inX, int inY );
 		void tileDropped( int inX, int inY, std::string const & inId, View::Rotation inRotation );
 		void endCurrentTurn();
 		void tryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY );
@@ -139,7 +139,6 @@ namespace View
 		 */
 		void onEndCurrentTurn();
 
-		void onClicked( int x, int y );
 		void onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
 
 	private:

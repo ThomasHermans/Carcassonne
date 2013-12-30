@@ -31,7 +31,6 @@ namespace View
 	{
 		Q_OBJECT
 	public:
-		explicit BoardView( QWidget *parent = 0 );
 		explicit BoardView( QGraphicsScene *inScene, QWidget *parent = 0 );
 
 		void placeTile( int inX, int inY, std::string const & inId, Rotation inRotation );
@@ -55,14 +54,15 @@ namespace View
 		void dropEvent( QDropEvent * inEvent );
 
 	private:
-		bool dragStartedOnNoTile() const;
-		bool dragStartedOnCurrentlyPlacedTile() const;
+		bool pressedOnNoTile() const;
+		bool pressedOnCurrentlyPlacedTile() const;
 		void zoomIn();
 		void zoomOut();
 		void zoomTo100();
 
 	private:
 		QPointF mPressPosition;
+		bool mDragging;
 		bool mPanning;
 		int mPanX;
 		int mPanY;
