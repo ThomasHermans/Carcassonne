@@ -89,6 +89,6 @@ INCLUDEPATH += \
 FORMS    += mainwindow.ui
 
 RESOURCES += \
-	Resources.qrc
+	Resources\Resources.qrc
 
 RC_FILE = Carcassonne.rc

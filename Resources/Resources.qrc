@@ -28,4 +28,7 @@
     <qresource prefix="/">
         <file>StyleSheet.qss</file>
     </qresource>
+    <qresource prefix="/">
+        <file>Follower.png</file>
+    </qresource>
 </RCC>
