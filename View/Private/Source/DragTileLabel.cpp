@@ -100,6 +100,7 @@ View::DragTileLabel::mouseMoveEvent( QMouseEvent * inEvent )
 	Dragging::TileData * tileData = new Dragging::TileData( mTileId, mRotation );
 	drag->setMimeData( tileData );
 	drag->setPixmap( mPixmap );
+	drag->setHotSpot( QPoint( Gui::kTileWidth / 2, Gui::kTileHeight / 2 ) );
 	drag->exec( Qt::MoveAction );
 }
 
