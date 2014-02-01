@@ -30,6 +30,7 @@ View::DragMeepleLabel::DragMeepleLabel
 	mNr( inNr ),
 	mType( inType ),
 	mColor( inColor ),
+	mMeeplePixmap( getMeeplePixmap( mColor ) ),
 	mDragStartPosition()
 {
 	setContentsMargins( 0, 0, 0, 0 );
@@ -60,12 +61,6 @@ View::DragMeepleLabel::setNr( unsigned inNr )
 }
 
 void
-View::DragMeepleLabel::setColor( View::Color inColor )
-{
-	mColor = inColor;
-}
-
-void
 View::DragMeepleLabel::mousePressEvent( QMouseEvent * inEvent )
 {
 	if ( inEvent->button() == Qt::LeftButton )
@@ -89,7 +84,7 @@ View::DragMeepleLabel::mouseMoveEvent( QMouseEvent * inEvent )
 	QDrag * drag = new QDrag( this );
 	Dragging::PieceData * dragData = new Dragging::PieceData( mType, mColor );
 	drag->setMimeData( dragData );
-	drag->setPixmap( getMeeplePixmap( mColor ) );
+	drag->setPixmap( mMeeplePixmap );
 	drag->setHotSpot( QPoint( Gui::kMeepleWidth / 2, Gui::kMeepleHeight / 2 ) );
 
 	drag->exec( Qt::MoveAction );
@@ -99,6 +94,6 @@ void
 View::DragMeepleLabel::paintEvent( QPaintEvent * inEvent )
 {
 	QPainter painter( this );
-	static QPainterPath path = View::getMeeplePath( 0, 5, Gui::kMeepleWidth, Gui::kMeepleHeight );
-	painter.fillPath( path, View::toQColor( mColor ) );
+	painter.drawPixmap( 0, 5, mMeeplePixmap );
+	QWidget::paintEvent( inEvent );
 }

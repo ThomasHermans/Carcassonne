@@ -12,7 +12,7 @@ namespace
 	QBitmap
 	getMeepleMask()
 	{
-		QPixmap const original = QPixmap( ":/Follower.png" );
+		QPixmap const original = QPixmap( ":/Follower_own.png" );
 		QPixmap const scaled = original.scaled( Gui::kMeepleWidth, Gui::kMeepleHeight );
 		return scaled.createMaskFromColor( Qt::transparent );
 	}

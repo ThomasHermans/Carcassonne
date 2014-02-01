@@ -3,6 +3,8 @@
 
 #include "View/Typedefs.h"
 
+#include <QPixmap>
+#include <QPoint>
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -16,27 +18,27 @@ namespace View
 	public:
 		DragMeepleLabel
 		(
-			View::Piece inType,
+			Piece inType,
 			unsigned inNr,
-			View::Color inColor,
+			Color inColor,
 			QWidget * inParent
 		);
 
 		~DragMeepleLabel();
 
 		void setNr( unsigned inNr );
-		void setColor( View::Color inColor );
 
 	protected:
-		void mousePressEvent( QMouseEvent * inEvent );
-		void mouseMoveEvent( QMouseEvent * inEvent );
-		void paintEvent( QPaintEvent * inEvent );
+		virtual void mousePressEvent( QMouseEvent * inEvent );
+		virtual void mouseMoveEvent( QMouseEvent * inEvent );
+		virtual void paintEvent( QPaintEvent * inEvent );
 
 	private:
 		QLabel * mNrLabel;
 		unsigned mNr;
-		View::Piece mType;
-		View::Color mColor;
+		Piece mType;
+		Color mColor;
+		QPixmap mMeeplePixmap;
 		QPoint mDragStartPosition;
 	};
 }
