@@ -4,7 +4,7 @@
 
 #include "StartController.h"
 
-#include <cassert>
+#include <iostream>
 
 Controller::SupremeController::SupremeController( QObject * inParent )
 :
@@ -26,5 +26,6 @@ Controller::SupremeController::~SupremeController()
 void
 Controller::SupremeController::startGame( std::vector< Model::Player > const & inPlayers )
 {
+	std::cout << "Starting game by resetting mGameController..." << std::endl;
 	mGameController.reset( new GameController( inPlayers ) );
 }

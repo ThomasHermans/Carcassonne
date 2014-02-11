@@ -6,7 +6,7 @@
 #include "View/Typedefs.h"
 #include "View/DragData.h"
 
-#include <cassert>
+#include <iostream>
 
 Controller::GameController::GameController( QObject *parent )
 :
@@ -36,9 +36,13 @@ Controller::GameController::GameController( std::vector< Model::Player > const &
 	mGame( new Model::Game( inPlayers, this ) ),
 	mWindow( new View::GameWindow() )
 {
+	std::cout << "GameController constructor. Adding players..." << std::endl;
 	addPlayers();
+	std::cout << "GameController constructor. Players added. Making connections..." << std::endl;
 	makeConnections();
+	std::cout << "GameController constructor. Connections made. Starting game..." << std::endl;
 	startGame();
+	std::cout << "GameController constructor. Game started..." << std::endl;
 }
 
 void
@@ -190,32 +194,32 @@ Controller::GameController::addPlayers()
 void
 Controller::GameController::makeConnections()
 {
-	connect( mGame, SIGNAL( tilePlaced( unsigned int, unsigned int, std::string, Model::Rotation ) ),
+	connect( mGame.get(), SIGNAL( tilePlaced( unsigned int, unsigned int, std::string, Model::Rotation ) ),
 			this, SLOT( onTilePlaced( unsigned int, unsigned int, std::string, Model::Rotation ) ) );
-	connect( mGame, SIGNAL( tileUnplaced( unsigned int, unsigned int ) ),
+	connect( mGame.get(), SIGNAL( tileUnplaced( unsigned int, unsigned int ) ),
 			this, SLOT( onTileUnplaced( unsigned int, unsigned int ) ) );
-	connect( mGame, SIGNAL( tileRotated( uint,uint,std::string,Model::Rotation ) ),
+	connect( mGame.get(), SIGNAL( tileRotated( uint,uint,std::string,Model::Rotation ) ),
 			this, SLOT( onTileRotated( uint,uint,std::string,Model::Rotation ) ) );
-	connect( mGame, SIGNAL( nextTile( std::string ) ), this, SLOT( onNextTile( std::string ) ) );
-	connect( mGame, SIGNAL( tilesLeft( uint ) ), this, SLOT( onTilesLeft( uint ) ) );
+	connect( mGame.get(), SIGNAL( nextTile( std::string ) ), this, SLOT( onNextTile( std::string ) ) );
+	connect( mGame.get(), SIGNAL( tilesLeft( uint ) ), this, SLOT( onTilesLeft( uint ) ) );
 
-	connect( mGame, SIGNAL( piecePlaced( uint, uint, Model::Area::Area, Model::Player ) ),
+	connect( mGame.get(), SIGNAL( piecePlaced( uint, uint, Model::Area::Area, Model::Player ) ),
 		this, SLOT( onPiecePlaced( uint, uint, Model::Area::Area, Model::Player ) ) );
-	connect( mGame, SIGNAL( pieceReturned( uint, uint, Model::Area::Area, Model::Player ) ),
+	connect( mGame.get(), SIGNAL( pieceReturned( uint, uint, Model::Area::Area, Model::Player ) ),
 		this, SLOT( onPieceReturned( uint, uint, Model::Area::Area, Model::Player ) ) );
-	connect( mGame, SIGNAL( playerInfoChanged( Model::Player ) ),
+	connect( mGame.get(), SIGNAL( playerInfoChanged( Model::Player ) ),
 		this, SLOT( onPlayerInfoChanged( Model::Player ) ) );
-	connect( mGame, SIGNAL( currentPlayerChanged( Model::Player ) ),
+	connect( mGame.get(), SIGNAL( currentPlayerChanged( Model::Player ) ),
 		this, SLOT( onCurrentPlayerChanged( Model::Player ) ) );
 
-	connect( mWindow, SIGNAL( clicked( int, int ) ), this, SLOT( onClicked( int, int ) ) );
-	connect( mWindow, SIGNAL( tileDropped( int, int, std::string const &, View::Rotation ) ),
+	connect( mWindow.get(), SIGNAL( clicked( int, int ) ), this, SLOT( onClicked( int, int ) ) );
+	connect( mWindow.get(), SIGNAL( tileDropped( int, int, std::string const &, View::Rotation ) ),
 		this, SLOT( onTileDropped( int, int, std::string const &, View::Rotation ) ) );
-	connect( mWindow, SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ),
+	connect( mWindow.get(), SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ),
 		this, SLOT( onTryToPlacePiece( Dragging::PieceData, int, int ) ) );
-	connect( mWindow, SIGNAL( endCurrentTurn() ), mGame, SLOT( onEndCurrentTurn() ) );
+	connect( mWindow.get(), SIGNAL( endCurrentTurn() ), mGame.get(), SLOT( onEndCurrentTurn() ) );
 
-	connect( mGame, SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );
+	connect( mGame.get(), SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );
 }
 
 void

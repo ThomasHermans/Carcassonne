@@ -10,8 +10,11 @@
 #include <QBrush>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsPolygonItem>
+#include <QHBoxLayout>
 #include <QPen>
+#include <QPushButton>
 #include <QStackedWidget>
+#include <QVBoxLayout>
 
 #include <boost/bind.hpp>
 
@@ -53,27 +56,25 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mBoardView(),
 	mTiles(),
 	mMeeples(),
-	mSideBarLayout(),
 	mTilesLeft(),
 	mPickedTileLabel(),
 	mUserInfo(),
 	mUserInfoMap(),
-	mEndTurnButton(),
 	mAllScoresWidget()
 {
 	this->resize( 800, 500 );
 	QWidget * centralWidget = new QWidget( this );
 	centralWidget->setObjectName( QString::fromUtf8( "centralWidget" ) );
 
-	QHBoxLayout * boardAndSideBarLayout = new QHBoxLayout();
-	boardAndSideBarLayout->setContentsMargins( 0, 0, 0, 0 );
-	boardAndSideBarLayout->setSpacing( 0 );
-	boardAndSideBarLayout->setObjectName(QString::fromUtf8("boardAndSideBarLayout"));
+	QHBoxLayout * mainLayout = new QHBoxLayout();
+	mainLayout->setContentsMargins( 0, 0, 0, 0 );
+	mainLayout->setSpacing( 0 );
+	mainLayout->setObjectName(QString::fromUtf8("mainLayout"));
 
 	mBoardScene = new QGraphicsScene( centralWidget );
 	mBoardScene->setObjectName( QString::fromUtf8("mBoardScene") );
 
-	mBoardView = new View::BoardView( mBoardScene, this );
+	mBoardView = new BoardView( mBoardScene, this );
 	mBoardView->setObjectName( QString::fromUtf8("mBoardView") );
 	mBoardView->setFrameStyle( QFrame::NoFrame );
 	mBoardView->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
@@ -83,45 +84,45 @@ View::GameWindow::GameWindow( QWidget *parent )
 	connect( mBoardView, SIGNAL( droppedPiece( Dragging::PieceData, int, int ) ),
 		this, SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ) );
 
-	boardAndSideBarLayout->addWidget( mBoardView, 1 );
+	mainLayout->addWidget( mBoardView, 1 );
 
 	connect( mBoardView, SIGNAL( clicked( int, int ) ), this, SIGNAL( clicked( int, int ) ) );
 	connect( mBoardView, SIGNAL( droppedTile( int, int, std::string const &, View::Rotation ) ),
 		this, SLOT( onDroppedTile( int, int, std::string const &, View::Rotation ) ) );
 
-	mSideBarLayout = new QVBoxLayout();
-	mSideBarLayout->setObjectName(QString::fromUtf8("mSideBarLayout"));
-	mSideBarLayout->setContentsMargins( 6, 6, 6, 6 );
-	mSideBarLayout->setSpacing( 0 );
+	QVBoxLayout * sidebarLayout = new QVBoxLayout();
+	sidebarLayout->setObjectName(QString::fromUtf8("sidebarLayout"));
+	sidebarLayout->setContentsMargins( 6, 6, 6, 6 );
+	sidebarLayout->setSpacing( 0 );
 
 	mTilesLeft = new QLabel(centralWidget);
 	mTilesLeft->setObjectName(QString::fromUtf8("mTilesLeft"));
 	mTilesLeft->setText("X tiles left");
-	mSideBarLayout->addWidget(mTilesLeft);
+	sidebarLayout->addWidget(mTilesLeft);
 
-	mPickedTileLabel = new View::DragTileLabel( centralWidget );
+	mPickedTileLabel = new DragTileLabel( centralWidget );
 	mPickedTileLabel->setObjectName( QString::fromUtf8( "mPickedTileLabel" ) );
-	mSideBarLayout->addWidget( mPickedTileLabel );
+	sidebarLayout->addWidget( mPickedTileLabel );
 
 	mUserInfo = new QStackedWidget( centralWidget );
-	mSideBarLayout->addWidget( mUserInfo, 0 );
+	sidebarLayout->addWidget( mUserInfo, 0 );
 
-	mEndTurnButton = new QPushButton(centralWidget);
-	mEndTurnButton->setObjectName(QString::fromUtf8("mEndTurnButton"));
-	mEndTurnButton->setText("End Turn");
-	connect( mEndTurnButton, SIGNAL( clicked() ), this, SLOT( onEndCurrentTurn() ) );
-	mSideBarLayout->addWidget( mEndTurnButton );
+	QPushButton * endTurnButton = new QPushButton( centralWidget );
+	endTurnButton->setObjectName(QString::fromUtf8("endTurnButton"));
+	endTurnButton->setText("End Turn");
+	connect( endTurnButton, SIGNAL( clicked() ), this, SLOT( onEndCurrentTurn() ) );
+	sidebarLayout->addWidget( endTurnButton );
 
-	mSideBarLayout->addStretch();
+	sidebarLayout->addStretch();
 
-	mAllScoresWidget = new View::AllScoresWidget( centralWidget );
+	mAllScoresWidget = new AllScoresWidget( centralWidget );
 	mAllScoresWidget->setObjectName( QString::fromUtf8( "mAllScoresWidget" ) );
-	mSideBarLayout->addWidget( mAllScoresWidget );
+	sidebarLayout->addWidget( mAllScoresWidget );
 
-	boardAndSideBarLayout->addLayout(mSideBarLayout);
+	mainLayout->addLayout( sidebarLayout );
 
-	centralWidget->setLayout(boardAndSideBarLayout);
-	setCentralWidget(centralWidget);
+	centralWidget->setLayout( mainLayout );
+	setCentralWidget( centralWidget );
 
 //    mMenuBar = new QMenuBar(this);
 //    mMenuBar->setObjectName(QString::fromUtf8("mMenuBar"));

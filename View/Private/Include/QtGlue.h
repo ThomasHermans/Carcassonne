@@ -11,7 +11,7 @@ namespace View
 	toQColor( Color inColor );
 
 	Color
-	fromQColor( QColor inColor );
+	fromQColor( QColor const & inColor );
 }
 
 #endif

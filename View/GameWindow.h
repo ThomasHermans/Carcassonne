@@ -8,14 +8,11 @@
 
 #include <QMainWindow>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QMenuBar>
-#include <QtGui/QPushButton>
-#include <QtGui/QScrollArea>
-#include <QtGui/QStatusBar>
-#include <QtGui/QToolBar>
-#include <QtGui/QVBoxLayout>
+#include <QLabel>
+#include <QMenuBar>
+#include <QScrollArea>
+#include <QStatusBar>
+#include <QToolBar>
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsView>
@@ -53,7 +50,7 @@ namespace View
 		/**
 		 *	Destructor.
 		 */
-		~GameWindow();
+		virtual ~GameWindow();
 
 		/**
 		 *	Add a player to the game with the given name, color
@@ -149,12 +146,10 @@ namespace View
 		BoardView *mBoardView;
 		std::vector< TileItem* > mTiles;
 		std::vector< GuiPlacedPiece > mMeeples;
-		QVBoxLayout *mSideBarLayout;
 		QLabel *mTilesLeft;
 		DragTileLabel *mPickedTileLabel;
 		QStackedWidget * mUserInfo;
 		std::map< std::string, UserInfoWidget * > mUserInfoMap;
-		QPushButton *mEndTurnButton;
 		AllScoresWidget * mAllScoresWidget;
 	};
 }

@@ -4,6 +4,8 @@
 #include "Model/Game.h"
 #include "View/GameWindow.h"
 
+#include <boost/scoped_ptr.hpp>
+
 #include <QObject>
 
 namespace Dragging
@@ -47,8 +49,8 @@ namespace Controller
 		void startGame();
 
 	private:
-		Model::Game *mGame;
-		View::GameWindow *mWindow;
+		boost::scoped_ptr< Model::Game > mGame;
+		boost::scoped_ptr< View::GameWindow > mWindow;
 	};
 }
 

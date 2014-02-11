@@ -25,7 +25,7 @@ View::toQColor( Color inColor )
 }
 
 View::Color
-View::fromQColor( QColor inColor )
+View::fromQColor( QColor const & inColor )
 {
 	if ( inColor == Qt::red )
 	{
