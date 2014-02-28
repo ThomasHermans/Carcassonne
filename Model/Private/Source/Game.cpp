@@ -56,82 +56,6 @@ namespace
 	}
 }
 
-Model::Game::Game( QObject * inParent )
-:
-	QObject( inParent ),
-	mBoard( Board( kSize ) ),
-	mStartRow( 0 ),
-	mStartCol( 0 ),
-	mCurrentPlacedTile( boost::none ),
-	mCurrentPlacedRow( kInvalid ),
-	mCurrentPlacedCol( kInvalid ),
-	mBag(),
-	mNextTile(),
-	mPlayers(),
-	mCurrentPlayer( 0 ),
-	mPiecesPlacedInCurrentTurn( 0 )
-{
-	// Fill bag of tiles
-	mBag = createBaseGameTiles();
-	// Print out bag
-	for ( unsigned int i = 0; i < mBag.size(); ++i )
-	{
-		std::cout << mBag[i].getID();
-	}
-	std::cout << std::endl;
-	// Game signals
-	connectGameSignals();
-	// Initialize first tile
-	if ( !mBag.empty() )
-	{
-		mNextTile = mBag.back();
-		mBag.pop_back();
-	}
-	// Initialize players
-	mPlayers.push_back( Player( "Thomas", Color::kBlue ) );
-	mPlayers.push_back( Player( "Gijs", Color::kRed ) );
-	connectPlayerSignals();
-	emit currentPlayerChanged( mPlayers.front() );
-}
-
-Model::Game::Game( std::string const & inTiles, QObject * inParent )
-:
-	QObject( inParent ),
-	mBoard( Board( kSize ) ),
-	mStartRow( 0 ),
-	mStartCol( 0 ),
-	mCurrentPlacedTile( boost::none ),
-	mCurrentPlacedRow( kInvalid ),
-	mCurrentPlacedCol( kInvalid ),
-	mBag(),
-	mNextTile(),
-	mPlayers(),
-	mCurrentPlayer( 0 ),
-	mPiecesPlacedInCurrentTurn( 0 )
-{
-	// Initialize bag
-	mBag = createTiles( inTiles );
-	// Print out bag
-	for ( unsigned int i = 0; i < mBag.size(); ++i )
-	{
-		std::cout << mBag[i].getID();
-	}
-	std::cout << std::endl;
-	// Game signals
-	connectGameSignals();
-	// Initialize first tile
-	if ( !mBag.empty() )
-	{
-		mNextTile = mBag.back();
-		mBag.pop_back();
-	}
-	// Initialize players
-	mPlayers.push_back( Player( "Thomas", Color::kBlue ) );
-	mPlayers.push_back( Player( "Gijs", Color::kRed ) );
-	connectPlayerSignals();
-	emit currentPlayerChanged( mPlayers.front() );
-}
-
 Model::Game::Game( std::vector< Player > const & inPlayers, QObject * inParent )
 :
 	QObject( inParent ),
@@ -165,46 +89,54 @@ Model::Game::Game( std::vector< Player > const & inPlayers, QObject * inParent )
 	}
 	// Player signals
 	connectPlayerSignals();
+	// Inform controller about dimensions
+	onDimensionsChanged();
+	// Inform controller about first player
 	emit currentPlayerChanged( mPlayers.front() );
 }
 
-Model::Game::~Game()
-{}
-
-std::vector< Model::Player > const &
-Model::Game::getPlayers()
+Model::Game::Game
+(
+	std::vector< Player > const & inPlayers,
+	std::string const & inTiles,
+	QObject * inParent
+)
+:
+	QObject( inParent ),
+	mBoard( Board( kSize ) ),
+	mStartRow( 0 ),
+	mStartCol( 0 ),
+	mCurrentPlacedTile( boost::none ),
+	mCurrentPlacedRow( kInvalid ),
+	mCurrentPlacedCol( kInvalid ),
+	mBag(),
+	mNextTile(),
+	mPlayers( inPlayers ),
+	mCurrentPlayer( 0 ),
+	mPiecesPlacedInCurrentTurn( 0 )
 {
-	return mPlayers;
-}
-
-unsigned int
-Model::Game::getNrOfRows() const
-{
-	return mBoard.getNrOfRows();
-}
-
-unsigned int
-Model::Game::getNrOfCols() const
-{
-	return mBoard.getNrOfCols();
-}
-
-unsigned int
-Model::Game::getStartRow() const
-{
-	return mStartRow;
-}
-
-unsigned int
-Model::Game::getStartCol() const
-{
-	return mStartCol;
-}
-
-Model::Player const &
-Model::Game::getCurrentPlayer() const
-{
-	return mPlayers[mCurrentPlayer];
+	// Initialize bag
+	mBag = createTiles( inTiles );
+	// Print out bag
+	for ( unsigned int i = 0; i < mBag.size(); ++i )
+	{
+		std::cout << mBag[i].getID();
+	}
+	std::cout << std::endl;
+	// Game signals
+	connectGameSignals();
+	// Initialize first tile
+	if ( !mBag.empty() )
+	{
+		mNextTile = mBag.back();
+		mBag.pop_back();
+	}
+	// Player signals
+	connectPlayerSignals();
+	// Inform controller about dimensions
+	onDimensionsChanged();
+	// Inform controller about first player
+	emit currentPlayerChanged( mPlayers.front() );
 }
 
 void
@@ -311,13 +243,14 @@ Model::Game::placeTileOnBoard( unsigned inCol, unsigned inRow, Model::Rotation i
 void
 Model::Game::placeStartTileOnBoard()
 {
-	if (mNextTile)
+	if ( mNextTile )
 	{
-		Model::Rotation rotation = Model::kCw0; // TODO: get a random Rotation each time
-		Model::TileOnBoard toBePlacedTile = Model::TileOnBoard(mNextTile.get(), rotation);
+		Rotation rotation = kCw0; // TODO: get a random Rotation each time
+		TileOnBoard toBePlacedTile = TileOnBoard(mNextTile.get(), rotation);
 		unsigned int pos = mBoard.placeStartTile(toBePlacedTile);
 		mStartCol = pos % mBoard.getNrOfCols();
 		mStartRow = pos / mBoard.getNrOfCols();
+		onDimensionsChanged();
 		pickNextTile();
 		emit tilePlaced(mStartCol, mStartRow, toBePlacedTile.getID(), toBePlacedTile.getRotation());
 		if (mNextTile)
@@ -325,12 +258,6 @@ Model::Game::placeStartTileOnBoard()
 			emit nextTile(mNextTile->getID());
 		}
 	}
-}
-
-boost::optional< Model::Tile >
-Model::Game::getNextTile() const
-{
-	return mNextTile;
 }
 
 void
@@ -548,12 +475,20 @@ void
 Model::Game::addColsLeft( unsigned inNrOfCols )
 {
 	mStartCol += inNrOfCols;
+	onDimensionsChanged();
 }
 
 void
 Model::Game::addRowsTop( unsigned inNrOfRows )
 {
 	mStartRow += inNrOfRows;
+	onDimensionsChanged();
+}
+
+void
+Model::Game::onDimensionsChanged()
+{
+	emit dimensionsChanged( mBoard.getNrOfRows(), mBoard.getNrOfCols(), mStartRow, mStartCol );
 }
 
 void
@@ -839,5 +774,9 @@ Model::Game::connectGameSignals()
 	(
 		&mBoard, SIGNAL( rowsAddedTop( unsigned ) ),
 		this, SLOT( addRowsTop( unsigned ) )
+	);
+	connect
+	(
+		&mBoard, SIGNAL(dimensionsChanged()), this, SLOT(onDimensionsChanged())
 	);
 }

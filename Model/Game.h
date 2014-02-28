@@ -20,25 +20,22 @@ namespace Model
 	{
 		Q_OBJECT
 	public:
-		Game( QObject * inParent = 0 );
-		Game( std::string const & inTiles, QObject * inParent = 0 );
-		Game( std::vector< Player > const & inPlayers, QObject * inParent = 0 );
-		~Game();
-
-		std::vector< Player > const & getPlayers();
-
-		unsigned getNrOfRows() const;
-		unsigned getNrOfCols() const;
-		unsigned getStartRow() const;
-		unsigned getStartCol() const;
-		Player const & getCurrentPlayer() const;
+		Game
+		(
+			std::vector< Player > const & inPlayers,
+			QObject * inParent
+		);
+		Game
+		(
+			std::vector< Player > const & inPlayers,
+			std::string const & inTiles,
+			QObject * inParent
+		);
 
 		void rotateTile( unsigned inCol, unsigned inRow );
 		void dropTile( unsigned inCol, unsigned inRow, std::string const & inTileId, Model::Rotation inRotation );
 		void placeTileOnBoard( unsigned inCol, unsigned inRow, Model::Rotation inRotation = Model::kCw0 );
 		void placeStartTileOnBoard();
-
-		boost::optional< Tile > getNextTile() const;
 
 		void tryToPlacePiece
 		(
@@ -57,6 +54,7 @@ namespace Model
 		void onEndCurrentTurn();
 
 	signals:
+		void dimensionsChanged( unsigned inNrOfRows, unsigned inNrOfCols, unsigned inStartRow, unsigned inStartCol );
 		void tileRotated( unsigned inCol, unsigned inRow, std::string inId, Model::Rotation inRot );
 		void tilePlaced( unsigned col, unsigned row, std::string id, Model::Rotation rot );
 		void tileUnplaced( unsigned inCol, unsigned inRow );
@@ -76,6 +74,7 @@ namespace Model
 	private slots:
 		void addColsLeft( unsigned inNrOfCols );
 		void addRowsTop( unsigned inNrOfRows );
+		void onDimensionsChanged();
 
 		void onFinishedCloister( unsigned inCol, unsigned inRow );
 		void onFinishedRoad( std::vector< PlacedRoad > const & inRoad );

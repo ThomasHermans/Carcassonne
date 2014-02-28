@@ -43,7 +43,7 @@ SOURCES += main.cpp \
 	View\Private\Source\StartScreenRow.cpp \
 	View\Private\Source\TileItem.cpp \
 	View\Private\Source\TileUtils.cpp \
-	View\Private\Source\UserInfoWidget.cpp \
+        View\Private\Source\UserInfoWidget.cpp
 
 HEADERS += \
 	Controller\GameController.h \
@@ -68,6 +68,7 @@ HEADERS += \
 	View\DragData.h \
 	View\GameWindow.h \
 	View\StartScreen.h \
+        View\Typedefs.h \
 	View\Private\Include\AllScoresWidget.h \
 	View\Private\Include\BoardView.h \
 	View\Private\Include\DragMeepleLabel.h \
@@ -77,16 +78,13 @@ HEADERS += \
 	View\Private\Include\StartScreenRow.h \
 	View\Private\Include\TileItem.h \
 	View\Private\Include\TileUtils.h \
-	View\Private\Include\Typedefs.h \
-	View\Private\Include\UserInfoWidget.h \
+        View\Private\Include\UserInfoWidget.h
 
 INCLUDEPATH += \
 	"C:\\Program Files\\boost\\boost_1_52_0" \
 	"Controller\\Private\\Include" \
 	"Model\\Private\\Include" \
-	"View\\Private\\Include" \
-
-FORMS    += mainwindow.ui
+        "View\\Private\\Include"
 
 RESOURCES += \
 	Resources\Resources.qrc

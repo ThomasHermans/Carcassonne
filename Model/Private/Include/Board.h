@@ -18,8 +18,6 @@ namespace Model
 	public:
 		Board( unsigned inSize = 5 );
 		Board( Board const & inBoard );
-		~Board();
-		Board & operator = ( Board const & inBoard );
 
 		unsigned getNrOfRows() const;
 		unsigned getNrOfCols() const;
@@ -62,6 +60,7 @@ namespace Model
 
 		void colsAddedLeft( unsigned inNrOfCols );
 		void rowsAddedTop( unsigned inNrOfRows );
+		void dimensionsChanged();
 
 	private:
 		bool placeTile( Model::TileOnBoard const & inTile, unsigned inCol, unsigned inRow );

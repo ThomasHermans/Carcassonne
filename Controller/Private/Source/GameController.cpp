@@ -8,23 +8,22 @@
 
 #include <iostream>
 
-Controller::GameController::GameController( QObject *parent )
-:
-	QObject( parent ),
-	mGame( new Model::Game( this ) ),
-	mWindow( new View::GameWindow() )
-{
-	addPlayers();
-	makeConnections();
-	startGame();
-}
-
 Controller::GameController::GameController( std::string const & inTiles, QObject * inParent )
 :
 	QObject( inParent ),
-	mGame( new Model::Game( inTiles, this ) ),
-	mWindow( new View::GameWindow() )
+	mGame(),
+	mWindow( new View::GameWindow() ),
+	mPlayers(),
+	mNrRows( 0 ),
+	mNrCols( 0 ),
+	mStartRow( 0 ),
+	mStartCol( 0 )
 {
+	// Set up default players
+	mPlayers.push_back( Model::Player( "Yumi", Model::Color::kYellow ) );
+	mPlayers.push_back( Model::Player( "Thomas", Model::Color::kGreen ) );
+	// Create game with these players
+	mGame.reset( new Model::Game( mPlayers, inTiles, this ) );
 	addPlayers();
 	makeConnections();
 	startGame();
@@ -34,15 +33,25 @@ Controller::GameController::GameController( std::vector< Model::Player > const &
 :
 	QObject( inParent ),
 	mGame( new Model::Game( inPlayers, this ) ),
-	mWindow( new View::GameWindow() )
+	mWindow( new View::GameWindow() ),
+	mPlayers( inPlayers ),
+	mNrRows( 0 ),
+	mNrCols( 0 ),
+	mStartRow( 0 ),
+	mStartCol( 0 )
 {
-	std::cout << "GameController constructor. Adding players..." << std::endl;
 	addPlayers();
-	std::cout << "GameController constructor. Players added. Making connections..." << std::endl;
 	makeConnections();
-	std::cout << "GameController constructor. Connections made. Starting game..." << std::endl;
 	startGame();
-	std::cout << "GameController constructor. Game started..." << std::endl;
+}
+
+void
+Controller::GameController::onDimensionsChanged( unsigned inNrOfRows, unsigned inNrCols, unsigned inStartRow, unsigned inStartCol )
+{
+	mNrRows = inNrOfRows;
+	mNrCols = inNrCols;
+	mStartRow = inStartRow;
+	mStartCol = inStartCol;
 }
 
 void
@@ -54,8 +63,8 @@ Controller::GameController::onTilePlaced
 	Model::Rotation inRotation
 )
 {
-	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
-	int y = Controller::yFromRow( inRow, mGame->getStartRow() );
+	int x = Controller::xFromCol( inCol, mStartCol );
+	int y = Controller::yFromRow( inRow, mStartRow );
 	mWindow->setTile( x, y, inId, Controller::viewFromModel( inRotation ) );
 	mWindow->fadeNextTile();
 }
@@ -67,8 +76,8 @@ Controller::GameController::onTileUnplaced
 	unsigned inRow
 )
 {
-	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
-	int y = Controller::yFromRow( inRow, mGame->getStartRow() );
+	int x = Controller::xFromCol( inCol, mStartCol );
+	int y = Controller::yFromRow( inRow, mStartRow );
 	mWindow->clearTile( x, y );
 }
 
@@ -81,8 +90,8 @@ Controller::GameController::onTileRotated
 	Model::Rotation inRotation
 )
 {
-	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
-	int y = Controller::yFromRow( inRow, mGame->getStartRow() );
+	int x = Controller::xFromCol( inCol, mStartCol );
+	int y = Controller::yFromRow( inRow, mStartRow );
 	mWindow->rotateTile( x, y, inId, Controller::viewFromModel( inRotation ) );
 }
 
@@ -102,8 +111,8 @@ void
 Controller::GameController::onPiecePlaced( unsigned inCol, unsigned inRow, Model::Area::Area inArea, Model::Player const & inCurrentPlayer )
 {
 	std::cout << inCurrentPlayer.getName() << " placed a piece." << std::endl;
-	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
-	int y = Controller::yFromRow( inRow, mGame->getStartRow() );
+	int x = Controller::xFromCol( inCol, mStartCol );
+	int y = Controller::yFromRow( inRow, mStartRow );
 	x += Controller::xFromArea( inArea ) - .5 * Gui::kTileWidth;
 	y += Controller::yFromArea( inArea ) - .5 * Gui::kTileHeight;
 	mWindow->placePiece( x, y, Controller::viewFromModel( inCurrentPlayer.getColor() ) );
@@ -113,8 +122,8 @@ void
 Controller::GameController::onPieceReturned( unsigned inCol, unsigned inRow, Model::Area::Area inArea, Model::Player const & inPlayer )
 {
 	std::cout << inPlayer.getName() << " got a piece back." << std::endl;
-	int x = Controller::xFromCol( inCol, mGame->getStartCol() );
-	int y = Controller::yFromRow( inRow, mGame->getStartRow() );
+	int x = Controller::xFromCol( inCol, mStartCol );
+	int y = Controller::yFromRow( inRow, mStartRow );
 	x += Controller::xFromArea( inArea ) - .5 * Gui::kTileWidth;
 	y += Controller::yFromArea( inArea ) - .5 * Gui::kTileHeight;
 	mWindow->returnPiece( x, y, Controller::viewFromModel( inPlayer.getColor() ) );
@@ -147,29 +156,29 @@ Controller::GameController::onEndOfGame( unsigned inTilesLeft )
 void
 Controller::GameController::onClicked( int inX, int inY )
 {
-	unsigned col = colFromX( inX, mGame->getStartCol() );
-	unsigned row = rowFromY( inY, mGame->getStartRow() );
+	unsigned col = colFromX( inX, mStartCol );
+	unsigned row = rowFromY( inY, mStartRow );
 	mGame->rotateTile( col, row );
 }
 
 void
 Controller::GameController::onTileDropped( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
 {
-	unsigned col = colFromX( inX, mGame->getStartCol() );
-	unsigned row = rowFromY( inY, mGame->getStartRow() );
+	unsigned col = colFromX( inX, mStartCol );
+	unsigned row = rowFromY( inY, mStartRow );
 	mGame->dropTile( col, row, inTileId, modelFromView( inRotation ) );
 }
 
 void
 Controller::GameController::onTryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY )
 {
-	unsigned col = colFromX( inX, mGame->getStartCol() );
-	unsigned row = rowFromY( inY, mGame->getStartRow() );
+	unsigned col = colFromX( inX, mStartCol );
+	unsigned row = rowFromY( inY, mStartRow );
 	std::cout << "GameController sees drop at x, y: " << inX << ", " << inY << ", which is col, row: " << col << ", " << row << std::endl;
 	std::cout << "Which is at " << posXFromX( inX ) << ", " << posYFromY( inY ) << " at that tile." << std::endl;
 	std::cout << "Which is at Area::" << areaFromPos( posXFromX( inX ), posYFromY( inY ) ) << std::endl;
 	std::cout << "Drop contains " << inData.getColor() << " " << inData.getPiece() << std::endl;
-	if ( col < mGame->getNrOfCols() && row < mGame->getNrOfRows() )
+	if ( col < mNrCols && row < mNrRows )
 	{
 		// Decipher data
 		Model::Color::Color color = modelFromView( inData.getColor() );
@@ -183,8 +192,8 @@ Controller::GameController::onTryToPlacePiece( Dragging::PieceData const & inDat
 void
 Controller::GameController::addPlayers()
 {
-	for ( std::vector< Model::Player >::const_iterator it = mGame->getPlayers().begin();
-		it != mGame->getPlayers().end();
+	for ( std::vector< Model::Player >::const_iterator it = mPlayers.begin();
+		it != mPlayers.end();
 		++it )
 	{
 		mWindow->addPlayer( it->getName(), viewFromModel( it->getColor() ), it->getNumberOfFreePieces() );
@@ -219,16 +228,15 @@ Controller::GameController::makeConnections()
 		this, SLOT( onTryToPlacePiece( Dragging::PieceData, int, int ) ) );
 	connect( mWindow.get(), SIGNAL( endCurrentTurn() ), mGame.get(), SLOT( onEndCurrentTurn() ) );
 
+	connect( mGame.get(), SIGNAL(dimensionsChanged(unsigned,unsigned,unsigned,unsigned)),
+		this, SLOT(onDimensionsChanged(unsigned,unsigned,unsigned,unsigned)) );
 	connect( mGame.get(), SIGNAL( endOfGame(uint) ), this, SLOT( onEndOfGame(uint) ) );
 }
 
 void
 Controller::GameController::startGame()
 {
-	onCurrentPlayerChanged( mGame->getCurrentPlayer() );
+	onCurrentPlayerChanged( mPlayers.front() );
 	mWindow->show();
-	if ( mGame->getNextTile() )
-	{
-		mGame->placeStartTileOnBoard();
-	}
+	mGame->placeStartTileOnBoard();
 }

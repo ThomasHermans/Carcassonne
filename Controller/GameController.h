@@ -2,11 +2,14 @@
 #define GAMECONTROLLER_H
 
 #include "Model/Game.h"
+#include "Model/Player.h"
 #include "View/GameWindow.h"
 
 #include <boost/scoped_ptr.hpp>
 
 #include <QObject>
+
+#include <vector>
 
 namespace Dragging
 {
@@ -19,11 +22,13 @@ namespace Controller
 	{
 		Q_OBJECT
 	public:
-		explicit GameController( QObject * inParent = 0 );
 		explicit GameController( std::string const & inTiles, QObject * inParent = 0 );
 		explicit GameController( std::vector< Model::Player > const & inPlayer, QObject * inParent = 0 );
 
 	private slots:
+		// Updates from model
+		void onDimensionsChanged( unsigned inNrRows, unsigned inNrCols, unsigned inStartRow, unsigned inStartCol );
+		
 		// From model to view
 		void onTilePlaced( unsigned inCol, unsigned inRow, std::string const & inId, Model::Rotation inRotation );
 		void onTileUnplaced( unsigned inCol, unsigned inRow );
@@ -51,6 +56,13 @@ namespace Controller
 	private:
 		boost::scoped_ptr< Model::Game > mGame;
 		boost::scoped_ptr< View::GameWindow > mWindow;
+
+		std::vector< Model::Player > mPlayers;
+
+		unsigned mNrRows;
+		unsigned mNrCols;
+		unsigned mStartRow;
+		unsigned mStartCol;
 	};
 }
 

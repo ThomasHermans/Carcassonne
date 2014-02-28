@@ -64,21 +64,6 @@ Model::Board::Board( Board const & inBoard )
 	mBoard( inBoard.mBoard )
 {}
 
-Model::Board::~Board()
-{}
-
-Model::Board &
-Model::Board::operator = ( Board const & inBoard )
-{
-	if ( this != &inBoard )
-	{
-		mNrRows = inBoard.mNrRows;
-		mNrCols = inBoard.mNrCols;
-		mBoard = inBoard.mBoard;
-	}
-	return *this;
-}
-
 unsigned
 Model::Board::getNrOfRows() const
 {
@@ -840,6 +825,7 @@ Model::Board::addRowsOnTop( unsigned inNrOfRows )
 {
 	mBoard.insert( mBoard.begin(), mNrCols * inNrOfRows, boost::none );
 	mNrRows += inNrOfRows;
+	emit dimensionsChanged();
 }
 
 void
@@ -847,6 +833,7 @@ Model::Board::addRowsBelow( unsigned inNrOfRows )
 {
 	mBoard.insert( mBoard.end(), mNrCols * inNrOfRows, boost::none );
 	mNrRows += inNrOfRows;
+	emit dimensionsChanged();
 }
 
 void
@@ -866,6 +853,7 @@ Model::Board::addColsLeft( unsigned inNrOfCols )
 		}
 	}
 	mNrCols += inNrOfCols;
+	emit dimensionsChanged();
 }
 
 void
@@ -885,4 +873,5 @@ Model::Board::addColsRight( unsigned inNrOfCols )
 		}
 	}
 	mNrCols += inNrOfCols;
+	emit dimensionsChanged();
 }
