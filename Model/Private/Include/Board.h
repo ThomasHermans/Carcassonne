@@ -17,7 +17,6 @@ namespace Model
 		
 	public:
 		Board( unsigned inSize = 5 );
-		Board( Board const & inBoard );
 
 		unsigned getNrOfRows() const;
 		unsigned getNrOfCols() const;

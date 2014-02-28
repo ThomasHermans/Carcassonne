@@ -57,13 +57,6 @@ Model::Board::Board( unsigned inSize )
 	mBoard( mNrCols * mNrRows, boost::none )
 {}
 
-Model::Board::Board( Board const & inBoard )
-:
-	mNrRows( inBoard.mNrRows ),
-	mNrCols( inBoard.mNrCols ),
-	mBoard( inBoard.mBoard )
-{}
-
 unsigned
 Model::Board::getNrOfRows() const
 {
@@ -114,7 +107,7 @@ Model::Board::isPossibleTile( Tile const & inTile )
 		{
 			for ( unsigned rot = 0; rot < 4; ++rot )
 			{
-				TileOnBoard tileOnBoard( inTile, Rotation(rot * 3) );
+				TileOnBoard const tileOnBoard( inTile, Rotation(rot * 3) );
 				if ( isValidTilePlacement( tileOnBoard, col, row ) )
 				{
 					return true;
@@ -227,8 +220,8 @@ Model::Board::placeStartTile( Model::TileOnBoard const & inTile )
 	{
 		return kInvalid;
 	}
-	unsigned col = mNrCols / 2;
-	unsigned row = mNrRows / 2;
+	unsigned const col = mNrCols / 2;
+	unsigned const row = mNrRows / 2;
 	placeTile( inTile, col, row );
 	return row * mNrCols + col;
 }
@@ -240,7 +233,7 @@ Model::Board::isOccupiedRoad( unsigned inCol, unsigned inRow, Area::Area inArea 
 	{
 		return false;
 	}
-	ContiguousRoad road = getTile( inCol, inRow )->getContiguousRoad( inArea );
+	ContiguousRoad const road = getTile( inCol, inRow )->getContiguousRoad( inArea );
 	std::vector< PlacedRoad > toCheckQueue;
 	for ( ContiguousRoad::const_iterator it = road.begin(); it != road.end(); ++it )
 	{
@@ -249,20 +242,20 @@ Model::Board::isOccupiedRoad( unsigned inCol, unsigned inRow, Area::Area inArea 
 	unsigned index = 0;
 	while ( index < toCheckQueue.size() )
 	{
-		if ( isTile( toCheckQueue[index].col, toCheckQueue[index].row )
-			&& getTile( toCheckQueue[index].col, toCheckQueue[index].row )->hasPiece( Area::Area( toCheckQueue[index].area ) ) )
+		PlacedRoad const thisRoad = toCheckQueue[index];
+		if ( getTile( thisRoad.col, thisRoad.row )->hasPiece( Area::Area( thisRoad.area ) ) )
 		{
 			return true;
 		}
-		PlacedRoad neighbor = getNeighbor( toCheckQueue[index] );
+		PlacedRoad const neighbor = getNeighbor( thisRoad );
 		if ( isTile( neighbor.col, neighbor.row ) )
 		{
 			if ( std::find( toCheckQueue.begin(), toCheckQueue.end(), neighbor ) == toCheckQueue.end() )
 			{
-				ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
-				for ( ContiguousRoad::const_iterator contRoadIt = contRoad.begin(); contRoadIt != contRoad.end(); ++contRoadIt )
+				ContiguousRoad const neighborRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
+				for ( ContiguousRoad::const_iterator it = neighborRoad.begin(); it != neighborRoad.end(); ++it )
 				{
-					toCheckQueue.push_back( PlacedRoad( neighbor.col, neighbor.row, *contRoadIt ) );
+					toCheckQueue.push_back( PlacedRoad( neighbor.col, neighbor.row, *it ) );
 				}
 			}
 		}
@@ -278,7 +271,7 @@ Model::Board::isOccupiedCity( unsigned inCol, unsigned inRow, Area::Area inArea 
 	{
 		return false;
 	}
-	ContiguousCity city = getTile( inCol, inRow )->getContiguousCity( inArea );
+	ContiguousCity const city = getTile( inCol, inRow )->getContiguousCity( inArea );
 	std::vector< PlacedCity > toCheckQueue;
 	for ( ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
 	{
@@ -287,18 +280,18 @@ Model::Board::isOccupiedCity( unsigned inCol, unsigned inRow, Area::Area inArea 
 	unsigned index = 0;
 	while ( index < toCheckQueue.size() )
 	{
-		if ( isTile( toCheckQueue[index].col, toCheckQueue[index].row )
-			&& getTile( toCheckQueue[index].col, toCheckQueue[index].row )->hasPiece( Area::Area( toCheckQueue[index].area ) ) )
+		PlacedCity const thisCity = toCheckQueue[index];
+		if ( getTile( thisCity.col, thisCity.row )->hasPiece( Area::Area( thisCity.area ) ) )
 		{
 			return true;
 		}
-		PlacedCity neighbor = getNeighbor( toCheckQueue[index] );
+		PlacedCity const neighbor = getNeighbor( thisCity );
 		if ( isTile( neighbor.col, neighbor.row ) )
 		{
 			if ( std::find( toCheckQueue.begin(), toCheckQueue.end(), neighbor ) == toCheckQueue.end() )
 			{
-				ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
-				for ( ContiguousCity::const_iterator contCityIt = contCity.begin(); contCityIt != contCity.end(); ++contCityIt )
+				ContiguousCity const neighborCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+				for ( ContiguousCity::const_iterator contCityIt = neighborCity.begin(); contCityIt != neighborCity.end(); ++contCityIt )
 				{
 					toCheckQueue.push_back( PlacedCity( neighbor.col, neighbor.row, *contCityIt ) );
 				}
@@ -316,7 +309,7 @@ Model::Board::isOccupiedField( PlacedField const & inField ) const
 	{
 		return false;
 	}
-	ContiguousField field = getTile( inField.col, inField.row )->getContiguousField( inField.area );
+	ContiguousField const field = getTile( inField.col, inField.row )->getContiguousField( inField.area );
 	std::vector< PlacedField > toCheckQueue;
 	for ( ContiguousField::const_iterator it = field.begin(); it != field.end(); ++it )
 	{
@@ -325,20 +318,19 @@ Model::Board::isOccupiedField( PlacedField const & inField ) const
 	unsigned index = 0;
 	while ( index < toCheckQueue.size() )
 	{
-		PlacedField thisField = toCheckQueue[ index ];
-		if ( isTile( thisField.col, thisField.row )
-			&& getTile( thisField.col, thisField.row )->hasPiece( thisField.area ) )
+		PlacedField const thisField = toCheckQueue[ index ];
+		if ( getTile( thisField.col, thisField.row )->hasPiece( thisField.area ) )
 		{
 			return true;
 		}
-		PlacedField neighbor = getNeighbor( thisField );
+		PlacedField const neighbor = getNeighbor( thisField );
 		if ( isTile( neighbor.col, neighbor.row ) )
 		{
 			if ( std::find( toCheckQueue.begin(), toCheckQueue.end(), neighbor ) == toCheckQueue.end() )
 			{
-				ContiguousField contField = getTile( neighbor.col, neighbor.row )->getContiguousField( neighbor.area );
-				for ( ContiguousField::const_iterator contFieldIt = contField.begin();
-					contFieldIt != contField.end();
+				ContiguousField const neighborField = getTile( neighbor.col, neighbor.row )->getContiguousField( neighbor.area );
+				for ( ContiguousField::const_iterator contFieldIt = neighborField.begin();
+					contFieldIt != neighborField.end();
 					++contFieldIt )
 				{
 					toCheckQueue.push_back( PlacedField( neighbor.col, neighbor.row, *contFieldIt ) );
@@ -371,7 +363,7 @@ Model::Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 	{
 		return;
 	}
-	std::vector< ContiguousCity > contiguousCities = getTile( inCol, inRow )->getContiguousCities();
+	std::vector< ContiguousCity > const contiguousCities = getTile( inCol, inRow )->getContiguousCities();
 	for ( unsigned city = 0; city < contiguousCities.size(); ++city )
 	{
 		// Start a tempQueue and add all Areas from this ContCity to it
@@ -388,14 +380,14 @@ Model::Board::checkForFinishedCities( unsigned inCol, unsigned inRow )
 		bool finished = true;
 		while ( i < tempQueue.size() )
 		{
-			PlacedCity currentCity = tempQueue[i];
-			PlacedCity neighbor = getNeighbor( currentCity );
+			PlacedCity const currentCity = tempQueue[i];
+			PlacedCity const neighbor = getNeighbor( currentCity );
 			if ( isTile( neighbor.col, neighbor.row ) )
 			{
 				// If not already in tempQueue, add continuation and all of its contiguous Areas to tempQueue
 				if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 				{
-					ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+					ContiguousCity const contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
 					for ( ContiguousCity::const_iterator it = contCity.begin(); it != contCity.end(); ++it )
 					{
 						tempQueue.push_back( PlacedCity( neighbor.col, neighbor.row, *it ) );
@@ -441,14 +433,14 @@ Model::Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 		bool finished = true;
 		while ( i < tempQueue.size() )
 		{
-			PlacedRoad currentRoad = tempQueue[i];
-			PlacedRoad neighbor = getNeighbor( currentRoad );
+			PlacedRoad const currentRoad = tempQueue[i];
+			PlacedRoad const neighbor = getNeighbor( currentRoad );
 			if ( isTile( neighbor.col, neighbor.row ) )
 			{
 				// If not already in tempQueue, add continuation and all of its contiguous Areas to tempQueue
 				if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 				{
-					ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
+					ContiguousRoad const contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
 					for ( ContiguousRoad::const_iterator it = contRoad.begin(); it != contRoad.end(); ++it )
 					{
 						tempQueue.push_back( PlacedRoad( neighbor.col, neighbor.row, *it ) );
@@ -473,10 +465,10 @@ Model::Board::checkForFinishedRoads( unsigned inCol, unsigned inRow )
 void
 Model::Board::checkForFinishedCloisters( unsigned inCol, unsigned inRow )
 {
-	unsigned leftCol = std::max( inCol, (unsigned)1 ) - 1;
-	unsigned rightCol = std::min( inCol + 1, mNrCols );
-	unsigned topRow = std::max( inRow, (unsigned)1 ) - 1;
-	unsigned bottomRow = std::min( inRow + 1, mNrRows );
+	unsigned const leftCol = std::max< unsigned >( inCol, 1 ) - 1;
+	unsigned const rightCol = std::min( inCol + 1, mNrCols );
+	unsigned const topRow = std::max< unsigned >( inRow, 1 ) - 1;
+	unsigned const bottomRow = std::min( inRow + 1, mNrRows );
 	for ( unsigned r = topRow; r <= bottomRow; ++r )
 	{
 		for ( unsigned c = leftCol; c <= rightCol; ++c )
@@ -496,7 +488,7 @@ Model::Board::isFinishedCity( unsigned inCol, unsigned inRow, Area::Area inArea 
 	{
 		return false;
 	}
-	ContiguousCity city = getTile( inCol, inRow )->getContiguousCity( inArea );
+	ContiguousCity const city = getTile( inCol, inRow )->getContiguousCity( inArea );
 	// Start a tempQueue and add all Areas from this ContCity to it
 	std::vector< PlacedCity > tempQueue;
 	for ( ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
@@ -508,14 +500,14 @@ Model::Board::isFinishedCity( unsigned inCol, unsigned inRow, Area::Area inArea 
 	bool finished = true;
 	while ( i < tempQueue.size() )
 	{
-		PlacedCity currentCity = tempQueue[i];
-		PlacedCity neighbor = getNeighbor( currentCity );
+		PlacedCity const currentCity = tempQueue[i];
+		PlacedCity const neighbor = getNeighbor( currentCity );
 		if ( isTile( neighbor.col, neighbor.row ) )
 		{
 			// If not already in tempQueue, add continuation and all of its contiguous Areas to tempQueue
 			if ( std::find( tempQueue.begin(), tempQueue.end(), neighbor ) == tempQueue.end() )
 			{
-				ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+				ContiguousCity const contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
 				for ( ContiguousCity::const_iterator it = contCity.begin(); it != contCity.end(); ++it )
 				{
 					tempQueue.push_back( PlacedCity( neighbor.col, neighbor.row, *it ) );
@@ -540,7 +532,7 @@ Model::Board::getUpperLeftPlacedCity( unsigned inCol, unsigned inRow, Area::Area
 	{
 		return PlacedCity( inCol, inRow, inArea );
 	}
-	ContiguousCity city = getTile( inCol, inRow )->getContiguousCity( inArea );
+	ContiguousCity const city = getTile( inCol, inRow )->getContiguousCity( inArea );
 	// Start a completeCity and add all Areas from this ContCity to it
 	std::vector< PlacedCity > completeCity;
 	for ( ContiguousCity::const_iterator it = city.begin(); it != city.end(); ++it )
@@ -550,14 +542,14 @@ Model::Board::getUpperLeftPlacedCity( unsigned inCol, unsigned inRow, Area::Area
 	// Go over completeCity, adding ContinuationAreas to it as we go
 	for ( unsigned i = 0; i < completeCity.size(); ++i )
 	{
-		PlacedCity currentCity = completeCity[i];
-		PlacedCity neighbor = getNeighbor( currentCity );
+		PlacedCity const currentCity = completeCity[i];
+		PlacedCity const neighbor = getNeighbor( currentCity );
 		if ( isTile( neighbor.col, neighbor.row ) )
 		{
 			// If not already in completeCity, add continuation and all of its contiguous Areas to completeCity
 			if ( std::find( completeCity.begin(), completeCity.end(), neighbor ) == completeCity.end() )
 			{
-				ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+				ContiguousCity const contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
 				for ( ContiguousCity::const_iterator it = contCity.begin(); it != contCity.end(); ++it )
 				{
 					completeCity.push_back( PlacedRoad( neighbor.col, neighbor.row, *it ) );
@@ -656,13 +648,13 @@ Model::Board::getPointsForCloister( unsigned inCol, unsigned inRow ) const
 std::vector< Model::PlacedRoad >
 Model::Board::getCompleteRoad( PlacedRoad const & inPlacedRoad ) const
 {
-	unsigned col = inPlacedRoad.col;
-	unsigned row = inPlacedRoad.row;
+	unsigned const col = inPlacedRoad.col;
+	unsigned const row = inPlacedRoad.row;
 	if ( !isTile( col, row ) )
 	{
 		return std::vector< PlacedRoad >();
 	}
-	ContiguousRoad contiguousRoad = getTile( col, row )->getContiguousRoad( inPlacedRoad.area );
+	ContiguousRoad const contiguousRoad = getTile( col, row )->getContiguousRoad( inPlacedRoad.area );
 	std::vector< PlacedRoad > completeRoad;
 	for ( ContiguousRoad::const_iterator it = contiguousRoad.begin();
 		it != contiguousRoad.end();
@@ -673,13 +665,13 @@ Model::Board::getCompleteRoad( PlacedRoad const & inPlacedRoad ) const
 	unsigned i = 0;
 	while ( i < completeRoad.size() )
 	{
-		PlacedRoad currentRoad = completeRoad[i];
-		PlacedRoad neighbor = getNeighbor( currentRoad );
+		PlacedRoad const currentRoad = completeRoad[i];
+		PlacedRoad const neighbor = getNeighbor( currentRoad );
 		if ( isTile( neighbor.col, neighbor.row ) )
 		{
 			if ( std::find( completeRoad.begin(), completeRoad.end(), neighbor ) == completeRoad.end() )
 			{
-				ContiguousRoad contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
+				ContiguousRoad const contRoad = getTile( neighbor.col, neighbor.row )->getContiguousRoad( neighbor.area );
 				for ( ContiguousRoad::const_iterator it = contRoad.begin();
 					it != contRoad.end();
 					++it )
@@ -696,13 +688,13 @@ Model::Board::getCompleteRoad( PlacedRoad const & inPlacedRoad ) const
 std::vector< Model::PlacedCity >
 Model::Board::getCompleteCity( PlacedCity const & inPlacedCity ) const
 {
-	unsigned col = inPlacedCity.col;
-	unsigned row = inPlacedCity.row;
+	unsigned const col = inPlacedCity.col;
+	unsigned const row = inPlacedCity.row;
 	if ( !isTile( col, row ) )
 	{
 		return std::vector< PlacedCity >();
 	}
-	ContiguousCity contiguousCity = getTile( col, row )->getContiguousCity( inPlacedCity.area );
+	ContiguousCity const contiguousCity = getTile( col, row )->getContiguousCity( inPlacedCity.area );
 	std::vector< PlacedCity > completeCity;
 	for ( ContiguousCity::const_iterator it = contiguousCity.begin();
 		it != contiguousCity.end();
@@ -713,13 +705,13 @@ Model::Board::getCompleteCity( PlacedCity const & inPlacedCity ) const
 	unsigned i = 0;
 	while ( i < completeCity.size() )
 	{
-		PlacedCity currentCity = completeCity[i];
-		PlacedCity neighbor = getNeighbor( currentCity );
+		PlacedCity const currentCity = completeCity[i];
+		PlacedCity const neighbor = getNeighbor( currentCity );
 		if ( isTile( neighbor.col, neighbor.row ) )
 		{
 			if ( std::find( completeCity.begin(), completeCity.end(), neighbor ) == completeCity.end() )
 			{
-				ContiguousCity contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
+				ContiguousCity const contCity = getTile( neighbor.col, neighbor.row )->getContiguousCity( neighbor.area );
 				for ( ContiguousCity::const_iterator it = contCity.begin();
 					it != contCity.end();
 					++it )
@@ -736,13 +728,13 @@ Model::Board::getCompleteCity( PlacedCity const & inPlacedCity ) const
 std::vector< Model::PlacedField >
 Model::Board::getCompleteField( PlacedField const & inPlacedField ) const
 {
-	unsigned col = inPlacedField.col;
-	unsigned row = inPlacedField.row;
+	unsigned const col = inPlacedField.col;
+	unsigned const row = inPlacedField.row;
 	if ( !isTile( col, row ) )
 	{
 		return std::vector< PlacedField >();
 	}
-	ContiguousField contiguousField = getTile( col, row )->getContiguousField( inPlacedField.area );
+	ContiguousField const contiguousField = getTile( col, row )->getContiguousField( inPlacedField.area );
 	std::vector< PlacedField > completeField;
 	for ( ContiguousField::const_iterator it = contiguousField.begin();
 		it != contiguousField.end();
@@ -752,13 +744,13 @@ Model::Board::getCompleteField( PlacedField const & inPlacedField ) const
 	}
 	for ( unsigned i = 0; i < completeField.size(); ++i )
 	{
-		PlacedField currentField = completeField[i];
-		PlacedField neighbor = getNeighbor( currentField );
+		PlacedField const currentField = completeField[i];
+		PlacedField const neighbor = getNeighbor( currentField );
 		if ( isTile( neighbor.col, neighbor.row ) )
 		{
 			if ( std::find( completeField.begin(), completeField.end(), neighbor ) == completeField.end() )
 			{
-				ContiguousField contField = getTile( neighbor.col, neighbor.row )->getContiguousField( neighbor.area );
+				ContiguousField const contField = getTile( neighbor.col, neighbor.row )->getContiguousField( neighbor.area );
 				for ( ContiguousField::const_iterator it = contField.begin();
 					it != contField.end();
 					++it )
@@ -789,7 +781,7 @@ Model::Board::placeTile( const Model::TileOnBoard &inTile, unsigned inCol, unsig
 bool
 Model::Board::removeTile( unsigned inCol, unsigned inRow )
 {
-	if ( inCol < mNrCols && inRow < mNrRows && isTile( inCol, inRow ) )
+	if ( isTile( inCol, inRow ) )
 	{
 		getTile( inCol, inRow ) = boost::none;
 		return true;
