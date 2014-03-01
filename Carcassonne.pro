@@ -17,7 +17,6 @@ SOURCES += main.cpp \
 	Controller\Private\Source\Settings.cpp \
 	Controller\Private\Source\SupremeController.cpp \
 	test_o_matic.cpp \
-	TileUnitTests.cpp \
 	UnitTests.cpp \
 	Model\Private\Source\Area.cpp \
 	Model\Private\Source\Board.cpp \
@@ -31,6 +30,7 @@ SOURCES += main.cpp \
 	Model\Private\Source\Rotation.cpp \
 	Model\Private\Source\TileOnBoard.cpp \
 	Model\Private\Source\Tile.cpp \
+	Model\Private\UnitTests\TileUnitTests.cpp \
 	View\Private\Source\AllScoresWidget.cpp \
 	View\Private\Source\BoardView.cpp \
 	View\Private\Source\DragData.cpp \

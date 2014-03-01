@@ -8,18 +8,21 @@
 
 #include <iostream>
 
-namespace
+namespace Main
 {
-	int const kPlay = 0;
-	int const kUnitTests = 1;
-	int const kDebugSpecificGame = 2;
+	enum Type
+	{
+		kPlay,
+		kUnitTests,
+		kDebugSpecificGame
+	};
 }
 
 int main(int argc, char * argv[])
 {
-	int const gameOption = kPlay;
+	Main::Type const gameOption = Main::kUnitTests;
 
-	if ( gameOption == kPlay )
+	if ( gameOption == Main::kPlay )
 	{
 		QFile file( ":/StyleSheet.qss" );
 		file.open( QFile::ReadOnly );
@@ -32,12 +35,12 @@ int main(int argc, char * argv[])
 
 		return a.exec();
 	}
-	else if ( gameOption == kUnitTests )
+	else if ( gameOption == Main::kUnitTests )
 	{
 		tom::mainTests();
 		return EXIT_SUCCESS;
 	}
-	else if ( gameOption == kDebugSpecificGame )
+	else if ( gameOption == Main::kDebugSpecificGame )
 	{
 		QFile file( ":/StyleSheet.qss" );
 		file.open( QFile::ReadOnly );

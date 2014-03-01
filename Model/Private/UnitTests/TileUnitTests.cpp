@@ -1,7 +1,7 @@
 #include <test_o_matic.hpp>
 
-#include "Model/Private/Include//Tile.h"
-#include "Model/Private/Include//CreateBaseGameTiles.h"
+#include "Tile.h"
+#include "CreateBaseGameTiles.h"
 
 namespace
 {
