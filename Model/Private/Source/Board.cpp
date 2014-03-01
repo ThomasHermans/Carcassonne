@@ -221,19 +221,7 @@ Model::Board::placeValidTile( Model::TileOnBoard const & inTile, unsigned inCol,
 unsigned
 Model::Board::placeStartTile( Model::TileOnBoard const & inTile )
 {
-	bool empty = true;
-	for ( unsigned row = 0; row < mNrRows; ++row )
-	{
-		for ( unsigned col = 0; col < mNrCols; ++col )
-		{
-			if ( !isEmptySpot( col, row ) )
-			{
-				empty = false;
-				break;
-			}
-		}
-	}
-	if ( !empty )
+	if ( getNrOfTiles() > 0 )
 	{
 		return kInvalid;
 	}
