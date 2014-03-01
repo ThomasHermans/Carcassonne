@@ -69,6 +69,23 @@ Model::Board::getNrOfCols() const
 	return mNrCols;
 }
 
+unsigned
+Model::Board::getNrOfTiles() const
+{
+	unsigned nrOfTiles = 0;
+	for ( unsigned row = 0; row < mNrRows; ++row )
+	{
+		for ( unsigned col = 0; col < mNrCols; ++col )
+		{
+			if ( isTile( col, row ) )
+			{
+				++nrOfTiles;
+			}
+		}
+	}
+	return nrOfTiles;
+}
+
 bool
 Model::Board::isTile( unsigned inCol, unsigned inRow ) const
 {

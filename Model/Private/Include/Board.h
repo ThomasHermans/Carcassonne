@@ -20,6 +20,7 @@ namespace Model
 
 		unsigned getNrOfRows() const;
 		unsigned getNrOfCols() const;
+		unsigned getNrOfTiles() const;
 		bool isTile( unsigned inCol, unsigned inRow ) const;
 		boost::optional< Model::TileOnBoard > const & getTile( unsigned inCol, unsigned inRow ) const;
 		boost::optional< Model::TileOnBoard > & getTile( unsigned inCol, unsigned inRow );
