@@ -30,7 +30,9 @@ SOURCES += main.cpp \
 	Model\Private\Source\Rotation.cpp \
 	Model\Private\Source\TileOnBoard.cpp \
 	Model\Private\Source\Tile.cpp \
+	Model\Private\UnitTests\AreaUnitTests.cpp \
 	Model\Private\UnitTests\BoardUnitTests.cpp \
+	Model\Private\UnitTests\PlacedProjectUnitTests.cpp \
 	Model\Private\UnitTests\TileUnitTests.cpp \
 	View\Private\Source\AllScoresWidget.cpp \
 	View\Private\Source\BoardView.cpp \
