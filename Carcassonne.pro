@@ -23,6 +23,7 @@ SOURCES += main.cpp \
 	Model\Private\Source\Color.cpp \
 	Model\Private\Source\CreateBaseGameTiles.cpp \
 	Model\Private\Source\Game.cpp \
+	Model\Private\Source\NewBoard.cpp \
 	Model\Private\Source\Piece.cpp \
 	Model\Private\Source\PlacedPiece.cpp \
 	Model\Private\Source\PlacedProject.cpp \
@@ -32,6 +33,7 @@ SOURCES += main.cpp \
 	Model\Private\Source\Tile.cpp \
 	Model\Private\UnitTests\AreaUnitTests.cpp \
 	Model\Private\UnitTests\BoardUnitTests.cpp \
+	Model\Private\UnitTests\NewBoardUnitTests.cpp \
 	Model\Private\UnitTests\PlacedProjectUnitTests.cpp \
 	Model\Private\UnitTests\TileUnitTests.cpp \
 	View\Private\Source\AllScoresWidget.cpp \
