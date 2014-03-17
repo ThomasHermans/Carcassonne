@@ -74,6 +74,19 @@ Model::NewBoard::isValidTilePlacement( TileOnBoard const & inTile, int inRow, in
 	return !tile && neighbor && sides;
 }
 
+bool
+Model::NewBoard::placeValidTile( TileOnBoard const & inTile, int inRow, int inCol )
+{
+	if ( isValidTilePlacement( inTile, inRow, inCol ) )
+	{
+		return placeTile( inTile, inRow, inCol );
+	}
+	else
+	{
+		return false;
+	}
+}
+
 int
 Model::NewBoard::getIndex( int inRow, int inCol ) const
 {
@@ -116,6 +129,7 @@ void
 Model::NewBoard::addRowsTop( int inNrRows )
 {
 	mTiles.insert( mTiles.begin(), mNrCols * inNrRows, boost::none );
+	mStartRow += inNrRows;
 	mNrRows += inNrRows;
 }
 
@@ -142,6 +156,7 @@ Model::NewBoard::addColsLeft( int inNrCols )
 			++it;
 		}
 	}
+	mStartCol += inNrCols;
 	mNrCols += inNrCols;
 }
 

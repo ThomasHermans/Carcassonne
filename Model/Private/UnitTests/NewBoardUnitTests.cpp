@@ -38,3 +38,14 @@ TEST( "NewBoard: check for valid tile placements" )
 	CHECK( !board.isValidTilePlacement( startTile, 0, 1 ) );
 	CHECK( !board.isValidTilePlacement( startTile, 0, -1 ) );
 }
+
+TEST( "NewBoard: place extra tiles" )
+{
+	NewBoard board;
+	board.placeStartTile( TileOnBoard( createTileD(), kCw0 ) );
+	CHECK( board.placeValidTile( TileOnBoard( createTileI(), kCw180 ), 0, 1 ) );
+	CHECK( board.placeValidTile( TileOnBoard( createTileV(), kCw270 ), -1, 0 ) );
+	CHECK( !board.placeValidTile( TileOnBoard( createTileB(), kCw0 ), -1, 1 ) );
+	CHECK( board.placeValidTile( TileOnBoard( createTileJ(), kCw180 ), -1, 1 ) );
+	CHECK( board.getNrOfTiles() == 4 );
+}

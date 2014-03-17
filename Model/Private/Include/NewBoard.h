@@ -41,7 +41,7 @@ namespace Model
 		boost::optional< TileOnBoard > & getTile( int inRow, int inCol );
 
 		/**
-		 *	Place a start tile on the board.
+		 *	Place a start tile on the board on position (0,0).
 		 */
 		bool placeStartTile( TileOnBoard const & inTile );
 
@@ -49,6 +49,11 @@ namespace Model
 		 *	Can the specified tile validly be placed at the specified location?
 		 */
 		bool isValidTilePlacement( TileOnBoard const & inTile, int inRow, int inCol ) const;
+
+		/**
+		 *	Place a valid tile on the board.
+		 */
+		bool placeValidTile( TileOnBoard const & inTile, int inRow, int inCol );
 
 	private:
 		int getIndex( int inRow, int inCol ) const;
