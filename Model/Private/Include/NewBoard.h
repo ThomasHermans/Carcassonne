@@ -51,7 +51,7 @@ namespace Model
 		bool isValidTilePlacement( TileOnBoard const & inTile, int inRow, int inCol ) const;
 
 	private:
-		std::size_t getIndex( int inRow, int inCol ) const;
+		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );
 
 		void addRowsTop( int inNrRows );
@@ -60,6 +60,9 @@ namespace Model
 		void addColsRight( int inNrCols );
 
 		bool placeTile( TileOnBoard const & inTile, int inRow, int inCol );
+
+		bool hasNeighbor( int inRow, int inCol ) const;
+		bool sidesMatch( TileOnBoard const & inTile, int inRow, int inCol ) const;
 
 	private:
 		typedef std::vector< boost::optional< TileOnBoard > > Tiles;

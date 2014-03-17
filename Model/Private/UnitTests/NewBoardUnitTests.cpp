@@ -26,3 +26,15 @@ TEST( "NewBoard: place a start tile" )
 	CHECK( board.isTile( 0, 0 ) );
 	CHECK( !board.placeStartTile( TileOnBoard( createTileF(), kCw0 ) ) );
 }
+
+TEST( "NewBoard: check for valid tile placements" )
+{
+	NewBoard board;
+	TileOnBoard const startTile( createTileD(), kCw0 );
+	CHECK( !board.isValidTilePlacement( startTile, 1, 3 ) );
+	board.placeStartTile( startTile );
+	CHECK( board.isValidTilePlacement( startTile, -1, 0 ) );
+	CHECK( board.isValidTilePlacement( startTile, 1, 0 ) );
+	CHECK( !board.isValidTilePlacement( startTile, 0, 1 ) );
+	CHECK( !board.isValidTilePlacement( startTile, 0, -1 ) );
+}

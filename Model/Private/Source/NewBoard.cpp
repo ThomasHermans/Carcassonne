@@ -33,8 +33,8 @@ Model::NewBoard::isTile( int inRow, int inCol ) const
 boost::optional< Model::TileOnBoard >
 Model::NewBoard::getTile( int inRow, int inCol ) const
 {
-	std::size_t const index = getIndex( inRow, inCol );
-	if ( index >= 0 && index < mTiles.size() )
+	int const index = getIndex( inRow, inCol );
+	if ( index >= 0 && index < int( mTiles.size() ) )
 	{
 		return mTiles[ index ];
 	}
@@ -48,7 +48,7 @@ boost::optional< Model::TileOnBoard > &
 Model::NewBoard::getTile( int inRow, int inCol )
 {
 	ensureTile( inRow, inCol );
-	std::size_t const index = getIndex( inRow, inCol );
+	int const index = getIndex( inRow, inCol );
 	return mTiles[ index ];
 }
 
@@ -65,10 +65,28 @@ Model::NewBoard::placeStartTile( TileOnBoard const & inTile )
 	}
 }
 
-std::size_t
+bool
+Model::NewBoard::isValidTilePlacement( TileOnBoard const & inTile, int inRow, int inCol ) const
+{
+	bool const tile = isTile( inRow, inCol );
+	bool const neighbor = hasNeighbor( inRow, inCol );
+	bool const sides = sidesMatch( inTile, inRow, inCol );
+	return !tile && neighbor && sides;
+}
+
+int
 Model::NewBoard::getIndex( int inRow, int inCol ) const
 {
-	return ( ( mStartRow + inRow ) * mNrCols + ( mStartCol + inCol ) );
+	int const internalRow = mStartRow + inRow;
+	int const internalCol = mStartCol + inCol;
+	if ( internalRow < 0 || internalRow >= mNrRows || internalCol < 0 || internalCol >= mNrCols )
+	{
+		return -1;
+	}
+	else
+	{
+		return ( ( mStartRow + inRow ) * mNrCols + ( mStartCol + inCol ) );
+	}
 }
 
 void
@@ -162,4 +180,36 @@ Model::NewBoard::placeTile( TileOnBoard const & inTile, int inRow, int inCol )
 	{
 		return false;
 	}
+}
+
+bool
+Model::NewBoard::hasNeighbor( int inRow, int inCol ) const
+{
+	return
+	(
+		isTile( inRow, inCol - 1 ) || isTile( inRow, inCol + 1 )
+		|| isTile( inRow - 1, inCol ) || isTile( inRow + 1, inCol )
+	);
+}
+
+bool
+Model::NewBoard::sidesMatch( TileOnBoard const & inTile, int inRow, int inCol ) const
+{
+	if ( isTile( inRow, inCol - 1 ) && !getTile( inRow, inCol - 1 )->matchesLeftOf( inTile ) )
+	{
+		return false;
+	}
+	if ( isTile( inRow, inCol + 1 ) && !getTile( inRow, inCol + 1 )->matchesRightOf( inTile ) )
+	{
+		return false;
+	}
+	if ( isTile( inRow - 1, inCol ) && !getTile( inRow - 1, inCol )->matchesAbove( inTile ) )
+	{
+		return false;
+	}
+	if ( isTile( inRow + 1, inCol ) && !getTile( inRow + 1, inCol )->matchesBelow( inTile ) )
+	{
+		return false;
+	}
+	return true;
 }
