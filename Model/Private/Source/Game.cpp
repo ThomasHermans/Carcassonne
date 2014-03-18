@@ -59,7 +59,7 @@ namespace
 Model::Game::Game( std::vector< Player > const & inPlayers, QObject * inParent )
 :
 	QObject( inParent ),
-	mBoard( Board( kSize ) ),
+	mBoard( kSize ),
 	mStartRow( 0 ),
 	mStartCol( 0 ),
 	mCurrentPlacedTile( boost::none ),
@@ -103,7 +103,7 @@ Model::Game::Game
 )
 :
 	QObject( inParent ),
-	mBoard( Board( kSize ) ),
+	mBoard( kSize ),
 	mStartRow( 0 ),
 	mStartCol( 0 ),
 	mCurrentPlacedTile( boost::none ),
