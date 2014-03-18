@@ -65,6 +65,14 @@ namespace Model
 		 */
 		bool isOccupiedRoad( int inRow, int inCol, Area::Area inArea ) const;
 
+		/**
+		 *	Check whether the specified city is occupied.
+		 *	Returns false when the specified tile does not exist,
+		 *	the specified area is not a city, or the city is not
+		 *	occupied.
+		 */
+		bool isOccupiedCity( int inRow, int inCol, Area::Area inArea ) const;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );

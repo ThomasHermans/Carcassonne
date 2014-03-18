@@ -127,6 +127,42 @@ Model::NewBoard::isOccupiedRoad( int inRow, int inCol, Area::Area inArea ) const
 	return false;
 }
 
+bool
+Model::NewBoard::isOccupiedCity( int inRow, int inCol, Area::Area inArea ) const
+{
+	if ( !isTile( inRow, inCol ) )
+	{
+		return false;
+	}
+	ContiguousCity const thisCity = getTile( inRow, inCol )->getContiguousCity( inArea );
+	std::vector< NewPlacedCity > queue;
+	BOOST_FOREACH( Area::Area const & area, thisCity )
+	{
+		queue.push_back( NewPlacedCity( inRow, inCol, area ) );
+	}
+	for ( std::size_t index = 0; index < queue.size(); ++index )
+	{
+		NewPlacedCity const city = queue[index];
+		if ( getTile( city.row, city.col )->hasPiece( city.area ) )
+		{
+			return true;
+		}
+		NewPlacedCity const neighbor = getNeighbor( city );
+		if ( isTile( neighbor.row, neighbor.col ) )
+		{
+			if ( std::find( queue.begin(), queue.end(), neighbor ) == queue.end() )
+			{
+				ContiguousCity const neighborCity = getTile( neighbor.row, neighbor.col )->getContiguousCity( neighbor.area );
+				BOOST_FOREACH( Area::Area const & area, neighborCity )
+				{
+					queue.push_back( NewPlacedCity( neighbor.row, neighbor.col, area ) );
+				}
+			}
+		}
+	}
+	return false;
+}
+
 int
 Model::NewBoard::getIndex( int inRow, int inCol ) const
 {
