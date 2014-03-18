@@ -1,5 +1,9 @@
 #include "NewBoard.h"
 
+#include "PlacedProject.h"
+
+#include <boost/foreach.hpp>
+
 Model::NewBoard::NewBoard()
 :
 	mTiles( 1, boost::none ),
@@ -85,6 +89,42 @@ Model::NewBoard::placeValidTile( TileOnBoard const & inTile, int inRow, int inCo
 	{
 		return false;
 	}
+}
+
+bool
+Model::NewBoard::isOccupiedRoad( int inRow, int inCol, Area::Area inArea ) const
+{
+	if ( !isTile( inRow, inCol ) )
+	{
+		return false;
+	}
+	ContiguousRoad const thisRoad = getTile( inRow, inCol )->getContiguousRoad( inArea );
+	std::vector< NewPlacedRoad > queue;
+	BOOST_FOREACH( Area::Area const & area, thisRoad )
+	{
+		queue.push_back( NewPlacedRoad( inRow, inCol, area ) );
+	}
+	for ( std::size_t index = 0; index < queue.size(); ++index )
+	{
+		NewPlacedRoad const road = queue[index];
+		if ( getTile( road.row, road.col )->hasPiece( road.area ) )
+		{
+			return true;
+		}
+		NewPlacedRoad const neighbor = getNeighbor( road );
+		if ( isTile( neighbor.row, neighbor.col ) )
+		{
+			if ( std::find( queue.begin(), queue.end(), neighbor ) == queue.end() )
+			{
+				ContiguousRoad const neighborRoad = getTile( neighbor.row, neighbor.col )->getContiguousRoad( neighbor.area );
+				BOOST_FOREACH( Area::Area const & area, neighborRoad )
+				{
+					queue.push_back( NewPlacedRoad( neighbor.row, neighbor.col, area ) );
+				}
+			}
+		}
+	}
+	return false;
 }
 
 int

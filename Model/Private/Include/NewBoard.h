@@ -3,6 +3,8 @@
 
 #include "TileOnBoard.h"
 
+#include "Model/Area.h"
+
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -54,6 +56,14 @@ namespace Model
 		 *	Place a valid tile on the board.
 		 */
 		bool placeValidTile( TileOnBoard const & inTile, int inRow, int inCol );
+
+		/**
+		 *	Check whether the specified road is occupied.
+		 *	Returns false when the specified tile does not exist,
+		 *	the specified area is not a road, or the road is not
+		 *	occupied.
+		 */
+		bool isOccupiedRoad( int inRow, int inCol, Area::Area inArea ) const;
 
 	private:
 		int getIndex( int inRow, int inCol ) const;
