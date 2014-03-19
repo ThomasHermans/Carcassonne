@@ -1,7 +1,5 @@
 #include "NewBoard.h"
 
-#include "PlacedProject.h"
-
 #include <boost/foreach.hpp>
 
 Model::NewBoard::NewBoard()
@@ -92,17 +90,17 @@ Model::NewBoard::placeValidTile( TileOnBoard const & inTile, int inRow, int inCo
 }
 
 bool
-Model::NewBoard::isOccupiedRoad( int inRow, int inCol, Area::Area inArea ) const
+Model::NewBoard::isOccupiedRoad( NewPlacedRoad const & inRoad ) const
 {
-	if ( !isTile( inRow, inCol ) )
+	if ( !isTile( inRoad.row, inRoad.col ) )
 	{
 		return false;
 	}
-	ContiguousRoad const thisRoad = getTile( inRow, inCol )->getContiguousRoad( inArea );
+	ContiguousRoad const thisRoad = getTile( inRoad.row, inRoad.col )->getContiguousRoad( inRoad.area );
 	std::vector< NewPlacedRoad > queue;
 	BOOST_FOREACH( Area::Area const & area, thisRoad )
 	{
-		queue.push_back( NewPlacedRoad( inRow, inCol, area ) );
+		queue.push_back( NewPlacedRoad( inRoad.row, inRoad.col, area ) );
 	}
 	for ( std::size_t index = 0; index < queue.size(); ++index )
 	{
@@ -128,17 +126,17 @@ Model::NewBoard::isOccupiedRoad( int inRow, int inCol, Area::Area inArea ) const
 }
 
 bool
-Model::NewBoard::isOccupiedCity( int inRow, int inCol, Area::Area inArea ) const
+Model::NewBoard::isOccupiedCity( NewPlacedCity const & inCity ) const
 {
-	if ( !isTile( inRow, inCol ) )
+	if ( !isTile( inCity.row, inCity.col ) )
 	{
 		return false;
 	}
-	ContiguousCity const thisCity = getTile( inRow, inCol )->getContiguousCity( inArea );
+	ContiguousCity const thisCity = getTile( inCity.row, inCity.col )->getContiguousCity( inCity.area );
 	std::vector< NewPlacedCity > queue;
 	BOOST_FOREACH( Area::Area const & area, thisCity )
 	{
-		queue.push_back( NewPlacedCity( inRow, inCol, area ) );
+		queue.push_back( NewPlacedCity( inCity.row, inCity.col, area ) );
 	}
 	for ( std::size_t index = 0; index < queue.size(); ++index )
 	{

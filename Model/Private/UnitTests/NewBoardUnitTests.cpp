@@ -75,35 +75,35 @@ TESTFIX( "NewBoard: place extra tiles", BoardFixture )
 
 TESTFIX( "NewBoard: check for occupied roads", BoardFixture )
 {
-	CHECK( !board.isOccupiedRoad( 0, 0, Area::kTop ) );
-	CHECK( !board.isOccupiedRoad( 0, 0, Area::kLeft ) );
-	CHECK( !board.isOccupiedRoad( 3, 0, Area::kBottomLeft ) );
+	CHECK( !board.isOccupiedRoad( NewPlacedRoad( 0, 0, Area::kTop ) ) );
+	CHECK( !board.isOccupiedRoad( NewPlacedRoad( 0, 0, Area::kLeft ) ) );
+	CHECK( !board.isOccupiedRoad( NewPlacedRoad( 3, 0, Area::kBottomLeft ) ) );
 
 	tileV.placePiece( PlacedPiece( piece, Area::kRight ) );
 	REQUIRE( board.placeValidTile( tileV, -1, 0 ) );
-	CHECK( board.isOccupiedRoad( -1, 0, Area::kRight ) );
-	CHECK( board.isOccupiedRoad( 0, 0, Area::kBottom ) );
+	CHECK( board.isOccupiedRoad( NewPlacedRoad( -1, 0, Area::kRight ) ) );
+	CHECK( board.isOccupiedRoad( NewPlacedRoad( 0, 0, Area::kBottom ) ) );
 
 	tileW.placePiece( PlacedPiece( piece, Area::kRight ) );
 	REQUIRE( board.placeValidTile( tileW, 1, 0 ) );
-	CHECK( board.isOccupiedRoad( 1, 0, Area::kRight ) );
-	CHECK( !board.isOccupiedRoad( 1, 0, Area::kLeft ) );
-	CHECK( board.isOccupiedRoad( 1, 0, Area::kTop ) );
+	CHECK( board.isOccupiedRoad( NewPlacedRoad( 1, 0, Area::kRight ) ) );
+	CHECK( !board.isOccupiedRoad( NewPlacedRoad( 1, 0, Area::kLeft ) ) );
+	CHECK( board.isOccupiedRoad( NewPlacedRoad( 1, 0, Area::kTop ) ) );
 }
 
 TESTFIX( "NewBoard: check for occupied cities", BoardFixture )
 {
-	CHECK( !board.isOccupiedCity( 0, 0, Area::kLeft ) );
-	CHECK( !board.isOccupiedCity( 0, 0, Area::kCentral ) );
-	CHECK( !board.isOccupiedCity( 3, 7, Area::kBottomLeft ) );
+	CHECK( !board.isOccupiedCity( NewPlacedCity( 0, 0, Area::kLeft ) ) );
+	CHECK( !board.isOccupiedCity( NewPlacedCity( 0, 0, Area::kCentral ) ) );
+	CHECK( !board.isOccupiedCity( NewPlacedCity( 3, 7, Area::kBottomLeft ) ) );
 
 	tileN.placePiece( PlacedPiece( piece, Area::kLeft ) );
 	REQUIRE( board.placeValidTile( tileN, 0, 1 ) );
-	CHECK( board.isOccupiedCity( 0, 1, Area::kTop ) );
-	CHECK( board.isOccupiedCity( 0, 0, Area::kRightBottom ) );
+	CHECK( board.isOccupiedCity( NewPlacedCity( 0, 1, Area::kTop ) ) );
+	CHECK( board.isOccupiedCity( NewPlacedCity( 0, 0, Area::kRightBottom ) ) );
 
 	TileOnBoard const secondN( createTileN(), kCw180 );
 	REQUIRE( board.placeValidTile( secondN, -1, 1 ) );
 	REQUIRE( board.placeValidTile( tileN, -1, 2 ) );
-	CHECK( board.isOccupiedCity( -1, 2, Area::kTopRight ) );
+	CHECK( board.isOccupiedCity( NewPlacedCity( -1, 2, Area::kTopRight ) ) );
 }

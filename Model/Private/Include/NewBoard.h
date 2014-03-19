@@ -1,9 +1,8 @@
 #ifndef CARCASSONNE_MODEL_NEWBOARD_20140313
 #define CARCASSONNE_MODEL_NEWBOARD_20140313
 
+#include "PlacedProject.h"
 #include "TileOnBoard.h"
-
-#include "Model/Area.h"
 
 #include <boost/optional.hpp>
 
@@ -63,7 +62,7 @@ namespace Model
 		 *	the specified area is not a road, or the road is not
 		 *	occupied.
 		 */
-		bool isOccupiedRoad( int inRow, int inCol, Area::Area inArea ) const;
+		bool isOccupiedRoad( NewPlacedRoad const & inRoad ) const;
 
 		/**
 		 *	Check whether the specified city is occupied.
@@ -71,7 +70,7 @@ namespace Model
 		 *	the specified area is not a city, or the city is not
 		 *	occupied.
 		 */
-		bool isOccupiedCity( int inRow, int inCol, Area::Area inArea ) const;
+		bool isOccupiedCity( NewPlacedCity const & inCity ) const;
 
 	private:
 		int getIndex( int inRow, int inCol ) const;
