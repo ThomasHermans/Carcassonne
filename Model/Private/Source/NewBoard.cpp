@@ -1,5 +1,7 @@
 #include "NewBoard.h"
 
+#include "PlacedPiece.h"
+
 #include <boost/foreach.hpp>
 
 Model::NewBoard::NewBoard()
@@ -195,6 +197,19 @@ Model::NewBoard::isOccupiedField( NewPlacedField const & inField ) const
 		}
 	}
 	return false;
+}
+
+std::vector< Model::PlacedPiece >
+Model::NewBoard::removePieces( NewPlacedProject inArea )
+{
+	if ( isTile( inArea.row, inArea.col ) )
+	{
+		return getTile( inArea.row, inArea.col )->removePieces( inArea.area );
+	}
+	else
+	{
+		return std::vector< PlacedPiece >();
+	}
 }
 
 int

@@ -10,6 +10,8 @@
 
 namespace Model
 {
+	class PlacedPiece;
+
 	/**
 	 *	A NewBoard holds the information about which TileOnBoards
 	 *	are located where. For the public API, the start tile is
@@ -79,6 +81,12 @@ namespace Model
 		 *	occupied.
 		 */
 		bool isOccupiedField( NewPlacedField const & inField ) const;
+
+		/**
+		 *	Remove all the pieces from the specified area on that tile.
+		 *	Returns all the removed pieces.
+		 */
+		std::vector< PlacedPiece > removePieces( NewPlacedProject inArea );
 
 	private:
 		int getIndex( int inRow, int inCol ) const;

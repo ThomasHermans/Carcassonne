@@ -124,3 +124,14 @@ TESTFIX( "NewBoard: check for occupied fields", BoardFixture )
 	CHECK( board.isOccupiedField( NewPlacedField( 0, 0, Area::kTopRight ) ) );
 	CHECK( board.isOccupiedField( NewPlacedField( 2, 0, Area::kBottom ) ) );
 }
+
+TESTFIX( "NewBoard: remove pieces from a specified tile & area", BoardFixture )
+{
+	TileOnBoard tileU( createTileU(), kCw0 );
+	tileU.placePiece( PlacedPiece( piece, Area::kLeft ) );
+	board.placeValidTile( tileU, 1, 0 );
+	CHECK( board.isOccupiedField( NewPlacedField( 1, 0, Area::kBottomLeft ) ) );
+	std::vector< PlacedPiece > const pieces = board.removePieces( NewPlacedProject( 1, 0, Area::kLeft ) );
+	CHECK( pieces.size() == 1 );
+	CHECK( !board.isOccupiedField( NewPlacedField( 1, 0, Area::kBottomLeft ) ) );
+}
