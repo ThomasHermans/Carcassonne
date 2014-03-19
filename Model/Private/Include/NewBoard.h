@@ -72,6 +72,14 @@ namespace Model
 		 */
 		bool isOccupiedCity( NewPlacedCity const & inCity ) const;
 
+		/**
+		 *	Check whether the specified field is occupied.
+		 *	Returns false when the specified tile does not exist,
+		 *	the specified area is not a field, or the field is not
+		 *	occupied.
+		 */
+		bool isOccupiedField( NewPlacedField const & inField ) const;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );

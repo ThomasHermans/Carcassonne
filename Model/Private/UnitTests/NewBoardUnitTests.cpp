@@ -45,18 +45,12 @@ namespace
 	{
 		NewBoard board;
 		TileOnBoard startTile;
-		TileOnBoard tileV;
-		TileOnBoard tileW;
-		TileOnBoard tileN;
 		Piece piece;
 
 		BoardFixture()
 		:
 			board(),
 			startTile( createTileD(), kCw0 ),
-			tileV( createTileV(), kCw270 ),
-			tileW( createTileW(), kCw180 ),
-			tileN( createTileN(), kCw0 ),
 			piece( Piece::kFollower, Color::kRed )
 		{
 			board.placeStartTile( startTile );
@@ -79,11 +73,13 @@ TESTFIX( "NewBoard: check for occupied roads", BoardFixture )
 	CHECK( !board.isOccupiedRoad( NewPlacedRoad( 0, 0, Area::kLeft ) ) );
 	CHECK( !board.isOccupiedRoad( NewPlacedRoad( 3, 0, Area::kBottomLeft ) ) );
 
+	TileOnBoard tileV( createTileV(), kCw270 );
 	tileV.placePiece( PlacedPiece( piece, Area::kRight ) );
 	REQUIRE( board.placeValidTile( tileV, -1, 0 ) );
 	CHECK( board.isOccupiedRoad( NewPlacedRoad( -1, 0, Area::kRight ) ) );
 	CHECK( board.isOccupiedRoad( NewPlacedRoad( 0, 0, Area::kBottom ) ) );
 
+	TileOnBoard tileW( createTileW(), kCw180 );
 	tileW.placePiece( PlacedPiece( piece, Area::kRight ) );
 	REQUIRE( board.placeValidTile( tileW, 1, 0 ) );
 	CHECK( board.isOccupiedRoad( NewPlacedRoad( 1, 0, Area::kRight ) ) );
@@ -97,13 +93,34 @@ TESTFIX( "NewBoard: check for occupied cities", BoardFixture )
 	CHECK( !board.isOccupiedCity( NewPlacedCity( 0, 0, Area::kCentral ) ) );
 	CHECK( !board.isOccupiedCity( NewPlacedCity( 3, 7, Area::kBottomLeft ) ) );
 
+	TileOnBoard tileN( createTileN(), kCw0 );
 	tileN.placePiece( PlacedPiece( piece, Area::kLeft ) );
 	REQUIRE( board.placeValidTile( tileN, 0, 1 ) );
 	CHECK( board.isOccupiedCity( NewPlacedCity( 0, 1, Area::kTop ) ) );
 	CHECK( board.isOccupiedCity( NewPlacedCity( 0, 0, Area::kRightBottom ) ) );
 
 	TileOnBoard const secondN( createTileN(), kCw180 );
+	TileOnBoard const thirdN( createTileN(), kCw0 );
 	REQUIRE( board.placeValidTile( secondN, -1, 1 ) );
-	REQUIRE( board.placeValidTile( tileN, -1, 2 ) );
+	REQUIRE( board.placeValidTile( thirdN, -1, 2 ) );
 	CHECK( board.isOccupiedCity( NewPlacedCity( -1, 2, Area::kTopRight ) ) );
+}
+
+TESTFIX( "NewBoard: check for occupied fields", BoardFixture )
+{
+	CHECK( !board.isOccupiedField( NewPlacedField( 0, 0, Area::kLeftTop ) ) );
+	CHECK( !board.isOccupiedField( NewPlacedField( 0, 0, Area::kCentral ) ) );
+	CHECK( !board.isOccupiedField( NewPlacedField( 3, 7, Area::kBottomLeft ) ) );
+
+	TileOnBoard tileU( createTileU(), kCw0 );
+	tileU.placePiece( PlacedPiece( piece, Area::kLeft ) );
+	REQUIRE( board.placeValidTile( tileU, 1, 0 ) );
+	CHECK( board.isOccupiedField( NewPlacedField( 0, 0, Area::kLeftTop ) ) );
+	CHECK( board.isOccupiedField( NewPlacedField( 1, 0, Area::kBottomLeft ) ) );
+	CHECK( !board.isOccupiedField( NewPlacedField( 0, 0, Area::kTopRight ) ) );
+
+	TileOnBoard const tileA( createTileA(), kCw180 );
+	REQUIRE( board.placeValidTile( tileA, 2, 0 ) );
+	CHECK( board.isOccupiedField( NewPlacedField( 0, 0, Area::kTopRight ) ) );
+	CHECK( board.isOccupiedField( NewPlacedField( 2, 0, Area::kBottom ) ) );
 }
