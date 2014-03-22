@@ -62,11 +62,16 @@ namespace
 	public:
 		SignalCounter( Model::NewBoard & inBoard )
 		:
-			mFinishedCityCount( 0 )
+			mFinishedCityCount( 0 ),
+			mFinishedRoadCount( 0 )
 		{
 			inBoard.finishedCity.connect
 			(
 				boost::bind( &SignalCounter::IncrementFinishedCity, this )
+			);
+			inBoard.finishedRoad.connect
+			(
+				boost::bind( &SignalCounter::IncrementFinishedRoad, this )
 			);
 		}
 		
@@ -74,13 +79,24 @@ namespace
 		{
 			++mFinishedCityCount;
 		}
+		
+		void IncrementFinishedRoad()
+		{
+			++mFinishedRoadCount;
+		}
 
 		std::size_t GetFinishedCityCount() const
 		{
 			return mFinishedCityCount;
 		}
+
+		std::size_t GetFinishedRoadCount() const
+		{
+			return mFinishedRoadCount;
+		}
 	private:
 		std::size_t mFinishedCityCount;
+		std::size_t mFinishedRoadCount;
 	};
 }
 
@@ -181,4 +197,22 @@ TESTFIX( "NewBoard: signal finishedCity is sent when needed", BoardFixture )
 	CHECK( counter.GetFinishedCityCount() == 1 );
 	board.placeValidTile( tileNBottomLeft, 1, 2 );
 	CHECK( counter.GetFinishedCityCount() == 2 );
+}
+
+TESTFIX( "NewBoard: signal finishedRoad is sent when needed", BoardFixture )
+{
+	SignalCounter counter( board );
+	CHECK( counter.GetFinishedRoadCount() == 0 );
+
+	TileOnBoard const tileA( createTileA(), kCw0 );
+	board.placeValidTile( tileA, -1, 0 );
+	TileOnBoard const tileV( createTileV(), kCw180 );
+	board.placeValidTile( tileV, 1, 0 );
+	TileOnBoard const tileS( createTileS(), kCw0 );
+	board.placeValidTile( tileS, 0, 1 );
+	CHECK( counter.GetFinishedRoadCount() == 0 );
+
+	TileOnBoard const otherV( createTileV(), kCw90 );
+	board.placeValidTile( otherV, 1, 1 );
+	CHECK( counter.GetFinishedRoadCount() == 1 );
 }

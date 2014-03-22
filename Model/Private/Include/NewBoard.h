@@ -94,6 +94,11 @@ namespace Model
 		 */
 		boost::signals2::signal< void ( std::vector< NewPlacedCity > ) > finishedCity;
 
+		/**
+		 *	Signal sent out when a road is now finished.
+		 */
+		boost::signals2::signal< void ( std::vector< NewPlacedRoad > ) > finishedRoad;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );
@@ -109,6 +114,7 @@ namespace Model
 		bool sidesMatch( TileOnBoard const & inTile, int inRow, int inCol ) const;
 
 		void checkForFinishedCities( int inRow, int inCol );
+		void checkForFinishedRoads( int inRow, int inCol );
 
 	private:
 		typedef std::vector< boost::optional< TileOnBoard > > Tiles;

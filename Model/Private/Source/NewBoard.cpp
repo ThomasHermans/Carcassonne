@@ -313,7 +313,7 @@ Model::NewBoard::placeTile( TileOnBoard const & inTile, int inRow, int inCol )
 		getTile( inRow, inCol ) = inTile;
 		// checkForFinishedCloisters( inRow, inCol );
 		checkForFinishedCities( inRow, inCol );
-		// checkForFinishedRoads( inRow, inCol );
+		checkForFinishedRoads( inRow, inCol );
 		return true;
 	}
 	else
@@ -399,6 +399,55 @@ Model::NewBoard::checkForFinishedCities( int inRow, int inCol )
 		if ( finished )
 		{
 			finishedCity( queue );
+		}
+	}
+}
+
+void
+Model::NewBoard::checkForFinishedRoads( int inRow, int inCol )
+{
+	if ( !isTile( inRow, inCol ) )
+	{
+		return;
+	}
+	std::vector< ContiguousRoad > const roads = getTile( inRow, inCol )->getContiguousRoads();
+	BOOST_FOREACH( ContiguousRoad const & road, roads )
+	{
+		// Check if this road is unfinished
+		// Create a queue and add all areas from this road to it
+		std::vector< NewPlacedRoad > queue;
+		BOOST_FOREACH( Area::Area const area, road )
+		{
+			queue.push_back( NewPlacedRoad( inRow, inCol, area ) );
+		}
+		// Go over the queue, adding continuations as we encounter them
+		// When a continuation is missing, this road is not finished
+		bool finished = true;
+		for ( std::size_t i = 0; i < queue.size(); ++i )
+		{
+			NewPlacedRoad const neighbor = getNeighbor( queue[i] );
+			if ( isTile( neighbor.row, neighbor.col ) )
+			{
+				// Add continuation to the queue if it is not there yet
+				if ( std::find( queue.begin(), queue.end(), neighbor ) == queue.end() )
+				{
+					ContiguousRoad const neighborRoad = getTile( neighbor.row, neighbor.col )->getContiguousRoad( neighbor.area );
+					BOOST_FOREACH( Area::Area const area, neighborRoad )
+					{
+						queue.push_back( NewPlacedRoad( neighbor.row, neighbor.col, area ) );
+					}
+				}
+			}
+			else
+			{
+				// No continuation means unfinished road
+				finished = false;
+				break;
+			}
+		}
+		if ( finished )
+		{
+			finishedRoad( queue );
 		}
 	}
 }
