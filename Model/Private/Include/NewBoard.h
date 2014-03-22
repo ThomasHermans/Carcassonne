@@ -5,6 +5,7 @@
 #include "TileOnBoard.h"
 
 #include <boost/optional.hpp>
+#include <boost/signals2/signal.hpp>
 
 #include <vector>
 
@@ -88,6 +89,11 @@ namespace Model
 		 */
 		std::vector< PlacedPiece > removePieces( NewPlacedProject inArea );
 
+		/**
+		 *	Signal sent out when a city is now finished.
+		 */
+		boost::signals2::signal< void ( std::vector< NewPlacedCity > ) > finishedCity;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );
@@ -101,6 +107,8 @@ namespace Model
 
 		bool hasNeighbor( int inRow, int inCol ) const;
 		bool sidesMatch( TileOnBoard const & inTile, int inRow, int inCol ) const;
+
+		void checkForFinishedCities( int inRow, int inCol );
 
 	private:
 		typedef std::vector< boost::optional< TileOnBoard > > Tiles;

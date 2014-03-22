@@ -56,6 +56,32 @@ namespace
 			board.placeStartTile( startTile );
 		}
 	};
+
+	class SignalCounter
+	{
+	public:
+		SignalCounter( Model::NewBoard & inBoard )
+		:
+			mFinishedCityCount( 0 )
+		{
+			inBoard.finishedCity.connect
+			(
+				boost::bind( &SignalCounter::IncrementFinishedCity, this )
+			);
+		}
+		
+		void IncrementFinishedCity()
+		{
+			++mFinishedCityCount;
+		}
+
+		std::size_t GetFinishedCityCount() const
+		{
+			return mFinishedCityCount;
+		}
+	private:
+		std::size_t mFinishedCityCount;
+	};
 }
 
 TESTFIX( "NewBoard: place extra tiles", BoardFixture )
@@ -134,4 +160,25 @@ TESTFIX( "NewBoard: remove pieces from a specified tile & area", BoardFixture )
 	std::vector< PlacedPiece > const pieces = board.removePieces( NewPlacedProject( 1, 0, Area::kLeft ) );
 	CHECK( pieces.size() == 1 );
 	CHECK( !board.isOccupiedField( NewPlacedField( 1, 0, Area::kBottomLeft ) ) );
+}
+
+TESTFIX( "NewBoard: signal finishedCity is sent when needed", BoardFixture )
+{
+	SignalCounter counter( board );
+	CHECK( counter.GetFinishedCityCount() == 0 );
+
+	TileOnBoard const tileE( createTileE(), kCw270 );
+	board.placeValidTile( tileE, 0, 1 );
+	CHECK( counter.GetFinishedCityCount() == 1 );
+
+	TileOnBoard const tileNTopLeft( createTileN(), kCw180 );
+	TileOnBoard const tileNTopRight( createTileN(), kCw270 );
+	TileOnBoard const tileNBottomRight( createTileN(), kCw0 );
+	TileOnBoard const tileNBottomLeft( createTileN(), kCw90 );
+	board.placeValidTile( tileNTopLeft, 0, 2 );
+	board.placeValidTile( tileNTopRight, 0, 3 );
+	board.placeValidTile( tileNBottomRight, 1, 3 );
+	CHECK( counter.GetFinishedCityCount() == 1 );
+	board.placeValidTile( tileNBottomLeft, 1, 2 );
+	CHECK( counter.GetFinishedCityCount() == 2 );
 }
