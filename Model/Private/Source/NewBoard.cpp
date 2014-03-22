@@ -311,7 +311,7 @@ Model::NewBoard::placeTile( TileOnBoard const & inTile, int inRow, int inCol )
 	if ( !isTile( inRow, inCol ) )
 	{
 		getTile( inRow, inCol ) = inTile;
-		// checkForFinishedCloisters( inRow, inCol );
+		checkForFinishedCloisters( inRow, inCol );
 		checkForFinishedCities( inRow, inCol );
 		checkForFinishedRoads( inRow, inCol );
 		return true;
@@ -450,4 +450,46 @@ Model::NewBoard::checkForFinishedRoads( int inRow, int inCol )
 			finishedRoad( queue );
 		}
 	}
+}
+
+void
+Model::NewBoard::checkForFinishedCloisters( int inRow, int inCol )
+{
+	for ( int row = inRow - 1; row <= inRow + 1; ++row )
+	{
+		for ( int col = inCol - 1; col <= inCol + 1; ++col )
+		{
+			if ( isFinishedCloister( row, col ) )
+			{
+				finishedCloister( row, col );
+			}
+		}
+	}
+}
+
+bool
+Model::NewBoard::isFinishedCloister( int inRow, int inCol ) const
+{
+	return
+	(
+		isTile( inRow, inCol )
+		&& getTile( inRow, inCol )->getCenter() == Tile::kCenterCloister
+		&& isFullySurrounded( inRow, inCol )
+	);
+}
+
+bool
+Model::NewBoard::isFullySurrounded( int inRow, int inCol ) const
+{
+	for ( int row = inRow - 1; row <= inRow + 1; ++row )
+	{
+		for ( int col = inCol - 1; col <= inCol + 1; ++col )
+		{
+			if ( !isTile( row, col ) )
+			{
+				return false;
+			}
+		}
+	}
+	return true;
 }

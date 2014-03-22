@@ -63,7 +63,8 @@ namespace
 		SignalCounter( Model::NewBoard & inBoard )
 		:
 			mFinishedCityCount( 0 ),
-			mFinishedRoadCount( 0 )
+			mFinishedRoadCount( 0 ),
+			mFinishedCloisterCount( 0 )
 		{
 			inBoard.finishedCity.connect
 			(
@@ -72,6 +73,10 @@ namespace
 			inBoard.finishedRoad.connect
 			(
 				boost::bind( &SignalCounter::IncrementFinishedRoad, this )
+			);
+			inBoard.finishedCloister.connect
+			(
+				boost::bind( &SignalCounter::IncrementFinishedCloister, this )
 			);
 		}
 		
@@ -84,6 +89,11 @@ namespace
 		{
 			++mFinishedRoadCount;
 		}
+		
+		void IncrementFinishedCloister()
+		{
+			++mFinishedCloisterCount;
+		}
 
 		std::size_t GetFinishedCityCount() const
 		{
@@ -94,9 +104,15 @@ namespace
 		{
 			return mFinishedRoadCount;
 		}
+
+		std::size_t GetFinishedCloisterCount() const
+		{
+			return mFinishedCloisterCount;
+		}
 	private:
 		std::size_t mFinishedCityCount;
 		std::size_t mFinishedRoadCount;
+		std::size_t mFinishedCloisterCount;
 	};
 }
 
@@ -215,4 +231,27 @@ TESTFIX( "NewBoard: signal finishedRoad is sent when needed", BoardFixture )
 	TileOnBoard const otherV( createTileV(), kCw90 );
 	board.placeValidTile( otherV, 1, 1 );
 	CHECK( counter.GetFinishedRoadCount() == 1 );
+}
+
+TESTFIX( "NewBoard: signal finishedCloister is sent when needed", BoardFixture )
+{
+	SignalCounter counter( board );
+	CHECK( counter.GetFinishedCloisterCount() == 0 );
+
+	TileOnBoard const tileA( createTileA(), kCw0 );
+	board.placeValidTile( tileA, -1, 0 );
+	TileOnBoard const tileNRightBottom( createTileN(), kCw0 );
+	board.placeValidTile( tileNRightBottom, 0, 1 );
+	TileOnBoard const tileGRight( createTileG(), kCw0 );
+	board.placeValidTile( tileGRight, -1, 1 );
+	TileOnBoard const tileIRightTop( createTileI(), kCw0 );
+	board.placeValidTile( tileIRightTop, -2, 1 );
+	TileOnBoard const tileETop( createTileE(), kCw0 );
+	board.placeValidTile( tileETop, -2, 0 );
+	board.placeValidTile( tileGRight, -2, -1 );
+	board.placeValidTile( tileGRight, -1, -1 );
+	CHECK( counter.GetFinishedCloisterCount() == 0 );
+	
+	board.placeValidTile( tileGRight, 0, -1 );
+	CHECK( counter.GetFinishedCloisterCount() == 1 );
 }

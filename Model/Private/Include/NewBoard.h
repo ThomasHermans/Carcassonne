@@ -99,6 +99,12 @@ namespace Model
 		 */
 		boost::signals2::signal< void ( std::vector< NewPlacedRoad > ) > finishedRoad;
 
+		/**
+		 *	Signal sent out when a cloister is now finished.
+		 *	The position (row, col) is sent out.
+		 */
+		boost::signals2::signal< void ( int, int ) > finishedCloister;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );
@@ -115,6 +121,9 @@ namespace Model
 
 		void checkForFinishedCities( int inRow, int inCol );
 		void checkForFinishedRoads( int inRow, int inCol );
+		void checkForFinishedCloisters( int inRow, int inCol );
+		bool isFinishedCloister( int inRow, int inCol ) const;
+		bool isFullySurrounded( int inRow, int inCol ) const;
 
 	private:
 		typedef std::vector< boost::optional< TileOnBoard > > Tiles;
