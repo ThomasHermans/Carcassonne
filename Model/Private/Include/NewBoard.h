@@ -105,6 +105,11 @@ namespace Model
 		 */
 		boost::signals2::signal< void ( int, int ) > finishedCloister;
 
+		/**
+		 *	Is the specified city finished?
+		 */
+		bool isFinishedCity( NewPlacedCity const & inCity ) const;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );

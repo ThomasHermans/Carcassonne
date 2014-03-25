@@ -212,6 +212,49 @@ Model::NewBoard::removePieces( NewPlacedProject inArea )
 	}
 }
 
+bool
+Model::NewBoard::isFinishedCity( NewPlacedCity const & inCity ) const
+{
+	if ( !isTile( inCity.row, inCity.col ) || !getTile( inCity.row, inCity.col )->isCity( inCity.area ) )
+	{
+		return false;
+	}
+	ContiguousCity const city = getTile( inCity.row, inCity.col )->getContiguousCity( inCity.area );
+	// Check if this city is unfinished
+	// Create a queue and add all areas from this city to it
+	std::vector< NewPlacedCity > queue;
+	BOOST_FOREACH( Area::Area const area, city )
+	{
+		queue.push_back( NewPlacedCity( inCity.row, inCity.col, area ) );
+	}
+	// Go over the queue, adding continuations as we encounter them
+	// When a continuation is missing, this city is not finished
+	bool finished = true;
+	for ( std::size_t i = 0; i < queue.size(); ++i )
+	{
+		NewPlacedCity const neighbor = getNeighbor( queue[i] );
+		if ( isTile( neighbor.row, neighbor.col ) )
+		{
+			// Add continuation to the queue if it is not there yet
+			if ( std::find( queue.begin(), queue.end(), neighbor ) == queue.end() )
+			{
+				ContiguousCity const neighborCity = getTile( neighbor.row, neighbor.col )->getContiguousCity( neighbor.area );
+				BOOST_FOREACH( Area::Area const area, neighborCity )
+				{
+					queue.push_back( NewPlacedCity( neighbor.row, neighbor.col, area ) );
+				}
+			}
+		}
+		else
+		{
+			// No continuation means unfinished city
+			finished = false;
+			break;
+		}
+	}
+	return finished;
+}
+
 int
 Model::NewBoard::getIndex( int inRow, int inCol ) const
 {

@@ -255,3 +255,34 @@ TESTFIX( "NewBoard: signal finishedCloister is sent when needed", BoardFixture )
 	board.placeValidTile( tileGRight, 0, -1 );
 	CHECK( counter.GetFinishedCloisterCount() == 1 );
 }
+
+TESTFIX( "NewBoard: simple isFinishedCity", BoardFixture )
+{
+	CHECK( !board.isFinishedCity( NewPlacedCity( 0, 0, Area::kTop ) ) );
+	CHECK( !board.isFinishedCity( NewPlacedCity( 0, 0, Area::kLeft ) ) );
+	CHECK( !board.isFinishedCity( NewPlacedCity( 0, 0, Area::kRight ) ) );
+
+	TileOnBoard const tileE( createTileE(), kCw270 );
+	board.placeValidTile( tileE, 0, 1 );
+	CHECK( board.isFinishedCity( NewPlacedCity( 0, 0, Area::kRight ) ) );
+	CHECK( board.isFinishedCity( NewPlacedCity( 0, 1, Area::kLeftTop ) ) );
+}
+
+TESTFIX( "NewBoard: extended isFinishedCity", BoardFixture )
+{
+	TileOnBoard const tileN( createTileN(), kCw0 );
+	board.placeValidTile( tileN, 0, 1 );
+	TileOnBoard const otherN( createTileN(), kCw270 );
+	board.placeValidTile( otherN, -1, 1 );
+	TileOnBoard const tileT( createTileT(), kCw0 );
+	board.placeValidTile( tileT, -1, 0 );
+	TileOnBoard const tileH( createTileH(), kCw0 );
+	board.placeValidTile( tileH, -1, -1 );
+	TileOnBoard const tileG( createTileG(), kCw0 );
+	board.placeValidTile( tileG, -2, 0 );
+	CHECK( !board.isFinishedCity( NewPlacedCity( -2, 0, Area::kCentral ) ) );
+	TileOnBoard const tileE( createTileE(), kCw180 );
+	board.placeValidTile( tileE, -3, 0 );
+	CHECK( board.isFinishedCity( NewPlacedCity( 0, 0, Area::kRight ) ) );
+	CHECK( board.isFinishedCity( NewPlacedCity( -2, 0, Area::kCentral ) ) );
+}
