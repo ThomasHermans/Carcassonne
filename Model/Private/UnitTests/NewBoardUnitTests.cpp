@@ -286,3 +286,16 @@ TESTFIX( "NewBoard: extended isFinishedCity", BoardFixture )
 	CHECK( board.isFinishedCity( NewPlacedCity( 0, 0, Area::kRight ) ) );
 	CHECK( board.isFinishedCity( NewPlacedCity( -2, 0, Area::kCentral ) ) );
 }
+
+TESTFIX( "NewBoard: getIdentifierCity", BoardFixture )
+{
+	NewPlacedCity const originTop( 0, 0, Area::kRightTop );
+	CHECK( board.getIdentifierCity( NewPlacedCity( 0, 0, Area::kRightBottom ) ) == originTop );
+	board.placeValidTile( TileOnBoard( createTileG(), kCw90 ), 0, 1 );
+	CHECK( board.getIdentifierCity( NewPlacedCity( 0, 1, Area::kCentral ) ) == originTop );
+	board.placeValidTile( TileOnBoard( createTileN(), kCw0 ), 0, 2 );
+	board.placeValidTile( TileOnBoard( createTileG(), kCw0 ), -1, 2 );
+	NewPlacedCity const top( -1, 2, Area::kTopLeft );
+	CHECK( board.getIdentifierCity( NewPlacedCity( 0, 0, Area::kRight ) ) == top );
+	CHECK( board.getIdentifierCity( NewPlacedCity( 0, 2, Area::kLeft ) ) == top );
+}

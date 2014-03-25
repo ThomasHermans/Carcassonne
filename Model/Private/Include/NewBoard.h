@@ -110,6 +110,13 @@ namespace Model
 		 */
 		bool isFinishedCity( NewPlacedCity const & inCity ) const;
 
+		/**
+		 *	Returns the identifier NewPlacedCity.
+		 *	Several NewPlacedCities that are part of the same contiguous city,
+		 *	will return the same identifier NewPlacedCity.
+		 */
+		NewPlacedCity getIdentifierCity( NewPlacedCity const & inCity ) const;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );
@@ -129,6 +136,8 @@ namespace Model
 		void checkForFinishedCloisters( int inRow, int inCol );
 		bool isFinishedCloister( int inRow, int inCol ) const;
 		bool isFullySurrounded( int inRow, int inCol ) const;
+
+		bool isCity( NewPlacedCity const & inCity ) const;
 
 	private:
 		typedef std::vector< boost::optional< TileOnBoard > > Tiles;

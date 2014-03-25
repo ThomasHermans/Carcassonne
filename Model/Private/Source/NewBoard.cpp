@@ -4,6 +4,26 @@
 
 #include <boost/foreach.hpp>
 
+namespace
+{
+	bool
+	upperLeftCompare( Model::NewPlacedCity const & inLeft, Model::NewPlacedCity const & inRight )
+	{
+		if ( inLeft.row != inRight.row )
+		{
+			return inLeft.row < inRight.row;
+		}
+		else if ( inLeft.col != inRight.col )
+		{
+			return inLeft.col < inRight.col;
+		}
+		else
+		{
+			return inLeft.area < inRight.area;
+		}
+	}
+}
+
 Model::NewBoard::NewBoard()
 :
 	mTiles( 1, boost::none ),
@@ -215,7 +235,7 @@ Model::NewBoard::removePieces( NewPlacedProject inArea )
 bool
 Model::NewBoard::isFinishedCity( NewPlacedCity const & inCity ) const
 {
-	if ( !isTile( inCity.row, inCity.col ) || !getTile( inCity.row, inCity.col )->isCity( inCity.area ) )
+	if ( !isCity( inCity ) )
 	{
 		return false;
 	}
@@ -253,6 +273,40 @@ Model::NewBoard::isFinishedCity( NewPlacedCity const & inCity ) const
 		}
 	}
 	return finished;
+}
+
+Model::NewPlacedCity
+Model::NewBoard::getIdentifierCity( NewPlacedCity const & inCity ) const
+{
+	if ( !isCity( inCity ) )
+	{
+		return inCity;
+	}
+	ContiguousCity const city = getTile( inCity.row, inCity.col )->getContiguousCity( inCity.area );
+	// Find the complete city for inCity
+	std::vector< NewPlacedCity > completeCity;
+	BOOST_FOREACH( Area::Area area, city )
+	{
+		completeCity.push_back( NewPlacedCity( inCity.row, inCity.col, area ) );
+	}
+	for ( std::size_t i = 0; i < completeCity.size(); ++i )
+	{
+		NewPlacedCity const thisCity = completeCity[i];
+		NewPlacedCity const neighbor = getNeighbor( thisCity );
+		if ( isTile( neighbor.row, neighbor.col ) )
+		{
+			if ( std::find( completeCity.begin(), completeCity.end(), neighbor ) == completeCity.end() )
+			{
+				ContiguousCity const neighborCity = getTile( neighbor.row, neighbor.col )->getContiguousCity( neighbor.area );
+				BOOST_FOREACH( Area::Area area, neighborCity )
+				{
+					completeCity.push_back( NewPlacedCity( neighbor.row, neighbor.col, area ) );
+				}
+			}
+		}
+	}
+	std::sort( completeCity.begin(), completeCity.end(), &upperLeftCompare );
+	return completeCity.front();
 }
 
 int
@@ -535,4 +589,10 @@ Model::NewBoard::isFullySurrounded( int inRow, int inCol ) const
 		}
 	}
 	return true;
+}
+
+bool
+Model::NewBoard::isCity( NewPlacedCity const & inCity ) const
+{
+	return isTile( inCity.row, inCity.col ) && getTile( inCity.row, inCity.col )->isCity( inCity.area );
 }
