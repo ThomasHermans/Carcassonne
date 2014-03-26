@@ -309,6 +309,27 @@ Model::NewBoard::getIdentifierCity( NewPlacedCity const & inCity ) const
 	return completeCity.front();
 }
 
+std::size_t
+Model::NewBoard::getNrOfSurroundingTiles( int inRow, int inCol ) const
+{
+	if ( !isTile( inRow, inCol ) )
+	{
+		return 0;
+	}
+	std::size_t nr = 0;
+	for ( int row = inRow - 1; row <= inRow + 1; ++row )
+	{
+		for ( int col = inCol - 1; col <= inCol + 1; ++col )
+		{
+			if ( isTile( row, col ) )
+			{
+				++nr;
+			}
+		}
+	}
+	return nr;
+}
+
 int
 Model::NewBoard::getIndex( int inRow, int inCol ) const
 {

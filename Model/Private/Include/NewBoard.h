@@ -117,6 +117,15 @@ namespace Model
 		 */
 		NewPlacedCity getIdentifierCity( NewPlacedCity const & inCity ) const;
 
+		/**
+		 *	Returns the number of tiles around the specified tile, including
+		 *	the specified tile.
+		 *	Returns 0 if there is no tile at the specified location.
+		 *	Returns 1 for a tile that has no neighbors (even diagonally).
+		 *	Returns 9 for a fully surrounded tile.
+		 */
+		std::size_t getNrOfSurroundingTiles( int inRow, int inCol ) const;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );

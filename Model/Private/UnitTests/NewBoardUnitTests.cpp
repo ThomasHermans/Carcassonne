@@ -299,3 +299,13 @@ TESTFIX( "NewBoard: getIdentifierCity", BoardFixture )
 	CHECK( board.getIdentifierCity( NewPlacedCity( 0, 0, Area::kRight ) ) == top );
 	CHECK( board.getIdentifierCity( NewPlacedCity( 0, 2, Area::kLeft ) ) == top );
 }
+
+TESTFIX( "NewBoard: getNrOfSurroundingTiles", BoardFixture )
+{
+	CHECK( board.getNrOfSurroundingTiles( 0, 0 ) == 1 );
+	CHECK( board.getNrOfSurroundingTiles( 0, 1 ) == 0 );
+	board.placeValidTile( TileOnBoard( createTileG(), kCw90 ), 0, 1 );
+	board.placeValidTile( TileOnBoard( createTileT(), kCw0 ), -1, 0 );
+	board.placeValidTile( TileOnBoard( createTileH(), kCw0 ), -1, -1 );
+	CHECK( board.getNrOfSurroundingTiles( 0, 0 ) == 4 );
+}
