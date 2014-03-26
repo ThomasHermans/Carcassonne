@@ -309,3 +309,10 @@ TESTFIX( "NewBoard: getNrOfSurroundingTiles", BoardFixture )
 	board.placeValidTile( TileOnBoard( createTileH(), kCw0 ), -1, -1 );
 	CHECK( board.getNrOfSurroundingTiles( 0, 0 ) == 4 );
 }
+
+TESTFIX( "NewBoard: getCompleteCity", BoardFixture )
+{
+	CHECK( board.getCompleteCity( NewPlacedCity( 0, 0, Area::kRight ) ).size() == 3 );
+	board.placeValidTile( TileOnBoard( createTileT(), kCw0 ), 0, 1 );
+	CHECK( board.getCompleteCity( NewPlacedCity( 0, 0, Area::kRight ) ).size() == 13 );
+}

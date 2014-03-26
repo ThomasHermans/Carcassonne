@@ -282,29 +282,7 @@ Model::NewBoard::getIdentifierCity( NewPlacedCity const & inCity ) const
 	{
 		return inCity;
 	}
-	ContiguousCity const city = getTile( inCity.row, inCity.col )->getContiguousCity( inCity.area );
-	// Find the complete city for inCity
-	std::vector< NewPlacedCity > completeCity;
-	BOOST_FOREACH( Area::Area area, city )
-	{
-		completeCity.push_back( NewPlacedCity( inCity.row, inCity.col, area ) );
-	}
-	for ( std::size_t i = 0; i < completeCity.size(); ++i )
-	{
-		NewPlacedCity const thisCity = completeCity[i];
-		NewPlacedCity const neighbor = getNeighbor( thisCity );
-		if ( isTile( neighbor.row, neighbor.col ) )
-		{
-			if ( std::find( completeCity.begin(), completeCity.end(), neighbor ) == completeCity.end() )
-			{
-				ContiguousCity const neighborCity = getTile( neighbor.row, neighbor.col )->getContiguousCity( neighbor.area );
-				BOOST_FOREACH( Area::Area area, neighborCity )
-				{
-					completeCity.push_back( NewPlacedCity( neighbor.row, neighbor.col, area ) );
-				}
-			}
-		}
-	}
+	std::vector< NewPlacedCity > completeCity = getCompleteCity( inCity );
 	std::sort( completeCity.begin(), completeCity.end(), &upperLeftCompare );
 	return completeCity.front();
 }
@@ -328,6 +306,38 @@ Model::NewBoard::getNrOfSurroundingTiles( int inRow, int inCol ) const
 		}
 	}
 	return nr;
+}
+
+std::vector< Model::NewPlacedCity >
+Model::NewBoard::getCompleteCity( NewPlacedCity const & inCity ) const
+{
+	if ( !isCity( inCity ) )
+	{
+		return std::vector< NewPlacedCity >();
+	}
+	std::vector< NewPlacedCity > completeCity;
+	ContiguousCity const city = getTile( inCity.row, inCity.col )->getContiguousCity( inCity.area );
+	BOOST_FOREACH( Area::Area area, city )
+	{
+		completeCity.push_back( NewPlacedCity( inCity.row, inCity.col, area ) );
+	}
+	for ( std::size_t i = 0; i < completeCity.size(); ++i )
+	{
+		NewPlacedCity const thisCity = completeCity[i];
+		NewPlacedCity const neighbor = getNeighbor( thisCity );
+		if ( isTile( neighbor.row, neighbor.col ) )
+		{
+			if ( std::find( completeCity.begin(), completeCity.end(), neighbor ) == completeCity.end() )
+			{
+				ContiguousCity const neighborCity = getTile( neighbor.row, neighbor.col )->getContiguousCity( neighbor.area );
+				BOOST_FOREACH( Area::Area area, neighborCity )
+				{
+					completeCity.push_back( NewPlacedCity( neighbor.row, neighbor.col, area ) );
+				}
+			}
+		}
+	}
+	return completeCity;
 }
 
 int

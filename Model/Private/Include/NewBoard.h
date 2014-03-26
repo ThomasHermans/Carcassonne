@@ -126,6 +126,12 @@ namespace Model
 		 */
 		std::size_t getNrOfSurroundingTiles( int inRow, int inCol ) const;
 
+		/**
+		 *	Get the complete city that is connected with the specified
+		 *	city area.
+		 */
+		std::vector< NewPlacedCity > getCompleteCity( NewPlacedCity const & inCity ) const;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );
