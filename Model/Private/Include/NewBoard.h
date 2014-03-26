@@ -138,6 +138,12 @@ namespace Model
 		 */
 		std::vector< NewPlacedRoad > getCompleteRoad( NewPlacedRoad const & inRoad ) const;
 
+		/**
+		 *	Get the complete field that is connected with the specified
+		 *	field area.
+		 */
+		std::vector< NewPlacedField > getCompleteField( NewPlacedField const & inField ) const;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );
@@ -160,6 +166,7 @@ namespace Model
 
 		bool isCity( NewPlacedCity const & inCity ) const;
 		bool isRoad( NewPlacedRoad const & inRoad ) const;
+		bool isField( NewPlacedField const & inField ) const;
 
 	private:
 		typedef std::vector< boost::optional< TileOnBoard > > Tiles;

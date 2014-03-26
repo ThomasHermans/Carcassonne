@@ -372,6 +372,38 @@ Model::NewBoard::getCompleteRoad( NewPlacedRoad const & inRoad ) const
 	return completeRoad;
 }
 
+std::vector< Model::NewPlacedField >
+Model::NewBoard::getCompleteField( NewPlacedField const & inField ) const
+{
+	if ( !isField( inField ) )
+	{
+		return std::vector< NewPlacedField >();
+	}
+	std::vector< NewPlacedField > completeField;
+	ContiguousField const field = getTile( inField.row, inField.col )->getContiguousField( inField.area );
+	BOOST_FOREACH( Area::Area area, field )
+	{
+		completeField.push_back( NewPlacedField( inField.row, inField.col, area ) );
+	}
+	for ( std::size_t i = 0; i < completeField.size(); ++i )
+	{
+		NewPlacedField const thisField = completeField[i];
+		NewPlacedField const neighbor = getNeighbor( thisField );
+		if ( isTile( neighbor.row, neighbor.col ) )
+		{
+			if ( std::find( completeField.begin(), completeField.end(), neighbor ) == completeField.end() )
+			{
+				ContiguousField const neighborField = getTile( neighbor.row, neighbor.col )->getContiguousField( neighbor.area );
+				BOOST_FOREACH( Area::Area area, neighborField )
+				{
+					completeField.push_back( NewPlacedField( neighbor.row, neighbor.col, area ) );
+				}
+			}
+		}
+	}
+	return completeField;
+}
+
 int
 Model::NewBoard::getIndex( int inRow, int inCol ) const
 {
@@ -664,4 +696,10 @@ bool
 Model::NewBoard::isRoad( NewPlacedRoad const & inRoad ) const
 {
 	return isTile( inRoad.row, inRoad.col ) && getTile( inRoad.row, inRoad.col )->isRoad( inRoad.area );
+}
+
+bool
+Model::NewBoard::isField( NewPlacedField const & inField ) const
+{
+	return isTile( inField.row, inField.col ) && getTile( inField.row, inField.col )->isField( inField.area );
 }

@@ -325,3 +325,15 @@ TESTFIX( "NewBoard: getCompleteRoad", BoardFixture )
 	board.placeValidTile( TileOnBoard( createTileW(), kCw0 ), 1, -1 );
 	CHECK( board.getCompleteRoad( NewPlacedRoad( 0, 0, Area::kTop ) ).size() == 7 );
 }
+
+TESTFIX( "NewBoard: getCompleteField", BoardFixture )
+{
+	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kLeft ) ).size() == 5 );
+	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kTopRight ) ).size() == 2 );
+	board.placeValidTile( TileOnBoard( createTileK(), kCw0 ), 1, 0 );
+	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kTopLeft ) ).size() == 7 );
+	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kTopRight ) ).size() == 7 );
+	board.placeValidTile( TileOnBoard( createTileW(), kCw0 ), 1, -1 );
+	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kTopLeft ) ).size() == 12 );
+	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kTopRight ) ).size() == 9 );
+}
