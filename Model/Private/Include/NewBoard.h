@@ -132,6 +132,12 @@ namespace Model
 		 */
 		std::vector< NewPlacedCity > getCompleteCity( NewPlacedCity const & inCity ) const;
 
+		/**
+		 *	Get the complete road that is connected with the specified
+		 *	road area.
+		 */
+		std::vector< NewPlacedRoad > getCompleteRoad( NewPlacedRoad const & inRoad ) const;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );
@@ -153,6 +159,7 @@ namespace Model
 		bool isFullySurrounded( int inRow, int inCol ) const;
 
 		bool isCity( NewPlacedCity const & inCity ) const;
+		bool isRoad( NewPlacedRoad const & inRoad ) const;
 
 	private:
 		typedef std::vector< boost::optional< TileOnBoard > > Tiles;

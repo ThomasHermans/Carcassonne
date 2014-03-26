@@ -340,6 +340,38 @@ Model::NewBoard::getCompleteCity( NewPlacedCity const & inCity ) const
 	return completeCity;
 }
 
+std::vector< Model::NewPlacedRoad >
+Model::NewBoard::getCompleteRoad( NewPlacedRoad const & inRoad ) const
+{
+	if ( !isRoad( inRoad ) )
+	{
+		return std::vector< NewPlacedRoad >();
+	}
+	std::vector< NewPlacedRoad > completeRoad;
+	ContiguousRoad const road = getTile( inRoad.row, inRoad.col )->getContiguousRoad( inRoad.area );
+	BOOST_FOREACH( Area::Area area, road )
+	{
+		completeRoad.push_back( NewPlacedRoad( inRoad.row, inRoad.col, area ) );
+	}
+	for ( std::size_t i = 0; i < completeRoad.size(); ++i )
+	{
+		NewPlacedRoad const thisRoad = completeRoad[i];
+		NewPlacedRoad const neighbor = getNeighbor( thisRoad );
+		if ( isTile( neighbor.row, neighbor.col ) )
+		{
+			if ( std::find( completeRoad.begin(), completeRoad.end(), neighbor ) == completeRoad.end() )
+			{
+				ContiguousRoad const neighborRoad = getTile( neighbor.row, neighbor.col )->getContiguousRoad( neighbor.area );
+				BOOST_FOREACH( Area::Area area, neighborRoad )
+				{
+					completeRoad.push_back( NewPlacedRoad( neighbor.row, neighbor.col, area ) );
+				}
+			}
+		}
+	}
+	return completeRoad;
+}
+
 int
 Model::NewBoard::getIndex( int inRow, int inCol ) const
 {
@@ -626,4 +658,10 @@ bool
 Model::NewBoard::isCity( NewPlacedCity const & inCity ) const
 {
 	return isTile( inCity.row, inCity.col ) && getTile( inCity.row, inCity.col )->isCity( inCity.area );
+}
+
+bool
+Model::NewBoard::isRoad( NewPlacedRoad const & inRoad ) const
+{
+	return isTile( inRoad.row, inRoad.col ) && getTile( inRoad.row, inRoad.col )->isRoad( inRoad.area );
 }

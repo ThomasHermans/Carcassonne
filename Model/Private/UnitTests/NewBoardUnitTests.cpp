@@ -316,3 +316,12 @@ TESTFIX( "NewBoard: getCompleteCity", BoardFixture )
 	board.placeValidTile( TileOnBoard( createTileT(), kCw0 ), 0, 1 );
 	CHECK( board.getCompleteCity( NewPlacedCity( 0, 0, Area::kRight ) ).size() == 13 );
 }
+
+TESTFIX( "NewBoard: getCompleteRoad", BoardFixture )
+{
+	CHECK( board.getCompleteRoad( NewPlacedRoad( 0, 0, Area::kCentral ) ).size() == 3 );
+	board.placeValidTile( TileOnBoard( createTileK(), kCw0 ), 1, 0 );
+	CHECK( board.getCompleteRoad( NewPlacedRoad( 0, 0, Area::kTop ) ).size() == 6 );
+	board.placeValidTile( TileOnBoard( createTileW(), kCw0 ), 1, -1 );
+	CHECK( board.getCompleteRoad( NewPlacedRoad( 0, 0, Area::kTop ) ).size() == 7 );
+}
