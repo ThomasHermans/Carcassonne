@@ -13,6 +13,12 @@ namespace Model
 		kCw270 = 9
 	};
 
+	/**
+	 *	Returns a Rotation that is 90 degrees clockwise
+	 *	rotated from the inRotation.
+	 */
+	Rotation rotateCW( Rotation inRotation );
+
 	std::string rotationToString( Rotation inRotation );
 }
 

@@ -2,6 +2,12 @@
 
 #include <cassert>
 
+Model::Rotation
+Model::rotateCW( Rotation inRotation )
+{
+	return Rotation( ( inRotation + kCw90 ) % ( kCw90 * 4 ) );
+}
+
 std::string
 Model::rotationToString( Rotation inRotation )
 {
