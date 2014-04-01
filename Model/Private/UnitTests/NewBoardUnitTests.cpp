@@ -39,6 +39,14 @@ TEST( "NewBoard: check for valid tile placements" )
 	CHECK( !board.isValidTilePlacement( startTile, 0, -1 ) );
 }
 
+TEST( "NewBoard: check for possible tile" )
+{
+	NewBoard board;
+	TileOnBoard const startTile( createTileD(), kCw0 );
+	board.placeStartTile( startTile );
+	CHECK( board.isPossibleTile( createTileE() ) );
+}
+
 namespace
 {
 	struct BoardFixture
@@ -123,6 +131,10 @@ TESTFIX( "NewBoard: place extra tiles", BoardFixture )
 	CHECK( !board.placeValidTile( TileOnBoard( createTileB(), kCw0 ), -1, 1 ) );
 	CHECK( board.placeValidTile( TileOnBoard( createTileJ(), kCw180 ), -1, 1 ) );
 	CHECK( board.getNrOfTiles() == 4 );
+	CHECK( board.getTopRow() == -1 );
+	CHECK( board.getBottomRow() == 0 );
+	CHECK( board.getLeftCol() == 0 );
+	CHECK( board.getRightCol() == 1 );
 }
 
 TESTFIX( "NewBoard: check for occupied roads", BoardFixture )

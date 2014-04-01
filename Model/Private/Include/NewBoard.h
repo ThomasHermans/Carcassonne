@@ -29,6 +29,26 @@ namespace Model
 		std::size_t getNrOfTiles() const;
 
 		/**
+		 *	Get the top most row that contains a tile.
+		 */
+		int getTopRow() const;
+
+		/**
+		 *	Get the bottom most row that contains a tile.
+		 */
+		int getBottomRow() const;
+
+		/**
+		 *	Get the left most column that contains a tile.
+		 */
+		int getLeftCol() const;
+
+		/**
+		 *	Get the right most column that contains a tile.
+		 */
+		int getRightCol() const;
+
+		/**
 		 *	Is there a tile at the specified position?
 		 */
 		bool isTile( int inRow, int inCol ) const;
@@ -58,6 +78,11 @@ namespace Model
 		 *	Place a valid tile on the board.
 		 */
 		bool placeValidTile( TileOnBoard const & inTile, int inRow, int inCol );
+
+		/**
+		 *	Is it possible to place the provided tile somewhere?
+		 */
+		bool isPossibleTile( Tile const & inTile ) const;
 
 		/**
 		 *	Check whether the specified road is occupied.

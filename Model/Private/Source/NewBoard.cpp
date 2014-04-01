@@ -48,6 +48,30 @@ Model::NewBoard::getNrOfTiles() const
 	return nrOfTiles;
 }
 
+int
+Model::NewBoard::getTopRow() const
+{
+	return - mStartRow;
+}
+
+int
+Model::NewBoard::getBottomRow() const
+{
+	return mNrRows - mStartRow - 1;
+}
+
+int
+Model::NewBoard::getLeftCol() const
+{
+	return - mStartCol;
+}
+
+int
+Model::NewBoard::getRightCol() const
+{
+	return mNrCols - mStartCol - 1;
+}
+
 bool
 Model::NewBoard::isTile( int inRow, int inCol ) const
 {
@@ -109,6 +133,30 @@ Model::NewBoard::placeValidTile( TileOnBoard const & inTile, int inRow, int inCo
 	{
 		return false;
 	}
+}
+
+bool
+Model::NewBoard::isPossibleTile( Tile const & inTile ) const
+{
+	int const topRow = getTopRow();
+	int const bottomRow = getBottomRow();
+	int const leftCol = getLeftCol();
+	int const rightCol = getRightCol();
+	for ( int row = topRow; row <= bottomRow; ++row )
+	{
+		for ( int col = leftCol; col <= rightCol; ++col )
+		{
+			for ( Rotation rot = kCw0; rot <= kCw270; rot = rotateCW( rot ) )
+			{
+				TileOnBoard const tile( inTile, rot );
+				if ( isValidTilePlacement( tile, row, col ) )
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 bool
