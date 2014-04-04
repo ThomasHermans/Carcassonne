@@ -138,21 +138,23 @@ Model::NewBoard::placeValidTile( TileOnBoard const & inTile, int inRow, int inCo
 bool
 Model::NewBoard::isPossibleTile( Tile const & inTile ) const
 {
-	int const topRow = getTopRow();
-	int const bottomRow = getBottomRow();
-	int const leftCol = getLeftCol();
-	int const rightCol = getRightCol();
+	int const topRow = getTopRow() - 1;
+	int const bottomRow = getBottomRow() + 1;
+	int const leftCol = getLeftCol() - 1;
+	int const rightCol = getRightCol() + 1;
 	for ( int row = topRow; row <= bottomRow; ++row )
 	{
 		for ( int col = leftCol; col <= rightCol; ++col )
 		{
-			for ( Rotation rot = kCw0; rot <= kCw270; rot = rotateCW( rot ) )
+			Rotation rot = kCw0;
+			for ( std::size_t i = 0; i < 4; ++i )
 			{
 				TileOnBoard const tile( inTile, rot );
 				if ( isValidTilePlacement( tile, row, col ) )
 				{
 					return true;
 				}
+				rot = rotateCW( rot );
 			}
 		}
 	}
