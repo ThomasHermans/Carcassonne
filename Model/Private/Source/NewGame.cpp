@@ -209,9 +209,17 @@ Model::NewGame::tryToPlacePiece
 void
 Model::NewGame::endTurn()
 {
-	mCurrentPlayer = ( mCurrentPlayer + 1 ) % mPlayers.size();
-	mPiecesPlacedThisTurn = 0;
-	currentPlayerChanged( boost::ref( mPlayers[mCurrentPlayer] ) );
+	if ( mCurrentPlacedTile )
+	{
+		if ( mBoard.placeValidTile( mCurrentPlacedTile->tile, mCurrentPlacedTile->row, mCurrentPlacedTile->col ) )
+		{
+			mCurrentPlayer = ( mCurrentPlayer + 1 ) % mPlayers.size();
+			mPiecesPlacedThisTurn = 0;
+			currentPlayerChanged( boost::ref( mPlayers[mCurrentPlayer] ) );
+			mCurrentPlacedTile.reset();
+			pickNextTile();
+		}
+	}
 }
 
 void
