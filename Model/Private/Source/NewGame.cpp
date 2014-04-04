@@ -127,11 +127,14 @@ Model::NewGame::tryToPlaceTile
 		}
 		if ( found )
 		{
-			if ( earlierTile && earlierTile->tile.hasPieces() )
+			if ( earlierTile )
 			{
 				tileRemoved( earlierTile->row, earlierTile->col );
-				mPiecesPlacedThisTurn = 0;
-				returnPieces( earlierTile->tile.removeAllPieces(), earlierTile->row, earlierTile->col );
+				if ( earlierTile->tile.hasPieces() )
+				{
+					mPiecesPlacedThisTurn = 0;
+					returnPieces( earlierTile->tile.removeAllPieces(), earlierTile->row, earlierTile->col );
+				}
 			}
 			mCurrentPlacedTile = PlacedTile( placedTile, inRow, inCol );
 			tilePlaced( inRow, inCol, placedTile.getID(), placedTile.getRotation() );
