@@ -10,7 +10,7 @@
 
 namespace Model
 {
-	class Player;
+	class NewPlayer;
 }
 
 namespace  Controller
@@ -26,7 +26,7 @@ namespace  Controller
 		~SupremeController();
 
 	private slots:
-		void startGame( std::vector< Model::Player > const & inPlayers );
+		void startGame( std::vector< Model::NewPlayer > const & inPlayers );
 
 	private:
 		boost::scoped_ptr< StartController > mStartController;

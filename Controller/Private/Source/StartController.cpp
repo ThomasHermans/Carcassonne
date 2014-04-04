@@ -64,14 +64,14 @@ Controller::StartController::onTryToStartGame( std::vector< View::PlayerInfo > c
 	QSettings & settings = getSettings();
 	settings.setValue( kNrOfPlayers, inPlayers.size() );
 	int index = 0;
-	std::vector< Model::Player > players;
+	std::vector< Model::NewPlayer > players;
 	for ( std::vector< View::PlayerInfo >::const_iterator it = inPlayers.begin();
 		it != inPlayers.end();
 		++it, ++index )
 	{
 		settings.setValue( getPlayerNameKey( index ), QString::fromStdString( it->name ) );
 		settings.setValue( getPlayerColorKey( index ), int( it->color ) );
-		players.push_back( Model::Player( it->name, modelFromView( it->color ) ) );
+		players.push_back( Model::NewPlayer( it->name, modelFromView( it->color ) ) );
 	}
 	mStartScreen->hide();
 	emit startGame( players );

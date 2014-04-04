@@ -12,17 +12,17 @@
 
 namespace Controller
 {
-	unsigned
-	colFromX( int inX, unsigned inStartCol );
-
-	unsigned
-	rowFromY( int inY, unsigned inStartRow );
+	int
+	colFromX( int inX );
 
 	int
-	xFromCol( unsigned inCol, unsigned inStartCol );
+	rowFromY( int inY );
 
 	int
-	yFromRow( unsigned inRow, unsigned inStartRow );
+	xFromCol( int inCol );
+
+	int
+	yFromRow( int inRow );
 
 	int
 	xFromArea( Model::Area::Area inArea );

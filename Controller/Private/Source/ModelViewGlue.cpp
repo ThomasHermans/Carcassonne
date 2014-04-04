@@ -2,28 +2,28 @@
 
 #include <cassert>
 
-unsigned
-Controller::colFromX( int inX, unsigned inStartCol )
+int
+Controller::colFromX( int inX )
 {
-	return ( inX / Gui::kTileWidth + inStartCol - ( inX < 0 ? 1 : 0 ) );
-}
-
-unsigned
-Controller::rowFromY( int inY, unsigned inStartRow )
-{
-	return ( inY / Gui::kTileHeight + inStartRow - ( inY < 0 ? 1 : 0 ) );
+	return ( inX / Gui::kTileWidth - ( inX < 0 ? 1 : 0 ) );
 }
 
 int
-Controller::xFromCol( unsigned inCol, unsigned inStartCol )
+Controller::rowFromY( int inY )
 {
-	return ( ((int)inCol - (int)inStartCol) * Gui::kTileWidth );
+	return ( inY / Gui::kTileHeight - ( inY < 0 ? 1 : 0 ) );
 }
 
 int
-Controller::yFromRow( unsigned inRow, unsigned inStartRow )
+Controller::xFromCol( int inCol )
 {
-	return ( ((int)inRow - (int)inStartRow) * Gui::kTileHeight );
+	return inCol * Gui::kTileWidth;
+}
+
+int
+Controller::yFromRow( int inRow )
+{
+	return inRow * Gui::kTileHeight;
 }
 
 int

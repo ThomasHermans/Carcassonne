@@ -12,7 +12,7 @@
 
 namespace Model
 {
-	class Player;
+	class NewPlayer;
 }
 
 namespace View
@@ -31,7 +31,7 @@ namespace Controller
 		~StartController();
 
 	signals:
-		void startGame( std::vector< Model::Player > const & inPlayers );
+		void startGame( std::vector< Model::NewPlayer > const & inPlayers );
 
 	private slots:
 		void onTryToStartGame( std::vector< View::PlayerInfo > const & inPlayers );

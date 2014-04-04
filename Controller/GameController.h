@@ -1,7 +1,7 @@
 #ifndef GAMECONTROLLER_H
 #define GAMECONTROLLER_H
 
-#include "Model/Game.h"
+#include "Model/NewGame.h"
 #include "Model/Player.h"
 #include "View/GameWindow.h"
 
@@ -23,46 +23,38 @@ namespace Controller
 		Q_OBJECT
 	public:
 		explicit GameController( std::string const & inTiles, QObject * inParent = 0 );
-		explicit GameController( std::vector< Model::Player > const & inPlayer, QObject * inParent = 0 );
+		explicit GameController( std::vector< Model::NewPlayer > const & inPlayer, QObject * inParent = 0 );
 
 	private slots:
-		// Updates from model
-		void onDimensionsChanged( unsigned inNrRows, unsigned inNrCols, unsigned inStartRow, unsigned inStartCol );
-		
 		// From model to view
-		void onTilePlaced( unsigned inCol, unsigned inRow, std::string const & inId, Model::Rotation inRotation );
-		void onTileUnplaced( unsigned inCol, unsigned inRow );
-		void onTileRotated( unsigned inCol, unsigned inRow, std::string const & inId, Model::Rotation inRotation );
+		void onTilePlaced( int inRow, int inCol, std::string const & inId, Model::Rotation inRotation );
+		void onTileRemoved( int inRow, int inCol );
 		void onNextTile( std::string const & inNextId );
-		void onTilesLeft( unsigned inNr );
+		void onTilesLeft( std::size_t inNr );
 
-		void onPiecePlaced( unsigned inCol, unsigned inRow, Model::Area::Area inArea, Model::Player const & inCurrentPlayer );
-		void onPieceReturned( unsigned inCol, unsigned inRow, Model::Area::Area inArea, Model::Player const & inCurrentPlayer );
-		void onPlayerInfoChanged( Model::Player const & inNewInfo );
-		void onCurrentPlayerChanged( Model::Player const & inCurrentPlayer);
+		void onPiecePlaced( int inRow, int inCol, Model::PlacedPiece const & inPiece, Model::NewPlayer const & inCurrentPlayer );
+		void onPieceRemoved( int inRow, int inCol, Model::PlacedPiece const & inPiece, Model::NewPlayer const & inCurrentPlayer );
+		void onPlayerInfoChanged( Model::NewPlayer const & inNewInfo );
+		void onCurrentPlayerChanged( Model::NewPlayer const & inCurrentPlayer);
 
-		void onEndOfGame( unsigned inTilesLeft );
+		void onEndOfGame( std::size_t inTilesLeft );
 
 		// From view to model
 		void onClicked( int inX, int inY );
 		void onTileDropped( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
 		void onTryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY );
+		void onEndCurrentTurn();
 
 	private:
-		void addPlayers();
+		void addPlayersToWindow();
 		void makeConnections();
 		void startGame();
 
 	private:
-		boost::scoped_ptr< Model::Game > mGame;
+		std::vector< Model::NewPlayer > mPlayers;
+
+		Model::NewGame mGame;
 		boost::scoped_ptr< View::GameWindow > mWindow;
-
-		std::vector< Model::Player > mPlayers;
-
-		unsigned mNrRows;
-		unsigned mNrCols;
-		unsigned mStartRow;
-		unsigned mStartCol;
 	};
 }
 
