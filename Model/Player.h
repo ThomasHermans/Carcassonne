@@ -11,13 +11,13 @@
 
 namespace Model
 {
-	class NewPlayer
+	class Player
 	{
 	public:
 		/**
 		 *	Construct a new player with the given name and color.
 		 */
-		NewPlayer( std::string const & inName, Color::Color inColor );
+		Player( std::string const & inName, Color::Color inColor );
 
 		/**
 		 *	Get the name of this player.

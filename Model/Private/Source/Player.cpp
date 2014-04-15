@@ -5,7 +5,7 @@
 
 #include <cassert>
 
-Model::NewPlayer::NewPlayer( std::string const & inName, Color::Color inColor )
+Model::Player::Player( std::string const & inName, Color::Color inColor )
 :
 	mName( inName ),
 	mColor( inColor ),
@@ -16,37 +16,37 @@ Model::NewPlayer::NewPlayer( std::string const & inName, Color::Color inColor )
 }
 
 std::string const &
-Model::NewPlayer::getName() const
+Model::Player::getName() const
 {
 	return mName;
 }
 
 Model::Color::Color
-Model::NewPlayer::getColor() const
+Model::Player::getColor() const
 {
 	return mColor;
 }
 
 std::size_t
-Model::NewPlayer::getScore() const
+Model::Player::getScore() const
 {
 	return mScore;
 }
 
 std::size_t
-Model::NewPlayer::getNumberOfFreePieces() const
+Model::Player::getNumberOfFreePieces() const
 {
 	return mFreePieces.size();
 }
 
 bool
-Model::NewPlayer::hasFreePieces() const
+Model::Player::hasFreePieces() const
 {
 	return !mFreePieces.empty();
 }
 
 Model::Piece
-Model::NewPlayer::getPieceToPlace()
+Model::Player::getPieceToPlace()
 {
 	assert( hasFreePieces() );
 	Piece const result = mFreePieces.back();
@@ -56,21 +56,21 @@ Model::NewPlayer::getPieceToPlace()
 }
 
 void
-Model::NewPlayer::returnPiece( Piece const & inPiece )
+Model::Player::returnPiece( Piece const & inPiece )
 {
 	mFreePieces.push_back( inPiece );
 	GetInfoChangedSignal()();
 }
 
 void
-Model::NewPlayer::awardPoints( std::size_t inPoints )
+Model::Player::awardPoints( std::size_t inPoints )
 {
 	mScore += inPoints;
 	GetInfoChangedSignal()();
 }
 
 boost::signals2::signal< void () > &
-Model::NewPlayer::GetInfoChangedSignal()
+Model::Player::GetInfoChangedSignal()
 {
 	return *mInfoChanged;
 }

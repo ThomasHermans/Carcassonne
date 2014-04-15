@@ -13,12 +13,12 @@
 
 namespace
 {
-	std::vector< Model::NewPlayer >
+	std::vector< Model::Player >
 	createTestPlayers()
 	{
-		std::vector< Model::NewPlayer > players;
-		players.push_back( Model::NewPlayer( "Yumi", Model::Color::kYellow ) );
-		players.push_back( Model::NewPlayer( "Thomas", Model::Color::kGreen ) );
+		std::vector< Model::Player > players;
+		players.push_back( Model::Player( "Yumi", Model::Color::kYellow ) );
+		players.push_back( Model::Player( "Thomas", Model::Color::kGreen ) );
 		return players;
 	}
 }
@@ -35,7 +35,7 @@ Controller::GameController::GameController( std::string const & inTiles, QObject
 	startGame();
 }
 
-Controller::GameController::GameController( std::vector< Model::NewPlayer > const & inPlayers, QObject * inParent )
+Controller::GameController::GameController( std::vector< Model::Player > const & inPlayers, QObject * inParent )
 :
 	QObject( inParent ),
 	mPlayers( inPlayers ),
@@ -87,7 +87,7 @@ Controller::GameController::onTilesLeft( std::size_t inNr )
 }
 
 void
-Controller::GameController::onPiecePlaced( int inRow, int inCol, Model::PlacedPiece const & inPiece, Model::NewPlayer const & inCurrentPlayer )
+Controller::GameController::onPiecePlaced( int inRow, int inCol, Model::PlacedPiece const & inPiece, Model::Player const & inCurrentPlayer )
 {
 	int x = xFromCol( inCol );
 	int y = yFromRow( inRow );
@@ -97,7 +97,7 @@ Controller::GameController::onPiecePlaced( int inRow, int inCol, Model::PlacedPi
 }
 
 void
-Controller::GameController::onPieceRemoved( int inRow, int inCol, Model::PlacedPiece const & inPiece, Model::NewPlayer const & inPlayer )
+Controller::GameController::onPieceRemoved( int inRow, int inCol, Model::PlacedPiece const & inPiece, Model::Player const & inPlayer )
 {
 	int x = xFromCol( inCol );
 	int y = yFromRow( inRow );
@@ -107,14 +107,14 @@ Controller::GameController::onPieceRemoved( int inRow, int inCol, Model::PlacedP
 }
 
 void
-Controller::GameController::onPlayerInfoChanged( Model::NewPlayer const & inNewInfo )
+Controller::GameController::onPlayerInfoChanged( Model::Player const & inNewInfo )
 {
 	mWindow->setFollowersLeft( inNewInfo.getName(), inNewInfo.getNumberOfFreePieces() );
 	mWindow->setScore( inNewInfo.getName(), inNewInfo.getScore() );
 }
 
 void
-Controller::GameController::onCurrentPlayerChanged( Model::NewPlayer const & inCurrentPlayer )
+Controller::GameController::onCurrentPlayerChanged( Model::Player const & inCurrentPlayer )
 {
 	mWindow->setActivePlayer( inCurrentPlayer.getName() );
 }
@@ -168,7 +168,7 @@ Controller::GameController::onEndCurrentTurn()
 void
 Controller::GameController::addPlayersToWindow()
 {
-	BOOST_FOREACH( Model::NewPlayer const & player, mPlayers )
+	BOOST_FOREACH( Model::Player const & player, mPlayers )
 	{
 		mWindow->addPlayer( player.getName(), viewFromModel( player.getColor() ), player.getNumberOfFreePieces() );
 	}

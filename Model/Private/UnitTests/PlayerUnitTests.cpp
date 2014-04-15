@@ -4,9 +4,9 @@
 
 using namespace Model;
 
-TEST( "NewPlayer: constructor, getters and initial values" )
+TEST( "Player: constructor, getters and initial values" )
 {
-	NewPlayer const player( "Thomas", Color::kGreen );
+	Player const player( "Thomas", Color::kGreen );
 	CHECK( player.getName() == "Thomas" );
 	CHECK( player.getColor() == Color::kGreen );
 	CHECK( player.getScore() == 0 );
@@ -14,9 +14,9 @@ TEST( "NewPlayer: constructor, getters and initial values" )
 	CHECK( player.hasFreePieces() );
 }
 
-TEST( "NewPlayer: get and return a piece and check free pieces" )
+TEST( "Player: get and return a piece and check free pieces" )
 {
-	NewPlayer player( "Thomas", Color::kGreen );
+	Player player( "Thomas", Color::kGreen );
 	Piece const first = player.getPieceToPlace();
 	Piece const second = player.getPieceToPlace();
 	CHECK( player.getNumberOfFreePieces() == 4 );
@@ -24,9 +24,9 @@ TEST( "NewPlayer: get and return a piece and check free pieces" )
 	CHECK( player.getNumberOfFreePieces() == 5 );
 }
 
-TEST( "NewPlayer: award points" )
+TEST( "Player: award points" )
 {
-	NewPlayer player( "Thomas", Color::kGreen );
+	Player player( "Thomas", Color::kGreen );
 	player.awardPoints( 5 );
 	player.awardPoints( 4 );
 	player.awardPoints( 19 );

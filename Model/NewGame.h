@@ -20,11 +20,11 @@ namespace Model
 		/**
 		 *	There is a new current player.
 		 */
-		boost::signals2::signal< void ( NewPlayer const & inPlayer ) > currentPlayerChanged;
+		boost::signals2::signal< void ( Player const & inPlayer ) > currentPlayerChanged;
 		/**
 		 *	The information about a player has changed.
 		 */
-		boost::signals2::signal< void ( NewPlayer const & inPlayer ) > playerInfoChanged;
+		boost::signals2::signal< void ( Player const & inPlayer ) > playerInfoChanged;
 		/**
 		 *	A tile was placed on the specified location.
 		 */
@@ -44,11 +44,11 @@ namespace Model
 		/**
 		 *	A piece has been placed on the board.
 		 */
-		boost::signals2::signal< void ( int inRow, int inCol, PlacedPiece const & inPiece, NewPlayer const & inPlayer ) > piecePlaced;
+		boost::signals2::signal< void ( int inRow, int inCol, PlacedPiece const & inPiece, Player const & inPlayer ) > piecePlaced;
 		/**
 		 *	A piece has been removed from the board.
 		 */
-		boost::signals2::signal< void ( int inRow, int inCol, PlacedPiece const & inPiece, NewPlayer const & inPlayer ) > pieceRemoved;
+		boost::signals2::signal< void ( int inRow, int inCol, PlacedPiece const & inPiece, Player const & inPlayer ) > pieceRemoved;
 		/**
 		 *	The game has ended. The number of tiles left in the bag is passed.
 		 */
@@ -58,14 +58,14 @@ namespace Model
 		 *	Construct a game with the given players and the
 		 *	tiles for the base game.
 		 */
-		NewGame( std::vector< NewPlayer > const & inPlayers );
+		NewGame( std::vector< Player > const & inPlayers );
 
 		/**
 		 *	Construct a game with the given players and tiles.
 		 */
 		NewGame
 		(
-			std::vector< NewPlayer > const & inPlayers,
+			std::vector< Player > const & inPlayers,
 			std::string const & inTiles
 		);
 
@@ -128,7 +128,7 @@ namespace Model
 
 		void returnPieces( std::vector< PlacedPiece > const & inPieces, int inRow, int inCol );
 
-		NewPlayer & getPlayer( Color::Color inColor );
+		Player & getPlayer( Color::Color inColor );
 
 		bool isOccupiedOnCurrentTile( Area::Area inArea ) const;
 
@@ -147,7 +147,7 @@ namespace Model
 		NewBoard mBoard;
 		std::vector< Tile > mBag;
 		boost::optional< Tile > mNextTile;
-		std::vector< NewPlayer > mPlayers;
+		std::vector< Player > mPlayers;
 		std::size_t mCurrentPlayer;
 		std::size_t mPiecesPlacedThisTurn;
 

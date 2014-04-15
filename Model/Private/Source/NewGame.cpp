@@ -56,7 +56,7 @@ namespace
 	}
 }
 
-Model::NewGame::NewGame( std::vector< NewPlayer > const & inPlayers )
+Model::NewGame::NewGame( std::vector< Player > const & inPlayers )
 :
 	mBoard(),
 	mBag( createBaseGameTiles() ),
@@ -69,7 +69,7 @@ Model::NewGame::NewGame( std::vector< NewPlayer > const & inPlayers )
 	initialize();
 }
 
-Model::NewGame::NewGame( std::vector< NewPlayer > const & inPlayers, std::string const & inTiles )
+Model::NewGame::NewGame( std::vector< Player > const & inPlayers, std::string const & inTiles )
 :
 	mBoard(),
 	mBag( createTiles( inTiles ) ),
@@ -188,7 +188,7 @@ Model::NewGame::tryToPlacePiece
 	{
 		// Only the active player can place a piece, if he has free pieces
 		// and if he hasn't already placed a piece
-		NewPlayer & player = mPlayers[ mCurrentPlayer ];
+		Player & player = mPlayers[ mCurrentPlayer ];
 		if ( player.getColor() == inColor && player.hasFreePieces() && mPiecesPlacedThisTurn == 0 )
 		{
 			// You can only place a piece in an unoccupied area
@@ -253,8 +253,8 @@ Model::NewGame::initialize()
 	mBoard.finishedCity.connect( boost::bind( &Model::NewGame::onFinishedCity, this, _1 ) );
 	mBoard.finishedRoad.connect( boost::bind( &Model::NewGame::onFinishedRoad, this, _1 ) );
 	mBoard.finishedCloister.connect( boost::bind( &Model::NewGame::onFinishedCloister, this, _1, _2 ) );
-	// NewPlayer signals
-	BOOST_FOREACH( NewPlayer & player, mPlayers )
+	// Player signals
+	BOOST_FOREACH( Player & player, mPlayers )
 	{
 		boost::function< void () > forwardSignal = boost::bind( boost::ref( playerInfoChanged ), boost::ref( player ) );
 		// player.GetNrOfFreePiecesChangedSignal().connect( forwardSignal );
@@ -307,16 +307,16 @@ Model::NewGame::returnPieces( std::vector< PlacedPiece > const & inPieces, int i
 {
 	BOOST_FOREACH( PlacedPiece const & piece, inPieces )
 	{
-		NewPlayer & player = getPlayer( piece.getPiece().getColor() );
+		Player & player = getPlayer( piece.getPiece().getColor() );
 		player.returnPiece( piece.getPiece() );
 		pieceRemoved( inRow, inCol, piece, player );
 	}
 }
 
-Model::NewPlayer &
+Model::Player &
 Model::NewGame::getPlayer( Color::Color inColor )
 {
-	BOOST_FOREACH( NewPlayer & player, mPlayers )
+	BOOST_FOREACH( Player & player, mPlayers )
 	{
 		if ( player.getColor() == inColor )
 		{
