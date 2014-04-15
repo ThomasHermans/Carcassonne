@@ -1,7 +1,7 @@
 #ifndef CARCASSONNE_MODEL_NEWGAME_20140329
 #define CARCASSONNE_MODEL_NEWGAME_20140329
 
-#include "NewBoard.h"
+#include "Board.h"
 #include "PlacedProject.h"
 
 #include "Model/Player.h"
@@ -144,7 +144,7 @@ namespace Model
 		void onFinishedCloister( int inRow, int inCol );
 
 	private:
-		NewBoard mBoard;
+		Board mBoard;
 		std::vector< Tile > mBag;
 		boost::optional< Tile > mNextTile;
 		std::vector< Player > mPlayers;

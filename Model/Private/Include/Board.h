@@ -14,14 +14,14 @@ namespace Model
 	class PlacedPiece;
 
 	/**
-	 *	A NewBoard holds the information about which TileOnBoards
+	 *	A Board holds the information about which TileOnBoards
 	 *	are located where. For the public API, the start tile is
 	 *	always located on (0,0).
 	 */
-	class NewBoard
+	class Board
 	{
 	public:
-		NewBoard();
+		Board();
 
 		/**
 		 *	Count the total amount of tiles on the board.

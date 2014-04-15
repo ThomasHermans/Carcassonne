@@ -1,15 +1,15 @@
 #include <test_o_matic.hpp>
 
 #include "CreateBaseGameTiles.h"
-#include "NewBoard.h"
+#include "Board.h"
 #include "Tile.h"
 #include "TileOnBoard.h"
 
 using namespace Model;
 
-TEST( "NewBoard: constructor creates an empty board" )
+TEST( "Board: constructor creates an empty board" )
 {
-	NewBoard const board;
+	Board const board;
 	CHECK( board.getNrOfTiles() == 0 );
 	CHECK( !board.isTile( 0, 0 ) );
 	CHECK( !board.isTile( 0, 1 ) );
@@ -18,18 +18,18 @@ TEST( "NewBoard: constructor creates an empty board" )
 	CHECK( !board.isTile( 0, -1 ) );
 }
 
-TEST( "NewBoard: place a start tile" )
+TEST( "Board: place a start tile" )
 {
-	NewBoard board;
+	Board board;
 	CHECK( board.placeStartTile( TileOnBoard( createTileD(), kCw0 ) ) );
 	CHECK( board.getNrOfTiles() == 1 );
 	CHECK( board.isTile( 0, 0 ) );
 	CHECK( !board.placeStartTile( TileOnBoard( createTileF(), kCw0 ) ) );
 }
 
-TEST( "NewBoard: check for valid tile placements" )
+TEST( "Board: check for valid tile placements" )
 {
-	NewBoard board;
+	Board board;
 	TileOnBoard const startTile( createTileD(), kCw0 );
 	CHECK( !board.isValidTilePlacement( startTile, 1, 3 ) );
 	board.placeStartTile( startTile );
@@ -39,9 +39,9 @@ TEST( "NewBoard: check for valid tile placements" )
 	CHECK( !board.isValidTilePlacement( startTile, 0, -1 ) );
 }
 
-TEST( "NewBoard: check for possible tile" )
+TEST( "Board: check for possible tile" )
 {
-	NewBoard board;
+	Board board;
 	TileOnBoard const startTile( createTileD(), kCw0 );
 	board.placeStartTile( startTile );
 	CHECK( board.isPossibleTile( createTileE() ) );
@@ -51,7 +51,7 @@ namespace
 {
 	struct BoardFixture
 	{
-		NewBoard board;
+		Board board;
 		TileOnBoard startTile;
 		Piece piece;
 
@@ -68,7 +68,7 @@ namespace
 	class SignalCounter
 	{
 	public:
-		SignalCounter( Model::NewBoard & inBoard )
+		SignalCounter( Model::Board & inBoard )
 		:
 			mFinishedCityCount( 0 ),
 			mFinishedRoadCount( 0 ),
@@ -124,7 +124,7 @@ namespace
 	};
 }
 
-TESTFIX( "NewBoard: place extra tiles", BoardFixture )
+TESTFIX( "Board: place extra tiles", BoardFixture )
 {
 	CHECK( board.placeValidTile( TileOnBoard( createTileI(), kCw180 ), 0, 1 ) );
 	CHECK( board.placeValidTile( TileOnBoard( createTileV(), kCw270 ), -1, 0 ) );
@@ -137,7 +137,7 @@ TESTFIX( "NewBoard: place extra tiles", BoardFixture )
 	CHECK( board.getRightCol() == 1 );
 }
 
-TESTFIX( "NewBoard: check for occupied roads", BoardFixture )
+TESTFIX( "Board: check for occupied roads", BoardFixture )
 {
 	CHECK( !board.isOccupiedRoad( PlacedRoad( 0, 0, Area::kTop ) ) );
 	CHECK( !board.isOccupiedRoad( PlacedRoad( 0, 0, Area::kLeft ) ) );
@@ -157,7 +157,7 @@ TESTFIX( "NewBoard: check for occupied roads", BoardFixture )
 	CHECK( board.isOccupiedRoad( PlacedRoad( 1, 0, Area::kTop ) ) );
 }
 
-TESTFIX( "NewBoard: check for occupied cities", BoardFixture )
+TESTFIX( "Board: check for occupied cities", BoardFixture )
 {
 	CHECK( !board.isOccupiedCity( PlacedCity( 0, 0, Area::kLeft ) ) );
 	CHECK( !board.isOccupiedCity( PlacedCity( 0, 0, Area::kCentral ) ) );
@@ -176,7 +176,7 @@ TESTFIX( "NewBoard: check for occupied cities", BoardFixture )
 	CHECK( board.isOccupiedCity( PlacedCity( -1, 2, Area::kTopRight ) ) );
 }
 
-TESTFIX( "NewBoard: check for occupied fields", BoardFixture )
+TESTFIX( "Board: check for occupied fields", BoardFixture )
 {
 	CHECK( !board.isOccupiedField( PlacedField( 0, 0, Area::kLeftTop ) ) );
 	CHECK( !board.isOccupiedField( PlacedField( 0, 0, Area::kCentral ) ) );
@@ -195,7 +195,7 @@ TESTFIX( "NewBoard: check for occupied fields", BoardFixture )
 	CHECK( board.isOccupiedField( PlacedField( 2, 0, Area::kBottom ) ) );
 }
 
-TESTFIX( "NewBoard: remove pieces from a specified tile & area", BoardFixture )
+TESTFIX( "Board: remove pieces from a specified tile & area", BoardFixture )
 {
 	TileOnBoard tileU( createTileU(), kCw0 );
 	tileU.placePiece( PlacedPiece( piece, Area::kLeft ) );
@@ -206,7 +206,7 @@ TESTFIX( "NewBoard: remove pieces from a specified tile & area", BoardFixture )
 	CHECK( !board.isOccupiedField( PlacedField( 1, 0, Area::kBottomLeft ) ) );
 }
 
-TESTFIX( "NewBoard: signal finishedCity is sent when needed", BoardFixture )
+TESTFIX( "Board: signal finishedCity is sent when needed", BoardFixture )
 {
 	SignalCounter counter( board );
 	CHECK( counter.GetFinishedCityCount() == 0 );
@@ -227,7 +227,7 @@ TESTFIX( "NewBoard: signal finishedCity is sent when needed", BoardFixture )
 	CHECK( counter.GetFinishedCityCount() == 2 );
 }
 
-TESTFIX( "NewBoard: signal finishedRoad is sent when needed", BoardFixture )
+TESTFIX( "Board: signal finishedRoad is sent when needed", BoardFixture )
 {
 	SignalCounter counter( board );
 	CHECK( counter.GetFinishedRoadCount() == 0 );
@@ -245,7 +245,7 @@ TESTFIX( "NewBoard: signal finishedRoad is sent when needed", BoardFixture )
 	CHECK( counter.GetFinishedRoadCount() == 1 );
 }
 
-TESTFIX( "NewBoard: signal finishedCloister is sent when needed", BoardFixture )
+TESTFIX( "Board: signal finishedCloister is sent when needed", BoardFixture )
 {
 	SignalCounter counter( board );
 	CHECK( counter.GetFinishedCloisterCount() == 0 );
@@ -268,7 +268,7 @@ TESTFIX( "NewBoard: signal finishedCloister is sent when needed", BoardFixture )
 	CHECK( counter.GetFinishedCloisterCount() == 1 );
 }
 
-TESTFIX( "NewBoard: simple isFinishedCity", BoardFixture )
+TESTFIX( "Board: simple isFinishedCity", BoardFixture )
 {
 	CHECK( !board.isFinishedCity( PlacedCity( 0, 0, Area::kTop ) ) );
 	CHECK( !board.isFinishedCity( PlacedCity( 0, 0, Area::kLeft ) ) );
@@ -280,7 +280,7 @@ TESTFIX( "NewBoard: simple isFinishedCity", BoardFixture )
 	CHECK( board.isFinishedCity( PlacedCity( 0, 1, Area::kLeftTop ) ) );
 }
 
-TESTFIX( "NewBoard: extended isFinishedCity", BoardFixture )
+TESTFIX( "Board: extended isFinishedCity", BoardFixture )
 {
 	TileOnBoard const tileN( createTileN(), kCw0 );
 	board.placeValidTile( tileN, 0, 1 );
@@ -299,7 +299,7 @@ TESTFIX( "NewBoard: extended isFinishedCity", BoardFixture )
 	CHECK( board.isFinishedCity( PlacedCity( -2, 0, Area::kCentral ) ) );
 }
 
-TESTFIX( "NewBoard: getIdentifierCity", BoardFixture )
+TESTFIX( "Board: getIdentifierCity", BoardFixture )
 {
 	PlacedCity const originTop( 0, 0, Area::kRightTop );
 	CHECK( board.getIdentifierCity( PlacedCity( 0, 0, Area::kRightBottom ) ) == originTop );
@@ -312,7 +312,7 @@ TESTFIX( "NewBoard: getIdentifierCity", BoardFixture )
 	CHECK( board.getIdentifierCity( PlacedCity( 0, 2, Area::kLeft ) ) == top );
 }
 
-TESTFIX( "NewBoard: getNrOfSurroundingTiles", BoardFixture )
+TESTFIX( "Board: getNrOfSurroundingTiles", BoardFixture )
 {
 	CHECK( board.getNrOfSurroundingTiles( 0, 0 ) == 1 );
 	CHECK( board.getNrOfSurroundingTiles( 0, 1 ) == 0 );
@@ -322,14 +322,14 @@ TESTFIX( "NewBoard: getNrOfSurroundingTiles", BoardFixture )
 	CHECK( board.getNrOfSurroundingTiles( 0, 0 ) == 4 );
 }
 
-TESTFIX( "NewBoard: getCompleteCity", BoardFixture )
+TESTFIX( "Board: getCompleteCity", BoardFixture )
 {
 	CHECK( board.getCompleteCity( PlacedCity( 0, 0, Area::kRight ) ).size() == 3 );
 	board.placeValidTile( TileOnBoard( createTileT(), kCw0 ), 0, 1 );
 	CHECK( board.getCompleteCity( PlacedCity( 0, 0, Area::kRight ) ).size() == 13 );
 }
 
-TESTFIX( "NewBoard: getCompleteRoad", BoardFixture )
+TESTFIX( "Board: getCompleteRoad", BoardFixture )
 {
 	CHECK( board.getCompleteRoad( PlacedRoad( 0, 0, Area::kCentral ) ).size() == 3 );
 	board.placeValidTile( TileOnBoard( createTileK(), kCw0 ), 1, 0 );
@@ -338,7 +338,7 @@ TESTFIX( "NewBoard: getCompleteRoad", BoardFixture )
 	CHECK( board.getCompleteRoad( PlacedRoad( 0, 0, Area::kTop ) ).size() == 7 );
 }
 
-TESTFIX( "NewBoard: getCompleteField", BoardFixture )
+TESTFIX( "Board: getCompleteField", BoardFixture )
 {
 	CHECK( board.getCompleteField( PlacedField( 0, 0, Area::kLeft ) ).size() == 5 );
 	CHECK( board.getCompleteField( PlacedField( 0, 0, Area::kTopRight ) ).size() == 2 );

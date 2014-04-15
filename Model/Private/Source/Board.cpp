@@ -1,4 +1,4 @@
-#include "NewBoard.h"
+#include "Board.h"
 
 #include "PlacedPiece.h"
 
@@ -24,7 +24,7 @@ namespace
 	}
 }
 
-Model::NewBoard::NewBoard()
+Model::Board::Board()
 :
 	mTiles( 1, boost::none ),
 	mStartRow( 0 ),
@@ -35,7 +35,7 @@ Model::NewBoard::NewBoard()
 }
 
 std::size_t
-Model::NewBoard::getNrOfTiles() const
+Model::Board::getNrOfTiles() const
 {
 	std::size_t nrOfTiles = 0;
 	for ( Tiles::const_iterator it = mTiles.begin(); it != mTiles.end(); ++it )
@@ -49,37 +49,37 @@ Model::NewBoard::getNrOfTiles() const
 }
 
 int
-Model::NewBoard::getTopRow() const
+Model::Board::getTopRow() const
 {
 	return - mStartRow;
 }
 
 int
-Model::NewBoard::getBottomRow() const
+Model::Board::getBottomRow() const
 {
 	return mNrRows - mStartRow - 1;
 }
 
 int
-Model::NewBoard::getLeftCol() const
+Model::Board::getLeftCol() const
 {
 	return - mStartCol;
 }
 
 int
-Model::NewBoard::getRightCol() const
+Model::Board::getRightCol() const
 {
 	return mNrCols - mStartCol - 1;
 }
 
 bool
-Model::NewBoard::isTile( int inRow, int inCol ) const
+Model::Board::isTile( int inRow, int inCol ) const
 {
 	return getTile( inRow, inCol );
 }
 
 boost::optional< Model::TileOnBoard >
-Model::NewBoard::getTile( int inRow, int inCol ) const
+Model::Board::getTile( int inRow, int inCol ) const
 {
 	int const index = getIndex( inRow, inCol );
 	if ( index >= 0 && index < int( mTiles.size() ) )
@@ -93,7 +93,7 @@ Model::NewBoard::getTile( int inRow, int inCol ) const
 }
 
 boost::optional< Model::TileOnBoard > &
-Model::NewBoard::getTile( int inRow, int inCol )
+Model::Board::getTile( int inRow, int inCol )
 {
 	ensureTile( inRow, inCol );
 	int const index = getIndex( inRow, inCol );
@@ -101,7 +101,7 @@ Model::NewBoard::getTile( int inRow, int inCol )
 }
 
 bool
-Model::NewBoard::placeStartTile( TileOnBoard const & inTile )
+Model::Board::placeStartTile( TileOnBoard const & inTile )
 {
 	if ( getNrOfTiles() == 0 )
 	{
@@ -114,7 +114,7 @@ Model::NewBoard::placeStartTile( TileOnBoard const & inTile )
 }
 
 bool
-Model::NewBoard::isValidTilePlacement( TileOnBoard const & inTile, int inRow, int inCol ) const
+Model::Board::isValidTilePlacement( TileOnBoard const & inTile, int inRow, int inCol ) const
 {
 	bool const tile = isTile( inRow, inCol );
 	bool const neighbor = hasNeighbor( inRow, inCol );
@@ -123,7 +123,7 @@ Model::NewBoard::isValidTilePlacement( TileOnBoard const & inTile, int inRow, in
 }
 
 bool
-Model::NewBoard::placeValidTile( TileOnBoard const & inTile, int inRow, int inCol )
+Model::Board::placeValidTile( TileOnBoard const & inTile, int inRow, int inCol )
 {
 	if ( isValidTilePlacement( inTile, inRow, inCol ) )
 	{
@@ -136,7 +136,7 @@ Model::NewBoard::placeValidTile( TileOnBoard const & inTile, int inRow, int inCo
 }
 
 bool
-Model::NewBoard::isPossibleTile( Tile const & inTile ) const
+Model::Board::isPossibleTile( Tile const & inTile ) const
 {
 	int const topRow = getTopRow() - 1;
 	int const bottomRow = getBottomRow() + 1;
@@ -162,7 +162,7 @@ Model::NewBoard::isPossibleTile( Tile const & inTile ) const
 }
 
 bool
-Model::NewBoard::isOccupiedRoad( PlacedRoad const & inRoad ) const
+Model::Board::isOccupiedRoad( PlacedRoad const & inRoad ) const
 {
 	if ( !isTile( inRoad.row, inRoad.col ) )
 	{
@@ -198,7 +198,7 @@ Model::NewBoard::isOccupiedRoad( PlacedRoad const & inRoad ) const
 }
 
 bool
-Model::NewBoard::isOccupiedCity( PlacedCity const & inCity ) const
+Model::Board::isOccupiedCity( PlacedCity const & inCity ) const
 {
 	if ( !isTile( inCity.row, inCity.col ) )
 	{
@@ -234,7 +234,7 @@ Model::NewBoard::isOccupiedCity( PlacedCity const & inCity ) const
 }
 
 bool
-Model::NewBoard::isOccupiedField( PlacedField const & inField ) const
+Model::Board::isOccupiedField( PlacedField const & inField ) const
 {
 	if ( !isTile( inField.row, inField.col ) )
 	{
@@ -270,7 +270,7 @@ Model::NewBoard::isOccupiedField( PlacedField const & inField ) const
 }
 
 std::vector< Model::PlacedPiece >
-Model::NewBoard::removePieces( PlacedProject inArea )
+Model::Board::removePieces( PlacedProject inArea )
 {
 	if ( isTile( inArea.row, inArea.col ) )
 	{
@@ -283,7 +283,7 @@ Model::NewBoard::removePieces( PlacedProject inArea )
 }
 
 bool
-Model::NewBoard::isFinishedCity( PlacedCity const & inCity ) const
+Model::Board::isFinishedCity( PlacedCity const & inCity ) const
 {
 	if ( !isCity( inCity ) )
 	{
@@ -326,7 +326,7 @@ Model::NewBoard::isFinishedCity( PlacedCity const & inCity ) const
 }
 
 Model::PlacedCity
-Model::NewBoard::getIdentifierCity( PlacedCity const & inCity ) const
+Model::Board::getIdentifierCity( PlacedCity const & inCity ) const
 {
 	if ( !isCity( inCity ) )
 	{
@@ -338,7 +338,7 @@ Model::NewBoard::getIdentifierCity( PlacedCity const & inCity ) const
 }
 
 std::size_t
-Model::NewBoard::getNrOfSurroundingTiles( int inRow, int inCol ) const
+Model::Board::getNrOfSurroundingTiles( int inRow, int inCol ) const
 {
 	if ( !isTile( inRow, inCol ) )
 	{
@@ -359,7 +359,7 @@ Model::NewBoard::getNrOfSurroundingTiles( int inRow, int inCol ) const
 }
 
 std::vector< Model::PlacedCity >
-Model::NewBoard::getCompleteCity( PlacedCity const & inCity ) const
+Model::Board::getCompleteCity( PlacedCity const & inCity ) const
 {
 	if ( !isCity( inCity ) )
 	{
@@ -391,7 +391,7 @@ Model::NewBoard::getCompleteCity( PlacedCity const & inCity ) const
 }
 
 std::vector< Model::PlacedRoad >
-Model::NewBoard::getCompleteRoad( PlacedRoad const & inRoad ) const
+Model::Board::getCompleteRoad( PlacedRoad const & inRoad ) const
 {
 	if ( !isRoad( inRoad ) )
 	{
@@ -423,7 +423,7 @@ Model::NewBoard::getCompleteRoad( PlacedRoad const & inRoad ) const
 }
 
 std::vector< Model::PlacedField >
-Model::NewBoard::getCompleteField( PlacedField const & inField ) const
+Model::Board::getCompleteField( PlacedField const & inField ) const
 {
 	if ( !isField( inField ) )
 	{
@@ -455,7 +455,7 @@ Model::NewBoard::getCompleteField( PlacedField const & inField ) const
 }
 
 int
-Model::NewBoard::getIndex( int inRow, int inCol ) const
+Model::Board::getIndex( int inRow, int inCol ) const
 {
 	int const internalRow = mStartRow + inRow;
 	int const internalCol = mStartCol + inCol;
@@ -470,7 +470,7 @@ Model::NewBoard::getIndex( int inRow, int inCol ) const
 }
 
 void
-Model::NewBoard::ensureTile( int inRow, int inCol )
+Model::Board::ensureTile( int inRow, int inCol )
 {
 	int const internalRow = mStartRow + inRow;
 	if ( internalRow < 0 )
@@ -493,7 +493,7 @@ Model::NewBoard::ensureTile( int inRow, int inCol )
 }
 
 void
-Model::NewBoard::addRowsTop( int inNrRows )
+Model::Board::addRowsTop( int inNrRows )
 {
 	mTiles.insert( mTiles.begin(), mNrCols * inNrRows, boost::none );
 	mStartRow += inNrRows;
@@ -501,14 +501,14 @@ Model::NewBoard::addRowsTop( int inNrRows )
 }
 
 void
-Model::NewBoard::addRowsBottom( int inNrRows )
+Model::Board::addRowsBottom( int inNrRows )
 {
 	mTiles.insert( mTiles.end(), mNrCols * inNrRows, boost::none );
 	mNrRows += inNrRows;
 }
 
 void
-Model::NewBoard::addColsLeft( int inNrCols )
+Model::Board::addColsLeft( int inNrCols )
 {
 	Tiles::iterator it = mTiles.begin();
 	for ( int row = 0; row < mNrRows; ++row )
@@ -528,7 +528,7 @@ Model::NewBoard::addColsLeft( int inNrCols )
 }
 
 void
-Model::NewBoard::addColsRight( int inNrCols )
+Model::Board::addColsRight( int inNrCols )
 {
 	Tiles::iterator it = mTiles.begin();
 	for ( int row = 0; row < mNrRows; ++row )
@@ -547,7 +547,7 @@ Model::NewBoard::addColsRight( int inNrCols )
 }
 
 bool
-Model::NewBoard::placeTile( TileOnBoard const & inTile, int inRow, int inCol )
+Model::Board::placeTile( TileOnBoard const & inTile, int inRow, int inCol )
 {
 	ensureTile( inRow, inCol );
 	if ( !isTile( inRow, inCol ) )
@@ -565,7 +565,7 @@ Model::NewBoard::placeTile( TileOnBoard const & inTile, int inRow, int inCol )
 }
 
 bool
-Model::NewBoard::hasNeighbor( int inRow, int inCol ) const
+Model::Board::hasNeighbor( int inRow, int inCol ) const
 {
 	return
 	(
@@ -575,7 +575,7 @@ Model::NewBoard::hasNeighbor( int inRow, int inCol ) const
 }
 
 bool
-Model::NewBoard::sidesMatch( TileOnBoard const & inTile, int inRow, int inCol ) const
+Model::Board::sidesMatch( TileOnBoard const & inTile, int inRow, int inCol ) const
 {
 	if ( isTile( inRow, inCol - 1 ) && !getTile( inRow, inCol - 1 )->matchesLeftOf( inTile ) )
 	{
@@ -597,7 +597,7 @@ Model::NewBoard::sidesMatch( TileOnBoard const & inTile, int inRow, int inCol ) 
 }
 
 void
-Model::NewBoard::checkForFinishedCities( int inRow, int inCol )
+Model::Board::checkForFinishedCities( int inRow, int inCol )
 {
 	if ( !isTile( inRow, inCol ) )
 	{
@@ -646,7 +646,7 @@ Model::NewBoard::checkForFinishedCities( int inRow, int inCol )
 }
 
 void
-Model::NewBoard::checkForFinishedRoads( int inRow, int inCol )
+Model::Board::checkForFinishedRoads( int inRow, int inCol )
 {
 	if ( !isTile( inRow, inCol ) )
 	{
@@ -695,7 +695,7 @@ Model::NewBoard::checkForFinishedRoads( int inRow, int inCol )
 }
 
 void
-Model::NewBoard::checkForFinishedCloisters( int inRow, int inCol )
+Model::Board::checkForFinishedCloisters( int inRow, int inCol )
 {
 	for ( int row = inRow - 1; row <= inRow + 1; ++row )
 	{
@@ -710,7 +710,7 @@ Model::NewBoard::checkForFinishedCloisters( int inRow, int inCol )
 }
 
 bool
-Model::NewBoard::isFinishedCloister( int inRow, int inCol ) const
+Model::Board::isFinishedCloister( int inRow, int inCol ) const
 {
 	return
 	(
@@ -721,7 +721,7 @@ Model::NewBoard::isFinishedCloister( int inRow, int inCol ) const
 }
 
 bool
-Model::NewBoard::isFullySurrounded( int inRow, int inCol ) const
+Model::Board::isFullySurrounded( int inRow, int inCol ) const
 {
 	for ( int row = inRow - 1; row <= inRow + 1; ++row )
 	{
@@ -737,19 +737,19 @@ Model::NewBoard::isFullySurrounded( int inRow, int inCol ) const
 }
 
 bool
-Model::NewBoard::isCity( PlacedCity const & inCity ) const
+Model::Board::isCity( PlacedCity const & inCity ) const
 {
 	return isTile( inCity.row, inCity.col ) && getTile( inCity.row, inCity.col )->isCity( inCity.area );
 }
 
 bool
-Model::NewBoard::isRoad( PlacedRoad const & inRoad ) const
+Model::Board::isRoad( PlacedRoad const & inRoad ) const
 {
 	return isTile( inRoad.row, inRoad.col ) && getTile( inRoad.row, inRoad.col )->isRoad( inRoad.area );
 }
 
 bool
-Model::NewBoard::isField( PlacedField const & inField ) const
+Model::Board::isField( PlacedField const & inField ) const
 {
 	return isTile( inField.row, inField.col ) && getTile( inField.row, inField.col )->isField( inField.area );
 }
