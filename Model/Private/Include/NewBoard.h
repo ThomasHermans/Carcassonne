@@ -90,7 +90,7 @@ namespace Model
 		 *	the specified area is not a road, or the road is not
 		 *	occupied.
 		 */
-		bool isOccupiedRoad( NewPlacedRoad const & inRoad ) const;
+		bool isOccupiedRoad( PlacedRoad const & inRoad ) const;
 
 		/**
 		 *	Check whether the specified city is occupied.
@@ -98,7 +98,7 @@ namespace Model
 		 *	the specified area is not a city, or the city is not
 		 *	occupied.
 		 */
-		bool isOccupiedCity( NewPlacedCity const & inCity ) const;
+		bool isOccupiedCity( PlacedCity const & inCity ) const;
 
 		/**
 		 *	Check whether the specified field is occupied.
@@ -106,23 +106,23 @@ namespace Model
 		 *	the specified area is not a field, or the field is not
 		 *	occupied.
 		 */
-		bool isOccupiedField( NewPlacedField const & inField ) const;
+		bool isOccupiedField( PlacedField const & inField ) const;
 
 		/**
 		 *	Remove all the pieces from the specified area on that tile.
 		 *	Returns all the removed pieces.
 		 */
-		std::vector< PlacedPiece > removePieces( NewPlacedProject inArea );
+		std::vector< PlacedPiece > removePieces( PlacedProject inArea );
 
 		/**
 		 *	Signal sent out when a city is now finished.
 		 */
-		boost::signals2::signal< void ( std::vector< NewPlacedCity > ) > finishedCity;
+		boost::signals2::signal< void ( std::vector< PlacedCity > ) > finishedCity;
 
 		/**
 		 *	Signal sent out when a road is now finished.
 		 */
-		boost::signals2::signal< void ( std::vector< NewPlacedRoad > ) > finishedRoad;
+		boost::signals2::signal< void ( std::vector< PlacedRoad > ) > finishedRoad;
 
 		/**
 		 *	Signal sent out when a cloister is now finished.
@@ -133,14 +133,14 @@ namespace Model
 		/**
 		 *	Is the specified city finished?
 		 */
-		bool isFinishedCity( NewPlacedCity const & inCity ) const;
+		bool isFinishedCity( PlacedCity const & inCity ) const;
 
 		/**
-		 *	Returns the identifier NewPlacedCity.
+		 *	Returns the identifier PlacedCity.
 		 *	Several NewPlacedCities that are part of the same contiguous city,
-		 *	will return the same identifier NewPlacedCity.
+		 *	will return the same identifier PlacedCity.
 		 */
-		NewPlacedCity getIdentifierCity( NewPlacedCity const & inCity ) const;
+		PlacedCity getIdentifierCity( PlacedCity const & inCity ) const;
 
 		/**
 		 *	Returns the number of tiles around the specified tile, including
@@ -155,19 +155,19 @@ namespace Model
 		 *	Get the complete city that is connected with the specified
 		 *	city area.
 		 */
-		std::vector< NewPlacedCity > getCompleteCity( NewPlacedCity const & inCity ) const;
+		std::vector< PlacedCity > getCompleteCity( PlacedCity const & inCity ) const;
 
 		/**
 		 *	Get the complete road that is connected with the specified
 		 *	road area.
 		 */
-		std::vector< NewPlacedRoad > getCompleteRoad( NewPlacedRoad const & inRoad ) const;
+		std::vector< PlacedRoad > getCompleteRoad( PlacedRoad const & inRoad ) const;
 
 		/**
 		 *	Get the complete field that is connected with the specified
 		 *	field area.
 		 */
-		std::vector< NewPlacedField > getCompleteField( NewPlacedField const & inField ) const;
+		std::vector< PlacedField > getCompleteField( PlacedField const & inField ) const;
 
 	private:
 		int getIndex( int inRow, int inCol ) const;
@@ -189,9 +189,9 @@ namespace Model
 		bool isFinishedCloister( int inRow, int inCol ) const;
 		bool isFullySurrounded( int inRow, int inCol ) const;
 
-		bool isCity( NewPlacedCity const & inCity ) const;
-		bool isRoad( NewPlacedRoad const & inRoad ) const;
-		bool isField( NewPlacedField const & inField ) const;
+		bool isCity( PlacedCity const & inCity ) const;
+		bool isRoad( PlacedRoad const & inRoad ) const;
+		bool isField( PlacedField const & inField ) const;
 
 	private:
 		typedef std::vector< boost::optional< TileOnBoard > > Tiles;

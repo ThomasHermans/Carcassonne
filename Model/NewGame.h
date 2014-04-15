@@ -103,7 +103,7 @@ namespace Model
 		 */
 		void tryToPlacePiece
 		(
-			NewPlacedProject const & inPlace,
+			PlacedProject const & inPlace,
 			Piece::PieceType inType,
 			Color::Color inColor
 		);
@@ -139,8 +139,8 @@ namespace Model
 
 		void awardPoints( std::set< Color::Color > const & inWinningColors, std::size_t inPoints );
 
-		void onFinishedCity( std::vector< NewPlacedCity > const & inCity );
-		void onFinishedRoad( std::vector< NewPlacedRoad > const & inRoad );
+		void onFinishedCity( std::vector< PlacedCity > const & inCity );
+		void onFinishedRoad( std::vector< PlacedRoad > const & inRoad );
 		void onFinishedCloister( int inRow, int inCol );
 
 	private:

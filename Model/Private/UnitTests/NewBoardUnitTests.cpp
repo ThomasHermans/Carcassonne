@@ -139,60 +139,60 @@ TESTFIX( "NewBoard: place extra tiles", BoardFixture )
 
 TESTFIX( "NewBoard: check for occupied roads", BoardFixture )
 {
-	CHECK( !board.isOccupiedRoad( NewPlacedRoad( 0, 0, Area::kTop ) ) );
-	CHECK( !board.isOccupiedRoad( NewPlacedRoad( 0, 0, Area::kLeft ) ) );
-	CHECK( !board.isOccupiedRoad( NewPlacedRoad( 3, 0, Area::kBottomLeft ) ) );
+	CHECK( !board.isOccupiedRoad( PlacedRoad( 0, 0, Area::kTop ) ) );
+	CHECK( !board.isOccupiedRoad( PlacedRoad( 0, 0, Area::kLeft ) ) );
+	CHECK( !board.isOccupiedRoad( PlacedRoad( 3, 0, Area::kBottomLeft ) ) );
 
 	TileOnBoard tileV( createTileV(), kCw270 );
 	tileV.placePiece( PlacedPiece( piece, Area::kRight ) );
 	REQUIRE( board.placeValidTile( tileV, -1, 0 ) );
-	CHECK( board.isOccupiedRoad( NewPlacedRoad( -1, 0, Area::kRight ) ) );
-	CHECK( board.isOccupiedRoad( NewPlacedRoad( 0, 0, Area::kBottom ) ) );
+	CHECK( board.isOccupiedRoad( PlacedRoad( -1, 0, Area::kRight ) ) );
+	CHECK( board.isOccupiedRoad( PlacedRoad( 0, 0, Area::kBottom ) ) );
 
 	TileOnBoard tileW( createTileW(), kCw180 );
 	tileW.placePiece( PlacedPiece( piece, Area::kRight ) );
 	REQUIRE( board.placeValidTile( tileW, 1, 0 ) );
-	CHECK( board.isOccupiedRoad( NewPlacedRoad( 1, 0, Area::kRight ) ) );
-	CHECK( !board.isOccupiedRoad( NewPlacedRoad( 1, 0, Area::kLeft ) ) );
-	CHECK( board.isOccupiedRoad( NewPlacedRoad( 1, 0, Area::kTop ) ) );
+	CHECK( board.isOccupiedRoad( PlacedRoad( 1, 0, Area::kRight ) ) );
+	CHECK( !board.isOccupiedRoad( PlacedRoad( 1, 0, Area::kLeft ) ) );
+	CHECK( board.isOccupiedRoad( PlacedRoad( 1, 0, Area::kTop ) ) );
 }
 
 TESTFIX( "NewBoard: check for occupied cities", BoardFixture )
 {
-	CHECK( !board.isOccupiedCity( NewPlacedCity( 0, 0, Area::kLeft ) ) );
-	CHECK( !board.isOccupiedCity( NewPlacedCity( 0, 0, Area::kCentral ) ) );
-	CHECK( !board.isOccupiedCity( NewPlacedCity( 3, 7, Area::kBottomLeft ) ) );
+	CHECK( !board.isOccupiedCity( PlacedCity( 0, 0, Area::kLeft ) ) );
+	CHECK( !board.isOccupiedCity( PlacedCity( 0, 0, Area::kCentral ) ) );
+	CHECK( !board.isOccupiedCity( PlacedCity( 3, 7, Area::kBottomLeft ) ) );
 
 	TileOnBoard tileN( createTileN(), kCw0 );
 	tileN.placePiece( PlacedPiece( piece, Area::kLeft ) );
 	REQUIRE( board.placeValidTile( tileN, 0, 1 ) );
-	CHECK( board.isOccupiedCity( NewPlacedCity( 0, 1, Area::kTop ) ) );
-	CHECK( board.isOccupiedCity( NewPlacedCity( 0, 0, Area::kRightBottom ) ) );
+	CHECK( board.isOccupiedCity( PlacedCity( 0, 1, Area::kTop ) ) );
+	CHECK( board.isOccupiedCity( PlacedCity( 0, 0, Area::kRightBottom ) ) );
 
 	TileOnBoard const secondN( createTileN(), kCw180 );
 	TileOnBoard const thirdN( createTileN(), kCw0 );
 	REQUIRE( board.placeValidTile( secondN, -1, 1 ) );
 	REQUIRE( board.placeValidTile( thirdN, -1, 2 ) );
-	CHECK( board.isOccupiedCity( NewPlacedCity( -1, 2, Area::kTopRight ) ) );
+	CHECK( board.isOccupiedCity( PlacedCity( -1, 2, Area::kTopRight ) ) );
 }
 
 TESTFIX( "NewBoard: check for occupied fields", BoardFixture )
 {
-	CHECK( !board.isOccupiedField( NewPlacedField( 0, 0, Area::kLeftTop ) ) );
-	CHECK( !board.isOccupiedField( NewPlacedField( 0, 0, Area::kCentral ) ) );
-	CHECK( !board.isOccupiedField( NewPlacedField( 3, 7, Area::kBottomLeft ) ) );
+	CHECK( !board.isOccupiedField( PlacedField( 0, 0, Area::kLeftTop ) ) );
+	CHECK( !board.isOccupiedField( PlacedField( 0, 0, Area::kCentral ) ) );
+	CHECK( !board.isOccupiedField( PlacedField( 3, 7, Area::kBottomLeft ) ) );
 
 	TileOnBoard tileU( createTileU(), kCw0 );
 	tileU.placePiece( PlacedPiece( piece, Area::kLeft ) );
 	REQUIRE( board.placeValidTile( tileU, 1, 0 ) );
-	CHECK( board.isOccupiedField( NewPlacedField( 0, 0, Area::kLeftTop ) ) );
-	CHECK( board.isOccupiedField( NewPlacedField( 1, 0, Area::kBottomLeft ) ) );
-	CHECK( !board.isOccupiedField( NewPlacedField( 0, 0, Area::kTopRight ) ) );
+	CHECK( board.isOccupiedField( PlacedField( 0, 0, Area::kLeftTop ) ) );
+	CHECK( board.isOccupiedField( PlacedField( 1, 0, Area::kBottomLeft ) ) );
+	CHECK( !board.isOccupiedField( PlacedField( 0, 0, Area::kTopRight ) ) );
 
 	TileOnBoard const tileA( createTileA(), kCw180 );
 	REQUIRE( board.placeValidTile( tileA, 2, 0 ) );
-	CHECK( board.isOccupiedField( NewPlacedField( 0, 0, Area::kTopRight ) ) );
-	CHECK( board.isOccupiedField( NewPlacedField( 2, 0, Area::kBottom ) ) );
+	CHECK( board.isOccupiedField( PlacedField( 0, 0, Area::kTopRight ) ) );
+	CHECK( board.isOccupiedField( PlacedField( 2, 0, Area::kBottom ) ) );
 }
 
 TESTFIX( "NewBoard: remove pieces from a specified tile & area", BoardFixture )
@@ -200,10 +200,10 @@ TESTFIX( "NewBoard: remove pieces from a specified tile & area", BoardFixture )
 	TileOnBoard tileU( createTileU(), kCw0 );
 	tileU.placePiece( PlacedPiece( piece, Area::kLeft ) );
 	board.placeValidTile( tileU, 1, 0 );
-	CHECK( board.isOccupiedField( NewPlacedField( 1, 0, Area::kBottomLeft ) ) );
-	std::vector< PlacedPiece > const pieces = board.removePieces( NewPlacedProject( 1, 0, Area::kLeft ) );
+	CHECK( board.isOccupiedField( PlacedField( 1, 0, Area::kBottomLeft ) ) );
+	std::vector< PlacedPiece > const pieces = board.removePieces( PlacedProject( 1, 0, Area::kLeft ) );
 	CHECK( pieces.size() == 1 );
-	CHECK( !board.isOccupiedField( NewPlacedField( 1, 0, Area::kBottomLeft ) ) );
+	CHECK( !board.isOccupiedField( PlacedField( 1, 0, Area::kBottomLeft ) ) );
 }
 
 TESTFIX( "NewBoard: signal finishedCity is sent when needed", BoardFixture )
@@ -270,14 +270,14 @@ TESTFIX( "NewBoard: signal finishedCloister is sent when needed", BoardFixture )
 
 TESTFIX( "NewBoard: simple isFinishedCity", BoardFixture )
 {
-	CHECK( !board.isFinishedCity( NewPlacedCity( 0, 0, Area::kTop ) ) );
-	CHECK( !board.isFinishedCity( NewPlacedCity( 0, 0, Area::kLeft ) ) );
-	CHECK( !board.isFinishedCity( NewPlacedCity( 0, 0, Area::kRight ) ) );
+	CHECK( !board.isFinishedCity( PlacedCity( 0, 0, Area::kTop ) ) );
+	CHECK( !board.isFinishedCity( PlacedCity( 0, 0, Area::kLeft ) ) );
+	CHECK( !board.isFinishedCity( PlacedCity( 0, 0, Area::kRight ) ) );
 
 	TileOnBoard const tileE( createTileE(), kCw270 );
 	board.placeValidTile( tileE, 0, 1 );
-	CHECK( board.isFinishedCity( NewPlacedCity( 0, 0, Area::kRight ) ) );
-	CHECK( board.isFinishedCity( NewPlacedCity( 0, 1, Area::kLeftTop ) ) );
+	CHECK( board.isFinishedCity( PlacedCity( 0, 0, Area::kRight ) ) );
+	CHECK( board.isFinishedCity( PlacedCity( 0, 1, Area::kLeftTop ) ) );
 }
 
 TESTFIX( "NewBoard: extended isFinishedCity", BoardFixture )
@@ -292,24 +292,24 @@ TESTFIX( "NewBoard: extended isFinishedCity", BoardFixture )
 	board.placeValidTile( tileH, -1, -1 );
 	TileOnBoard const tileG( createTileG(), kCw0 );
 	board.placeValidTile( tileG, -2, 0 );
-	CHECK( !board.isFinishedCity( NewPlacedCity( -2, 0, Area::kCentral ) ) );
+	CHECK( !board.isFinishedCity( PlacedCity( -2, 0, Area::kCentral ) ) );
 	TileOnBoard const tileE( createTileE(), kCw180 );
 	board.placeValidTile( tileE, -3, 0 );
-	CHECK( board.isFinishedCity( NewPlacedCity( 0, 0, Area::kRight ) ) );
-	CHECK( board.isFinishedCity( NewPlacedCity( -2, 0, Area::kCentral ) ) );
+	CHECK( board.isFinishedCity( PlacedCity( 0, 0, Area::kRight ) ) );
+	CHECK( board.isFinishedCity( PlacedCity( -2, 0, Area::kCentral ) ) );
 }
 
 TESTFIX( "NewBoard: getIdentifierCity", BoardFixture )
 {
-	NewPlacedCity const originTop( 0, 0, Area::kRightTop );
-	CHECK( board.getIdentifierCity( NewPlacedCity( 0, 0, Area::kRightBottom ) ) == originTop );
+	PlacedCity const originTop( 0, 0, Area::kRightTop );
+	CHECK( board.getIdentifierCity( PlacedCity( 0, 0, Area::kRightBottom ) ) == originTop );
 	board.placeValidTile( TileOnBoard( createTileG(), kCw90 ), 0, 1 );
-	CHECK( board.getIdentifierCity( NewPlacedCity( 0, 1, Area::kCentral ) ) == originTop );
+	CHECK( board.getIdentifierCity( PlacedCity( 0, 1, Area::kCentral ) ) == originTop );
 	board.placeValidTile( TileOnBoard( createTileN(), kCw0 ), 0, 2 );
 	board.placeValidTile( TileOnBoard( createTileG(), kCw0 ), -1, 2 );
-	NewPlacedCity const top( -1, 2, Area::kTopLeft );
-	CHECK( board.getIdentifierCity( NewPlacedCity( 0, 0, Area::kRight ) ) == top );
-	CHECK( board.getIdentifierCity( NewPlacedCity( 0, 2, Area::kLeft ) ) == top );
+	PlacedCity const top( -1, 2, Area::kTopLeft );
+	CHECK( board.getIdentifierCity( PlacedCity( 0, 0, Area::kRight ) ) == top );
+	CHECK( board.getIdentifierCity( PlacedCity( 0, 2, Area::kLeft ) ) == top );
 }
 
 TESTFIX( "NewBoard: getNrOfSurroundingTiles", BoardFixture )
@@ -324,28 +324,28 @@ TESTFIX( "NewBoard: getNrOfSurroundingTiles", BoardFixture )
 
 TESTFIX( "NewBoard: getCompleteCity", BoardFixture )
 {
-	CHECK( board.getCompleteCity( NewPlacedCity( 0, 0, Area::kRight ) ).size() == 3 );
+	CHECK( board.getCompleteCity( PlacedCity( 0, 0, Area::kRight ) ).size() == 3 );
 	board.placeValidTile( TileOnBoard( createTileT(), kCw0 ), 0, 1 );
-	CHECK( board.getCompleteCity( NewPlacedCity( 0, 0, Area::kRight ) ).size() == 13 );
+	CHECK( board.getCompleteCity( PlacedCity( 0, 0, Area::kRight ) ).size() == 13 );
 }
 
 TESTFIX( "NewBoard: getCompleteRoad", BoardFixture )
 {
-	CHECK( board.getCompleteRoad( NewPlacedRoad( 0, 0, Area::kCentral ) ).size() == 3 );
+	CHECK( board.getCompleteRoad( PlacedRoad( 0, 0, Area::kCentral ) ).size() == 3 );
 	board.placeValidTile( TileOnBoard( createTileK(), kCw0 ), 1, 0 );
-	CHECK( board.getCompleteRoad( NewPlacedRoad( 0, 0, Area::kTop ) ).size() == 6 );
+	CHECK( board.getCompleteRoad( PlacedRoad( 0, 0, Area::kTop ) ).size() == 6 );
 	board.placeValidTile( TileOnBoard( createTileW(), kCw0 ), 1, -1 );
-	CHECK( board.getCompleteRoad( NewPlacedRoad( 0, 0, Area::kTop ) ).size() == 7 );
+	CHECK( board.getCompleteRoad( PlacedRoad( 0, 0, Area::kTop ) ).size() == 7 );
 }
 
 TESTFIX( "NewBoard: getCompleteField", BoardFixture )
 {
-	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kLeft ) ).size() == 5 );
-	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kTopRight ) ).size() == 2 );
+	CHECK( board.getCompleteField( PlacedField( 0, 0, Area::kLeft ) ).size() == 5 );
+	CHECK( board.getCompleteField( PlacedField( 0, 0, Area::kTopRight ) ).size() == 2 );
 	board.placeValidTile( TileOnBoard( createTileK(), kCw0 ), 1, 0 );
-	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kTopLeft ) ).size() == 7 );
-	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kTopRight ) ).size() == 7 );
+	CHECK( board.getCompleteField( PlacedField( 0, 0, Area::kTopLeft ) ).size() == 7 );
+	CHECK( board.getCompleteField( PlacedField( 0, 0, Area::kTopRight ) ).size() == 7 );
 	board.placeValidTile( TileOnBoard( createTileW(), kCw0 ), 1, -1 );
-	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kTopLeft ) ).size() == 12 );
-	CHECK( board.getCompleteField( NewPlacedField( 0, 0, Area::kTopRight ) ).size() == 9 );
+	CHECK( board.getCompleteField( PlacedField( 0, 0, Area::kTopLeft ) ).size() == 12 );
+	CHECK( board.getCompleteField( PlacedField( 0, 0, Area::kTopRight ) ).size() == 9 );
 }

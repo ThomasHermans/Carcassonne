@@ -178,7 +178,7 @@ Model::NewGame::rotateTile( int inRow, int inCol )
 void
 Model::NewGame::tryToPlacePiece
 (
-	NewPlacedProject const & inPlace,
+	PlacedProject const & inPlace,
 	Piece::PieceType inType,
 	Color::Color inColor
 )
@@ -342,17 +342,17 @@ Model::NewGame::isOccupiedOnCurrentTile( Area::Area inArea ) const
 	if ( mCurrentPlacedTile->tile.isRoad( inArea ) )
 	{
 		ContiguousRoad const contRoad = mCurrentPlacedTile->tile.getContiguousRoad( inArea );
-		std::vector< NewPlacedRoad > roadsToCheck;
+		std::vector< PlacedRoad > roadsToCheck;
 		BOOST_FOREACH( Area::Area area, contRoad )
 		{
 			if ( mCurrentPlacedTile->tile.hasPiece( area ) )
 			{
 				return true;
 			}
-			NewPlacedRoad const thisRoad( mCurrentPlacedTile->row, mCurrentPlacedTile->col, area );
+			PlacedRoad const thisRoad( mCurrentPlacedTile->row, mCurrentPlacedTile->col, area );
 			roadsToCheck.push_back( getNeighbor( thisRoad ) );
 		}
-		BOOST_FOREACH( NewPlacedRoad road, roadsToCheck )
+		BOOST_FOREACH( PlacedRoad road, roadsToCheck )
 		{
 			if ( mBoard.isOccupiedRoad( road ) )
 			{
@@ -365,17 +365,17 @@ Model::NewGame::isOccupiedOnCurrentTile( Area::Area inArea ) const
 	if ( mCurrentPlacedTile->tile.isCity( inArea ) )
 	{
 		ContiguousCity const contCity = mCurrentPlacedTile->tile.getContiguousCity( inArea );
-		std::vector< NewPlacedCity > citiesToCheck;
+		std::vector< PlacedCity > citiesToCheck;
 		BOOST_FOREACH( Area::Area area, contCity )
 		{
 			if ( mCurrentPlacedTile->tile.hasPiece( area ) )
 			{
 				return true;
 			}
-			NewPlacedCity const thisCity( mCurrentPlacedTile->row, mCurrentPlacedTile->col, area );
+			PlacedCity const thisCity( mCurrentPlacedTile->row, mCurrentPlacedTile->col, area );
 			citiesToCheck.push_back( getNeighbor( thisCity ) );
 		}
-		BOOST_FOREACH( NewPlacedCity city, citiesToCheck )
+		BOOST_FOREACH( PlacedCity city, citiesToCheck )
 		{
 			if ( mBoard.isOccupiedCity( city ) )
 			{
@@ -388,17 +388,17 @@ Model::NewGame::isOccupiedOnCurrentTile( Area::Area inArea ) const
 	if ( mCurrentPlacedTile->tile.isField( inArea ) )
 	{
 		ContiguousField const contField = mCurrentPlacedTile->tile.getContiguousField( inArea );
-		std::vector< NewPlacedField > fieldsToCheck;
+		std::vector< PlacedField > fieldsToCheck;
 		BOOST_FOREACH( Area::Area area, contField )
 		{
 			if ( mCurrentPlacedTile->tile.hasPiece( area ) )
 			{
 				return true;
 			}
-			NewPlacedField const thisField( mCurrentPlacedTile->row, mCurrentPlacedTile->col, area );
+			PlacedField const thisField( mCurrentPlacedTile->row, mCurrentPlacedTile->col, area );
 			fieldsToCheck.push_back( getNeighbor( thisField ) );
 		}
-		BOOST_FOREACH( NewPlacedField field, fieldsToCheck )
+		BOOST_FOREACH( PlacedField field, fieldsToCheck )
 		{
 			if ( mBoard.isOccupiedField( field ) )
 			{
@@ -427,7 +427,7 @@ Model::NewGame::awardEndCloisterPoints()
 					if ( tile.isCloister( piece.getArea() ) )
 					{
 						// Remove and return all pieces from the cloister
-						NewPlacedProject const project( row, col, piece.getArea() );
+						PlacedProject const project( row, col, piece.getArea() );
 						std::vector< PlacedPiece > const pieces = mBoard.removePieces( project );
 						returnPieces( pieces, row, col );
 						// Calculate winner(s) and points of the cloister
@@ -457,13 +457,13 @@ Model::NewGame::awardEndCityPoints()
 				{
 					if ( tile.isCity( piece.getArea() ) )
 					{
-						NewPlacedCity const cityPart( row, col, piece.getArea() );
-						std::vector< NewPlacedCity > const completeCity = mBoard.getCompleteCity( cityPart );
+						PlacedCity const cityPart( row, col, piece.getArea() );
+						std::vector< PlacedCity > const completeCity = mBoard.getCompleteCity( cityPart );
 						// Go over the complete city to get all the information
 						std::vector< PlacedPiece > allPieces;
 						std::set< std::pair< int, int > > usedTiles;
-						std::set< NewPlacedCity > allShields;
-						BOOST_FOREACH( NewPlacedCity const & city, completeCity )
+						std::set< PlacedCity > allShields;
+						BOOST_FOREACH( PlacedCity const & city, completeCity )
 						{
 							// Add the tile to usedTiles
 							usedTiles.insert( std::make_pair( city.row, city.col ) );
@@ -505,12 +505,12 @@ Model::NewGame::awardEndRoadPoints()
 				{
 					if ( tile.isRoad( piece.getArea() ) )
 					{
-						NewPlacedRoad const roadPart( row, col, piece.getArea() );
-						std::vector< NewPlacedRoad > const completeRoad = mBoard.getCompleteRoad( roadPart );
+						PlacedRoad const roadPart( row, col, piece.getArea() );
+						std::vector< PlacedRoad > const completeRoad = mBoard.getCompleteRoad( roadPart );
 						// Go over the complete road to get all the information
 						std::vector< PlacedPiece > allPieces;
 						std::set< std::pair< int, int > > usedTiles;
-						BOOST_FOREACH( NewPlacedRoad const & road, completeRoad )
+						BOOST_FOREACH( PlacedRoad const & road, completeRoad )
 						{
 							// Add the tile to usedTiles
 							usedTiles.insert( std::make_pair( road.row, road.col ) );
@@ -546,21 +546,21 @@ Model::NewGame::awardEndFieldPoints()
 				{
 					if ( tile.isField( piece.getArea() ) )
 					{
-						NewPlacedField const fieldPart( row, col, piece.getArea() );
-						std::vector< NewPlacedField > const completeField = mBoard.getCompleteField( fieldPart );
+						PlacedField const fieldPart( row, col, piece.getArea() );
+						std::vector< PlacedField > const completeField = mBoard.getCompleteField( fieldPart );
 						// Go over the complete field to get all the information
 						std::vector< PlacedPiece > allPieces;
-						std::set< NewPlacedCity > finishedCities;
-						BOOST_FOREACH( NewPlacedField const & field, completeField )
+						std::set< PlacedCity > finishedCities;
+						BOOST_FOREACH( PlacedField const & field, completeField )
 						{
 							std::vector< ContiguousCity > const cities = mBoard.getTile( field.row, field.col )->getCitiesPerField( field.area );
 							// Add the identifier city part of every finished city to finishedCities
 							BOOST_FOREACH( ContiguousCity const & city, cities )
 							{
-								NewPlacedCity const cityPart( field.row, field.col, city.front() );
+								PlacedCity const cityPart( field.row, field.col, city.front() );
 								if ( mBoard.isFinishedCity( cityPart ) )
 								{
-									NewPlacedCity const id = mBoard.getIdentifierCity( cityPart );
+									PlacedCity const id = mBoard.getIdentifierCity( cityPart );
 									finishedCities.insert( id );
 								}
 							}
@@ -591,12 +591,12 @@ Model::NewGame::awardPoints( std::set< Color::Color > const & inWinningColors, s
 }
 
 void
-Model::NewGame::onFinishedCity( std::vector< NewPlacedCity > const & inCity )
+Model::NewGame::onFinishedCity( std::vector< PlacedCity > const & inCity )
 {
 	std::vector< PlacedPiece > allPieces;
 	std::set< std::pair< int, int > > usedTiles;
-	std::set< NewPlacedCity > allShields;
-	BOOST_FOREACH( NewPlacedCity const & city, inCity )
+	std::set< PlacedCity > allShields;
+	BOOST_FOREACH( PlacedCity const & city, inCity )
 	{
 		// Add to used tiles
 		usedTiles.insert( std::make_pair( city.row, city.col ) );
@@ -606,7 +606,7 @@ Model::NewGame::onFinishedCity( std::vector< NewPlacedCity > const & inCity )
 		{
 			allShields.insert( city );
 		}
-		// Remove and return all pieces from this NewPlacedCity
+		// Remove and return all pieces from this PlacedCity
 		std::vector< PlacedPiece > const pieces = mBoard.removePieces( city );
 		returnPieces( pieces, city.row, city.col );
 		// Add to allPieces
@@ -618,15 +618,15 @@ Model::NewGame::onFinishedCity( std::vector< NewPlacedCity > const & inCity )
 }
 
 void
-Model::NewGame::onFinishedRoad( std::vector< NewPlacedRoad > const & inRoad )
+Model::NewGame::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
 {
 	std::vector< PlacedPiece > allPieces;
 	std::set< std::pair< int, int > > usedTiles;
-	BOOST_FOREACH( NewPlacedRoad const & road, inRoad )
+	BOOST_FOREACH( PlacedRoad const & road, inRoad )
 	{
 		// Add to used tiles
 		usedTiles.insert( std::make_pair( road.row, road.col ) );
-		// Remove and return all pieces from this NewPlacedRoad
+		// Remove and return all pieces from this PlacedRoad
 		std::vector< PlacedPiece > const pieces = mBoard.removePieces( road );
 		returnPieces( pieces, road.row, road.col );
 		// Add to allPieces
@@ -641,7 +641,7 @@ void
 Model::NewGame::onFinishedCloister( int inRow, int inCol )
 {
 	// Remove and return all pieces
-	std::vector< PlacedPiece > const pieces = mBoard.removePieces( NewPlacedProject( inRow, inCol, Area::kCentral ) );
+	std::vector< PlacedPiece > const pieces = mBoard.removePieces( PlacedProject( inRow, inCol, Area::kCentral ) );
 	returnPieces( pieces, inRow, inCol );
 	std::set< Color::Color > const winningColors = getWinningColors( pieces );
 	awardPoints( winningColors, kMonkPointsFinished );

@@ -5,30 +5,30 @@
 
 namespace Model
 {
-	struct NewPlacedProject
+	struct PlacedProject
 	{
 		int row;
 		int col;
 		Area::Area area;
 
-		NewPlacedProject( int inRow, int inCol, Area::Area inArea );
+		PlacedProject( int inRow, int inCol, Area::Area inArea );
 	};
 
 	bool
-	operator == ( NewPlacedProject const & inLeft, NewPlacedProject const & inRight );
+	operator == ( PlacedProject const & inLeft, PlacedProject const & inRight );
 
 	bool
-	operator != ( NewPlacedProject const & inLeft, NewPlacedProject const & inRight );
+	operator != ( PlacedProject const & inLeft, PlacedProject const & inRight );
 
 	bool
-	operator < ( NewPlacedProject const & inLeft, NewPlacedProject const & inRight );
+	operator < ( PlacedProject const & inLeft, PlacedProject const & inRight );
 
-	NewPlacedProject
-	getNeighbor( NewPlacedProject const & inPlacedRoad );
+	PlacedProject
+	getNeighbor( PlacedProject const & inPlacedRoad );
 
-	typedef NewPlacedProject NewPlacedRoad;
-	typedef NewPlacedProject NewPlacedField;
-	typedef NewPlacedProject NewPlacedCity;
+	typedef PlacedProject PlacedRoad;
+	typedef PlacedProject PlacedField;
+	typedef PlacedProject PlacedCity;
 }
 
 #endif // PLACEDPROJECT_H

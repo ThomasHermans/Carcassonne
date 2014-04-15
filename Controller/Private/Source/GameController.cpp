@@ -156,7 +156,7 @@ Controller::GameController::onTryToPlacePiece( Dragging::PieceData const & inDat
 	Model::Piece::PieceType const type = modelFromView( inData.getPiece() );
 	Model::Area::Area const area = areaFromPos( posXFromX( inX ), posYFromY( inY ) );
 	// Send to mGame
-	mGame.tryToPlacePiece( Model::NewPlacedProject( row, col, area ), type, color );
+	mGame.tryToPlacePiece( Model::PlacedProject( row, col, area ), type, color );
 }
 
 void

@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-Model::NewPlacedProject::NewPlacedProject
+Model::PlacedProject::PlacedProject
 (
 	int inRow,
 	int inCol,
@@ -15,7 +15,7 @@ Model::NewPlacedProject::NewPlacedProject
 {}
 
 bool
-Model::operator == ( NewPlacedProject const & inLeft, NewPlacedProject const & inRight )
+Model::operator == ( PlacedProject const & inLeft, PlacedProject const & inRight )
 {
 	return
 	(
@@ -28,13 +28,13 @@ Model::operator == ( NewPlacedProject const & inLeft, NewPlacedProject const & i
 }
 
 bool
-Model::operator != ( NewPlacedProject const & inLeft, NewPlacedProject const & inRight )
+Model::operator != ( PlacedProject const & inLeft, PlacedProject const & inRight )
 {
 	return !( inLeft == inRight );
 }
 
 bool
-Model::operator < ( NewPlacedProject const & inLeft, NewPlacedProject const & inRight )
+Model::operator < ( PlacedProject const & inLeft, PlacedProject const & inRight )
 {
 	if ( inLeft.row != inRight.row )
 	{
@@ -50,8 +50,8 @@ Model::operator < ( NewPlacedProject const & inLeft, NewPlacedProject const & in
 	}
 }
 
-Model::NewPlacedProject
-Model::getNeighbor( NewPlacedProject const & inProject )
+Model::PlacedProject
+Model::getNeighbor( PlacedProject const & inProject )
 {
 	switch ( inProject.area )
 	{
@@ -59,7 +59,7 @@ Model::getNeighbor( NewPlacedProject const & inProject )
 		case Area::kTop:
 		case Area::kTopRight:
 		{
-			return NewPlacedProject
+			return PlacedProject
 			(
 				inProject.row - 1,
 				inProject.col,
@@ -70,7 +70,7 @@ Model::getNeighbor( NewPlacedProject const & inProject )
 		case Area::kRight:
 		case Area::kRightBottom:
 		{
-			return NewPlacedProject
+			return PlacedProject
 			(
 				inProject.row,
 				inProject.col + 1,
@@ -81,7 +81,7 @@ Model::getNeighbor( NewPlacedProject const & inProject )
 		case Area::kBottom:
 		case Area::kBottomLeft:
 		{
-			return NewPlacedProject
+			return PlacedProject
 			(
 				inProject.row + 1,
 				inProject.col,
@@ -92,7 +92,7 @@ Model::getNeighbor( NewPlacedProject const & inProject )
 		case Area::kLeft:
 		case Area::kLeftTop:
 		{
-			return NewPlacedProject
+			return PlacedProject
 			(
 				inProject.row,
 				inProject.col - 1,
