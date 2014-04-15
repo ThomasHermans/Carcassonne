@@ -1,7 +1,7 @@
 #ifndef GAMECONTROLLER_H
 #define GAMECONTROLLER_H
 
-#include "Model/NewGame.h"
+#include "Model/Game.h"
 #include "Model/Player.h"
 #include "View/GameWindow.h"
 
@@ -53,7 +53,7 @@ namespace Controller
 	private:
 		std::vector< Model::Player > mPlayers;
 
-		Model::NewGame mGame;
+		Model::Game mGame;
 		boost::scoped_ptr< View::GameWindow > mWindow;
 	};
 }

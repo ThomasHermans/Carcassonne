@@ -1,4 +1,4 @@
-#include "Model/NewGame.h"
+#include "Model/Game.h"
 
 #include "CreateBaseGameTiles.h"
 
@@ -56,7 +56,7 @@ namespace
 	}
 }
 
-Model::NewGame::NewGame( std::vector< Player > const & inPlayers )
+Model::Game::Game( std::vector< Player > const & inPlayers )
 :
 	mBoard(),
 	mBag( createBaseGameTiles() ),
@@ -69,7 +69,7 @@ Model::NewGame::NewGame( std::vector< Player > const & inPlayers )
 	initialize();
 }
 
-Model::NewGame::NewGame( std::vector< Player > const & inPlayers, std::string const & inTiles )
+Model::Game::Game( std::vector< Player > const & inPlayers, std::string const & inTiles )
 :
 	mBoard(),
 	mBag( createTiles( inTiles ) ),
@@ -83,7 +83,7 @@ Model::NewGame::NewGame( std::vector< Player > const & inPlayers, std::string co
 }
 
 void
-Model::NewGame::placeStartTileOnBoard()
+Model::Game::placeStartTileOnBoard()
 {
 	if ( mNextTile )
 	{
@@ -99,7 +99,7 @@ Model::NewGame::placeStartTileOnBoard()
 }
 
 void
-Model::NewGame::tryToPlaceTile
+Model::Game::tryToPlaceTile
 (
 	int inRow,
 	int inCol,
@@ -143,7 +143,7 @@ Model::NewGame::tryToPlaceTile
 }
 
 void
-Model::NewGame::rotateTile( int inRow, int inCol )
+Model::Game::rotateTile( int inRow, int inCol )
 {
 	if ( isCurrentSpot( inRow, inCol ) )
 	{
@@ -176,7 +176,7 @@ Model::NewGame::rotateTile( int inRow, int inCol )
 }
 
 void
-Model::NewGame::tryToPlacePiece
+Model::Game::tryToPlacePiece
 (
 	PlacedProject const & inPlace,
 	Piece::PieceType inType,
@@ -210,7 +210,7 @@ Model::NewGame::tryToPlacePiece
 }
 
 void
-Model::NewGame::endTurn()
+Model::Game::endTurn()
 {
 	if ( mCurrentPlacedTile )
 	{
@@ -226,7 +226,7 @@ Model::NewGame::endTurn()
 }
 
 void
-Model::NewGame::awardEndPoints()
+Model::Game::awardEndPoints()
 {
 	awardEndCloisterPoints();
 	awardEndCityPoints();
@@ -235,7 +235,7 @@ Model::NewGame::awardEndPoints()
 }
 
 void
-Model::NewGame::initialize()
+Model::Game::initialize()
 {
 	// Print out bag
 	BOOST_FOREACH( Tile const & tile, mBag )
@@ -250,9 +250,9 @@ Model::NewGame::initialize()
 		mBag.pop_back();
 	}
 	// Game signals
-	mBoard.finishedCity.connect( boost::bind( &Model::NewGame::onFinishedCity, this, _1 ) );
-	mBoard.finishedRoad.connect( boost::bind( &Model::NewGame::onFinishedRoad, this, _1 ) );
-	mBoard.finishedCloister.connect( boost::bind( &Model::NewGame::onFinishedCloister, this, _1, _2 ) );
+	mBoard.finishedCity.connect( boost::bind( &Model::Game::onFinishedCity, this, _1 ) );
+	mBoard.finishedRoad.connect( boost::bind( &Model::Game::onFinishedRoad, this, _1 ) );
+	mBoard.finishedCloister.connect( boost::bind( &Model::Game::onFinishedCloister, this, _1, _2 ) );
 	// Player signals
 	BOOST_FOREACH( Player & player, mPlayers )
 	{
@@ -266,7 +266,7 @@ Model::NewGame::initialize()
 }
 
 void
-Model::NewGame::pickNextTile()
+Model::Game::pickNextTile()
 {
 	std::vector< Tile >::iterator it = mBag.end();
 	bool foundPossible = false;
@@ -291,19 +291,19 @@ Model::NewGame::pickNextTile()
 }
 
 bool
-Model::NewGame::isEmptySpot( int inRow, int inCol ) const
+Model::Game::isEmptySpot( int inRow, int inCol ) const
 {
 	return ( !isCurrentSpot( inRow, inCol ) && !mBoard.isTile( inRow, inCol ) );
 }
 
 bool
-Model::NewGame::isCurrentSpot( int inRow, int inCol ) const
+Model::Game::isCurrentSpot( int inRow, int inCol ) const
 {
 	return ( mCurrentPlacedTile && mCurrentPlacedTile->row == inRow && mCurrentPlacedTile->col == inCol );
 }
 
 void
-Model::NewGame::returnPieces( std::vector< PlacedPiece > const & inPieces, int inRow, int inCol )
+Model::Game::returnPieces( std::vector< PlacedPiece > const & inPieces, int inRow, int inCol )
 {
 	BOOST_FOREACH( PlacedPiece const & piece, inPieces )
 	{
@@ -314,7 +314,7 @@ Model::NewGame::returnPieces( std::vector< PlacedPiece > const & inPieces, int i
 }
 
 Model::Player &
-Model::NewGame::getPlayer( Color::Color inColor )
+Model::Game::getPlayer( Color::Color inColor )
 {
 	BOOST_FOREACH( Player & player, mPlayers )
 	{
@@ -327,7 +327,7 @@ Model::NewGame::getPlayer( Color::Color inColor )
 }
 
 bool
-Model::NewGame::isOccupiedOnCurrentTile( Area::Area inArea ) const
+Model::Game::isOccupiedOnCurrentTile( Area::Area inArea ) const
 {
 	if ( !mCurrentPlacedTile )
 	{
@@ -412,7 +412,7 @@ Model::NewGame::isOccupiedOnCurrentTile( Area::Area inArea ) const
 }
 
 void
-Model::NewGame::awardEndCloisterPoints()
+Model::Game::awardEndCloisterPoints()
 {
 	for ( int row = mBoard.getTopRow(); row <= mBoard.getBottomRow(); ++row )
 	{
@@ -443,7 +443,7 @@ Model::NewGame::awardEndCloisterPoints()
 }
 
 void
-Model::NewGame::awardEndCityPoints()
+Model::Game::awardEndCityPoints()
 {
 	for ( int row = mBoard.getTopRow(); row <= mBoard.getBottomRow(); ++row )
 	{
@@ -491,7 +491,7 @@ Model::NewGame::awardEndCityPoints()
 }
 
 void
-Model::NewGame::awardEndRoadPoints()
+Model::Game::awardEndRoadPoints()
 {
 	for ( int row = mBoard.getTopRow(); row <= mBoard.getBottomRow(); ++row )
 	{
@@ -532,7 +532,7 @@ Model::NewGame::awardEndRoadPoints()
 }
 
 void
-Model::NewGame::awardEndFieldPoints()
+Model::Game::awardEndFieldPoints()
 {
 	for ( int row = mBoard.getTopRow(); row <= mBoard.getBottomRow(); ++row )
 	{
@@ -582,7 +582,7 @@ Model::NewGame::awardEndFieldPoints()
 }
 
 void
-Model::NewGame::awardPoints( std::set< Color::Color > const & inWinningColors, std::size_t inPoints )
+Model::Game::awardPoints( std::set< Color::Color > const & inWinningColors, std::size_t inPoints )
 {
 	BOOST_FOREACH( Color::Color color, inWinningColors )
 	{
@@ -591,7 +591,7 @@ Model::NewGame::awardPoints( std::set< Color::Color > const & inWinningColors, s
 }
 
 void
-Model::NewGame::onFinishedCity( std::vector< PlacedCity > const & inCity )
+Model::Game::onFinishedCity( std::vector< PlacedCity > const & inCity )
 {
 	std::vector< PlacedPiece > allPieces;
 	std::set< std::pair< int, int > > usedTiles;
@@ -618,7 +618,7 @@ Model::NewGame::onFinishedCity( std::vector< PlacedCity > const & inCity )
 }
 
 void
-Model::NewGame::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
+Model::Game::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
 {
 	std::vector< PlacedPiece > allPieces;
 	std::set< std::pair< int, int > > usedTiles;
@@ -638,7 +638,7 @@ Model::NewGame::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
 }
 
 void
-Model::NewGame::onFinishedCloister( int inRow, int inCol )
+Model::Game::onFinishedCloister( int inRow, int inCol )
 {
 	// Remove and return all pieces
 	std::vector< PlacedPiece > const pieces = mBoard.removePieces( PlacedProject( inRow, inCol, Area::kCentral ) );

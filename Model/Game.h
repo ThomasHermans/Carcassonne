@@ -14,7 +14,7 @@
 
 namespace Model
 {
-	class NewGame
+	class Game
 	{
 	public:
 		/**
@@ -58,12 +58,12 @@ namespace Model
 		 *	Construct a game with the given players and the
 		 *	tiles for the base game.
 		 */
-		NewGame( std::vector< Player > const & inPlayers );
+		Game( std::vector< Player > const & inPlayers );
 
 		/**
 		 *	Construct a game with the given players and tiles.
 		 */
-		NewGame
+		Game
 		(
 			std::vector< Player > const & inPlayers,
 			std::string const & inTiles

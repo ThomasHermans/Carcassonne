@@ -22,7 +22,7 @@ SOURCES += main.cpp \
 	Model\Private\Source\Color.cpp \
 	Model\Private\Source\CreateBaseGameTiles.cpp \
 	Model\Private\Source\NewBoard.cpp \
-	Model\Private\Source\NewGame.cpp \
+	Model\Private\Source\Game.cpp \
 	Model\Private\Source\Piece.cpp \
 	Model\Private\Source\PlacedPiece.cpp \
 	Model\Private\Source\PlacedProject.cpp \
