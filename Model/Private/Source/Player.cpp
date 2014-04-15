@@ -102,8 +102,6 @@ Model::NewPlayer::NewPlayer( std::string const & inName, Color::Color inColor )
 	mColor( inColor ),
 	mScore( 0 ),
 	mFreePieces( createBaseGamePieces( inColor ) ),
-	mNrOfFreePiecesChanged( new boost::signals2::signal< void ( std::size_t ) >() ),
-	mScoreChanged( new boost::signals2::signal< void ( std::size_t ) >() ),
 	mInfoChanged( new boost::signals2::signal< void () >() )
 {
 }
@@ -144,8 +142,7 @@ Model::NewPlayer::getPieceToPlace()
 	assert( hasFreePieces() );
 	Piece const result = mFreePieces.back();
 	mFreePieces.pop_back();
-	(*mNrOfFreePiecesChanged)( mFreePieces.size() );
-	(*mInfoChanged)();
+	GetInfoChangedSignal()();
 	return result;
 }
 
@@ -153,28 +150,14 @@ void
 Model::NewPlayer::returnPiece( Piece const & inPiece )
 {
 	mFreePieces.push_back( inPiece );
-	(*mNrOfFreePiecesChanged)( mFreePieces.size() );
-	(*mInfoChanged)();
+	GetInfoChangedSignal()();
 }
 
 void
 Model::NewPlayer::awardPoints( std::size_t inPoints )
 {
 	mScore += inPoints;
-	(*mScoreChanged)( mScore );
-	(*mInfoChanged)();
-}
-
-boost::signals2::signal< void ( std::size_t ) > &
-Model::NewPlayer::GetNrOfFreePiecesChangedSignal()
-{
-	return *mNrOfFreePiecesChanged;
-}
-
-boost::signals2::signal< void ( std::size_t ) > &
-Model::NewPlayer::GetScoreChangedSignal()
-{
-	return *mScoreChanged;
+	GetInfoChangedSignal()();
 }
 
 boost::signals2::signal< void () > &

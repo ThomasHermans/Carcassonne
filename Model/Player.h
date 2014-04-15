@@ -96,18 +96,6 @@ namespace Model
 		void awardPoints( std::size_t inPoints );
 
 		/**
-		 *	The number of free pieces for this player has changed.
-		 */
-		boost::signals2::signal< void ( std::size_t ) > &
-		GetNrOfFreePiecesChangedSignal();
-
-		/**
-		 *	The score for this player has changed.
-		 */
-		boost::signals2::signal< void ( std::size_t ) > &
-		GetScoreChangedSignal();
-
-		/**
 		 *	Something for this player has changed.
 		 */
 		boost::signals2::signal< void () > &
@@ -118,8 +106,6 @@ namespace Model
 		Color::Color mColor;
 		std::size_t mScore;
 		std::vector< Piece > mFreePieces;
-		boost::shared_ptr< boost::signals2::signal< void ( std::size_t ) > > mNrOfFreePiecesChanged;
-		boost::shared_ptr< boost::signals2::signal< void ( std::size_t ) > > mScoreChanged;
 		boost::shared_ptr< boost::signals2::signal< void () > > mInfoChanged;
 	};
 }

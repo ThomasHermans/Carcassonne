@@ -19,10 +19,8 @@ SOURCES += main.cpp \
 	test_o_matic.cpp \
 	UnitTests.cpp \
 	Model\Private\Source\Area.cpp \
-	Model\Private\Source\Board.cpp \
 	Model\Private\Source\Color.cpp \
 	Model\Private\Source\CreateBaseGameTiles.cpp \
-	Model\Private\Source\Game.cpp \
 	Model\Private\Source\NewBoard.cpp \
 	Model\Private\Source\NewGame.cpp \
 	Model\Private\Source\Piece.cpp \
@@ -33,7 +31,6 @@ SOURCES += main.cpp \
 	Model\Private\Source\TileOnBoard.cpp \
 	Model\Private\Source\Tile.cpp \
 	Model\Private\UnitTests\AreaUnitTests.cpp \
-	Model\Private\UnitTests\BoardUnitTests.cpp \
 	Model\Private\UnitTests\NewBoardUnitTests.cpp \
 	Model\Private\UnitTests\PlacedProjectUnitTests.cpp \
 	Model\Private\UnitTests\PlayerUnitTests.cpp \
@@ -58,20 +55,7 @@ HEADERS += \
 	Controller\Private\Include\ModelViewGlue.h \
 	Controller\Private\Include\Settings.h \
 	Controller\Private\Include\StartController.h \
-	test_o_matic.hpp \
-	UnitTests.h \
-	Model\Area.h \
-	Model\Color.h \
-	Model\Game.h \
-	Model\Piece.h \
 	Model\Player.h \
-	Model\Rotation.h \
-	Model\Private\Include\Board.h \
-	Model\Private\Include\CreateBaseGameTiles.h \
-	Model\Private\Include\PlacedPiece.h \
-	Model\Private\Include\PlacedProject.h \
-	Model\Private\Include\Tile.h \
-	Model\Private\Include\TileOnBoard.h \
 	View\DragData.h \
 	View\GameWindow.h \
 	View\StartScreen.h \

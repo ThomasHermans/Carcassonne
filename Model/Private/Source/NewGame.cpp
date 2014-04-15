@@ -238,9 +238,9 @@ void
 Model::NewGame::initialize()
 {
 	// Print out bag
-	for ( std::size_t i = 0; i < mBag.size(); ++i )
+	BOOST_FOREACH( Tile const & tile, mBag )
 	{
-		std::cout << mBag[i].getID();
+		std::cout << tile.getID();
 	}
 	std::cout << std::endl;
 	// Initialize first tile
