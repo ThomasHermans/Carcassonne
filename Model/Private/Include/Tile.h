@@ -56,6 +56,12 @@ namespace Model
 		std::vector< Area::Area > const & getShields() const;
 		std::vector< Area::Area > const & getInns() const;
 
+		/**
+		 *	Does the specified road area have an inn next to it?
+		 *	Returns false if not a road or no inn.
+		 */
+		bool hasInn( Area::Area inRoadArea ) const;
+
 		ContiguousField getContiguousField( Area::Area inFieldArea ) const;
 		ContiguousRoad getContiguousRoad(Area::Area inArea) const;
 		ContiguousCity getContiguousCity(Area::Area inArea) const;

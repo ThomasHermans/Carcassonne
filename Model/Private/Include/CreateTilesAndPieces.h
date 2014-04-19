@@ -36,6 +36,11 @@ namespace Model
 	Tile createTileW();
 	Tile createTileX();
 
+	Tile createTileEA();
+	Tile createTileEB();
+	Tile createTileEC();
+	Tile createTileED();
+
 	Tile createTile( char inChar );
 
 	/*

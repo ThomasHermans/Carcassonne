@@ -1,5 +1,7 @@
 #include "Tile.h"
 
+#include <boost/foreach.hpp>
+
 #include <algorithm>
 #include <cassert>
 
@@ -312,6 +314,25 @@ std::vector< Model::Area::Area > const &
 Model::Tile::getInns() const
 {
 	return mInns;
+}
+
+bool
+Model::Tile::hasInn( Area::Area inRoadArea ) const
+{
+	if ( !isRoad( inRoadArea ) )
+	{
+		return false;
+	}
+	ContiguousRoad const completeRoad = getContiguousRoad( inRoadArea );
+	std::vector< Area::Area > const inns = getInns();
+	BOOST_FOREACH( Area::Area area, completeRoad )
+	{
+		if ( std::find( inns.begin(), inns.end(), area ) != inns.end() )
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 Model::ContiguousField

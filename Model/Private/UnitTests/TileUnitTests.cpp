@@ -224,75 +224,68 @@ namespace
 	}
 }
 
-TEST("Tile emtpy initializer")
+using namespace Model;
+
+TEST( "Tile: emtpy initializer" )
 {
-	Model::Tile tile;
-	CHECK(tile.getID() == "D");
+	Tile const tile;
+	CHECK( tile.getID() == "D" );
 }
 
-TEST("Tile creator via id, check sides and center")
+TEST("Tile: creator via id, check no double assigned sides")
 {
-	Model::Tile a = Model::createTileA();
-	CHECK( a.getID() == "A" );
-	CHECK( a.getTop() == Model::Tile::kSideField );
-	CHECK( a.getLeft() == Model::Tile::kSideField );
-	CHECK( a.getRight() == Model::Tile::kSideField );
-	CHECK( a.getBottom() == Model::Tile::kSideRoad );
-	CHECK( a.getCenter() == Model::Tile::kCenterCloister );
+	CHECK( sidesMatch( createTileA() ) );
+	CHECK( sidesMatch( createTileB() ) );
+	CHECK( sidesMatch( createTileC() ) );
+	CHECK( sidesMatch( createTileD() ) );
+	CHECK( sidesMatch( createTileE() ) );
+	CHECK( sidesMatch( createTileF() ) );
+	CHECK( sidesMatch( createTileG() ) );
+	CHECK( sidesMatch( createTileH() ) );
+	CHECK( sidesMatch( createTileI() ) );
+	CHECK( sidesMatch( createTileJ() ) );
+	CHECK( sidesMatch( createTileK() ) );
+	CHECK( sidesMatch( createTileL() ) );
+	CHECK( sidesMatch( createTileM() ) );
+	CHECK( sidesMatch( createTileN() ) );
+	CHECK( sidesMatch( createTileO() ) );
+	CHECK( sidesMatch( createTileP() ) );
+	CHECK( sidesMatch( createTileQ() ) );
+	CHECK( sidesMatch( createTileR() ) );
+	CHECK( sidesMatch( createTileS() ) );
+	CHECK( sidesMatch( createTileT() ) );
+	CHECK( sidesMatch( createTileU() ) );
+	CHECK( sidesMatch( createTileV() ) );
+	CHECK( sidesMatch( createTileW() ) );
+	CHECK( sidesMatch( createTileX() ) );
+
+	CHECK( sidesMatch( createTileEA() ) );
+	CHECK( sidesMatch( createTileEB() ) );
+	CHECK( sidesMatch( createTileEC() ) );
+	CHECK( sidesMatch( createTileED() ) );
 }
 
-TEST("Tile creator via id, check id")
+TEST( "Tile: check hasInn for several tiles" )
 {
-	CHECK( Model::createTileA().getID() == "A" );
-	CHECK( Model::createTileB().getID() == "B" );
-	CHECK( Model::createTileC().getID() == "C" );
-	CHECK( Model::createTileD().getID() == "D" );
-	CHECK( Model::createTileE().getID() == "E" );
-	CHECK( Model::createTileF().getID() == "F" );
-	CHECK( Model::createTileG().getID() == "G" );
-	CHECK( Model::createTileH().getID() == "H" );
-	CHECK( Model::createTileI().getID() == "I" );
-	CHECK( Model::createTileJ().getID() == "J" );
-	CHECK( Model::createTileK().getID() == "K" );
-	CHECK( Model::createTileL().getID() == "L" );
-	CHECK( Model::createTileM().getID() == "M" );
-	CHECK( Model::createTileN().getID() == "N" );
-	CHECK( Model::createTileO().getID() == "O" );
-	CHECK( Model::createTileP().getID() == "P" );
-	CHECK( Model::createTileQ().getID() == "Q" );
-	CHECK( Model::createTileR().getID() == "R" );
-	CHECK( Model::createTileS().getID() == "S" );
-	CHECK( Model::createTileT().getID() == "T" );
-	CHECK( Model::createTileU().getID() == "U" );
-	CHECK( Model::createTileV().getID() == "V" );
-	CHECK( Model::createTileW().getID() == "W" );
-	CHECK( Model::createTileX().getID() == "X" );
-}
+	Tile const tileEA = createTileEA();
 
-TEST("Tile creator via id, check no double assigned sides")
-{
-	CHECK( sidesMatch( Model::createTileA() ) );
-	CHECK( sidesMatch( Model::createTileB() ) );
-	CHECK( sidesMatch( Model::createTileC() ) );
-	CHECK( sidesMatch( Model::createTileD() ) );
-	CHECK( sidesMatch( Model::createTileE() ) );
-	CHECK( sidesMatch( Model::createTileF() ) );
-	CHECK( sidesMatch( Model::createTileG() ) );
-	CHECK( sidesMatch( Model::createTileH() ) );
-	CHECK( sidesMatch( Model::createTileI() ) );
-	CHECK( sidesMatch( Model::createTileJ() ) );
-	CHECK( sidesMatch( Model::createTileK() ) );
-	CHECK( sidesMatch( Model::createTileL() ) );
-	CHECK( sidesMatch( Model::createTileM() ) );
-	CHECK( sidesMatch( Model::createTileN() ) );
-	CHECK( sidesMatch( Model::createTileO() ) );
-	CHECK( sidesMatch( Model::createTileP() ) );
-	CHECK( sidesMatch( Model::createTileQ() ) );
-	CHECK( sidesMatch( Model::createTileR() ) );
-	CHECK( sidesMatch( Model::createTileS() ) );
-	CHECK( sidesMatch( Model::createTileT() ) );
-	CHECK( sidesMatch( Model::createTileU() ) );
-	CHECK( sidesMatch( Model::createTileV() ) );
-	CHECK( sidesMatch( Model::createTileW() ) );
-	CHECK( sidesMatch( Model::createTileX() ) );
+	CHECK( !tileEA.hasInn( Area::kTop ) );
+	CHECK( tileEA.hasInn( Area::kLeft ) );
+	CHECK( tileEA.hasInn( Area::kCentral ) );
+	CHECK( tileEA.hasInn( Area::kBottom ) );
+
+	Tile const tileEB = createTileEB();
+
+	CHECK( !tileEB.hasInn( Area::kLeft ) );
+	CHECK( tileEB.hasInn( Area::kTop ) );
+	CHECK( tileEB.hasInn( Area::kCentral ) );
+	CHECK( tileEB.hasInn( Area::kBottom ) );
+
+	Tile const tileEC = createTileEC();
+
+	CHECK( !tileEC.hasInn( Area::kLeft ) );
+	CHECK( !tileEC.hasInn( Area::kTop ) );
+	CHECK( !tileEC.hasInn( Area::kCentral ) );
+	CHECK( !tileEC.hasInn( Area::kBottom ) );
+	CHECK( tileEC.hasInn( Area::kRight ) );
 }
