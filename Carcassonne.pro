@@ -20,7 +20,7 @@ SOURCES += main.cpp \
 	UnitTests.cpp \
 	Model\Private\Source\Area.cpp \
 	Model\Private\Source\Color.cpp \
-	Model\Private\Source\CreateBaseGameTiles.cpp \
+	Model\Private\Source\CreateTilesAndPieces.cpp \
 	Model\Private\Source\Board.cpp \
 	Model\Private\Source\Game.cpp \
 	Model\Private\Source\Piece.cpp \

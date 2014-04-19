@@ -20,7 +20,7 @@ namespace Main
 
 int main(int argc, char * argv[])
 {
-	Main::Type const gameOption = Main::kPlay;
+	Main::Type const gameOption = Main::kUnitTests;
 
 	if ( gameOption == Main::kPlay )
 	{

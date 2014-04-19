@@ -1,6 +1,6 @@
 #include "Model/Player.h"
 
-#include "CreateBaseGameTiles.h"
+#include "CreateTilesAndPieces.h"
 #include "Tile.h"
 
 #include <cassert>

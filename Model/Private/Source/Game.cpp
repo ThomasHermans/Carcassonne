@@ -1,6 +1,6 @@
 #include "Model/Game.h"
 
-#include "CreateBaseGameTiles.h"
+#include "CreateTilesAndPieces.h"
 
 #include <boost/foreach.hpp>
 

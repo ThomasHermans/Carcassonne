@@ -1,6 +1,6 @@
 #include <test_o_matic.hpp>
 
-#include "CreateBaseGameTiles.h"
+#include "CreateTilesAndPieces.h"
 #include "Board.h"
 #include "Tile.h"
 #include "TileOnBoard.h"
