@@ -263,6 +263,12 @@ TEST("Tile: creator via id, check no double assigned sides")
 	CHECK( sidesMatch( createTileEB() ) );
 	CHECK( sidesMatch( createTileEC() ) );
 	CHECK( sidesMatch( createTileED() ) );
+	CHECK( sidesMatch( createTileEE() ) );
+	CHECK( sidesMatch( createTileEF() ) );
+	CHECK( sidesMatch( createTileEG() ) );
+	CHECK( sidesMatch( createTileEH() ) );
+	CHECK( sidesMatch( createTileEI() ) );
+	CHECK( sidesMatch( createTileEJ() ) );
 }
 
 TEST( "Tile: check hasInn for several tiles" )
