@@ -269,6 +269,13 @@ TEST("Tile: creator via id, check no double assigned sides")
 	CHECK( sidesMatch( createTileEH() ) );
 	CHECK( sidesMatch( createTileEI() ) );
 	CHECK( sidesMatch( createTileEJ() ) );
+	CHECK( sidesMatch( createTileEK() ) );
+	CHECK( sidesMatch( createTileEL() ) );
+	CHECK( sidesMatch( createTileEM() ) );
+	CHECK( sidesMatch( createTileEN() ) );
+	CHECK( sidesMatch( createTileEO() ) );
+	CHECK( sidesMatch( createTileEP() ) );
+	CHECK( sidesMatch( createTileEQ() ) );
 }
 
 TEST( "Tile: check hasInn for several tiles" )
@@ -294,4 +301,25 @@ TEST( "Tile: check hasInn for several tiles" )
 	CHECK( !tileEC.hasInn( Area::kCentral ) );
 	CHECK( !tileEC.hasInn( Area::kBottom ) );
 	CHECK( tileEC.hasInn( Area::kRight ) );
+
+	Tile const tileEL = createTileEL();
+
+	CHECK( !tileEL.hasInn( Area::kTopLeft ) );
+	CHECK( tileEL.hasInn( Area::kRight ) );
+	CHECK( tileEL.hasInn( Area::kCentral ) );
+	CHECK( tileEL.hasInn( Area::kBottom ) );
+
+	Tile const tileEM = createTileEM();
+
+	CHECK( !tileEM.hasInn( Area::kTopLeft ) );
+	CHECK( !tileEM.hasInn( Area::kRight ) );
+	CHECK( tileEM.hasInn( Area::kCentral ) );
+	CHECK( tileEM.hasInn( Area::kBottom ) );
+
+	Tile const tileEN = createTileEN();
+
+	CHECK( !tileEN.hasInn( Area::kTopLeft ) );
+	CHECK( !tileEN.hasInn( Area::kRight ) );
+	CHECK( tileEN.hasInn( Area::kCentral ) );
+	CHECK( tileEN.hasInn( Area::kBottom ) );
 }

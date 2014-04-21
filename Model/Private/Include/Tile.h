@@ -22,7 +22,8 @@ namespace Model
 		enum Center
 		{
 			kCenterNothing,
-			kCenterCloister
+			kCenterCloister,
+			kCenterCathedral
 		};
 
 		Tile();

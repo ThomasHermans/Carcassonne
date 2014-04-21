@@ -46,6 +46,13 @@ namespace Model
 	Tile createTileEH();
 	Tile createTileEI();
 	Tile createTileEJ();
+	Tile createTileEK();
+	Tile createTileEL();
+	Tile createTileEM();
+	Tile createTileEN();
+	Tile createTileEO();
+	Tile createTileEP();
+	Tile createTileEQ();
 
 	Tile createTile( char inChar );
 

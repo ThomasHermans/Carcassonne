@@ -1457,6 +1457,352 @@ Model::createTileEJ()
 }
 
 Model::Tile
+Model::createTileEK()
+{
+	std::vector< ContiguousField > fields;
+
+	std::vector< ContiguousRoad > roads;
+
+	std::vector< ContiguousCity > cities;
+	ContiguousCity firstCity;
+	firstCity.push_back( Area::kTopLeft );
+	firstCity.push_back( Area::kTop );
+	firstCity.push_back( Area::kTopRight );
+	firstCity.push_back( Area::kRightTop );
+	firstCity.push_back( Area::kRight );
+	firstCity.push_back( Area::kRightBottom );
+	firstCity.push_back( Area::kBottomRight );
+	firstCity.push_back( Area::kBottom );
+	firstCity.push_back( Area::kBottomLeft );
+	firstCity.push_back( Area::kLeftBottom );
+	firstCity.push_back( Area::kLeft );
+	firstCity.push_back( Area::kLeftTop );
+	firstCity.push_back( Area::kCentral );
+	cities.push_back( firstCity );
+
+	std::map< ContiguousField, std::vector< ContiguousCity > > citiesPerField;
+
+	Tile const tileEK
+	(
+		Tile::kCenterCathedral,
+		"EK",
+		fields,
+		roads,
+		cities,
+		citiesPerField
+	);
+
+	return tileEK;
+}
+
+Model::Tile
+Model::createTileEL()
+{
+	std::vector< ContiguousField > fields;
+	ContiguousField firstField;
+	firstField.push_back( Area::kRightTop );
+	firstField.push_back( Area::kBottomLeft );
+	fields.push_back( firstField );
+	ContiguousField secondField;
+	secondField.push_back( Area::kRightBottom );
+	secondField.push_back( Area::kBottomRight );
+	fields.push_back( secondField );
+
+
+	std::vector< ContiguousRoad > roads;
+	ContiguousRoad firstRoad;
+	firstRoad.push_back( Area::kRight );
+	firstRoad.push_back( Area::kBottom );
+	firstRoad.push_back( Area::kCentral );
+	roads.push_back( firstRoad );
+
+	std::vector< ContiguousCity > cities;
+	std::vector< Area::Area > firstCity;
+	firstCity.push_back( Area::kTopLeft );
+	firstCity.push_back( Area::kTop );
+	firstCity.push_back( Area::kTopRight );
+	firstCity.push_back( Area::kLeftBottom );
+	firstCity.push_back( Area::kLeft );
+	firstCity.push_back( Area::kLeftTop );
+	cities.push_back( firstCity );
+
+	std::map< ContiguousField, std::vector< ContiguousCity > > citiesPerField;
+	citiesPerField[ firstField ] = std::vector< ContiguousCity >( 1, firstCity );
+	citiesPerField[ secondField ] = std::vector< ContiguousCity >();
+
+	std::vector< Area::Area > shields( 1, Area::kTop );
+
+	std::vector< Area::Area > inns( 1, Area::kRight );
+
+	Tile const tileEL
+	(
+		Tile::kCenterNothing,
+		"EL",
+		fields,
+		roads,
+		cities,
+		citiesPerField,
+		shields,
+		inns
+	);
+
+	return tileEL;
+}
+
+Model::Tile
+Model::createTileEM()
+{
+	std::vector< ContiguousField > fields;
+	ContiguousField firstField;
+	firstField.push_back( Area::kRightTop );
+	firstField.push_back( Area::kRight );
+	firstField.push_back( Area::kRightBottom );
+	firstField.push_back( Area::kBottomRight );
+	firstField.push_back( Area::kLeftTop );
+	fields.push_back( firstField );
+	ContiguousField secondField;
+	secondField.push_back( Area::kBottomLeft );
+	secondField.push_back( Area::kLeftBottom );
+	fields.push_back( secondField );
+
+
+	std::vector< ContiguousRoad > roads;
+	ContiguousRoad firstRoad;
+	firstRoad.push_back( Area::kBottom );
+	firstRoad.push_back( Area::kLeft );
+	firstRoad.push_back( Area::kCentral );
+	roads.push_back( firstRoad );
+
+	std::vector< ContiguousCity > cities;
+	std::vector< Area::Area > firstCity;
+	firstCity.push_back( Area::kTopLeft );
+	firstCity.push_back( Area::kTop );
+	firstCity.push_back( Area::kTopRight );
+	cities.push_back( firstCity );
+
+	std::map< ContiguousField, std::vector< ContiguousCity > > citiesPerField;
+	citiesPerField[ firstField ] = std::vector< ContiguousCity >( 1, firstCity );
+	citiesPerField[ secondField ] = std::vector< ContiguousCity >();
+
+	std::vector< Area::Area > shields;
+
+	std::vector< Area::Area > inns( 1, Area::kBottom );
+
+	Tile const tileEM
+	(
+		Tile::kCenterNothing,
+		"EM",
+		fields,
+		roads,
+		cities,
+		citiesPerField,
+		shields,
+		inns
+	);
+
+	return tileEM;
+}
+
+
+Model::Tile
+Model::createTileEN()
+{
+	std::vector< ContiguousField > fields;
+	ContiguousField firstField;
+	firstField.push_back( Area::kRightTop );
+	firstField.push_back( Area::kRight );
+	firstField.push_back( Area::kRightBottom );
+	firstField.push_back( Area::kBottomRight );
+	fields.push_back( firstField );
+	ContiguousField secondField;
+	secondField.push_back( Area::kBottomLeft );
+	fields.push_back( secondField );
+
+
+	std::vector< ContiguousRoad > roads;
+	ContiguousRoad firstRoad;
+	firstRoad.push_back( Area::kBottom );
+	firstRoad.push_back( Area::kCentral );
+	roads.push_back( firstRoad );
+
+	std::vector< ContiguousCity > cities;
+	std::vector< Area::Area > firstCity;
+	firstCity.push_back( Area::kTopLeft );
+	firstCity.push_back( Area::kTop );
+	firstCity.push_back( Area::kTopRight );
+	firstCity.push_back( Area::kLeftBottom );
+	firstCity.push_back( Area::kLeft );
+	firstCity.push_back( Area::kLeftTop );
+	cities.push_back( firstCity );
+
+	std::map< ContiguousField, std::vector< ContiguousCity > > citiesPerField;
+	citiesPerField[ firstField ] = std::vector< ContiguousCity >( 1, firstCity );
+	citiesPerField[ secondField ] = std::vector< ContiguousCity >( 1, firstCity );
+
+	std::vector< Area::Area > shields;
+
+	std::vector< Area::Area > inns( 1, Area::kBottom );
+
+	Tile const tileEN
+	(
+		Tile::kCenterNothing,
+		"EN",
+		fields,
+		roads,
+		cities,
+		citiesPerField,
+		shields,
+		inns
+	);
+
+	return tileEN;
+}
+
+Model::Tile
+Model::createTileEO()
+{
+	std::vector< ContiguousField > fields;
+	ContiguousField firstField;
+	firstField.push_back( Area::kBottomRight );
+	firstField.push_back( Area::kBottom );
+	firstField.push_back( Area::kBottomLeft );
+	firstField.push_back( Area::kCentral );
+	fields.push_back( firstField );
+
+	std::vector< ContiguousRoad > roads;
+
+	std::vector< ContiguousCity > cities;
+	ContiguousCity firstCity;
+	firstCity.push_back( Area::kTopLeft );
+	firstCity.push_back( Area::kTop );
+	firstCity.push_back( Area::kTopRight );
+	cities.push_back( firstCity );
+	ContiguousCity secondCity;
+	secondCity.push_back( Area::kRightTop );
+	secondCity.push_back( Area::kRight );
+	secondCity.push_back( Area::kRightBottom );
+	cities.push_back( secondCity );
+	ContiguousCity thirdCity;
+	thirdCity.push_back( Area::kLeftBottom );
+	thirdCity.push_back( Area::kLeft );
+	thirdCity.push_back( Area::kLeftTop );
+	cities.push_back( thirdCity );
+
+	std::map< ContiguousField, std::vector< ContiguousCity > > citiesPerField;
+	citiesPerField[ firstField ] = cities;
+
+	Tile const tileEO
+	(
+		Tile::kCenterNothing,
+		"EO",
+		fields,
+		roads,
+		cities,
+		citiesPerField
+	);
+
+	return tileEO;
+}
+
+Model::Tile
+Model::createTileEP()
+{
+	std::vector< ContiguousField > fields;
+	ContiguousField firstField;
+	firstField.push_back( Area::kBottomRight );
+	firstField.push_back( Area::kBottom );
+	firstField.push_back( Area::kBottomLeft );
+	firstField.push_back( Area::kCentral );
+	fields.push_back( firstField );
+
+	std::vector< ContiguousRoad > roads;
+
+	std::vector< ContiguousCity > cities;
+	ContiguousCity firstCity;
+	firstCity.push_back( Area::kTopLeft );
+	firstCity.push_back( Area::kTop );
+	firstCity.push_back( Area::kTopRight );
+	firstCity.push_back( Area::kRightTop );
+	firstCity.push_back( Area::kRight );
+	firstCity.push_back( Area::kRightBottom );
+	cities.push_back( firstCity );
+	ContiguousCity secondCity;
+	secondCity.push_back( Area::kLeftBottom );
+	secondCity.push_back( Area::kLeft );
+	secondCity.push_back( Area::kLeftTop );
+	cities.push_back( secondCity );
+
+	std::map< ContiguousField, std::vector< ContiguousCity > > citiesPerField;
+	citiesPerField[ firstField ] = cities;
+
+	std::vector< Area::Area > shields( 1, Area::kTopRight );
+
+	Tile const tileEP
+	(
+		Tile::kCenterNothing,
+		"EP",
+		fields,
+		roads,
+		cities,
+		citiesPerField,
+		shields
+	);
+
+	return tileEP;
+}
+
+Model::Tile
+Model::createTileEQ()
+{
+	std::vector< ContiguousField > fields;
+	ContiguousField const firstField( 1, Area::kTopLeft );
+	ContiguousField const secondField( 1, Area::kTopRight );
+	ContiguousField const thirdField( 1, Area::kBottomRight );
+	ContiguousField const fourthField( 1, Area::kBottomLeft );
+	fields.push_back( firstField );
+	fields.push_back( secondField );
+	fields.push_back( thirdField );
+	fields.push_back( fourthField );
+
+	std::vector< ContiguousRoad > roads;
+	ContiguousRoad const firstRoad( 1, Area::kTop );
+	ContiguousRoad const secondRoad( 1, Area::kBottom );
+	roads.push_back( firstRoad );
+	roads.push_back( secondRoad );
+
+	std::vector< ContiguousCity > cities;
+	ContiguousCity firstCity;
+	firstCity.push_back( Area::kRightTop );
+	firstCity.push_back( Area::kRight );
+	firstCity.push_back( Area::kRightBottom );
+	firstCity.push_back( Area::kLeftBottom );
+	firstCity.push_back( Area::kLeft );
+	firstCity.push_back( Area::kLeftTop );
+	cities.push_back( firstCity );
+
+	std::map< ContiguousField, std::vector< ContiguousCity > > citiesPerField;
+	citiesPerField[ firstField ] = cities;
+	citiesPerField[ secondField ] = cities;
+	citiesPerField[ thirdField ] = cities;
+	citiesPerField[ fourthField ] = cities;
+
+	std::vector< Area::Area > shields( 1, Area::kRight );
+
+	Tile const tileEQ
+	(
+		Tile::kCenterNothing,
+		"EQ",
+		fields,
+		roads,
+		cities,
+		citiesPerField,
+		shields
+	);
+
+	return tileEQ;
+}
+
+Model::Tile
 Model::createTile( char inChar )
 {
 	switch ( inChar )
