@@ -27,6 +27,11 @@ namespace Model
 		Model::Rotation getRotation() const;
 		std::vector< PlacedPiece > const & getPlacedPieces() const;
 
+		/**
+		 *	Does this TileOnBoard have an inn next to the specified Area?
+		 */
+		bool hasInn( Area::Area inArea ) const;
+
 		bool matchesAbove( TileOnBoard const & inTileOnBoard ) const;
 		bool matchesRightOf( TileOnBoard const & inTileOnBoard ) const;
 		bool matchesBelow( TileOnBoard const & inTileOnBoard ) const;

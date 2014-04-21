@@ -169,6 +169,11 @@ namespace Model
 		 */
 		std::vector< PlacedField > getCompleteField( PlacedField const & inField ) const;
 
+		/**
+		 *	Does the specified road area have an inn next to it?
+		 */
+		bool hasInn( PlacedRoad const & inRoad ) const;
+
 	private:
 		int getIndex( int inRow, int inCol ) const;
 		void ensureTile( int inRow, int inCol );

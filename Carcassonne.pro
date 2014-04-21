@@ -35,6 +35,7 @@ SOURCES += main.cpp \
 	Model\Private\UnitTests\PlacedProjectUnitTests.cpp \
 	Model\Private\UnitTests\PlayerUnitTests.cpp \
 	Model\Private\UnitTests\TileUnitTests.cpp \
+	Model\Private\UnitTests\TileOnBoardUnitTests.cpp \
 	View\Private\Source\AllScoresWidget.cpp \
 	View\Private\Source\BoardView.cpp \
 	View\Private\Source\DragData.cpp \

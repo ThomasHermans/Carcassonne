@@ -12,6 +12,7 @@ namespace
 {
 	std::size_t const kBrigandPointsPerTileUnfinished = 1;
 	std::size_t const kBrigandPointsPerTileFinished = 1;
+	std::size_t const kBrigandExtraPointsPerTileFinished = 1;
 	std::size_t const kFarmerPointsPerCity = 3;
 	std::size_t const kKnightPointsPerTileFinished = 2;
 	std::size_t const kKnightsPointsPerShieldFinished = 2;
@@ -622,10 +623,13 @@ Model::Game::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
 {
 	std::vector< PlacedPiece > allPieces;
 	std::set< std::pair< int, int > > usedTiles;
+	bool hasInn = false;
 	BOOST_FOREACH( PlacedRoad const & road, inRoad )
 	{
 		// Add to used tiles
 		usedTiles.insert( std::make_pair( road.row, road.col ) );
+		// Check if an inn is present
+		hasInn = hasInn || mBoard.hasInn( road );
 		// Remove and return all pieces from this PlacedRoad
 		std::vector< PlacedPiece > const pieces = mBoard.removePieces( road );
 		returnPieces( pieces, road.row, road.col );
@@ -633,7 +637,8 @@ Model::Game::onFinishedRoad( std::vector< PlacedRoad > const & inRoad )
 		allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
 	}
 	std::set< Color::Color > const winningColors = getWinningColors( allPieces );
-	std::size_t const points = usedTiles.size() * kBrigandPointsPerTileFinished;
+	std::size_t const pointsPerTile = kBrigandPointsPerTileFinished + ( hasInn ? kBrigandExtraPointsPerTileFinished : 0 );
+	std::size_t const points = usedTiles.size() * pointsPerTile;
 	awardPoints( winningColors, points );
 }
 

@@ -454,6 +454,16 @@ Model::Board::getCompleteField( PlacedField const & inField ) const
 	return completeField;
 }
 
+bool
+Model::Board::hasInn( PlacedRoad const & inRoad ) const
+{
+	if ( !isTile( inRoad.row, inRoad.col ) )
+	{
+		return false;
+	}
+	return getTile( inRoad.row, inRoad.col )->hasInn( inRoad.area );
+}
+
 int
 Model::Board::getIndex( int inRow, int inCol ) const
 {

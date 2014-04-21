@@ -139,6 +139,12 @@ Model::TileOnBoard::getPlacedPieces() const
 }
 
 bool
+Model::TileOnBoard::hasInn( Area::Area inArea ) const
+{
+	return mTile.hasInn( unturn( inArea, mRotation ) );
+}
+
+bool
 Model::TileOnBoard::matchesAbove( TileOnBoard const & inTileOnBoard) const
 {
 	return ( this->getBottom() == inTileOnBoard.getTop() );
