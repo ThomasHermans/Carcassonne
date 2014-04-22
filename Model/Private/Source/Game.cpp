@@ -10,15 +10,17 @@
 
 namespace
 {
-	std::size_t const kBrigandPointsPerTileUnfinished = 1;
-	std::size_t const kBrigandPointsPerTileFinished = 1;
-	std::size_t const kBrigandPointsPerTileFinishedWithInn = 2;
-	std::size_t const kFarmerPointsPerCity = 3;
-	std::size_t const kKnightPointsPerTileFinished = 2;
-	std::size_t const kKnightsPointsPerShieldFinished = 2;
-	std::size_t const kKnightPointsPerTileUnfinished = 1;
-	std::size_t const kKnightsPointsPerShieldUnfinished = 1;
-	std::size_t const kMonkPointsPerTile = 1;
+	std::size_t const kBrigandPPTileUnfinished = 1;
+	std::size_t const kBrigandPPTileFinished = 1;
+	std::size_t const kBrigandPPTileFinishedWithInn = 2;
+	std::size_t const kFarmerPPCity = 3;
+	std::size_t const kKnightPPTileFinished = 2;
+	std::size_t const kKnightPPTileFinishedWithCathedral = 3;
+	std::size_t const kKnightPPShieldFinished = 2;
+	std::size_t const kKnightPPShieldFinishedWithCathedral = 3;
+	std::size_t const kKnightPPTileUnfinished = 1;
+	std::size_t const kKnightPPShieldUnfinished = 1;
+	std::size_t const kMonkPPTile = 1;
 	std::size_t const kMonkPointsFinished = 9;
 
 	std::set< Model::Color::Color >
@@ -65,7 +67,7 @@ namespace
 		}
 		else
 		{
-			return inNrOfTiles * kBrigandPointsPerTileUnfinished;
+			return inNrOfTiles * kBrigandPPTileUnfinished;
 		}
 	}
 
@@ -74,12 +76,38 @@ namespace
 	{
 		if ( inHasInn )
 		{
-			return inNrOfTiles * kBrigandPointsPerTileFinishedWithInn;
+			return inNrOfTiles * kBrigandPPTileFinishedWithInn;
 		}
 		else
 		{
-			return inNrOfTiles * kBrigandPointsPerTileFinished;
+			return inNrOfTiles * kBrigandPPTileFinished;
 		}		
+	}
+
+	std::size_t
+	calculatePointsUnfinishedCity( std::size_t inNrOfTiles, std::size_t inNrOfShields, bool inHasCathedral )
+	{
+		if ( inHasCathedral )
+		{
+			return 0;
+		}
+		else
+		{
+			return inNrOfTiles * kKnightPPTileUnfinished + inNrOfShields * kKnightPPShieldUnfinished;
+		}
+	}
+
+	std::size_t
+	calculatePointsFinishedCity( std::size_t inNrOfTiles, std::size_t inNrOfShields, bool inHasCathedral )
+	{
+		if ( inHasCathedral )
+		{
+			return inNrOfTiles * kKnightPPTileFinishedWithCathedral + inNrOfShields * kKnightPPShieldFinishedWithCathedral;
+		}
+		else
+		{
+			return inNrOfTiles * kKnightPPTileFinished + inNrOfShields * kKnightPPShieldFinished;
+		}
 	}
 }
 
@@ -459,7 +487,7 @@ Model::Game::awardEndCloisterPoints()
 						returnPieces( pieces, row, col );
 						// Calculate winner(s) and points of the cloister
 						std::set< Color::Color > const winningColors = getWinningColors( pieces );
-						std::size_t const points = mBoard.getNrOfSurroundingTiles( row, col ) * kMonkPointsPerTile;
+						std::size_t const points = mBoard.getNrOfSurroundingTiles( row, col ) * kMonkPPTile;
 						// Award the points to the winners
 						awardPoints( winningColors, points );
 					}
@@ -490,10 +518,13 @@ Model::Game::awardEndCityPoints()
 						std::vector< PlacedPiece > allPieces;
 						std::set< std::pair< int, int > > usedTiles;
 						std::set< PlacedCity > allShields;
+						bool hasCathedral = false;
 						BOOST_FOREACH( PlacedCity const & city, completeCity )
 						{
 							// Add the tile to usedTiles
 							usedTiles.insert( std::make_pair( city.row, city.col ) );
+							// Check if a cathedral is present
+							hasCathedral = hasCathedral || mBoard.getTile( city.row, city.col )->getCenter() == Tile::kCenterCathedral;
 							// Add the shields on the tile
 							std::vector< Area::Area > const shields = mBoard.getTile( city.row, city.col )->getShields();
 							if ( std::find( shields.begin(), shields.end(), city.area ) != shields.end() )
@@ -507,7 +538,7 @@ Model::Game::awardEndCityPoints()
 						}
 						// Calculate winner(s) and points of the city
 						std::set< Color::Color > const winningColors = getWinningColors( allPieces );
-						std::size_t const points = usedTiles.size() * kKnightPointsPerTileUnfinished + allShields.size() * kKnightsPointsPerShieldUnfinished;
+						std::size_t const points = calculatePointsUnfinishedCity( usedTiles.size(), allShields.size(), hasCathedral );
 						// Award the points to the winners
 						awardPoints( winningColors, points );
 					}
@@ -601,7 +632,7 @@ Model::Game::awardEndFieldPoints()
 						}
 						// Calculate winner(s) and points of the field
 						std::set< Color::Color > const winningColors = getWinningColors( allPieces );
-						std::size_t const points = finishedCities.size() * kFarmerPointsPerCity;
+						std::size_t const points = finishedCities.size() * kFarmerPPCity;
 						// Award the points to the winners
 						awardPoints( winningColors, points );
 					}
@@ -626,10 +657,13 @@ Model::Game::onFinishedCity( std::vector< PlacedCity > const & inCity )
 	std::vector< PlacedPiece > allPieces;
 	std::set< std::pair< int, int > > usedTiles;
 	std::set< PlacedCity > allShields;
+	bool hasCathedral = false;
 	BOOST_FOREACH( PlacedCity const & city, inCity )
 	{
 		// Add to used tiles
 		usedTiles.insert( std::make_pair( city.row, city.col ) );
+		// Check if a cathedral is present
+		hasCathedral = hasCathedral || mBoard.getTile( city.row, city.col )->getCenter() == Tile::kCenterCathedral;
 		// Add shield
 		std::vector< Area::Area > const shields = mBoard.getTile( city.row, city.col )->getShields();
 		if ( std::find( shields.begin(), shields.end(), city.area ) != shields.end() )
@@ -643,7 +677,7 @@ Model::Game::onFinishedCity( std::vector< PlacedCity > const & inCity )
 		allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
 	}
 	std::set< Color::Color > const winningColors = getWinningColors( allPieces );
-	std::size_t const points = usedTiles.size() * kKnightPointsPerTileFinished + allShields.size() * kKnightsPointsPerShieldFinished;
+	std::size_t const points = calculatePointsFinishedCity( usedTiles.size(), allShields.size(), hasCathedral );
 	awardPoints( winningColors, points );
 }
 
