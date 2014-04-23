@@ -69,12 +69,3 @@ Model::PlacedPiece::getArea() const
 {
 	return mArea;
 }
-
-std::string
-Model::PlacedPiece::toString() const
-{
-	std::string res = mPiece.toString();
-	res.append(" on ");
-	res.append( areaToString( mArea ) );
-	return res;
-}

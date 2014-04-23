@@ -22,16 +22,12 @@ namespace Model
 
 	public:
 		Piece();
-		Piece( const Piece & inPiece );
-		Piece( const PlacedPiece & inPlacedPiece );
+		Piece( PlacedPiece const & inPlacedPiece );
 		Piece( PieceType inType, Color::Color inColor );
-		Piece & operator = ( const Piece & inPiece );
 
 		PieceType getType() const;
 		Color::Color getColor() const;
-		int getPoints() const;
-
-		std::string toString() const;
+		std::size_t getWeight() const;
 
 	private:
 		PieceType mType;

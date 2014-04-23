@@ -39,10 +39,6 @@ namespace Model
 			std::vector< Area::Area > const & inInns = std::vector< Area::Area >()
 		);
 
-
-		static std::string sideToString(Side inSide);
-		static std::string centerToString(Center inCenter);
-
 		Side getTop() const;
 		Side getRight() const;
 		Side getBottom() const;
@@ -71,8 +67,6 @@ namespace Model
 		bool isRoad( Area::Area inArea ) const;
 		bool isCity( Area::Area inArea ) const;
 		bool isField( Area::Area inArea ) const;
-
-		std::string toString() const;
 
 	private:
 		std::string mID;

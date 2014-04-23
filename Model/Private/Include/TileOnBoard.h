@@ -61,8 +61,6 @@ namespace Model
 		std::vector< Area::Area > getShields() const;
 		std::vector< Area::Area > getInns() const;
 
-		std::string toString() const;
-
 	private:
 		Tile mTile;
 		Rotation mRotation;

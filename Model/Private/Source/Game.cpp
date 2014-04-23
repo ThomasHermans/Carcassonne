@@ -34,11 +34,11 @@ namespace
 			Counts::iterator const it = counts.find( color );
 			if ( it == counts.end() )
 			{
-				counts.insert( std::make_pair( color, 1 ) );
+				counts.insert( std::make_pair( color, piece.getPiece().getWeight() ) );
 			}
 			else
 			{
-				++it->second;
+				it->second += piece.getPiece().getWeight();
 			}
 		}
 		std::set< Model::Color::Color > winningColors;

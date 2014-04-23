@@ -18,8 +18,6 @@ namespace Model
 		Color::Color getColor() const;
 		Area::Area getArea() const;
 
-		std::string toString() const;
-
 	private:
 		Piece mPiece;
 		Area::Area mArea;
