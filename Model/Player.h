@@ -4,10 +4,12 @@
 #include "Model/Color.h"
 #include "Model/Piece.h"
 
+#include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/signals2/signal.hpp>
 
-#include <vector>
+#include <map>
+#include <string>
 
 namespace Model
 {
@@ -37,18 +39,20 @@ namespace Model
 		/**
 		 *	Get the number of free pieces this player has.
 		 */
-		std::size_t getNumberOfFreePieces() const;
+		std::size_t getNumberOfFreePieces( Piece::PieceType inType ) const;
 
 		/**
-		 *	Does this player have free pieces?
+		 *	Does this player has a piece of the specified type
+		 *	to place?
 		 */
-		bool hasFreePieces() const;
+		bool hasPieceToPlace( Piece::PieceType inType ) const;
 
 		/**
 		 *	Remove one of the free pieces so you can place it.
-		 *	@note this player should have free pieces.
+		 *	If this player does not have a free piece of the
+		 *	specified type, boost::none is returned.
 		 */
-		Piece getPieceToPlace();
+		boost::optional< Piece > getPieceToPlace( Piece::PieceType inType );
 
 		/**
 		 *	Return a piece to this player.
@@ -70,7 +74,7 @@ namespace Model
 		std::string mName;
 		Color::Color mColor;
 		std::size_t mScore;
-		std::vector< Piece > mFreePieces;
+		std::map< Piece::PieceType, std::size_t > mPieces;
 		boost::shared_ptr< boost::signals2::signal< void () > > mInfoChanged;
 	};
 }

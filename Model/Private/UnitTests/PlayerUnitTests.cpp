@@ -10,18 +10,19 @@ TEST( "Player: constructor, getters and initial values" )
 	CHECK( player.getName() == "Thomas" );
 	CHECK( player.getColor() == Color::kGreen );
 	CHECK( player.getScore() == 0 );
-	CHECK( player.getNumberOfFreePieces() == 6 );
-	CHECK( player.hasFreePieces() );
+	CHECK( player.getNumberOfFreePieces( Piece::kFollower ) == 6 );
 }
 
 TEST( "Player: get and return a piece and check free pieces" )
 {
 	Player player( "Thomas", Color::kGreen );
-	Piece const first = player.getPieceToPlace();
-	Piece const second = player.getPieceToPlace();
-	CHECK( player.getNumberOfFreePieces() == 4 );
-	player.returnPiece( first );
-	CHECK( player.getNumberOfFreePieces() == 5 );
+	boost::optional< Piece > const firstPiece = player.getPieceToPlace( Piece::kFollower );
+	boost::optional< Piece > const secondPiece = player.getPieceToPlace( Piece::kFollower );
+	assert( firstPiece );
+	assert( secondPiece );
+	CHECK( player.getNumberOfFreePieces( Piece::kFollower ) == 4 );
+	player.returnPiece( *firstPiece );
+	CHECK( player.getNumberOfFreePieces( Piece::kFollower ) == 5 );
 }
 
 TEST( "Player: award points" )

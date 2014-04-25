@@ -3,14 +3,28 @@
 #include "CreateTilesAndPieces.h"
 #include "Tile.h"
 
+#include "Model/Typedefs.h"
+
 #include <cassert>
+
+namespace
+{
+	std::set< Model::Expansion::Type >
+	getExpansions()
+	{
+		std::set< Model::Expansion::Type > expansions;
+		expansions.insert( Model::Expansion::kBaseGame );
+		expansions.insert( Model::Expansion::kTheExpansion );
+		return expansions;
+	}
+}
 
 Model::Player::Player( std::string const & inName, Color::Color inColor )
 :
 	mName( inName ),
 	mColor( inColor ),
 	mScore( 0 ),
-	mFreePieces( createBaseGamePieces( inColor ) ),
+	mPieces( createPieces( getExpansions() ) ),
 	mInfoChanged( new boost::signals2::signal< void () >() )
 {
 }
@@ -34,31 +48,48 @@ Model::Player::getScore() const
 }
 
 std::size_t
-Model::Player::getNumberOfFreePieces() const
+Model::Player::getNumberOfFreePieces( Piece::PieceType inType ) const
 {
-	return mFreePieces.size();
+	std::map< Piece::PieceType, std::size_t >::const_iterator const it = mPieces.find( inType );
+	if ( it != mPieces.end() )
+	{
+		return it->second;
+	}
+	return 0;
 }
 
 bool
-Model::Player::hasFreePieces() const
+Model::Player::hasPieceToPlace( Piece::PieceType inType ) const
 {
-	return !mFreePieces.empty();
+	return getNumberOfFreePieces( inType ) > 0;
 }
 
-Model::Piece
-Model::Player::getPieceToPlace()
+boost::optional< Model::Piece >
+Model::Player::getPieceToPlace( Piece::PieceType inType )
 {
-	assert( hasFreePieces() );
-	Piece const result = mFreePieces.back();
-	mFreePieces.pop_back();
-	GetInfoChangedSignal()();
-	return result;
+	std::map< Piece::PieceType, std::size_t >::iterator const it = mPieces.find( inType );
+	if ( it != mPieces.end() && it->second > 0 )
+	{
+		it->second--;
+		Piece const result( inType, mColor );
+		GetInfoChangedSignal()();
+		return result;
+	}
+	return boost::none;
 }
 
 void
 Model::Player::returnPiece( Piece const & inPiece )
 {
-	mFreePieces.push_back( inPiece );
+	std::map< Piece::PieceType, std::size_t >::iterator const it = mPieces.find( inPiece.getType() );
+	if ( it != mPieces.end() )
+	{
+		it->second++;
+	}
+	else
+	{
+		mPieces.insert( std::make_pair( inPiece.getType(), 1 ) );
+	}
 	GetInfoChangedSignal()();
 }
 

@@ -244,20 +244,24 @@ Model::Game::tryToPlacePiece
 		// Only the active player can place a piece, if he has free pieces
 		// and if he hasn't already placed a piece
 		Player & player = mPlayers[ mCurrentPlayer ];
-		if ( player.getColor() == inColor && player.hasFreePieces() && mPiecesPlacedThisTurn == 0 )
+		if ( player.getColor() == inColor && player.hasPieceToPlace( inType ) && mPiecesPlacedThisTurn == 0 )
 		{
 			// You can only place a piece in an unoccupied area
 			if ( !isOccupiedOnCurrentTile( inPlace.area ) )
 			{
-				PlacedPiece const placedPiece( player.getPieceToPlace(), inPlace.area );
-				if ( mCurrentPlacedTile->tile.placePiece( placedPiece ) )
+				boost::optional< Piece > const piece = player.getPieceToPlace( inType );
+				if ( piece )
 				{
-					++mPiecesPlacedThisTurn;
-					piecePlaced( mCurrentPlacedTile->row, mCurrentPlacedTile->col, placedPiece, player );
-				}
-				else
-				{
-					player.returnPiece( placedPiece.getPiece() );
+					PlacedPiece const placedPiece( *piece, inPlace.area );
+					if ( mCurrentPlacedTile->tile.placePiece( placedPiece ) )
+					{
+						++mPiecesPlacedThisTurn;
+						piecePlaced( mCurrentPlacedTile->row, mCurrentPlacedTile->col, placedPiece, player );
+					}
+					else
+					{
+						player.returnPiece( placedPiece.getPiece() );
+					}
 				}
 			}
 		}

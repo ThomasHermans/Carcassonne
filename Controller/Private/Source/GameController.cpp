@@ -109,7 +109,7 @@ Controller::GameController::onPieceRemoved( int inRow, int inCol, Model::PlacedP
 void
 Controller::GameController::onPlayerInfoChanged( Model::Player const & inNewInfo )
 {
-	mWindow->setFollowersLeft( inNewInfo.getName(), inNewInfo.getNumberOfFreePieces() );
+	mWindow->setFollowersLeft( inNewInfo.getName(), inNewInfo.getNumberOfFreePieces( Model::Piece::kFollower ) );
 	mWindow->setScore( inNewInfo.getName(), inNewInfo.getScore() );
 }
 
@@ -170,7 +170,7 @@ Controller::GameController::addPlayersToWindow()
 {
 	BOOST_FOREACH( Model::Player const & player, mPlayers )
 	{
-		mWindow->addPlayer( player.getName(), viewFromModel( player.getColor() ), player.getNumberOfFreePieces() );
+		mWindow->addPlayer( player.getName(), viewFromModel( player.getColor() ), player.getNumberOfFreePieces( Model::Piece::kFollower ) );
 	}
 }
 

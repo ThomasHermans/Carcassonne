@@ -5,7 +5,9 @@
 #include "Tile.h"
 
 #include "Model/Color.h"
+#include "Model/Typedefs.h"
 
+#include <set>
 #include <string>
 #include <vector>
 
@@ -64,7 +66,12 @@ namespace Model
 
 	std::vector< Tile > createTiles( std::string const & inTiles );
 
-	std::vector< Piece > createBaseGamePieces( Color::Color inColor );
+	/**
+	 *	Create the correct pieces according to the specified
+	 *	set of expansions.
+	 */
+	std::map< Piece::PieceType, std::size_t >
+	createPieces( std::set< Expansion::Type > const & inExpansions );
 }
 
 #endif // SETUPBASEGAME_H

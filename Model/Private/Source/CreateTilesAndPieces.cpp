@@ -1992,13 +1992,17 @@ Model::createTiles( std::string const & inTiles )
 	return tiles;
 }
 
-std::vector< Model::Piece >
-Model::createBaseGamePieces( Color::Color inColor )
+std::map< Model::Piece::PieceType, std::size_t >
+Model::createPieces( std::set< Expansion::Type > const & inExpansions )
 {
-	std::vector< Piece > pieces;
-	for ( unsigned int i = 0; i < 6; ++i)
+	std::map< Piece::PieceType, std::size_t > pieces;
+	if ( inExpansions.count( Expansion::kBaseGame ) == 1 )
 	{
-		pieces.push_back( Piece( Piece::kFollower, inColor ) );
+		pieces[ Piece::kFollower ] = 6;
+	}
+	if ( inExpansions.count( Expansion::kTheExpansion ) == 1 )
+	{
+		pieces[ Piece::kLargeFollower ] = 1;
 	}
 	return pieces;
 }
