@@ -3,6 +3,92 @@
 #include <algorithm>
 #include <ctime>
 
+namespace
+{
+	Model::Tile
+	createTile( char inChar )
+	{
+		using namespace Model;
+		switch ( inChar )
+		{
+			case 'A':
+			case 'a':
+				return createTileA();
+			case 'B':
+			case 'b':
+				return createTileB();
+			case 'C':
+			case 'c':
+				return createTileC();
+			case 'D':
+			case 'd':
+				return createTileD();
+			case 'E':
+			case 'e':
+				return createTileE();
+			case 'F':
+			case 'f':
+				return createTileF();
+			case 'G':
+			case 'g':
+				return createTileG();
+			case 'H':
+			case 'h':
+				return createTileH();
+			case 'I':
+			case 'i':
+				return createTileI();
+			case 'J':
+			case 'j':
+				return createTileJ();
+			case 'K':
+			case 'k':
+				return createTileK();
+			case 'L':
+			case 'l':
+				return createTileL();
+			case 'M':
+			case 'm':
+				return createTileM();
+			case 'N':
+			case 'n':
+				return createTileN();
+			case 'O':
+			case 'o':
+				return createTileO();
+			case 'P':
+			case 'p':
+				return createTileP();
+			case 'Q':
+			case 'q':
+				return createTileQ();
+			case 'R':
+			case 'r':
+				return createTileR();
+			case 'S':
+			case 's':
+				return createTileS();
+			case 'T':
+			case 't':
+				return createTileT();
+			case 'U':
+			case 'u':
+				return createTileU();
+			case 'V':
+			case 'v':
+				return createTileV();
+			case 'W':
+			case 'w':
+				return createTileW();
+			case 'X':
+			case 'x':
+				return createTileX();
+			default:
+				return createTileD();
+		}
+	}
+}
+
 Model::Tile
 Model::createTileA()
 {
@@ -1802,179 +1888,145 @@ Model::createTileEQ()
 	return tileEQ;
 }
 
-Model::Tile
-Model::createTile( char inChar )
-{
-	switch ( inChar )
-	{
-		case 'A':
-		case 'a':
-			return createTileA();
-		case 'B':
-		case 'b':
-			return createTileB();
-		case 'C':
-		case 'c':
-			return createTileC();
-		case 'D':
-		case 'd':
-			return createTileD();
-		case 'E':
-		case 'e':
-			return createTileE();
-		case 'F':
-		case 'f':
-			return createTileF();
-		case 'G':
-		case 'g':
-			return createTileG();
-		case 'H':
-		case 'h':
-			return createTileH();
-		case 'I':
-		case 'i':
-			return createTileI();
-		case 'J':
-		case 'j':
-			return createTileJ();
-		case 'K':
-		case 'k':
-			return createTileK();
-		case 'L':
-		case 'l':
-			return createTileL();
-		case 'M':
-		case 'm':
-			return createTileM();
-		case 'N':
-		case 'n':
-			return createTileN();
-		case 'O':
-		case 'o':
-			return createTileO();
-		case 'P':
-		case 'p':
-			return createTileP();
-		case 'Q':
-		case 'q':
-			return createTileQ();
-		case 'R':
-		case 'r':
-			return createTileR();
-		case 'S':
-		case 's':
-			return createTileS();
-		case 'T':
-		case 't':
-			return createTileT();
-		case 'U':
-		case 'u':
-			return createTileU();
-		case 'V':
-		case 'v':
-			return createTileV();
-		case 'W':
-		case 'w':
-			return createTileW();
-		case 'X':
-		case 'x':
-			return createTileX();
-		default:
-			return createTileD();
-	}
-}
-
 std::vector< Model::Tile >
 Model::createBaseGameTiles()
 {
 	std::vector< Tile > tiles;
 	for (int i = 0; i < 2; ++i)
 	{
-		tiles.push_back(createTileA());
+		tiles.push_back( createTileA() );
 	}
 	for (int i = 0; i < 4; ++i)
 	{
-		tiles.push_back(createTileB());
+		tiles.push_back( createTileB() );
 	}
-	tiles.push_back(createTileC());
+	tiles.push_back( createTileC() );
 	//3 instead of 4, will facilitate easy starting tile
 	for (int i = 0; i < 3; ++i)
 	{
-		tiles.push_back(createTileD());
+		tiles.push_back( createTileD() );
 	}
 	for (int i = 0; i < 5; ++i)
 	{
-		tiles.push_back(createTileE());
+		tiles.push_back( createTileE() );
 	}
 	for (int i = 0; i < 2; ++i)
 	{
-		tiles.push_back(createTileF());
+		tiles.push_back( createTileF() );
 	}
-	tiles.push_back(createTileG());
+	tiles.push_back( createTileG() );
 	for (int i = 0; i < 3; ++i)
 	{
-		tiles.push_back(createTileH());
+		tiles.push_back( createTileH() );
 	}
 	for (int i = 0; i < 2; ++i)
 	{
-		tiles.push_back(createTileI());
+		tiles.push_back( createTileI() );
 	}
 	for (int i = 0; i < 3; ++i)
 	{
-		tiles.push_back(createTileJ());
+		tiles.push_back( createTileJ() );
 	}
 	for (int i = 0; i < 3; ++i)
 	{
-		tiles.push_back(createTileK());
+		tiles.push_back( createTileK() );
 	}
 	for (int i = 0; i < 3; ++i)
 	{
-		tiles.push_back(createTileL());
+		tiles.push_back( createTileL() );
 	}
 	for (int i = 0; i < 2; ++i)
 	{
-		tiles.push_back(createTileM());
+		tiles.push_back( createTileM() );
 	}
 	for (int i = 0; i < 3; ++i)
 	{
-		tiles.push_back(createTileN());
+		tiles.push_back( createTileN() );
 	}
 	for (int i = 0; i < 2; ++i)
 	{
-		tiles.push_back(createTileO());
+		tiles.push_back( createTileO() );
 	}
 	for (int i = 0; i < 3; ++i)
 	{
-		tiles.push_back(createTileP());
+		tiles.push_back( createTileP() );
 	}
-	tiles.push_back(createTileQ());
+	tiles.push_back( createTileQ() );
 	for (int i = 0; i < 3; ++i)
 	{
-		tiles.push_back(createTileR());
+		tiles.push_back( createTileR() );
 	}
 	for (int i = 0; i < 2; ++i)
 	{
-		tiles.push_back(createTileS());
+		tiles.push_back( createTileS() );
 	}
-	tiles.push_back(createTileT());
+	tiles.push_back( createTileT() );
 	for (int i = 0; i < 8; ++i)
 	{
-		tiles.push_back(createTileU());
+		tiles.push_back( createTileU() );
 	}
 	for (int i = 0; i < 9; ++i)
 	{
-		tiles.push_back(createTileV());
+		tiles.push_back( createTileV() );
 	}
 	for (int i = 0; i < 4; ++i)
 	{
-		tiles.push_back(createTileW());
+		tiles.push_back( createTileW() );
 	}
-	tiles.push_back(createTileX());
+	tiles.push_back( createTileX() );
 
-	std::srand(std::time(0));
-	std::random_shuffle(tiles.begin(), tiles.end());
+	std::srand( std::time( 0 ) );
+	std::random_shuffle( tiles.begin(), tiles.end() );
 	//add starting tile
-	tiles.push_back(createTileD());
+	tiles.push_back( createTileD() );
+
+	return tiles;
+}
+
+std::vector< Model::Tile >
+Model::createTheExpansionTiles()
+{
+	std::vector< Tile > tiles;
+	tiles.push_back( createTileEA() );
+	tiles.push_back( createTileEB() );
+	tiles.push_back( createTileEC() );
+	tiles.push_back( createTileED() );
+	tiles.push_back( createTileEE() );
+	tiles.push_back( createTileEF() );
+	tiles.push_back( createTileEG() );
+	tiles.push_back( createTileEH() );
+	tiles.push_back( createTileEI() );
+	tiles.push_back( createTileEJ() );
+	tiles.push_back( createTileEK() );
+	tiles.push_back( createTileEK() );
+	tiles.push_back( createTileEL() );
+	tiles.push_back( createTileEM() );
+	tiles.push_back( createTileEN() );
+	tiles.push_back( createTileEO() );
+	tiles.push_back( createTileEP() );
+	tiles.push_back( createTileEQ() );
+	return tiles;
+}
+
+std::vector< Model::Tile >
+Model::createTiles( std::set< Expansion::Type > const & inExpansions )
+{
+	std::vector< Tile > tiles;
+	// Base game
+	std::vector< Tile > const baseGameTiles = createBaseGameTiles();
+	tiles.insert( tiles.end(), baseGameTiles.begin(), baseGameTiles.end() );
+	Tile const startTile = tiles.back();
+	tiles.pop_back();
+	// Expansions
+	if ( inExpansions.count( Expansion::kTheExpansion ) == 1 )
+	{
+		std::vector< Tile > const expansionTiles = createTheExpansionTiles();
+		tiles.insert( tiles.end(), expansionTiles.begin(), expansionTiles.end() );
+	}
+	// Shuffle the tiles
+	std::srand( std::time( 0 ) );
+	std::random_shuffle( tiles.begin(), tiles.end() );
+	tiles.push_back( startTile );
 
 	return tiles;
 }
@@ -1996,10 +2048,9 @@ std::map< Model::Piece::PieceType, std::size_t >
 Model::createPieces( std::set< Expansion::Type > const & inExpansions )
 {
 	std::map< Piece::PieceType, std::size_t > pieces;
-	if ( inExpansions.count( Expansion::kBaseGame ) == 1 )
-	{
-		pieces[ Piece::kFollower ] = 6;
-	}
+	// Base game
+	pieces[ Piece::kFollower ] = 6;
+	// Expansions
 	if ( inExpansions.count( Expansion::kTheExpansion ) == 1 )
 	{
 		pieces[ Piece::kLargeFollower ] = 1;

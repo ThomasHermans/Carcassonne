@@ -56,15 +56,34 @@ namespace Model
 	Tile createTileEP();
 	Tile createTileEQ();
 
-	Tile createTile( char inChar );
+	/*
+	 *	Create a shuffled list of Tiles containing all of the base game
+	 *	tiles, having the start Tile on the back.
+	 *	This means that Tiles should be removed using pop_back.
+	 */
+	std::vector< Tile >
+	createBaseGameTiles();
 
 	/*
-	 * returns a shuffled vector of Tiles containing all of the base game tiles, having the start Tile on the back.
-	 * This means that Tiles should be removed using pop_back.
+	 *	Create a shuffled list of Tiles containing all of the tiles of
+	 *	the expansion.
 	 */
-	std::vector< Tile > createBaseGameTiles();
+	std::vector< Tile >
+	createTheExpansionTiles();
 
-	std::vector< Tile > createTiles( std::string const & inTiles );
+	/**
+	 *	Create a shuffled list of tiles according the specified
+	 *	set of expansions.
+	 *	The start tile will be on the back of the list.
+	 */
+	std::vector< Tile >
+	createTiles( std::set< Expansion::Type > const & inExpansions );
+
+	/**
+	 *	Create a list of tiles according to the specified string.
+	 */
+	std::vector< Tile >
+	createTiles( std::string const & inTiles );
 
 	/**
 	 *	Create the correct pieces according to the specified
