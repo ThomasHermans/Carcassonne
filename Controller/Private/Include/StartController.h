@@ -6,7 +6,9 @@
 #include <QObject>
 
 #include <boost/scoped_ptr.hpp>
+#include <boost/signals2/signal.hpp>
 
+#include <set>
 #include <string>
 #include <vector>
 
@@ -30,8 +32,9 @@ namespace Controller
 		StartController( QObject * inParent = 0 );
 		~StartController();
 
-	signals:
-		void startGame( std::vector< Model::Player > const & inPlayers );
+	boost::signals2::signal
+	< void ( std::set< View::Expansion::Type > const & inExpansions,
+		std::vector< View::PlayerInfo > const & inPlayers ) > startGame;
 
 	private slots:
 		void onTryToStartGame( std::vector< View::PlayerInfo > const & inPlayers );

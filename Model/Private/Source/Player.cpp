@@ -7,24 +7,17 @@
 
 #include <cassert>
 
-namespace
-{
-	std::set< Model::Expansion::Type >
-	getExpansions()
-	{
-		std::set< Model::Expansion::Type > expansions;
-		expansions.insert( Model::Expansion::kBaseGame );
-		expansions.insert( Model::Expansion::kTheExpansion );
-		return expansions;
-	}
-}
-
-Model::Player::Player( std::string const & inName, Color::Color inColor )
+Model::Player::Player
+(
+	std::string const & inName,
+	Color::Color inColor,
+	std::set< Expansion::Type > const & inExpansions
+)
 :
 	mName( inName ),
 	mColor( inColor ),
 	mScore( 0 ),
-	mPieces( createPieces( getExpansions() ) ),
+	mPieces( createPieces( inExpansions ) ),
 	mInfoChanged( new boost::signals2::signal< void () >() )
 {
 }

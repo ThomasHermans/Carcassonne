@@ -10,6 +10,8 @@
 
 #include <QSettings>
 
+#include <boost/foreach.hpp>
+
 namespace
 {
 	QString const kNrOfPlayers = "NrOfPlayers";
@@ -30,6 +32,14 @@ namespace
 		QString playerColorKey = kPlayerColor;
 		playerColorKey.append( QString::number( inIndex ) );
 		return playerColorKey;
+	}
+
+	std::set< View::Expansion::Type >
+	getExpansions()
+	{
+		std::set< View::Expansion::Type > expansions;
+		expansions.insert( View::Expansion::kBaseGame );
+		return expansions;
 	}
 }
 
@@ -64,15 +74,12 @@ Controller::StartController::onTryToStartGame( std::vector< View::PlayerInfo > c
 	QSettings & settings = getSettings();
 	settings.setValue( kNrOfPlayers, inPlayers.size() );
 	int index = 0;
-	std::vector< Model::Player > players;
-	for ( std::vector< View::PlayerInfo >::const_iterator it = inPlayers.begin();
-		it != inPlayers.end();
-		++it, ++index )
+	BOOST_FOREACH( View::PlayerInfo const & player, inPlayers )
 	{
-		settings.setValue( getPlayerNameKey( index ), QString::fromStdString( it->name ) );
-		settings.setValue( getPlayerColorKey( index ), int( it->color ) );
-		players.push_back( Model::Player( it->name, modelFromView( it->color ) ) );
+		settings.setValue( getPlayerNameKey( index ), QString::fromStdString( player.name ) );
+		settings.setValue( getPlayerColorKey( index ), int( player.color ) );
+		++index;
 	}
 	mStartScreen->hide();
-	emit startGame( players );
+	startGame( getExpansions(), inPlayers );
 }

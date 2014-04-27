@@ -4,21 +4,76 @@
 
 #include "Model/Color.h"
 #include "Model/Private/Include/PlacedProject.h"
-#include "View/Typedefs.h"
+
 #include "View/DragData.h"
+#include "View/StartScreen.h"
+#include "View/Typedefs.h"
 
 #include <boost/foreach.hpp>
 
+#include <cassert>
 #include <iostream>
+#include <set>
 
 namespace
 {
 	std::vector< Model::Player >
 	createTestPlayers()
 	{
+		std::set< Model::Expansion::Type > testExpansions;
+		testExpansions.insert( Model::Expansion::kBaseGame );
 		std::vector< Model::Player > players;
-		players.push_back( Model::Player( "Yumi", Model::Color::kYellow ) );
-		players.push_back( Model::Player( "Thomas", Model::Color::kGreen ) );
+		players.push_back( Model::Player( "Yumi", Model::Color::kYellow, testExpansions ) );
+		players.push_back( Model::Player( "Thomas", Model::Color::kGreen, testExpansions ) );
+		return players;
+	}
+
+	Model::Expansion::Type
+	modelFromView( View::Expansion::Type inExpansion )
+	{
+		switch ( inExpansion )
+		{
+			case View::Expansion::kBaseGame:
+				return Model::Expansion::kBaseGame;
+			case View::Expansion::kTheExpansion:
+				return Model::Expansion::kTheExpansion;
+		}
+		assert( !"Invalide View::Expansion::Type!" );
+		return Model::Expansion::kBaseGame;
+	}
+
+	std::set< Model::Expansion::Type >
+	modelFromView( std::set< View::Expansion::Type > const & inExpansions )
+	{
+		std::set< Model::Expansion::Type > expansions;
+		BOOST_FOREACH( View::Expansion::Type expansion, inExpansions )
+		{
+			expansions.insert( modelFromView( expansion ) );
+		}
+		return expansions;
+	}
+
+	std::vector< Model::Player >
+	modelFromView
+	(
+		std::set< View::Expansion::Type > const & inExpansions,
+		std::vector< View::PlayerInfo > const & inPlayers
+	)
+	{
+		std::set< Model::Expansion::Type > const expansions = modelFromView( inExpansions );
+		std::vector< Model::Player > players;
+		BOOST_FOREACH( View::PlayerInfo const & playerInfo, inPlayers )
+		{
+			players.push_back
+			(
+				Model::Player
+				(
+					playerInfo.name,
+					Controller::modelFromView( playerInfo.color ),
+					expansions
+				)
+			);
+		}
 		return players;
 	}
 }
@@ -35,11 +90,16 @@ Controller::GameController::GameController( std::string const & inTiles, QObject
 	startGame();
 }
 
-Controller::GameController::GameController( std::vector< Model::Player > const & inPlayers, QObject * inParent )
+Controller::GameController::GameController
+(
+	std::set< View::Expansion::Type > const & inExpansions,
+	std::vector< View::PlayerInfo > const & inPlayers,
+	QObject * inParent
+)
 :
 	QObject( inParent ),
-	mPlayers( inPlayers ),
-	mGame( mPlayers ),
+	mPlayers( ::modelFromView( inExpansions, inPlayers ) ),
+	mGame( mPlayers, ::modelFromView( inExpansions ) ),
 	mWindow( new View::GameWindow() )
 {
 	addPlayersToWindow();

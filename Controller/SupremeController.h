@@ -1,16 +1,17 @@
 #ifndef SUPREMECONTROLLER_H
 #define SUPREMECONTROLLER_H
 
-#include <QObject>
+#include "View/Typedefs.h"
 
 #include <boost/scoped_ptr.hpp>
 
+#include <set>
 #include <string>
 #include <vector>
 
-namespace Model
+namespace View
 {
-	class Player;
+	class PlayerInfo;
 }
 
 namespace  Controller
@@ -18,15 +19,22 @@ namespace  Controller
 	class GameController;
 	class StartController;
 
-	class SupremeController : QObject
+	class SupremeController
 	{
-		Q_OBJECT
 	public:
-		SupremeController( QObject * inParent = 0 );
+		SupremeController();
 		~SupremeController();
 
-	private slots:
-		void startGame( std::vector< Model::Player > const & inPlayers );
+		/**
+		 *	Start a game with the specified expansions
+		 *	and players.
+		 */
+		void
+		startGame
+		(
+			std::set< View::Expansion::Type > const & inExpansions,
+			std::vector< View::PlayerInfo > const & inPlayers
+		);
 
 	private:
 		boost::scoped_ptr< StartController > mStartController;

@@ -52,7 +52,6 @@ SOURCES += main.cpp \
 
 HEADERS += \
 	Controller\GameController.h \
-	Controller\SupremeController.h \
 	Controller\Private\Include\ModelViewGlue.h \
 	Controller\Private\Include\Settings.h \
 	Controller\Private\Include\StartController.h \

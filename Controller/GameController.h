@@ -3,17 +3,26 @@
 
 #include "Model/Game.h"
 #include "Model/Player.h"
+
 #include "View/GameWindow.h"
+#include "View/Typedefs.h"
 
 #include <boost/scoped_ptr.hpp>
 
 #include <QObject>
 
+#include <set>
+#include <string>
 #include <vector>
 
 namespace Dragging
 {
 	class PieceData;
+}
+
+namespace View
+{
+	struct PlayerInfo;
 }
 
 namespace Controller
@@ -23,7 +32,12 @@ namespace Controller
 		Q_OBJECT
 	public:
 		explicit GameController( std::string const & inTiles, QObject * inParent = 0 );
-		explicit GameController( std::vector< Model::Player > const & inPlayer, QObject * inParent = 0 );
+		explicit GameController
+		(
+			std::set< View::Expansion::Type > const & inExpansions,
+			std::vector< View::PlayerInfo > const & inPlayer,
+			QObject * inParent = 0
+		);
 
 	private slots:
 		// From model to view

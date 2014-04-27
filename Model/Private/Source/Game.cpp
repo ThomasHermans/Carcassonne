@@ -111,10 +111,14 @@ namespace
 	}
 }
 
-Model::Game::Game( std::vector< Player > const & inPlayers )
+Model::Game::Game
+(
+	std::vector< Player > const & inPlayers,
+	std::set< Expansion::Type > const & inExpansions
+)
 :
 	mBoard(),
-	mBag( createBaseGameTiles() ),
+	mBag( createTiles( inExpansions ) ),
 	mNextTile(),
 	mPlayers( inPlayers ),
 	mCurrentPlayer( 0 ),

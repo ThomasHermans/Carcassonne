@@ -5,6 +5,7 @@
 #include "PlacedProject.h"
 
 #include "Model/Player.h"
+#include "Model/Typedefs.h"
 
 #include <boost/optional.hpp>
 #include <boost/signals2/signal.hpp>
@@ -56,9 +57,13 @@ namespace Model
 	public:
 		/**
 		 *	Construct a game with the given players and the
-		 *	tiles for the base game.
+		 *	tiles for specified expansions.
 		 */
-		Game( std::vector< Player > const & inPlayers );
+		Game
+		(
+			std::vector< Player > const & inPlayers,
+			std::set< Expansion::Type > const & inExpansions
+		);
 
 		/**
 		 *	Construct a game with the given players and tiles.

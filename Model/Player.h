@@ -3,12 +3,14 @@
 
 #include "Model/Color.h"
 #include "Model/Piece.h"
+#include "Model/Typedefs.h"
 
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/signals2/signal.hpp>
 
 #include <map>
+#include <set>
 #include <string>
 
 namespace Model
@@ -18,8 +20,15 @@ namespace Model
 	public:
 		/**
 		 *	Construct a new player with the given name and color.
+		 *	The player will have the correct pieces according to
+		 *	the specified expansions.
 		 */
-		Player( std::string const & inName, Color::Color inColor );
+		Player
+		(
+			std::string const & inName,
+			Color::Color inColor,
+			std::set< Expansion::Type > const & inExpansions
+		);
 
 		/**
 		 *	Get the name of this player.

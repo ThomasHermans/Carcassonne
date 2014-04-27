@@ -1,12 +1,24 @@
 #include <test_o_matic.hpp>
 
 #include "Model/Player.h"
+#include "Model/Typedefs.h"
 
 using namespace Model;
 
+namespace
+{
+	std::set< Expansion::Type >
+	getExpansions()
+	{
+		std::set< Expansion::Type > expansions;
+		expansions.insert( Expansion::kBaseGame );
+		return expansions;
+	}
+}
+
 TEST( "Player: constructor, getters and initial values" )
 {
-	Player const player( "Thomas", Color::kGreen );
+	Player const player( "Thomas", Color::kGreen, getExpansions() );
 	CHECK( player.getName() == "Thomas" );
 	CHECK( player.getColor() == Color::kGreen );
 	CHECK( player.getScore() == 0 );
@@ -15,7 +27,7 @@ TEST( "Player: constructor, getters and initial values" )
 
 TEST( "Player: get and return a piece and check free pieces" )
 {
-	Player player( "Thomas", Color::kGreen );
+	Player player( "Thomas", Color::kGreen, getExpansions() );
 	boost::optional< Piece > const firstPiece = player.getPieceToPlace( Piece::kFollower );
 	boost::optional< Piece > const secondPiece = player.getPieceToPlace( Piece::kFollower );
 	assert( firstPiece );
@@ -27,7 +39,7 @@ TEST( "Player: get and return a piece and check free pieces" )
 
 TEST( "Player: award points" )
 {
-	Player player( "Thomas", Color::kGreen );
+	Player player( "Thomas", Color::kGreen, getExpansions() );
 	player.awardPoints( 5 );
 	player.awardPoints( 4 );
 	player.awardPoints( 19 );

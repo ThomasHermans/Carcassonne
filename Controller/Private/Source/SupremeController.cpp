@@ -6,16 +6,14 @@
 
 #include <iostream>
 
-Controller::SupremeController::SupremeController( QObject * inParent )
+Controller::SupremeController::SupremeController()
 :
-	QObject( inParent ),
 	mStartController( new StartController() ),
 	mGameController()
 {
-	connect
+	mStartController->startGame.connect
 	(
-		mStartController.get(), SIGNAL( startGame( std::vector< Model::Player > ) ),
-		this, SLOT( startGame( std::vector< Model::Player > ) )
+		boost::bind( &Controller::SupremeController::startGame, this, _1, _2 )
 	);
 }
 
@@ -24,8 +22,12 @@ Controller::SupremeController::~SupremeController()
 }
 
 void
-Controller::SupremeController::startGame( std::vector< Model::Player > const & inPlayers )
+Controller::SupremeController::startGame
+(
+	std::set< View::Expansion::Type > const & inExpansions,
+	std::vector< View::PlayerInfo > const & inPlayers
+)
 {
 	std::cout << "Starting game by resetting mGameController..." << std::endl;
-	mGameController.reset( new GameController( inPlayers ) );
+	mGameController.reset( new GameController( inExpansions, inPlayers ) );
 }
