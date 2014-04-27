@@ -28,6 +28,5 @@ Controller::SupremeController::startGame
 	std::vector< View::PlayerInfo > const & inPlayers
 )
 {
-	std::cout << "Starting game by resetting mGameController..." << std::endl;
 	mGameController.reset( new GameController( inExpansions, inPlayers ) );
 }

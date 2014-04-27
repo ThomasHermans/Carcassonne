@@ -1,91 +1,192 @@
 #include "CreateTilesAndPieces.h"
 
 #include <algorithm>
+#include <cassert>
 #include <ctime>
 
 namespace
 {
+	std::size_t
+	getLength( std::string inString, std::size_t inStartPos )
+	{
+		std::size_t const size = inString.size();
+		for ( std::size_t length = 0; inStartPos + length < size; ++length )
+		{
+			char c = inString[ inStartPos + length ];
+			if ( c >= 'A' && c <= 'Z' )
+			{
+				return length + 1;
+			}
+		}
+		assert( !"No capital found after given start position!" );
+		return 0;
+	}
+
 	Model::Tile
-	createTile( char inChar )
+	createTile( std::string const & inId )
 	{
 		using namespace Model;
-		switch ( inChar )
+		if ( inId == "A" )
 		{
-			case 'A':
-			case 'a':
-				return createTileA();
-			case 'B':
-			case 'b':
-				return createTileB();
-			case 'C':
-			case 'c':
-				return createTileC();
-			case 'D':
-			case 'd':
-				return createTileD();
-			case 'E':
-			case 'e':
-				return createTileE();
-			case 'F':
-			case 'f':
-				return createTileF();
-			case 'G':
-			case 'g':
-				return createTileG();
-			case 'H':
-			case 'h':
-				return createTileH();
-			case 'I':
-			case 'i':
-				return createTileI();
-			case 'J':
-			case 'j':
-				return createTileJ();
-			case 'K':
-			case 'k':
-				return createTileK();
-			case 'L':
-			case 'l':
-				return createTileL();
-			case 'M':
-			case 'm':
-				return createTileM();
-			case 'N':
-			case 'n':
-				return createTileN();
-			case 'O':
-			case 'o':
-				return createTileO();
-			case 'P':
-			case 'p':
-				return createTileP();
-			case 'Q':
-			case 'q':
-				return createTileQ();
-			case 'R':
-			case 'r':
-				return createTileR();
-			case 'S':
-			case 's':
-				return createTileS();
-			case 'T':
-			case 't':
-				return createTileT();
-			case 'U':
-			case 'u':
-				return createTileU();
-			case 'V':
-			case 'v':
-				return createTileV();
-			case 'W':
-			case 'w':
-				return createTileW();
-			case 'X':
-			case 'x':
-				return createTileX();
-			default:
-				return createTileD();
+			return createTileA();
 		}
+		else if ( inId == "B" )
+		{
+			return createTileB();
+		}
+		else if ( inId == "C" )
+		{
+			return createTileC();
+		}
+		else if ( inId == "D" )
+		{
+			return createTileD();
+		}
+		else if ( inId == "E" )
+		{
+			return createTileE();
+		}
+		else if ( inId == "F" )
+		{
+			return createTileF();
+		}
+		else if ( inId == "G" )
+		{
+			return createTileG();
+		}
+		else if ( inId == "H" )
+		{
+			return createTileH();
+		}
+		else if ( inId == "I" )
+		{
+			return createTileI();
+		}
+		else if ( inId == "J" )
+		{
+			return createTileJ();
+		}
+		else if ( inId == "K" )
+		{
+			return createTileK();
+		}
+		else if ( inId == "L" )
+		{
+			return createTileL();
+		}
+		else if ( inId == "M" )
+		{
+			return createTileM();
+		}
+		else if ( inId == "N" )
+		{
+			return createTileN();
+		}
+		else if ( inId == "O" )
+		{
+			return createTileO();
+		}
+		else if ( inId == "P" )
+		{
+			return createTileP();
+		}
+		else if ( inId == "Q" )
+		{
+			return createTileQ();
+		}
+		else if ( inId == "R" )
+		{
+			return createTileR();
+		}
+		else if ( inId == "S" )
+		{
+			return createTileS();
+		}
+		else if ( inId == "T" )
+		{
+			return createTileT();
+		}
+		else if ( inId == "U" )
+		{
+			return createTileU();
+		}
+		else if ( inId == "V" )
+		{
+			return createTileV();
+		}
+		else if ( inId == "W" )
+		{
+			return createTileW();
+		}
+		else if ( inId == "X" )
+		{
+			return createTileX();
+		}
+		else if ( inId == "eA" )
+		{
+			return createTileEA();
+		}
+		else if ( inId == "eB" )
+		{
+			return createTileEB();
+		}
+		else if ( inId == "eC" )
+		{
+			return createTileEC();
+		}
+		else if ( inId == "eD" )
+		{
+			return createTileED();
+		}
+		else if ( inId == "eF" )
+		{
+			return createTileEF();
+		}
+		else if ( inId == "eG" )
+		{
+			return createTileEG();
+		}
+		else if ( inId == "eH" )
+		{
+			return createTileEH();
+		}
+		else if ( inId == "eI" )
+		{
+			return createTileEI();
+		}
+		else if ( inId == "eJ" )
+		{
+			return createTileEJ();
+		}
+		else if ( inId == "eK" )
+		{
+			return createTileEK();
+		}
+		else if ( inId == "eL" )
+		{
+			return createTileEL();
+		}
+		else if ( inId == "eM" )
+		{
+			return createTileEM();
+		}
+		else if ( inId == "eN" )
+		{
+			return createTileEN();
+		}
+		else if ( inId == "eO" )
+		{
+			return createTileEO();
+		}
+		else if ( inId == "eP" )
+		{
+			return createTileEP();
+		}
+		else if ( inId == "eQ" )
+		{
+			return createTileEQ();
+		}
+		assert( !"Wrong id given" );
 	}
 }
 
@@ -1110,7 +1211,7 @@ Model::createTileEA()
 	Tile const tileEA
 	(
 		Tile::kCenterNothing,
-		"EA",
+		"eA",
 		fields,
 		roads,
 		cities,
@@ -1160,7 +1261,7 @@ Model::createTileEB()
 	Tile const tileEB
 	(
 		Tile::kCenterNothing,
-		"EB",
+		"eB",
 		fields,
 		roads,
 		cities,
@@ -1210,7 +1311,7 @@ Model::createTileEC()
 	Tile const tileEC
 	(
 		Tile::kCenterNothing,
-		"EC",
+		"eC",
 		fields,
 		roads,
 		cities,
@@ -1254,7 +1355,7 @@ Model::createTileED()
 	Tile const tileED
 	(
 		Tile::kCenterCloister,
-		"ED",
+		"eD",
 		fields,
 		roads,
 		cities,
@@ -1303,7 +1404,7 @@ Model::createTileEE()
 	Tile const tileEE
 	(
 		Tile::kCenterNothing,
-		"EE",
+		"eE",
 		fields,
 		roads,
 		cities,
@@ -1350,7 +1451,7 @@ Model::createTileEF()
 	Tile const tileEF
 	(
 		Tile::kCenterNothing,
-		"EF",
+		"eF",
 		fields,
 		roads,
 		cities,
@@ -1395,7 +1496,7 @@ Model::createTileEG()
 	Tile const tileEG
 	(
 		Tile::kCenterNothing,
-		"EG",
+		"eG",
 		fields,
 		roads,
 		cities,
@@ -1441,7 +1542,7 @@ Model::createTileEH()
 	Tile const tileEH
 	(
 		Tile::kCenterNothing,
-		"EH",
+		"eH",
 		fields,
 		roads,
 		cities,
@@ -1485,7 +1586,7 @@ Model::createTileEI()
 	Tile const tileEI
 	(
 		Tile::kCenterNothing,
-		"EI",
+		"eI",
 		fields,
 		roads,
 		cities,
@@ -1532,7 +1633,7 @@ Model::createTileEJ()
 	Tile const tileEJ
 	(
 		Tile::kCenterNothing,
-		"EJ",
+		"eJ",
 		fields,
 		roads,
 		cities,
@@ -1571,7 +1672,7 @@ Model::createTileEK()
 	Tile const tileEK
 	(
 		Tile::kCenterCathedral,
-		"EK",
+		"eK",
 		fields,
 		roads,
 		cities,
@@ -1623,7 +1724,7 @@ Model::createTileEL()
 	Tile const tileEL
 	(
 		Tile::kCenterNothing,
-		"EL",
+		"eL",
 		fields,
 		roads,
 		cities,
@@ -1677,7 +1778,7 @@ Model::createTileEM()
 	Tile const tileEM
 	(
 		Tile::kCenterNothing,
-		"EM",
+		"eM",
 		fields,
 		roads,
 		cities,
@@ -1732,7 +1833,7 @@ Model::createTileEN()
 	Tile const tileEN
 	(
 		Tile::kCenterNothing,
-		"EN",
+		"eN",
 		fields,
 		roads,
 		cities,
@@ -1780,7 +1881,7 @@ Model::createTileEO()
 	Tile const tileEO
 	(
 		Tile::kCenterNothing,
-		"EO",
+		"eO",
 		fields,
 		roads,
 		cities,
@@ -1826,7 +1927,7 @@ Model::createTileEP()
 	Tile const tileEP
 	(
 		Tile::kCenterNothing,
-		"EP",
+		"eP",
 		fields,
 		roads,
 		cities,
@@ -1877,7 +1978,7 @@ Model::createTileEQ()
 	Tile const tileEQ
 	(
 		Tile::kCenterNothing,
-		"EQ",
+		"eQ",
 		fields,
 		roads,
 		cities,
@@ -2036,9 +2137,14 @@ Model::createTiles( std::string const & inTiles )
 {
 	std::vector< Tile > tiles;
 
-	for ( std::string::const_iterator it = inTiles.begin(); it != inTiles.end(); ++it )
+	std::size_t startPos = 0;
+	std::size_t const size = inTiles.size();
+	while ( startPos < size )
 	{
-		tiles.push_back( createTile( *it ) );
+		std::size_t const length = getLength( inTiles, startPos );
+		std::string const id = inTiles.substr( startPos, length );
+		tiles.push_back( createTile( id ) );
+		startPos += length;
 	}
 
 	return tiles;
