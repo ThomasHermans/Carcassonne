@@ -1,35 +1,52 @@
 <RCC>
-    <qresource prefix="/">
-        <file>tiles/A.png</file>
-        <file>tiles/B.png</file>
-        <file>tiles/C.png</file>
-        <file>tiles/D.png</file>
-        <file>tiles/E.png</file>
-        <file>tiles/F.png</file>
-        <file>tiles/G.png</file>
-        <file>tiles/H.png</file>
-        <file>tiles/I.png</file>
-        <file>tiles/J.png</file>
-        <file>tiles/K.png</file>
-        <file>tiles/L.png</file>
-        <file>tiles/M.png</file>
-        <file>tiles/N.png</file>
-        <file>tiles/O.png</file>
-        <file>tiles/P.png</file>
-        <file>tiles/Q.png</file>
-        <file>tiles/R.png</file>
-        <file>tiles/S.png</file>
-        <file>tiles/T.png</file>
-        <file>tiles/U.png</file>
-        <file>tiles/V.png</file>
-        <file>tiles/W.png</file>
-        <file>tiles/X.png</file>
-    </qresource>
-    <qresource prefix="/">
-        <file>StyleSheet.qss</file>
-    </qresource>
-    <qresource prefix="/">
-        <file>Follower.png</file>
-        <file>Follower_own.png</file>
-    </qresource>
+	<qresource prefix="/">
+		<file>tiles/A.png</file>
+		<file>tiles/B.png</file>
+		<file>tiles/C.png</file>
+		<file>tiles/D.png</file>
+		<file>tiles/E.png</file>
+		<file>tiles/F.png</file>
+		<file>tiles/G.png</file>
+		<file>tiles/H.png</file>
+		<file>tiles/I.png</file>
+		<file>tiles/J.png</file>
+		<file>tiles/K.png</file>
+		<file>tiles/L.png</file>
+		<file>tiles/M.png</file>
+		<file>tiles/N.png</file>
+		<file>tiles/O.png</file>
+		<file>tiles/P.png</file>
+		<file>tiles/Q.png</file>
+		<file>tiles/R.png</file>
+		<file>tiles/S.png</file>
+		<file>tiles/T.png</file>
+		<file>tiles/U.png</file>
+		<file>tiles/V.png</file>
+		<file>tiles/W.png</file>
+		<file>tiles/X.png</file>
+		<file>tiles/eA.png</file>
+		<file>tiles/eB.png</file>
+		<file>tiles/eC.png</file>
+		<file>tiles/eD.png</file>
+		<file>tiles/eE.png</file>
+		<file>tiles/eF.png</file>
+		<file>tiles/eG.png</file>
+		<file>tiles/eH.png</file>
+		<file>tiles/eI.png</file>
+		<file>tiles/eJ.png</file>
+		<file>tiles/eK.png</file>
+		<file>tiles/eL.png</file>
+		<file>tiles/eM.png</file>
+		<file>tiles/eN.png</file>
+		<file>tiles/eO.png</file>
+		<file>tiles/eP.png</file>
+		<file>tiles/eQ.png</file>
+	</qresource>
+	<qresource prefix="/">
+		<file>StyleSheet.qss</file>
+	</qresource>
+	<qresource prefix="/">
+		<file>Follower.png</file>
+		<file>Follower_own.png</file>
+	</qresource>
 </RCC>

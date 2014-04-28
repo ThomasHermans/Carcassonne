@@ -50,7 +50,7 @@ int main(int argc, char * argv[])
 		a.setStyleSheet( styleSheet );
 		
 		// GameController gc( "BKDAD" );
-		Controller::GameController gc( "EEED" );
+		Controller::GameController gc( "eFBD" );
 
 		return a.exec();
 	}
