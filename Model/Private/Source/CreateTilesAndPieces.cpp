@@ -1965,6 +1965,7 @@ Model::createTileEQ()
 	firstCity.push_back( Area::kLeftBottom );
 	firstCity.push_back( Area::kLeft );
 	firstCity.push_back( Area::kLeftTop );
+	firstCity.push_back( Area::kCentral );
 	cities.push_back( firstCity );
 
 	std::map< ContiguousField, std::vector< ContiguousCity > > citiesPerField;
