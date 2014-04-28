@@ -1,7 +1,6 @@
 #ifndef AREA_H
 #define AREA_H
 
-#include <string>
 #include <vector>
 
 namespace Model
@@ -25,8 +24,6 @@ namespace Model
 			kCentral = 12
 		};
 	}
-
-	std::string areaToString( Area::Area inArea );
 
 	Area::Area oppositeSide( Area::Area inArea );
 

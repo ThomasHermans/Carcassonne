@@ -2,42 +2,6 @@
 
 #include <cassert>
 
-std::string
-Model::areaToString( Area::Area inArea )
-{
-	switch ( inArea )
-	{
-	case Area::kTopLeft:
-		return "AreaTopLeft";
-	case Area::kTopRight:
-		return "AreaTopRight";
-	case Area::kRightTop:
-		return "AreaRightTop";
-	case Area::kRightBottom:
-		return "AreaRightBottom";
-	case Area::kBottomRight:
-		return "AreaBottomRight";
-	case Area::kBottomLeft:
-		return "AreaBottomLeft";
-	case Area::kLeftBottom:
-		return "AreaLeftBottom";
-	case Area::kLeftTop:
-		return "AreaLeftTop";
-	case Area::kCentral:
-		return "AreaCentral";
-	case Area::kTop:
-		return "AreaTop";
-	case Area::kRight:
-		return "AreaRight";
-	case Area::kBottom:
-		return "AreaBottom";
-	case Area::kLeft:
-		return "AreaLeft";
-	}
-	assert( !"Invalid Area" );
-	return "Invalid Area";
-}
-
 Model::Area::Area
 Model::oppositeSide( Area::Area inArea )
 {
