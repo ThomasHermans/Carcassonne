@@ -21,7 +21,8 @@ namespace Model
 
 		enum Center
 		{
-			kCenterNothing,
+			kCenterProject,
+			kCenterNoProject,
 			kCenterCloister,
 			kCenterCathedral
 		};

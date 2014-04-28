@@ -93,6 +93,66 @@ namespace
 		assureSide( inTile, inTile.getBottom(), Model::Area::kBottom );
 		assureSide( inTile, inTile.getLeft(), Model::Area::kLeft );
 	}
+
+	std::map< Model::Area::Area, std::size_t >
+	getFilledAreas( std::size_t inValue )
+	{
+		std::map< Model::Area::Area, std::size_t > areas;
+		for ( int i = Model::Area::kTopLeft; i <= Model::Area::kCentral; ++i )
+		{
+			areas[ Model::Area::Area( i ) ] = inValue;
+		}
+		return areas;
+	}
+
+	std::size_t
+	getExpectedCenterOutput( Model::Tile::Center inCenter )
+	{
+		if ( inCenter == Model::Tile::kCenterNoProject || inCenter == Model::Tile::kCenterCloister )
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+
+	void
+	assureEveryAreaIsTakenOnce( Model::Tile const & inTile )
+	{
+		typedef std::map< Model::Area::Area, std::size_t > AreaMap;
+		AreaMap areas = getFilledAreas( 0 );
+		std::vector< Model::ContiguousField > const fields = inTile.getContiguousFields();
+		BOOST_FOREACH( Model::ContiguousField const & field, fields )
+		{
+			BOOST_FOREACH( Model::Area::Area area, field )
+			{
+				++areas[ area ];
+			}
+		}
+		std::vector< Model::ContiguousField > const cities = inTile.getContiguousCities();
+		BOOST_FOREACH( Model::ContiguousField const & city, cities )
+		{
+			BOOST_FOREACH( Model::Area::Area area, city )
+			{
+				++areas[ area ];
+			}
+		}
+		std::vector< Model::ContiguousField > const roads = inTile.getContiguousRoads();
+		BOOST_FOREACH( Model::ContiguousField const & road, roads )
+		{
+			BOOST_FOREACH( Model::Area::Area area, road )
+			{
+				++areas[ area ];
+			}
+		}
+		for ( int i = Model::Area::kTopLeft; i < Model::Area::kCentral; ++i )
+		{
+			assert( areas[ Model::Area::Area( i ) ] == 1 );
+		}
+		assert( areas[ Model::Area::kCentral ] == getExpectedCenterOutput( inTile.getCenter() ) );
+	}
 }
 
 Model::Tile::Tile()
@@ -102,7 +162,7 @@ Model::Tile::Tile()
 	mRight( kSideCity ),
 	mBottom( kSideRoad ),
 	mLeft( kSideField ),
-	mCenter( kCenterNothing ),
+	mCenter( kCenterProject ),
 	mFields(),
 	mRoads(),
 	mCities(),
@@ -234,6 +294,7 @@ Model::Tile::Tile
 	assert( right <= 1 );
 	assert( bottom <= 1 );
 	assert( left <= 1 );
+	assureEveryAreaIsTakenOnce( *this );
 	assureSides( *this );
 }
 

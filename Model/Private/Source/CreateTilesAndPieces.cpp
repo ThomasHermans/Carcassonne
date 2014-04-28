@@ -285,7 +285,7 @@ Model::createTileC()
 	std::vector< Area::Area > shields;
 	shields.push_back( Area::kTop );
 
-	Tile tileC = Tile( Tile::kCenterNothing, "C", fields, roads, cities, citiesPerField, shields );
+	Tile tileC = Tile( Tile::kCenterProject, "C", fields, roads, cities, citiesPerField, shields );
 
 	return tileC;
 }
@@ -328,7 +328,7 @@ Model::createTileD()
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 	citiesPerField.insert( std::make_pair( secondField, secondFieldCities ) );
 
-	Tile tileD = Tile( Tile::kCenterNothing, "D", fields, roads, cities, citiesPerField );
+	Tile tileD = Tile( Tile::kCenterProject, "D", fields, roads, cities, citiesPerField );
 
 	return tileD;
 }
@@ -365,7 +365,7 @@ Model::createTileE()
 
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 	
-	Tile tileE = Tile( Tile::kCenterNothing, "E", fields, roads, cities, citiesPerField );
+	Tile tileE = Tile( Tile::kCenterProject, "E", fields, roads, cities, citiesPerField );
 
 	return tileE;
 }
@@ -413,7 +413,7 @@ Model::createTileF()
 	std::vector< Area::Area > shields;
 	shields.push_back( Area::kRight );
 
-	Tile tileF = Tile( Tile::kCenterNothing,"F", fields, roads, cities, citiesPerField, shields );
+	Tile tileF = Tile( Tile::kCenterProject,"F", fields, roads, cities, citiesPerField, shields );
 	return tileF;
 }
 
@@ -454,7 +454,7 @@ Model::createTileG()
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 	citiesPerField.insert( std::make_pair( secondField, secondFieldCities ) );
 
-	Tile tileG = Tile( Tile::kCenterNothing, "G", fields, roads, cities, citiesPerField );
+	Tile tileG = Tile( Tile::kCenterProject, "G", fields, roads, cities, citiesPerField );
 
 	return tileG;
 }
@@ -494,7 +494,7 @@ Model::createTileH()
 
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 
-	Tile tileH = Tile( Tile::kCenterNothing, "H", fields, roads, cities, citiesPerField );
+	Tile tileH = Tile( Tile::kCenterProject, "H", fields, roads, cities, citiesPerField );
 
 	return tileH;
 }
@@ -534,7 +534,7 @@ Model::createTileI()
 
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 
-	Tile tileI = Tile( Tile::kCenterNothing, "I", fields, roads, cities, citiesPerField );
+	Tile tileI = Tile( Tile::kCenterProject, "I", fields, roads, cities, citiesPerField );
 
 	return tileI;
 }
@@ -577,7 +577,7 @@ Model::createTileJ()
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 	citiesPerField.insert( std::make_pair( secondField, secondFieldCities ) );
 
-	Tile tileJ = Tile( Tile::kCenterNothing, "J", fields, roads, cities, citiesPerField );
+	Tile tileJ = Tile( Tile::kCenterProject, "J", fields, roads, cities, citiesPerField );
 	return tileJ;
 }
 
@@ -619,7 +619,7 @@ Model::createTileK()
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 	citiesPerField.insert( std::make_pair( secondField, secondFieldCities ) );
 
-	Tile tileK = Tile( Tile::kCenterNothing, "K", fields, roads, cities, citiesPerField );
+	Tile tileK = Tile( Tile::kCenterProject, "K", fields, roads, cities, citiesPerField );
 
 	return tileK;
 }
@@ -669,7 +669,7 @@ Model::createTileL()
 	citiesPerField.insert( std::make_pair( secondField, secondFieldCities ) );
 	citiesPerField.insert( std::make_pair( thirdField, thirdFieldCities ) );
 
-	Tile tileL = Tile( Tile::kCenterNothing, "L", fields, roads, cities, citiesPerField );
+	Tile tileL = Tile( Tile::kCenterNoProject, "L", fields, roads, cities, citiesPerField );
 
 	return tileL;
 }
@@ -685,6 +685,7 @@ Model::createTileM()
 	firstField.push_back( Area::kBottomRight );
 	firstField.push_back( Area::kBottom );
 	firstField.push_back( Area::kBottomLeft );
+	firstField.push_back( Area::kCentral );
 	fields.push_back( firstField );
 
 	std::vector< ContiguousRoad > roads;
@@ -708,7 +709,7 @@ Model::createTileM()
 	std::vector< Area::Area > shields;
 	shields.push_back( Area::kTop );
 
-	Tile tileM = Tile( Tile::kCenterNothing, "M", fields, roads, cities, citiesPerField, shields );
+	Tile tileM = Tile( Tile::kCenterProject, "M", fields, roads, cities, citiesPerField, shields );
 
 	return tileM;
 }
@@ -724,6 +725,7 @@ Model::createTileN()
 	firstField.push_back( Area::kBottomRight );
 	firstField.push_back( Area::kBottom );
 	firstField.push_back( Area::kBottomLeft );
+	firstField.push_back( Area::kCentral );
 	fields.push_back( firstField );
 
 	std::vector< ContiguousRoad > roads;
@@ -744,7 +746,7 @@ Model::createTileN()
 
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 
-	Tile tileN = Tile( Tile::kCenterNothing, "N", fields, roads, cities, citiesPerField );
+	Tile tileN = Tile( Tile::kCenterProject, "N", fields, roads, cities, citiesPerField );
 
 	return tileN;
 }
@@ -791,7 +793,7 @@ Model::createTileO()
 	std::vector< Area::Area > shields;
 	shields.push_back( Area::kTop );
 
-	Tile tileO = Tile( Tile::kCenterNothing, "O", fields, roads, cities, citiesPerField, shields );
+	Tile tileO = Tile( Tile::kCenterProject, "O", fields, roads, cities, citiesPerField, shields );
 
 	return tileO;
 }
@@ -835,7 +837,7 @@ Model::createTileP()
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 	citiesPerField.insert( std::make_pair( secondField, secondFieldCities ) );
 
-	Tile tileP = Tile( Tile::kCenterNothing, "P", fields, roads, cities, citiesPerField );
+	Tile tileP = Tile( Tile::kCenterProject, "P", fields, roads, cities, citiesPerField );
 
 	return tileP;
 }
@@ -874,7 +876,7 @@ Model::createTileQ()
 	std::vector< Area::Area > shields;
 	shields.push_back( Area::kTop );
 
-	Tile tileQ = Tile( Tile::kCenterNothing, "Q", fields, roads, cities, citiesPerField, shields );
+	Tile tileQ = Tile( Tile::kCenterProject, "Q", fields, roads, cities, citiesPerField, shields );
 
 	return tileQ;
 }
@@ -910,7 +912,7 @@ Model::createTileR()
 	firstFieldCities.push_back( city );
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 
-	Tile tileR = Tile( Tile::kCenterNothing, "R", fields, roads, cities, citiesPerField );
+	Tile tileR = Tile( Tile::kCenterProject, "R", fields, roads, cities, citiesPerField );
 
 	return tileR;
 }
@@ -956,7 +958,7 @@ Model::createTileS()
 	std::vector< Area::Area > shields;
 	shields.push_back( Area::kTop );
 
-	Tile tileS = Tile( Tile::kCenterNothing, "S", fields, roads, cities, citiesPerField, shields );
+	Tile tileS = Tile( Tile::kCenterProject, "S", fields, roads, cities, citiesPerField, shields );
 
 	return tileS;
 }
@@ -999,7 +1001,7 @@ Model::createTileT()
 	citiesPerField.insert( std::make_pair( firstField, firstFieldCities ) );
 	citiesPerField.insert( std::make_pair( secondField, secondFieldCities ) );
 
-	Tile tileT = Tile( Tile::kCenterNothing, "T",     fields, roads, cities, citiesPerField );
+	Tile tileT = Tile( Tile::kCenterProject, "T",     fields, roads, cities, citiesPerField );
 
 	return tileT;
 }
@@ -1036,7 +1038,7 @@ Model::createTileU()
 	citiesPerField.insert( std::make_pair( firstField, std::vector< ContiguousCity >() ) );
 	citiesPerField.insert( std::make_pair( secondField, std::vector< ContiguousCity >() ) );
 
-	Tile tileU = Tile( Tile::kCenterNothing, "U", fields, roads, cities, citiesPerField );
+	Tile tileU = Tile( Tile::kCenterProject, "U", fields, roads, cities, citiesPerField );
 
 	return tileU;
 }
@@ -1073,7 +1075,7 @@ Model::createTileV()
 	citiesPerField.insert( std::make_pair( firstField, std::vector< ContiguousCity >() ) );
 	citiesPerField.insert( std::make_pair( secondField, std::vector< ContiguousCity >() ) );
 
-	Tile tileV = Tile( Tile::kCenterNothing, "V", fields, roads, cities, citiesPerField );
+	Tile tileV = Tile( Tile::kCenterProject, "V", fields, roads, cities, citiesPerField );
 
 	return tileV;
 }
@@ -1116,7 +1118,7 @@ Model::createTileW()
 	citiesPerField.insert( std::make_pair( secondField, std::vector< ContiguousCity >() ) );
 	citiesPerField.insert( std::make_pair( thirdField, std::vector< ContiguousCity >() ) );
 
-	Tile const tileW( Tile::kCenterNothing, "W", fields, roads, cities, citiesPerField );
+	Tile const tileW( Tile::kCenterNoProject, "W", fields, roads, cities, citiesPerField );
 
 	return tileW;
 }
@@ -1168,7 +1170,7 @@ Model::createTileX()
 	citiesPerField.insert( std::make_pair( thirdField, thirdFieldCities ) );
 	citiesPerField.insert( std::make_pair( fourthField, fourthFieldCities ) );
 
-	Tile tileX = Tile( Tile::kCenterNothing, "X", fields, roads, cities, citiesPerField );
+	Tile tileX = Tile( Tile::kCenterNoProject, "X", fields, roads, cities, citiesPerField );
 
 	return tileX;
 }
@@ -1210,7 +1212,7 @@ Model::createTileEA()
 
 	Tile const tileEA
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eA",
 		fields,
 		roads,
@@ -1260,7 +1262,7 @@ Model::createTileEB()
 
 	Tile const tileEB
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eB",
 		fields,
 		roads,
@@ -1310,7 +1312,7 @@ Model::createTileEC()
 
 	Tile const tileEC
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterNoProject,
 		"eC",
 		fields,
 		roads,
@@ -1378,6 +1380,7 @@ Model::createTileEE()
 	secondField.push_back( Area::kRightTop );
 	secondField.push_back( Area::kBottomLeft );
 	secondField.push_back( Area::kLeftBottom );
+	secondField.push_back( Area::kCentral );
 	fields.push_back( secondField );
 	ContiguousField thirdField;
 	thirdField.push_back( Area::kRightBottom );
@@ -1403,7 +1406,7 @@ Model::createTileEE()
 
 	Tile const tileEE
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eE",
 		fields,
 		roads,
@@ -1450,7 +1453,7 @@ Model::createTileEF()
 
 	Tile const tileEF
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eF",
 		fields,
 		roads,
@@ -1495,7 +1498,7 @@ Model::createTileEG()
 
 	Tile const tileEG
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eG",
 		fields,
 		roads,
@@ -1541,7 +1544,7 @@ Model::createTileEH()
 
 	Tile const tileEH
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eH",
 		fields,
 		roads,
@@ -1585,7 +1588,7 @@ Model::createTileEI()
 
 	Tile const tileEI
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterNoProject,
 		"eI",
 		fields,
 		roads,
@@ -1632,7 +1635,7 @@ Model::createTileEJ()
 
 	Tile const tileEJ
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eJ",
 		fields,
 		roads,
@@ -1723,7 +1726,7 @@ Model::createTileEL()
 
 	Tile const tileEL
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eL",
 		fields,
 		roads,
@@ -1777,7 +1780,7 @@ Model::createTileEM()
 
 	Tile const tileEM
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eM",
 		fields,
 		roads,
@@ -1832,7 +1835,7 @@ Model::createTileEN()
 
 	Tile const tileEN
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eN",
 		fields,
 		roads,
@@ -1880,7 +1883,7 @@ Model::createTileEO()
 
 	Tile const tileEO
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eO",
 		fields,
 		roads,
@@ -1926,7 +1929,7 @@ Model::createTileEP()
 
 	Tile const tileEP
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eP",
 		fields,
 		roads,
@@ -1978,7 +1981,7 @@ Model::createTileEQ()
 
 	Tile const tileEQ
 	(
-		Tile::kCenterNothing,
+		Tile::kCenterProject,
 		"eQ",
 		fields,
 		roads,

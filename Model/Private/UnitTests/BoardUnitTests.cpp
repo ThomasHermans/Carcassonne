@@ -250,16 +250,12 @@ TESTFIX( "Board: signal finishedCloister is sent when needed", BoardFixture )
 	SignalCounter counter( board );
 	CHECK( counter.GetFinishedCloisterCount() == 0 );
 
-	TileOnBoard const tileA( createTileA(), kCw0 );
-	board.placeValidTile( tileA, -1, 0 );
-	TileOnBoard const tileNRightBottom( createTileN(), kCw0 );
-	board.placeValidTile( tileNRightBottom, 0, 1 );
+	board.placeValidTile( TileOnBoard( createTileA(), kCw0 ), -1, 0 );
+	board.placeValidTile( TileOnBoard( createTileN(), kCw0 ), 0, 1 );
 	TileOnBoard const tileGRight( createTileG(), kCw0 );
 	board.placeValidTile( tileGRight, -1, 1 );
-	TileOnBoard const tileIRightTop( createTileI(), kCw0 );
-	board.placeValidTile( tileIRightTop, -2, 1 );
-	TileOnBoard const tileETop( createTileE(), kCw0 );
-	board.placeValidTile( tileETop, -2, 0 );
+	board.placeValidTile( TileOnBoard( createTileI(), kCw0 ), -2, 1 );
+	board.placeValidTile( TileOnBoard( createTileE(), kCw0 ), -2, 0 );
 	board.placeValidTile( tileGRight, -2, -1 );
 	board.placeValidTile( tileGRight, -1, -1 );
 	CHECK( counter.GetFinishedCloisterCount() == 0 );
