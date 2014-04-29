@@ -6,8 +6,15 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include <boost/foreach.hpp>
+
 #include <cassert>
 #include <set>
+
+namespace
+{
+	std::size_t kMaxPlayers = 6;
+}
 
 View::PlayerInfo::PlayerInfo( std::string const & inName, Color inColor )
 :
@@ -22,6 +29,8 @@ View::StartScreen::StartScreen( QWidget * inParent )
 	mLayout( new QVBoxLayout() ),
 	mPlayerRows(),
 	mAddPlayerButton( new QPushButton( "Add player", this ) ),
+	mBaseGameBox( new QCheckBox( "Base Game", this ) ),
+	mTheExpansionBox( new QCheckBox( "The Expansion", this ) ),
 	mPlayButton( new QPushButton( "Start game", this ) )
 {
 	connect( mAddPlayerButton, SIGNAL( clicked() ), this, SLOT( addPlayer() ) );
@@ -32,6 +41,10 @@ View::StartScreen::StartScreen( QWidget * inParent )
 	setLayout( mLayout );
 
 	mLayout->addWidget( mAddPlayerButton );
+	mBaseGameBox->setChecked( true );
+	mBaseGameBox->setEnabled( false );
+	mLayout->addWidget( mBaseGameBox );
+	mLayout->addWidget( mTheExpansionBox );
 	mLayout->addWidget( mPlayButton );
 	mLayout->addStretch();
 }
@@ -78,10 +91,10 @@ View::StartScreen::findUnusedColor() const
 bool
 View::StartScreen::addPlayer()
 {
-	if ( mPlayerRows.size() < 6 )
+	if ( mPlayerRows.size() < kMaxPlayers )
 	{
 		StartScreenRow * row = new StartScreenRow( this );
-		Color color = findUnusedColor();
+		Color const color = findUnusedColor();
 		row->setColor( color );
 		connect( row, SIGNAL( removed() ), this, SLOT( removePlayer() ) );
 		connect( row, SIGNAL( colorChanged( Color ) ), this, SLOT( updateColors( Color ) ) );
@@ -122,14 +135,12 @@ View::StartScreen::updateColors( Color inColor )
 	StartScreenRow * senderRow = qobject_cast< StartScreenRow * >( QObject::sender() );
 	if ( senderRow )
 	{
-		for ( boost::ptr_vector< StartScreenRow >::iterator it = mPlayerRows.begin();
-			it != mPlayerRows.end();
-			++it )
+		BOOST_FOREACH( StartScreenRow & row, mPlayerRows )
 		{
-			if ( senderRow != &(*it) && it->getColor() == inColor )
+			if ( senderRow != &row && row.getColor() == inColor )
 			{
 				Color const color = findUnusedColor();
-				it->setColor( color );
+				row.setColor( color );
 			}
 		}
 	}
@@ -138,12 +149,31 @@ View::StartScreen::updateColors( Color inColor )
 void
 View::StartScreen::playClicked()
 {
-	std::vector< PlayerInfo > players;
-	for ( boost::ptr_vector< StartScreenRow >::const_iterator it = mPlayerRows.begin();
-		it != mPlayerRows.end();
-		++it )
+	startGame( getSelectedExpansions(), getPlayers() );
+}
+
+std::set< View::Expansion::Type >
+View::StartScreen::getSelectedExpansions() const
+{
+	std::set< Expansion::Type > expansions;
+	if ( mBaseGameBox->isChecked() )
 	{
-		players.push_back( PlayerInfo( it->getName().toStdString(), it->getColor() ) );
+		expansions.insert( Expansion::kBaseGame );
 	}
-	emit startGame( players );
+	if ( mTheExpansionBox->isChecked() )
+	{
+		expansions.insert( Expansion::kTheExpansion );
+	}
+	return expansions;
+}
+
+std::vector< View::PlayerInfo >
+View::StartScreen::getPlayers() const
+{
+	std::vector< PlayerInfo > players;
+	BOOST_FOREACH( StartScreenRow const & row, mPlayerRows )
+	{
+		players.push_back( PlayerInfo( row.getName().toStdString(), row.getColor() ) );
+	}
+	return players;
 }

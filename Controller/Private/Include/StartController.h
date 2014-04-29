@@ -3,8 +3,6 @@
 
 #include "View/Typedefs.h"
 
-#include <QObject>
-
 #include <boost/scoped_ptr.hpp>
 #include <boost/signals2/signal.hpp>
 
@@ -27,17 +25,21 @@ namespace Controller
 {
 	class StartController : public QObject
 	{
-		Q_OBJECT
 	public:
 		StartController( QObject * inParent = 0 );
 		~StartController();
 
-	boost::signals2::signal
-	< void ( std::set< View::Expansion::Type > const & inExpansions,
-		std::vector< View::PlayerInfo > const & inPlayers ) > startGame;
+		boost::signals2::signal
+		< void ( std::set< View::Expansion::Type > const & inExpansions,
+			std::vector< View::PlayerInfo > const & inPlayers ) > startGame;
 
-	private slots:
-		void onTryToStartGame( std::vector< View::PlayerInfo > const & inPlayers );
+	private:
+		void
+		onTryToStartGame
+		(
+			std::set< View::Expansion::Type > const & inExpansions,
+			std::vector< View::PlayerInfo > const & inPlayers
+		);
 
 	private:
 		boost::scoped_ptr< View::StartScreen > mStartScreen;

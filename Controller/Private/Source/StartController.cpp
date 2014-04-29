@@ -33,14 +33,6 @@ namespace
 		playerColorKey.append( QString::number( inIndex ) );
 		return playerColorKey;
 	}
-
-	std::set< View::Expansion::Type >
-	getExpansions()
-	{
-		std::set< View::Expansion::Type > expansions;
-		expansions.insert( View::Expansion::kBaseGame );
-		return expansions;
-	}
 }
 
 Controller::StartController::StartController( QObject * inParent )
@@ -56,10 +48,9 @@ Controller::StartController::StartController( QObject * inParent )
 		View::Color const playerColor = View::Color( settings.value( getPlayerColorKey( i ), 0 ).toInt() );
 		mStartScreen->addPlayer( playerName, playerColor );
 	}
-	connect
+	mStartScreen->startGame.connect
 	(
-		mStartScreen.get(), SIGNAL( startGame( std::vector< View::PlayerInfo > ) ),
-		this, SLOT( onTryToStartGame( std::vector< View::PlayerInfo > ) )
+		boost::bind( &Controller::StartController::onTryToStartGame, this, _1, _2 )
 	);
 	mStartScreen->show();
 }
@@ -69,7 +60,11 @@ Controller::StartController::~StartController()
 }
 
 void
-Controller::StartController::onTryToStartGame( std::vector< View::PlayerInfo > const & inPlayers )
+Controller::StartController::onTryToStartGame
+(
+	std::set< View::Expansion::Type > const & inExpansions,
+	std::vector< View::PlayerInfo > const & inPlayers
+)
 {
 	QSettings & settings = getSettings();
 	settings.setValue( kNrOfPlayers, inPlayers.size() );
@@ -81,5 +76,5 @@ Controller::StartController::onTryToStartGame( std::vector< View::PlayerInfo > c
 		++index;
 	}
 	mStartScreen->hide();
-	startGame( getExpansions(), inPlayers );
+	startGame( inExpansions, inPlayers );
 }

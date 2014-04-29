@@ -54,7 +54,6 @@ HEADERS += \
 	Controller\GameController.h \
 	Controller\Private\Include\ModelViewGlue.h \
 	Controller\Private\Include\Settings.h \
-	Controller\Private\Include\StartController.h \
 	View\DragData.h \
 	View\GameWindow.h \
 	View\StartScreen.h \
