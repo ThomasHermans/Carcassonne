@@ -2,8 +2,18 @@
 
 #include <QHBoxLayout>
 #include <QPainter>
+#include <QString>
 #include <QStyle>
 #include <QStyleOption>
+
+namespace
+{
+	QString
+	fromStd( std::string const & inString )
+	{
+		return QString::fromUtf8( inString.c_str() );
+	}
+}
 
 View::StartScreenRow::StartScreenRow( QWidget * inParent )
 :
@@ -48,9 +58,9 @@ View::StartScreenRow::getColor() const
 }
 
 void
-View::StartScreenRow::setName( QString const & inName )
+View::StartScreenRow::setName( std::string const & inName )
 {
-	mNameLineEdit->setText( inName );
+	mNameLineEdit->setText( fromStd( inName ) );
 }
 
 void

@@ -54,7 +54,7 @@ View::StartScreen::~StartScreen()
 }
 
 bool
-View::StartScreen::addPlayer( QString const & inName, Color inColor )
+View::StartScreen::addPlayer( std::string const & inName, Color inColor )
 {
 	if ( addPlayer() )
 	{

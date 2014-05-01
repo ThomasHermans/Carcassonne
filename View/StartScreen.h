@@ -36,7 +36,7 @@ namespace View
 		explicit StartScreen( QWidget * inParent = 0 );
 		~StartScreen();
 
-		bool addPlayer( QString const & inName, Color inColor );
+		bool addPlayer( std::string const & inName, Color inColor );
 
 	private:
 		Color findUnusedColor() const;

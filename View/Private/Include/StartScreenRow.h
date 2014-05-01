@@ -21,7 +21,7 @@ namespace View
 		QString getName() const;
 		Color getColor() const;
 
-		void setName( QString const & inName );
+		void setName( std::string const & inName );
 		void setColor( Color inColor );
 
 	signals:

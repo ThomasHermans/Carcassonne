@@ -23,10 +23,10 @@ namespace View
 
 namespace Controller
 {
-	class StartController : public QObject
+	class StartController
 	{
 	public:
-		StartController( QObject * inParent = 0 );
+		StartController();
 		~StartController();
 
 		boost::signals2::signal

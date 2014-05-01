@@ -8,44 +8,75 @@
 #include "View/StartScreen.h"
 #include "View/Typedefs.h"
 
-#include <QSettings>
-
 #include <boost/foreach.hpp>
+
+#include <cassert>
+#include <sstream>
 
 namespace
 {
-	QString const kNrOfPlayers = "NrOfPlayers";
-	QString const kPlayerName = "PlayerName";
-	QString const kPlayerColor = "PlayerColor";
+	std::string const kNrOfPlayers = "NrOfPlayers";
+	std::string const kPlayerName = "PlayerName";
+	std::string const kPlayerColor = "PlayerColor";
 
-	QString
+	std::string
 	getPlayerNameKey( int inIndex )
 	{
-		QString playerNameKey = kPlayerName;
-		playerNameKey.append( QString::number( inIndex ) );
-		return playerNameKey;
+		std::stringstream keyStream;
+		keyStream << kPlayerName << inIndex;
+		return keyStream.str();
 	}
 
-	QString
+	std::string
 	getPlayerColorKey( int inIndex )
 	{
-		QString playerColorKey = kPlayerColor;
-		playerColorKey.append( QString::number( inIndex ) );
-		return playerColorKey;
+		std::stringstream keyStream;
+		keyStream << kPlayerColor << inIndex;
+		return keyStream.str();
+	}
+
+	View::Color
+	toColor( std::size_t inNumber )
+	{
+		switch ( inNumber )
+		{
+			case 0: return View::kRed;
+			case 1: return View::kGreen;
+			case 2: return View::kBlue;
+			case 3: return View::kYellow;
+			case 4: return View::kBlack;
+			case 5: return View::kGray;
+		}
+		assert( !"No color matches this number" );
+		return View::kRed;
+	}
+
+	std::size_t
+	fromColor( View::Color inColor )
+	{
+		switch ( inColor )
+		{
+			case View::kRed: return 0;
+			case View::kGreen: return 1;
+			case View::kBlue: return 2;
+			case View::kYellow: return 3;
+			case View::kBlack: return 4;
+			case View::kGray: return 5;
+		}
+		assert( !"Invalid color" );
+		return 0;
 	}
 }
 
-Controller::StartController::StartController( QObject * inParent )
+Controller::StartController::StartController()
 :
-	QObject( inParent ),
 	mStartScreen( new View::StartScreen() )
 {
-	QSettings const & settings = getSettings();
-	int const nrOfPlayers = settings.value( kNrOfPlayers, 0 ).toInt();
-	for ( int i = 0; i < nrOfPlayers; ++i )
+	std::size_t const nrOfPlayers = Settings::getNumber( kNrOfPlayers, 0 );
+	for ( std::size_t i = 0; i < nrOfPlayers; ++i )
 	{
-		QString const playerName = settings.value( getPlayerNameKey( i ), "" ).toString();
-		View::Color const playerColor = View::Color( settings.value( getPlayerColorKey( i ), 0 ).toInt() );
+		std::string const playerName = Settings::getString( getPlayerNameKey( i ), "" );
+		View::Color const playerColor = toColor( Settings::getNumber( getPlayerColorKey( i ), 0 ) );
 		mStartScreen->addPlayer( playerName, playerColor );
 	}
 	mStartScreen->startGame.connect
@@ -66,14 +97,13 @@ Controller::StartController::onTryToStartGame
 	std::vector< View::PlayerInfo > const & inPlayers
 )
 {
-	QSettings & settings = getSettings();
-	settings.setValue( kNrOfPlayers, inPlayers.size() );
-	int index = 0;
+	Settings::storeNumber( kNrOfPlayers, inPlayers.size() );
+	int i = 0;
 	BOOST_FOREACH( View::PlayerInfo const & player, inPlayers )
 	{
-		settings.setValue( getPlayerNameKey( index ), QString::fromStdString( player.name ) );
-		settings.setValue( getPlayerColorKey( index ), int( player.color ) );
-		++index;
+		Settings::storeString( getPlayerNameKey( i ), player.name );
+		Settings::storeNumber( getPlayerColorKey( i ), fromColor( player.color ) );
+		++i;
 	}
 	mStartScreen->hide();
 	startGame( inExpansions, inPlayers );
