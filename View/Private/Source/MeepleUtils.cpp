@@ -16,6 +16,12 @@ namespace
 		QPixmap const scaled = original.scaled( Gui::kMeepleWidth, Gui::kMeepleHeight );
 		return scaled.createMaskFromColor( Qt::transparent );
 	}
+
+	QBitmap
+	getMask( View::Piece /*inType*/ )
+	{
+		return getMeepleMask();
+	}
 }
 
 QPainterPath
@@ -58,9 +64,9 @@ View::getMeeplePath( int inX, int inY, int inWidth, int inHeight )
 }
 
 QPixmap
-View::getMeeplePixmap( View::Color inColor )
+View::getMeeplePixmap( Piece inType, Color inColor )
 {
-	static QBitmap const mask = getMeepleMask();
+	static QBitmap const mask = getMask( inType );
 	QPixmap result( mask.size() );
 	result.fill( toQColor( inColor ) );
 	result.setMask( mask );

@@ -12,7 +12,7 @@ namespace View
 	getMeeplePath( int inX, int inY, int inWidth, int inHeight );
 
 	QPixmap
-	getMeeplePixmap( Color inColor );
+	getMeeplePixmap( Piece inType, Color inColor );
 }
 
 #endif

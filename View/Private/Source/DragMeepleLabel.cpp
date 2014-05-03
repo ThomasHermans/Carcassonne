@@ -19,45 +19,39 @@
 
 View::DragMeepleLabel::DragMeepleLabel
 (
-	View::Piece inType,
-	unsigned inNr,
-	View::Color inColor,
+	Piece inType,
+	std::size_t inNr,
+	Color inColor,
 	QWidget * inParent
 )
 :
 	QWidget( inParent ),
-	mNrLabel(),
-	mNr( inNr ),
+	mNrLabel( new QLabel( QString::number( inNr ), this ) ),
 	mType( inType ),
 	mColor( inColor ),
-	mMeeplePixmap( getMeeplePixmap( mColor ) ),
+	mPixmap( getMeeplePixmap( inType, mColor ) ),
 	mDragStartPosition()
 {
 	setContentsMargins( 0, 0, 0, 0 );
+
 	QHBoxLayout * layout = new QHBoxLayout( this );
 	layout->setContentsMargins( 0, 0, 0, 0 );
-
-	layout->addSpacing( 40 );
-
-	mNrLabel = new QLabel( QString::number( mNr ), this );
+	QLabel * pixmapLabel = new QLabel( this );
+	pixmapLabel->setPixmap( mPixmap );
+	layout->addWidget( pixmapLabel );
+	layout->addSpacing( 5 );
 	layout->addWidget( mNrLabel );
-
 	layout->addStretch();
 
 	setLayout( layout );
 
-	setFixedWidth( parentWidget()->width() );
 	setFixedHeight( 40 );
 }
 
-View::DragMeepleLabel::~DragMeepleLabel()
-{}
-
 void
-View::DragMeepleLabel::setNr( unsigned inNr )
+View::DragMeepleLabel::setNr( std::size_t inNr )
 {
-	mNr = inNr;
-	mNrLabel->setText( QString::number( mNr ) );
+	mNrLabel->setText( QString::number( inNr ) );
 }
 
 void
@@ -84,16 +78,8 @@ View::DragMeepleLabel::mouseMoveEvent( QMouseEvent * inEvent )
 	QDrag * drag = new QDrag( this );
 	Dragging::PieceData * dragData = new Dragging::PieceData( mType, mColor );
 	drag->setMimeData( dragData );
-	drag->setPixmap( mMeeplePixmap );
+	drag->setPixmap( mPixmap );
 	drag->setHotSpot( QPoint( Gui::kMeepleWidth / 2, Gui::kMeepleHeight / 2 ) );
 
 	drag->exec( Qt::MoveAction );
-}
-
-void
-View::DragMeepleLabel::paintEvent( QPaintEvent * inEvent )
-{
-	QPainter painter( this );
-	painter.drawPixmap( 0, 5, mMeeplePixmap );
-	QWidget::paintEvent( inEvent );
 }

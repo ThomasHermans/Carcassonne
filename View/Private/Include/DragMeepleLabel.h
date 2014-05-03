@@ -19,26 +19,23 @@ namespace View
 		DragMeepleLabel
 		(
 			Piece inType,
-			unsigned inNr,
+			std::size_t inNr,
 			Color inColor,
 			QWidget * inParent
 		);
 
-		~DragMeepleLabel();
-
-		void setNr( unsigned inNr );
+		void setNr( std::size_t inNr );
 
 	protected:
 		virtual void mousePressEvent( QMouseEvent * inEvent );
 		virtual void mouseMoveEvent( QMouseEvent * inEvent );
-		virtual void paintEvent( QPaintEvent * inEvent );
 
 	private:
+		std::size_t mNr;
 		QLabel * mNrLabel;
-		unsigned mNr;
 		Piece mType;
 		Color mColor;
-		QPixmap mMeeplePixmap;
+		QPixmap mPixmap;
 		QPoint mDragStartPosition;
 	};
 }

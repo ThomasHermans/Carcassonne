@@ -244,7 +244,7 @@ View::GameWindow::setNextTile( std::string const & inId )
 void
 View::GameWindow::placePiece( int inX, int inY, View::Color inColor )
 {
-	QGraphicsPixmapItem * meeple = new QGraphicsPixmapItem( getMeeplePixmap( inColor ) );
+	QGraphicsPixmapItem * meeple = new QGraphicsPixmapItem( getMeeplePixmap( kFollower, inColor ) );
 	meeple->moveBy( inX + Gui::kTileWidth / 2 - Gui::kMeepleWidth / 2, inY + Gui::kTileHeight / 2 - Gui::kMeepleHeight / 2 );
 	mBoardScene->addItem( meeple );
 	mMeeples.push_back( GuiPlacedPiece( meeple, inX, inY, inColor ) );

@@ -51,7 +51,7 @@ namespace
 	}
 
 	QString
-	GetStyleSheet( View::Color inColor )
+	getStyleSheet( View::Color inColor )
 	{
 		QString styleSheet( "QLabel { color: __COLOR__; } QWidget { background-color: __BGCOLOR__; }");
 		styleSheet.replace( "__COLOR__", GetColor( inColor ) );
@@ -63,7 +63,7 @@ namespace
 View::UserInfoWidget::UserInfoWidget
 (
 	std::string const & inName,
-	View::Color inColor,
+	Color inColor,
 	unsigned inNumberOfFollowers,
 	QWidget * inParent
 )
@@ -89,6 +89,7 @@ View::UserInfoWidget::UserInfoWidget
 	rowLayout->addWidget( mNameLabel );
 
 	rowLayout->addStretch();
+	rowLayout->addSpacing( 5 );
 
 	mScoreLabel = new QLabel( QString::number( 0 ), this );
 	mScoreLabel->setObjectName( "mScoreLabel" );
@@ -96,14 +97,14 @@ View::UserInfoWidget::UserInfoWidget
 
 	layout->addLayout( rowLayout );
 
-	mDragFollowersLabel = new DragMeepleLabel( View::kFollower, inNumberOfFollowers, inColor, this );
+	mDragFollowersLabel = new DragMeepleLabel( kFollower, inNumberOfFollowers, inColor, this );
 	mDragFollowersLabel->setObjectName( "mDragFollowersLabel" );
 	layout->addWidget( mDragFollowersLabel );
 
 	setLayout( layout );
 	setFixedSize( sizeHint() );
 
-	setStyleSheet( GetStyleSheet( inColor ) );
+	setStyleSheet( getStyleSheet( inColor ) );
 }
 
 View::UserInfoWidget::~UserInfoWidget()
