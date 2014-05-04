@@ -7,6 +7,8 @@
 #include "QtGlue.h"
 #include "UserInfoWidget.h"
 
+#include "View/Meeple.h"
+
 #include <QBrush>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsPolygonItem>
@@ -22,32 +24,25 @@
 #include <iostream>
 #include <sstream>
 
-struct GuiPlacedPiece
+struct View::GuiPlacedPiece
 {
 	QGraphicsPixmapItem* mItem;
 	int mX;
 	int mY;
 	View::Color mColor;
 	
-	GuiPlacedPiece( QGraphicsPixmapItem* inItem, int inX, int inY, View::Color inColor );
+	GuiPlacedPiece( QGraphicsPixmapItem* inItem, int inX, int inY, View::Color inColor )
+	: mItem( inItem ), mX( inX ), mY( inY ), mColor( inColor ) {}
 };
 
 namespace
 {
 	bool
-	HasMembers( GuiPlacedPiece const & inPiece, int inX, int inY, View::Color inColor )
+	HasMembers( View::GuiPlacedPiece const & inPiece, int inX, int inY, View::Color inColor )
 	{
 		return ( inPiece.mX == inX && inPiece.mY == inY && inPiece.mColor == inColor );
 	}
 }
-
-GuiPlacedPiece::GuiPlacedPiece( QGraphicsPixmapItem * inItem, int inX, int inY, View::Color inColor )
-:
-	mItem( inItem ),
-	mX( inX ),
-	mY( inY ),
-	mColor( inColor )
-{}
 
 View::GameWindow::GameWindow( QWidget *parent )
 :
@@ -144,13 +139,11 @@ void
 View::GameWindow::addPlayer
 (
 	std::string const & inName,
-	View::Color inColor,
-	unsigned inNumberOfFollowers
+	View::Color inColor
 )
 {
-	UserInfoWidget * newUserInfo = new UserInfoWidget( inName, inColor, inNumberOfFollowers, mUserInfo );
+	UserInfoWidget * newUserInfo = new UserInfoWidget( inName, inColor, mUserInfo );
 	mUserInfo->addWidget( newUserInfo );
-	mUserInfo->setFixedHeight( newUserInfo->sizeHint().height() );
 	mUserInfoMap[inName] = newUserInfo;
 
 	mAllScoresWidget->addPlayer( inName );
@@ -215,7 +208,7 @@ View::GameWindow::setActivePlayer( std::string const & inName )
 }
 
 void
-View::GameWindow::setScore( std::string const & inName, unsigned inScore )
+View::GameWindow::setScore( std::string const & inName, std::size_t inScore )
 {
 	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
 	if ( it != mUserInfoMap.end() )
@@ -226,12 +219,32 @@ View::GameWindow::setScore( std::string const & inName, unsigned inScore )
 }
 
 void
-View::GameWindow::setFollowersLeft( std::string const & inName, unsigned inNumberOfFollowers )
+View::GameWindow::setFollowersLeft( std::string const & inName, std::size_t inNumberOfFollowers )
 {
 	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
 	if ( it != mUserInfoMap.end() )
 	{
 		it->second->setNumberOfFollowers( inNumberOfFollowers );
+	}
+}
+
+void
+View::GameWindow::enableLargeFollowers( std::string const & inName )
+{
+	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
+	if ( it != mUserInfoMap.end() )
+	{
+		it->second->enableLargeFollowers();
+	}	
+}
+
+void
+View::GameWindow::setLargeFollowersLeft( std::string const & inName, std::size_t inNumberOfLargeFollowers )
+{
+	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
+	if ( it != mUserInfoMap.end() )
+	{
+		it->second->setNumberOfLargeFollowers( inNumberOfLargeFollowers );
 	}
 }
 
@@ -242,21 +255,21 @@ View::GameWindow::setNextTile( std::string const & inId )
 }
 
 void
-View::GameWindow::placePiece( int inX, int inY, View::Color inColor )
+View::GameWindow::placePiece( int inX, int inY, View::Meeple const & inMeeple )
 {
-	QGraphicsPixmapItem * meeple = new QGraphicsPixmapItem( getMeeplePixmap( kFollower, inColor ) );
+	QGraphicsPixmapItem * meeple = new QGraphicsPixmapItem( getMeeplePixmap( inMeeple ) );
 	meeple->moveBy( inX + Gui::kTileWidth / 2 - Gui::kMeepleWidth / 2, inY + Gui::kTileHeight / 2 - Gui::kMeepleHeight / 2 );
 	mBoardScene->addItem( meeple );
-	mMeeples.push_back( GuiPlacedPiece( meeple, inX, inY, inColor ) );
+	mMeeples.push_back( GuiPlacedPiece( meeple, inX, inY, inMeeple.getColor() ) );
 }
 
 void
-View::GameWindow::returnPiece( int inX, int inY, View::Color inColor )
+View::GameWindow::returnPiece( int inX, int inY, View::Meeple const & inMeeple )
 {
 	std::vector< GuiPlacedPiece >::iterator it = std::find_if
 	(
 		mMeeples.begin(), mMeeples.end(),
-		boost::bind( &HasMembers, _1, inX, inY, inColor )
+		boost::bind( &HasMembers, _1, inX, inY, inMeeple.getColor() )
 	);
 	if ( it != mMeeples.end() )
 	{
@@ -264,6 +277,7 @@ View::GameWindow::returnPiece( int inX, int inY, View::Color inColor )
 		mMeeples.erase( it );
 	}
 	mBoardView->update();
+	update();
 }
 
 void

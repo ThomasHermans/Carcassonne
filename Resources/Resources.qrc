@@ -48,5 +48,6 @@
 	<qresource prefix="/">
 		<file>Follower.png</file>
 		<file>Follower_own.png</file>
+		<file>LargeFollower_own.png</file>
 	</qresource>
 </RCC>

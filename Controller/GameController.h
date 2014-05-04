@@ -46,8 +46,8 @@ namespace Controller
 		void onNextTile( std::string const & inNextId );
 		void onTilesLeft( std::size_t inNr );
 
-		void onPiecePlaced( int inRow, int inCol, Model::PlacedPiece const & inPiece, Model::Player const & inCurrentPlayer );
-		void onPieceRemoved( int inRow, int inCol, Model::PlacedPiece const & inPiece, Model::Player const & inCurrentPlayer );
+		void onPiecePlaced( int inRow, int inCol, Model::PlacedPiece const & inPiece );
+		void onPieceRemoved( int inRow, int inCol, Model::PlacedPiece const & inPiece );
 		void onPlayerInfoChanged( Model::Player const & inNewInfo );
 		void onCurrentPlayerChanged( Model::Player const & inCurrentPlayer);
 

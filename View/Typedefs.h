@@ -41,14 +41,6 @@ namespace View
 		kBlack,
 		kGray
 	};
-
-	enum Piece
-	{
-		kFollower,
-		kLargeFollower,
-		kBuilder,
-		kPig
-	};
 }
 
 Q_DECLARE_METATYPE( View::Color )

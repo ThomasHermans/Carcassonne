@@ -4,7 +4,6 @@
 #include "QtGlue.h"
 
 #include "View/DragData.h"
-#include "View/Typedefs.h"
 
 #include <QApplication>
 #include <QColor>
@@ -15,21 +14,17 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QString>
-#include <QWidget>
 
 View::DragMeepleLabel::DragMeepleLabel
 (
-	Piece inType,
-	std::size_t inNr,
-	Color inColor,
+	Meeple const & inMeeple,
 	QWidget * inParent
 )
 :
 	QWidget( inParent ),
-	mNrLabel( new QLabel( QString::number( inNr ), this ) ),
-	mType( inType ),
-	mColor( inColor ),
-	mPixmap( getMeeplePixmap( inType, mColor ) ),
+	mMeeple( inMeeple ),
+	mPixmap( getMeeplePixmap( inMeeple ) ),
+	mNrLabel( new QLabel( QString::number( 0 ), this ) ),
 	mDragStartPosition()
 {
 	setContentsMargins( 0, 0, 0, 0 );
@@ -76,7 +71,7 @@ View::DragMeepleLabel::mouseMoveEvent( QMouseEvent * inEvent )
 	}
 
 	QDrag * drag = new QDrag( this );
-	Dragging::PieceData * dragData = new Dragging::PieceData( mType, mColor );
+	Dragging::PieceData * dragData = new Dragging::PieceData( mMeeple );
 	drag->setMimeData( dragData );
 	drag->setPixmap( mPixmap );
 	drag->setHotSpot( QPoint( Gui::kMeepleWidth / 2, Gui::kMeepleHeight / 2 ) );

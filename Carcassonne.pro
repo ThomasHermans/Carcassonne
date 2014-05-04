@@ -42,6 +42,7 @@ SOURCES += main.cpp \
 	View\Private\Source\DragMeepleLabel.cpp \
 	View\Private\Source\DragTileLabel.cpp \
 	View\Private\Source\GameWindow.cpp \
+	View\Private\Source\Meeple.cpp \
 	View\Private\Source\MeepleUtils.cpp \
 	View\Private\Source\QtGlue.cpp \
 	View\Private\Source\StartScreen.cpp \

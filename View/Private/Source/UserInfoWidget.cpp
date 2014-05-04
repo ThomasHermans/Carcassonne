@@ -2,16 +2,19 @@
 
 #include "DragMeepleLabel.h"
 
+#include "View/Meeple.h"
+
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QVBoxLayout>
 
 #include <cassert>
+#include <iostream>
 
 namespace
 {
 	QString
-	GetColor( View::Color inColor )
+	getColor( View::Color inColor )
 	{
 		switch ( inColor )
 		{
@@ -33,7 +36,7 @@ namespace
 	}
 
 	QString
-	GetBackgroundColor( View::Color inColor )
+	getBackgroundColor( View::Color inColor )
 	{
 		switch ( inColor )
 		{
@@ -54,8 +57,8 @@ namespace
 	getStyleSheet( View::Color inColor )
 	{
 		QString styleSheet( "QLabel { color: __COLOR__; } QWidget { background-color: __BGCOLOR__; }");
-		styleSheet.replace( "__COLOR__", GetColor( inColor ) );
-		styleSheet.replace( "__BGCOLOR__", GetBackgroundColor( inColor ) );
+		styleSheet.replace( "__COLOR__", getColor( inColor ) );
+		styleSheet.replace( "__BGCOLOR__", getBackgroundColor( inColor ) );
 		return styleSheet;
 	}
 }
@@ -64,61 +67,60 @@ View::UserInfoWidget::UserInfoWidget
 (
 	std::string const & inName,
 	Color inColor,
-	unsigned inNumberOfFollowers,
 	QWidget * inParent
 )
 :
 	QWidget( inParent ),
-	mNameLabel(),
-	mScoreLabel(),
-	mDragFollowersLabel()
+	mColor( inColor ),
+	mLayout( new QVBoxLayout( this ) ),
+	mNameLabel( new QLabel( QString::fromStdString( inName ), this ) ),
+	mScoreLabel( new QLabel( QString::number( 0 ), this ) ),
+	mDragFollowersLabel( new DragMeepleLabel( Meeple( Meeple::kFollower, inColor ), this ) ),
+	mDragLargeFollowersLabel( new DragMeepleLabel( Meeple( Meeple::kLargeFollower, inColor ), this ) )
 {
 	setObjectName( "UserInfoWidget" );
 	setContentsMargins( 5, 5, 5, 5 );
 
-	QVBoxLayout * layout = new QVBoxLayout( this );
-	layout->setContentsMargins( 0, 0, 0, 0 );
-	layout->setSpacing( 0 );
+	mLayout->setContentsMargins( 0, 0, 0, 0 );
+	mLayout->setSpacing( 0 );
 
-	QHBoxLayout * rowLayout = new QHBoxLayout();
-	rowLayout->setContentsMargins( 0, 0, 0, 0 );
-	rowLayout->setSpacing( 0 );
+	QHBoxLayout * nameAndScoreLayout = new QHBoxLayout();
+	nameAndScoreLayout->setContentsMargins( 0, 0, 0, 0 );
+	nameAndScoreLayout->setSpacing( 0 );
+	nameAndScoreLayout->addWidget( mNameLabel );
+	nameAndScoreLayout->addStretch();
+	nameAndScoreLayout->addWidget( mScoreLabel );
+	mLayout->addLayout( nameAndScoreLayout );
 
-	mNameLabel = new QLabel( QString::fromStdString( inName ), this );
-	mNameLabel->setObjectName( "mNameLabel" );
-	rowLayout->addWidget( mNameLabel );
+	mLayout->addWidget( mDragFollowersLabel );
+	mDragLargeFollowersLabel->hide();
+	mLayout->addWidget( mDragLargeFollowersLabel );
 
-	rowLayout->addStretch();
-	rowLayout->addSpacing( 5 );
-
-	mScoreLabel = new QLabel( QString::number( 0 ), this );
-	mScoreLabel->setObjectName( "mScoreLabel" );
-	rowLayout->addWidget( mScoreLabel );
-
-	layout->addLayout( rowLayout );
-
-	mDragFollowersLabel = new DragMeepleLabel( kFollower, inNumberOfFollowers, inColor, this );
-	mDragFollowersLabel->setObjectName( "mDragFollowersLabel" );
-	layout->addWidget( mDragFollowersLabel );
-
-	setLayout( layout );
-	setFixedSize( sizeHint() );
+	setLayout( mLayout );
 
 	setStyleSheet( getStyleSheet( inColor ) );
 }
 
-View::UserInfoWidget::~UserInfoWidget()
-{
-}
-
 void
-View::UserInfoWidget::setScore( unsigned inScore )
+View::UserInfoWidget::setScore( std::size_t inScore )
 {
 	mScoreLabel->setText( QString::number( inScore ) );
 }
 
 void
-View::UserInfoWidget::setNumberOfFollowers( unsigned inNumberOfFollowers )
+View::UserInfoWidget::setNumberOfFollowers( std::size_t inNumberOfFollowers )
 {
 	mDragFollowersLabel->setNr( inNumberOfFollowers );
+}
+
+void
+View::UserInfoWidget::enableLargeFollowers()
+{
+	mDragLargeFollowersLabel->show();
+}
+
+void
+View::UserInfoWidget::setNumberOfLargeFollowers( std::size_t inNumberOfLargeFollowers )
+{
+	mDragLargeFollowersLabel->setNr( inNumberOfLargeFollowers );
 }

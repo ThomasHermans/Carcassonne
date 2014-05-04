@@ -6,9 +6,8 @@
 #include "Model/Piece.h"
 #include "Model/Rotation.h"
 
+#include "View/Meeple.h"
 #include "View/Typedefs.h"
-
-#include <QColor>
 
 namespace Controller
 {
@@ -46,7 +45,16 @@ namespace Controller
 	viewFromModel( Model::Color::Color inColor );
 
 	Model::Piece::PieceType
-	modelFromView( View::Piece inPiece );
+	modelFromView( View::Meeple::MeepleType inType );
+
+	View::Meeple::MeepleType
+	viewFromModel( Model::Piece::PieceType inType );
+
+	Model::Piece
+	modelFromView( View::Meeple const & inPiece );
+
+	View::Meeple
+	viewFromModel( Model::Piece const & inPiece );
 
 	Model::Rotation
 	modelFromView( View::Rotation inRotation );

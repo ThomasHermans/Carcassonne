@@ -1,6 +1,7 @@
 #ifndef DRAGMEEPLELABEL_THHR_20130811
 #define DRAGMEEPLELABEL_THHR_20130811
 
+#include "View/Meeple.h"
 #include "View/Typedefs.h"
 
 #include <QPixmap>
@@ -18,9 +19,7 @@ namespace View
 	public:
 		DragMeepleLabel
 		(
-			Piece inType,
-			std::size_t inNr,
-			Color inColor,
+			Meeple const & inMeeple,
 			QWidget * inParent
 		);
 
@@ -31,11 +30,9 @@ namespace View
 		virtual void mouseMoveEvent( QMouseEvent * inEvent );
 
 	private:
-		std::size_t mNr;
-		QLabel * mNrLabel;
-		Piece mType;
-		Color mColor;
+		Meeple mMeeple;
 		QPixmap mPixmap;
+		QLabel * mNrLabel;
 		QPoint mDragStartPosition;
 	};
 }

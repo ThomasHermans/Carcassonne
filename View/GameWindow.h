@@ -24,8 +24,6 @@ QT_BEGIN_NAMESPACE
 	class QStackedWidget;
 QT_END_NAMESPACE
 
-struct GuiPlacedPiece;
-
 namespace Dragging
 {
 	class PieceData;
@@ -36,6 +34,8 @@ namespace View
 	class AllScoresWidget;
 	class DragMeepleLabel;
 	class DragTileLabel;
+	struct GuiPlacedPiece;
+	class Meeple;
 	class UserInfoWidget;
 
 	class GameWindow : public QMainWindow
@@ -50,7 +50,7 @@ namespace View
 		/**
 		 *	Destructor.
 		 */
-		virtual ~GameWindow();
+		~GameWindow();
 
 		/**
 		 *	Add a player to the game with the given name, color
@@ -60,8 +60,7 @@ namespace View
 		addPlayer
 		(
 			std::string const & inName,
-			View::Color inColor,
-			unsigned inNumberOfFollowers
+			View::Color inColor
 		);
 
 		/**
@@ -97,12 +96,19 @@ namespace View
 		/**
 		 *	Set the score for the specified player.
 		 */
-		void setScore( std::string const & inName, unsigned inScore );
+		void setScore( std::string const & inName, std::size_t inScore );
 
 		/**
 		 *	Set the amount of followers the specified player has left.
 		 */
-		void setFollowersLeft( std::string const & inName, unsigned inNumberOfFollowers );
+		void setFollowersLeft( std::string const & inName, std::size_t inNumberOfFollowers );
+
+		void enableLargeFollowers( std::string const & inName );
+
+		/**
+		 *	Set the amount of large followers the specified player has left.
+		 */
+		void setLargeFollowersLeft( std::string const & inName, std::size_t inNumberOfLargeFollowers );
 		
 		/**
 		 *	Show the specified tile as the next to be played tile.
@@ -112,12 +118,12 @@ namespace View
 		/**
 		 *	Place a piece on the board.
 		 */
-		void placePiece( int inX, int inY, View::Color inColor );
+		void placePiece( int inX, int inY, View::Meeple const & inPiece );
 
 		/**
 		 *	Remove a piece from the board.
 		 */
-		void returnPiece( int inX, int inY, View::Color inColor );
+		void returnPiece( int inX, int inY, View::Meeple const & inPiece );
 		
 	signals:
 		void clicked( int inX, int inY );

@@ -9,31 +9,43 @@
 
 QT_BEGIN_NAMESPACE
 	class QLabel;
+	class QVBoxLayout;
 QT_END_NAMESPACE
 
 namespace View
 {
 	class DragMeepleLabel;
 
+	/**
+	 *	A UserInfoWidget is a widget showing all the info
+	 *	of a player. It shows the name, the current score
+	 *	and the number of free pieces per piecetype.
+	 */
 	class UserInfoWidget : public QWidget
 	{
 	public:
 		UserInfoWidget
 		(
 			std::string const & inName,
-			View::Color inColor,
-			unsigned inNumberOfFollowers,
+			Color inColor,
 			QWidget * inParent
 		);
-		~UserInfoWidget();
 
-		void setScore( unsigned inScore );
-		void setNumberOfFollowers( unsigned inNumberOfFollowers );
+		void setScore( std::size_t inScore );
+		void setNumberOfFollowers( std::size_t inNumberOfFollowers );
+		void enableLargeFollowers();
+		void setNumberOfLargeFollowers( std::size_t inNumberOfLargeFollowers );
 
 	private:
+		void initializeLargeFollowers();
+
+	private:
+		Color mColor;
+		QVBoxLayout * mLayout;
 		QLabel * mNameLabel;
 		QLabel * mScoreLabel;
 		DragMeepleLabel * mDragFollowersLabel;
+		DragMeepleLabel * mDragLargeFollowersLabel;
 	};
 }
 

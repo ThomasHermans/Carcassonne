@@ -1,6 +1,7 @@
 #ifndef DRAGDATA_VIEW_THHR_20130818
 #define DRAGDATA_VIEW_THHR_20130818
 
+#include "View/Meeple.h"
 #include "View/Typedefs.h"
 
 #include <QMimeData>
@@ -28,14 +29,12 @@ namespace Dragging
 		Q_OBJECT
 
 	public:
-		PieceData( View::Piece inPiece, View::Color inColor );
+		PieceData( View::Meeple inPiece );
 
-		View::Piece getPiece() const;
-		View::Color getColor() const;
+		View::Meeple const & getMeeple() const;
 
 	private:
-		View::Piece mPiece;
-		View::Color mColor;
+		View::Meeple mMeeple;
 	};
 }
 

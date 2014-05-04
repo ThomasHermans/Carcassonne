@@ -147,30 +147,32 @@ Controller::GameController::onTilesLeft( std::size_t inNr )
 }
 
 void
-Controller::GameController::onPiecePlaced( int inRow, int inCol, Model::PlacedPiece const & inPiece, Model::Player const & inCurrentPlayer )
+Controller::GameController::onPiecePlaced( int inRow, int inCol, Model::PlacedPiece const & inPiece )
 {
 	int x = xFromCol( inCol );
 	int y = yFromRow( inRow );
 	x += xFromArea( inPiece.getArea() ) - .5 * Gui::kTileWidth;
 	y += yFromArea( inPiece.getArea() ) - .5 * Gui::kTileHeight;
-	mWindow->placePiece( x, y, viewFromModel( inCurrentPlayer.getColor() ) );
+	mWindow->placePiece( x, y, viewFromModel( inPiece.getPiece() ) );
 }
 
 void
-Controller::GameController::onPieceRemoved( int inRow, int inCol, Model::PlacedPiece const & inPiece, Model::Player const & inPlayer )
+Controller::GameController::onPieceRemoved( int inRow, int inCol, Model::PlacedPiece const & inPiece )
 {
 	int x = xFromCol( inCol );
 	int y = yFromRow( inRow );
 	x += xFromArea( inPiece.getArea() ) - .5 * Gui::kTileWidth;
 	y += yFromArea( inPiece.getArea() ) - .5 * Gui::kTileHeight;
-	mWindow->returnPiece( x, y, viewFromModel( inPlayer.getColor() ) );
+	mWindow->returnPiece( x, y, viewFromModel( inPiece.getPiece() ) );
 }
 
 void
 Controller::GameController::onPlayerInfoChanged( Model::Player const & inNewInfo )
 {
-	mWindow->setFollowersLeft( inNewInfo.getName(), inNewInfo.getNumberOfFreePieces( Model::Piece::kFollower ) );
-	mWindow->setScore( inNewInfo.getName(), inNewInfo.getScore() );
+	std::string const name = inNewInfo.getName();
+	mWindow->setFollowersLeft( name, inNewInfo.getNumberOfFreePieces( Model::Piece::kFollower ) );
+	mWindow->setLargeFollowersLeft( name, inNewInfo.getNumberOfFreePieces( Model::Piece::kLargeFollower ) );
+	mWindow->setScore( name, inNewInfo.getScore() );
 }
 
 void
@@ -210,13 +212,12 @@ Controller::GameController::onTryToPlacePiece( Dragging::PieceData const & inDat
 	std::cout << "GameController sees drop at x, y: " << inX << ", " << inY << ", which is col, row: " << col << ", " << row << std::endl;
 	std::cout << "Which is at " << posXFromX( inX ) << ", " << posYFromY( inY ) << " at that tile." << std::endl;
 	std::cout << "Which is at Area::" << areaFromPos( posXFromX( inX ), posYFromY( inY ) ) << std::endl;
-	std::cout << "Drop contains " << inData.getColor() << " " << inData.getPiece() << std::endl;
+	std::cout << "Drop contains " << inData.getMeeple().getColor() << " " << inData.getMeeple().getType() << std::endl;
 	// Decipher data
-	Model::Color::Color const color = modelFromView( inData.getColor() );
-	Model::Piece::PieceType const type = modelFromView( inData.getPiece() );
+	Model::Piece const piece = modelFromView( inData.getMeeple() );
 	Model::Area::Area const area = areaFromPos( posXFromX( inX ), posYFromY( inY ) );
 	// Send to mGame
-	mGame.tryToPlacePiece( Model::PlacedProject( row, col, area ), type, color );
+	mGame.tryToPlacePiece( Model::PlacedProject( row, col, area ), piece.getType(), piece.getColor() );
 }
 
 void
@@ -230,7 +231,15 @@ Controller::GameController::addPlayersToWindow()
 {
 	BOOST_FOREACH( Model::Player const & player, mPlayers )
 	{
-		mWindow->addPlayer( player.getName(), viewFromModel( player.getColor() ), player.getNumberOfFreePieces( Model::Piece::kFollower ) );
+		std::string const name = player.getName();
+		mWindow->addPlayer( name, viewFromModel( player.getColor() ) );
+		mWindow->setFollowersLeft( name, player.getNumberOfFreePieces( Model::Piece::kFollower ) );
+		std::size_t const nrOfLargeFollowers = player.getNumberOfFreePieces( Model::Piece::kLargeFollower );
+		if ( nrOfLargeFollowers > 0 )
+		{
+			mWindow->enableLargeFollowers( name );
+			mWindow->setLargeFollowersLeft( name, nrOfLargeFollowers );
+		}
 	}
 }
 
@@ -241,8 +250,8 @@ Controller::GameController::makeConnections()
 	mGame.tileRemoved.connect( boost::bind( &Controller::GameController::onTileRemoved, this, _1, _2 ) );
 	mGame.nextTile.connect( boost::bind( &Controller::GameController::onNextTile, this, _1 ) );
 	mGame.tilesLeft.connect( boost::bind( &Controller::GameController::onTilesLeft, this, _1 ) );
-	mGame.piecePlaced.connect( boost::bind( &Controller::GameController::onPiecePlaced, this, _1, _2, _3, _4 ) );
-	mGame.pieceRemoved.connect( boost::bind( &Controller::GameController::onPieceRemoved, this, _1, _2, _3, _4 ) );
+	mGame.piecePlaced.connect( boost::bind( &Controller::GameController::onPiecePlaced, this, _1, _2, _3 ) );
+	mGame.pieceRemoved.connect( boost::bind( &Controller::GameController::onPieceRemoved, this, _1, _2, _3 ) );
 	mGame.playerInfoChanged.connect( boost::bind( &Controller::GameController::onPlayerInfoChanged, this, _1 ) );
 	mGame.currentPlayerChanged.connect( boost::bind( &Controller::GameController::onCurrentPlayerChanged, this, _1 ) );
 	mGame.endOfGame.connect( boost::bind( &Controller::GameController::onEndOfGame, this, _1 ) );

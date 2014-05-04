@@ -204,21 +204,51 @@ Controller::viewFromModel( Model::Color::Color inColor )
 }
 
 Model::Piece::PieceType
-Controller::modelFromView( View::Piece inPiece )
+Controller::modelFromView( View::Meeple::MeepleType inType )
 {
-	switch ( inPiece )
+	switch ( inType )
 	{
-	case View::kFollower:
+	case View::Meeple::kFollower:
 		return Model::Piece::kFollower;
-	case View::kLargeFollower:
+	case View::Meeple::kLargeFollower:
 		return Model::Piece::kLargeFollower;
-	case View::kBuilder:
+	case View::Meeple::kBuilder:
 		return Model::Piece::kBuilder;
-	case View::kPig:
+	case View::Meeple::kPig:
 		return Model::Piece::kPig;
 	}
-	assert( !"Invalid Dragging Piece" );
+	assert( !"Invalide View::Meeple::PieceType" );
 	return Model::Piece::kFollower;
+}
+
+View::Meeple::MeepleType
+Controller::viewFromModel( Model::Piece::PieceType inType )
+{
+	switch ( inType )
+	{
+	case Model::Piece::kFollower:
+		return View::Meeple::kFollower;
+	case Model::Piece::kLargeFollower:
+		return View::Meeple::kLargeFollower;
+	case Model::Piece::kBuilder:
+		return View::Meeple::kBuilder;
+	case Model::Piece::kPig:
+		return View::Meeple::kPig;
+	}
+	assert( !"Invalide Model::Piece::PieceType" );
+	return View::Meeple::kFollower;
+}
+
+Model::Piece
+Controller::modelFromView( View::Meeple const & inMeeple )
+{
+	return Model::Piece( modelFromView( inMeeple.getType() ), modelFromView( inMeeple.getColor() ) );
+}
+
+View::Meeple
+Controller::viewFromModel( Model::Piece const & inPiece )
+{
+	return View::Meeple( viewFromModel( inPiece.getType() ), viewFromModel( inPiece.getColor() ) );
 }
 
 Model::Rotation

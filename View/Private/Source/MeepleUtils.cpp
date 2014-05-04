@@ -1,16 +1,19 @@
 #include "MeepleUtils.h"
-#include "MeepleUtils.h"
 
 #include "QtGlue.h"
+
+#include "View/Meeple.h"
 
 #include <QBitmap>
 #include <QPainter>
 #include <QPen>
 
+#include <cassert>
+
 namespace
 {
 	QBitmap
-	getMeepleMask()
+	getFollowerMask()
 	{
 		QPixmap const original = QPixmap( ":/Follower_own.png" );
 		QPixmap const scaled = original.scaled( Gui::kMeepleWidth, Gui::kMeepleHeight );
@@ -18,9 +21,25 @@ namespace
 	}
 
 	QBitmap
-	getMask( View::Piece /*inType*/ )
+	getLargeFollowerMask()
 	{
-		return getMeepleMask();
+		QPixmap const original = QPixmap( ":/LargeFollower_own.png" );
+		QPixmap const scaled = original.scaled( Gui::kMeepleWidth, Gui::kMeepleHeight );
+		return scaled.createMaskFromColor( Qt::transparent );
+	}
+
+	QBitmap
+	getMask( View::Meeple::MeepleType inType )
+	{
+		switch ( inType )
+		{
+			case View::Meeple::kFollower:
+				return getFollowerMask();
+			case View::Meeple::kLargeFollower:
+				return getLargeFollowerMask();
+		}
+		assert( !"Invalide View::Meeple type" );
+		return getFollowerMask();
 	}
 }
 
@@ -64,11 +83,11 @@ View::getMeeplePath( int inX, int inY, int inWidth, int inHeight )
 }
 
 QPixmap
-View::getMeeplePixmap( Piece inType, Color inColor )
+View::getMeeplePixmap( Meeple const & inMeeple )
 {
-	static QBitmap const mask = getMask( inType );
+	QBitmap const mask = getMask( inMeeple.getType() );
 	QPixmap result( mask.size() );
-	result.fill( toQColor( inColor ) );
+	result.fill( toQColor( inMeeple.getColor() ) );
 	result.setMask( mask );
 	return result;
 }

@@ -19,22 +19,14 @@ Dragging::TileData::getRotation() const
 	return mRotation;
 }
 
-
-Dragging::PieceData::PieceData( View::Piece inPiece, View::Color inColor )
+Dragging::PieceData::PieceData( View::Meeple inMeeple )
 :
 	QMimeData(),
-	mPiece( inPiece ),
-	mColor( inColor )
+	mMeeple( inMeeple )
 {}
 
-View::Piece
-Dragging::PieceData::getPiece() const
+View::Meeple const &
+Dragging::PieceData::getMeeple() const
 {
-	return mPiece;
-}
-
-View::Color
-Dragging::PieceData::getColor() const
-{
-	return mColor;
+	return mMeeple;
 }

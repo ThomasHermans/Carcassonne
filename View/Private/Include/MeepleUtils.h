@@ -8,11 +8,13 @@
 
 namespace View
 {
+	class Meeple;
+	
 	QPainterPath
 	getMeeplePath( int inX, int inY, int inWidth, int inHeight );
 
 	QPixmap
-	getMeeplePixmap( Piece inType, Color inColor );
+	getMeeplePixmap( Meeple const & inMeeple );
 }
 
 #endif
