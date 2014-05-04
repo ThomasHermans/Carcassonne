@@ -75,20 +75,20 @@ Controller::StartController::StartController()
 	mStartScreen( new View::StartScreen() )
 {
 	// Get the players that were saved from last time.
-	std::size_t const nrOfPlayers = Settings::getNumber( kNrOfPlayers, 0 );
+	std::size_t const nrOfPlayers = Settings::getValue< std::size_t >( kNrOfPlayers, 0 );
 	for ( std::size_t i = 0; i < nrOfPlayers; ++i )
 	{
-		std::string const playerName = Settings::getString( getPlayerNameKey( i ), "" );
-		View::Color const playerColor = toColor( Settings::getNumber( getPlayerColorKey( i ), 0 ) );
+		std::string const playerName = Settings::getValue< std::string >( getPlayerNameKey( i ), "" );
+		View::Color const playerColor = toColor( Settings::getValue< std::size_t >( getPlayerColorKey( i ), 0 ) );
 		mStartScreen->addPlayer( playerName, playerColor );
 	}
 	// Get the expansions that were played with last time.
 	std::set< View::Expansion::Type > expansions;
-	if ( Settings::getBool( kBaseGame, true ) )
+	if ( Settings::getValue< bool >( kBaseGame, true ) )
 	{
 		expansions.insert( View::Expansion::kBaseGame );
 	}
-	if ( Settings::getBool( kTheExpansion, false ) )
+	if ( Settings::getValue< bool >( kTheExpansion, false ) )
 	{
 		expansions.insert( View::Expansion::kTheExpansion );
 	}
@@ -113,17 +113,17 @@ Controller::StartController::onTryToStartGame
 )
 {
 	// Store the players' information.
-	Settings::storeNumber( kNrOfPlayers, inPlayers.size() );
+	Settings::storeValue< std::size_t >( kNrOfPlayers, inPlayers.size() );
 	int i = 0;
 	BOOST_FOREACH( View::PlayerInfo const & player, inPlayers )
 	{
-		Settings::storeString( getPlayerNameKey( i ), player.name );
-		Settings::storeNumber( getPlayerColorKey( i ), fromColor( player.color ) );
+		Settings::storeValue< std::string >( getPlayerNameKey( i ), player.name );
+		Settings::storeValue< std::size_t >( getPlayerColorKey( i ), fromColor( player.color ) );
 		++i;
 	}
 	// Store the chosen expansions.
-	Settings::storeBool( kBaseGame, inExpansions.count( View::Expansion::kBaseGame ) > 0 );
-	Settings::storeBool( kTheExpansion, inExpansions.count( View::Expansion::kTheExpansion ) > 0 );
+	Settings::storeValue< bool >( kBaseGame, inExpansions.count( View::Expansion::kBaseGame ) > 0 );
+	Settings::storeValue< bool >( kTheExpansion, inExpansions.count( View::Expansion::kTheExpansion ) > 0 );
 	// Hide the start screen and start the game.
 	mStartScreen->hide();
 	startGame( inExpansions, inPlayers );

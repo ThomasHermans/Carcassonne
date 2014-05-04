@@ -7,48 +7,24 @@ namespace Controller
 {
 	namespace Settings
 	{
+		template< class T >
 		void
-		storeString
+		storeValue
 		(
 			std::string const & inKey,
-			std::string const & inValue
+			T const & inValue
 		);
 
-		std::string
-		getString
+		template< class T >
+		T
+		getValue
 		(
 			std::string const & inKey,
-			std::string const & inDefaultValue
-		);
-
-		void
-		storeNumber
-		(
-			std::string const & inKey,
-			std::size_t inValue
-		);
-
-		std::size_t
-		getNumber
-		(
-			std::string const & inKey,
-			std::size_t inDefaultValue
-		);
-
-		void
-		storeBool
-		(
-			std::string const & inKey,
-			bool inValue
-		);
-
-		bool
-		getBool
-		(
-			std::string const & inKey,
-			bool inDefaultValue
+			T const & inDefaultValue
 		);
 	}
 }
+
+#include "Settings.hpp"
 
 #endif
