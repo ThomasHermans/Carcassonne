@@ -23,9 +23,9 @@ View::PlayerInfo::PlayerInfo( std::string const & inName, Color inColor )
 {
 }
 
-View::StartScreen::StartScreen( QWidget * inParent )
+View::StartScreen::StartScreen()
 :
-	QDialog( inParent ),
+	QDialog(),
 	mLayout( new QVBoxLayout() ),
 	mPlayerRows(),
 	mAddPlayerButton( new QPushButton( "Add player", this ) ),
@@ -66,6 +66,12 @@ View::StartScreen::addPlayer( std::string const & inName, Color inColor )
 	{
 		return false;
 	}
+}
+
+void
+View::StartScreen::selectExpansions( std::set< Expansion::Type > const & inExpansions )
+{
+	mTheExpansionBox->setChecked( inExpansions.count( Expansion::kTheExpansion ) > 0 );
 }
 
 View::Color

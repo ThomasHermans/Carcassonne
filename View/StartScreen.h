@@ -27,16 +27,32 @@ namespace View
 		PlayerInfo( std::string const & inName, Color inColor );
 	};
 
+	/**
+	 *	The StartScreen is the screen where you decide with how many
+	 *	players you'll play, who will be what color and with which
+	 *	expansions you'll play.
+	 */
 	class StartScreen : public QDialog
 	{
 		Q_OBJECT
 	public:
 		boost::signals2::signal< void ( std::set< Expansion::Type >, std::vector< PlayerInfo > ) > startGame;
 	public:
-		explicit StartScreen( QWidget * inParent = 0 );
+		/**
+		 *	Construct an empty StartScreen.
+		 */
+		explicit StartScreen();
 		~StartScreen();
 
+		/**
+		 *	Add a player with the given information to the start screen.
+		 */
 		bool addPlayer( std::string const & inName, Color inColor );
+
+		/**
+		 *	Select the given expansions to be played with.
+		 */
+		void selectExpansions( std::set< Expansion::Type > const & inExpansions );
 
 	private:
 		Color findUnusedColor() const;

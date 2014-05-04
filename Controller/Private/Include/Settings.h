@@ -34,6 +34,20 @@ namespace Controller
 			std::string const & inKey,
 			std::size_t inDefaultValue
 		);
+
+		void
+		storeBool
+		(
+			std::string const & inKey,
+			bool inValue
+		);
+
+		bool
+		getBool
+		(
+			std::string const & inKey,
+			bool inDefaultValue
+		);
 	}
 }
 

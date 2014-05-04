@@ -79,3 +79,28 @@ Controller::Settings::getNumber
 	}
 	return inDefaultValue;
 }
+
+void
+Controller::Settings::storeBool
+(
+	std::string const & inKey,
+	bool inValue
+)
+{
+	getSettings().setValue( fromStd( inKey ), inValue );
+}
+
+bool
+Controller::Settings::getBool
+(
+	std::string const & inKey,
+	bool inDefaultValue
+)
+{
+	QVariant const value = getSettings().value( fromStd( inKey ) );
+	if ( value != QVariant() )
+	{
+		return value.value< bool >();
+	}
+	return inDefaultValue;
+}
