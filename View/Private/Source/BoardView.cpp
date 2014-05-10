@@ -159,6 +159,7 @@ View::BoardView::keyPressEvent( QKeyEvent * inEvent )
 void
 View::BoardView::dragEnterEvent( QDragEnterEvent * inEvent )
 {
+	QGraphicsView::dragEnterEvent( inEvent );
 	Dragging::TileData const * tileData = qobject_cast< Dragging::TileData const * >( inEvent->mimeData() );
 	if ( tileData )
 	{
@@ -176,11 +177,25 @@ View::BoardView::dragEnterEvent( QDragEnterEvent * inEvent )
 void
 View::BoardView::dragMoveEvent( QDragMoveEvent * inEvent )
 {
+	QGraphicsView::dragMoveEvent( inEvent );
+	Dragging::TileData const * tileData = qobject_cast< Dragging::TileData const * >( inEvent->mimeData() );
+	if ( tileData )
+	{
+		inEvent->acceptProposedAction();
+		return;
+	}
+	Dragging::PieceData const * pieceData = qobject_cast< Dragging::PieceData const * >( inEvent->mimeData() );
+	if ( pieceData )
+	{
+		inEvent->acceptProposedAction();
+		return;
+	}
 }
 
 void
 View::BoardView::dropEvent( QDropEvent * inEvent )
 {
+	QGraphicsView::dropEvent( inEvent );
 	Dragging::TileData const * tileData = qobject_cast< Dragging::TileData const * >( inEvent->mimeData() );
 	if ( tileData )
 	{
