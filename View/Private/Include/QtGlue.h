@@ -4,6 +4,7 @@
 #include "View/Typedefs.h"
 
 #include <QColor>
+#include <QPixmap>
 
 namespace View
 {
@@ -12,6 +13,9 @@ namespace View
 
 	Color
 	fromQColor( QColor const & inColor );
+
+	QPixmap
+	getEmptyPixmap();
 }
 
 #endif

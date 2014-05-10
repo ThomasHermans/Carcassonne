@@ -54,3 +54,11 @@ View::fromQColor( QColor const & inColor )
 	assert( !"Invalid View::Color" );
 	return kRed;
 }
+
+QPixmap
+View::getEmptyPixmap()
+{
+	QPixmap emptyPixmap( 1, 1 );
+	emptyPixmap.fill( Qt::transparent );
+	return emptyPixmap;
+}
