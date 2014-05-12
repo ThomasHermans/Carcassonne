@@ -6,6 +6,8 @@
 
 #include "View/Typedefs.h"
 
+#include "Utils/Typedefs.h"
+
 #include <QMainWindow>
 
 #include <QLabel>
@@ -124,6 +126,11 @@ namespace View
 		 *	Remove a piece from the board.
 		 */
 		void returnPiece( int inX, int inY, View::Meeple const & inPiece );
+
+		/**
+		 *	Show the specified locations as possible locations for the current tile.
+		 */
+		void setPossibleLocations( Utils::Locations const & inLocations );
 		
 	signals:
 		void clicked( int inX, int inY );

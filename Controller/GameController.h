@@ -7,6 +7,8 @@
 #include "View/GameWindow.h"
 #include "View/Typedefs.h"
 
+#include "Utils/Typedefs.h"
+
 #include <boost/scoped_ptr.hpp>
 
 #include <QObject>
@@ -49,7 +51,8 @@ namespace Controller
 		void onPiecePlaced( int inRow, int inCol, Model::PlacedPiece const & inPiece );
 		void onPieceRemoved( int inRow, int inCol, Model::PlacedPiece const & inPiece );
 		void onPlayerInfoChanged( Model::Player const & inNewInfo );
-		void onCurrentPlayerChanged( Model::Player const & inCurrentPlayer);
+		void onCurrentPlayerChanged( Model::Player const & inCurrentPlayer );
+		void onPossibleLocationsChanged( Utils::Locations const & inLocations );
 
 		void onEndOfGame( std::size_t inTilesLeft );
 

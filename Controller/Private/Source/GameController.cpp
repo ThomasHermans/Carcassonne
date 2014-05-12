@@ -182,6 +182,12 @@ Controller::GameController::onCurrentPlayerChanged( Model::Player const & inCurr
 }
 
 void
+Controller::GameController::onPossibleLocationsChanged( Utils::Locations const & inLocations )
+{
+	mWindow->setPossibleLocations( inLocations );
+}
+
+void
 Controller::GameController::onEndOfGame( std::size_t inTilesLeft )
 {
 	mGame.awardEndPoints();
@@ -254,6 +260,7 @@ Controller::GameController::makeConnections()
 	mGame.pieceRemoved.connect( boost::bind( &Controller::GameController::onPieceRemoved, this, _1, _2, _3 ) );
 	mGame.playerInfoChanged.connect( boost::bind( &Controller::GameController::onPlayerInfoChanged, this, _1 ) );
 	mGame.currentPlayerChanged.connect( boost::bind( &Controller::GameController::onCurrentPlayerChanged, this, _1 ) );
+	mGame.possibleLocationsChanged.connect( boost::bind( &Controller::GameController::onPossibleLocationsChanged, this, _1 ) );
 	mGame.endOfGame.connect( boost::bind( &Controller::GameController::onEndOfGame, this, _1 ) );
 
 	connect( mWindow.get(), SIGNAL( clicked( int, int ) ), this, SLOT( onClicked( int, int ) ) );

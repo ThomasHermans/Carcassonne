@@ -271,6 +271,12 @@ View::GameWindow::returnPiece( int inX, int inY, View::Meeple const & inMeeple )
 }
 
 void
+View::GameWindow::setPossibleLocations( Utils::Locations const & /*inLocations*/ )
+{
+	// TODO: Show them on the board.
+}
+
+void
 View::GameWindow::fadeNextTile()
 {
 	mPickedTileLabel->fadeTile();
