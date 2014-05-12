@@ -5,6 +5,8 @@
 #include "Tile.h"
 #include "TileOnBoard.h"
 
+#include "Utils/Typedefs.h"
+
 using namespace Model;
 
 TEST( "Board: constructor creates an empty board" )
@@ -348,25 +350,25 @@ TESTFIX( "Board: getCompleteField", BoardFixture )
 
 TESTFIX( "Board: getPossibleLocations", BoardFixture )
 {
-	Locations expectedLocations;
-	expectedLocations.insert( Location( -1, 0 ) );
-	expectedLocations.insert( Location( 0, -1 ) );
-	expectedLocations.insert( Location( 1, 0 ) );
+	Utils::Locations expectedLocations;
+	expectedLocations.insert( Utils::Location( -1, 0 ) );
+	expectedLocations.insert( Utils::Location( 0, -1 ) );
+	expectedLocations.insert( Utils::Location( 1, 0 ) );
 
-	Locations locations = board.getPossibleLocations( createTileU() );
+	Utils::Locations locations = board.getPossibleLocations( createTileU() );
 	CHECK( locations == expectedLocations );
 
 	board.placeValidTile( TileOnBoard( createTileO(), kCw0 ), -1, 0 );
 	expectedLocations.clear();
-	expectedLocations.insert( Location( -2, 0 ) );
-	expectedLocations.insert( Location( -1, -1 ) );
-	expectedLocations.insert( Location( 0, 1 ) );
+	expectedLocations.insert( Utils::Location( -2, 0 ) );
+	expectedLocations.insert( Utils::Location( -1, -1 ) );
+	expectedLocations.insert( Utils::Location( 0, 1 ) );
 
 	locations = board.getPossibleLocations( createTileC() );
 	CHECK( locations == expectedLocations );
 
 	expectedLocations.clear();
-	expectedLocations.insert( Location( 0, -1 ) );
+	expectedLocations.insert( Utils::Location( 0, -1 ) );
 
 	locations = board.getPossibleLocations( createTileB() );
 	CHECK( locations == expectedLocations );

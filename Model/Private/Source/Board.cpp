@@ -161,14 +161,14 @@ Model::Board::isPossibleTile( Tile const & inTile ) const
 	return false;
 }
 
-Model::Locations
+Utils::Locations
 Model::Board::getPossibleLocations( Tile const & inTile ) const
 {
 	int const topRow = getTopRow() - 1;
 	int const bottomRow = getBottomRow() + 1;
 	int const leftCol = getLeftCol() - 1;
 	int const rightCol = getRightCol() + 1;
-	Locations locations;
+	Utils::Locations locations;
 	for ( int row = topRow; row <= bottomRow; ++row )
 	{
 		for ( int col = leftCol; col <= rightCol; ++col )
@@ -179,7 +179,7 @@ Model::Board::getPossibleLocations( Tile const & inTile ) const
 				TileOnBoard const tile( inTile, rotation );
 				if ( isValidTilePlacement( tile, row, col ) )
 				{
-					locations.insert( Location( row, col ) );
+					locations.insert( Utils::Location( row, col ) );
 					break;
 				}
 				rotation = rotateCW( rotation );
