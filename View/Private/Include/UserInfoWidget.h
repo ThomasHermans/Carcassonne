@@ -9,7 +9,6 @@
 
 QT_BEGIN_NAMESPACE
 	class QLabel;
-	class QVBoxLayout;
 QT_END_NAMESPACE
 
 namespace View
@@ -41,7 +40,6 @@ namespace View
 
 	private:
 		Color mColor;
-		QVBoxLayout * mLayout;
 		QLabel * mNameLabel;
 		QLabel * mScoreLabel;
 		DragMeepleLabel * mDragFollowersLabel;

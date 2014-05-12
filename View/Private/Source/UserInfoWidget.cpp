@@ -45,7 +45,7 @@ namespace
 			case View::kBlue:
 			case View::kBlack:
 			case View::kGray:
-				return "none";
+				return "yellow";
 			case View::kYellow:
 				return "darkGray";
 		}
@@ -72,7 +72,6 @@ View::UserInfoWidget::UserInfoWidget
 :
 	QWidget( inParent ),
 	mColor( inColor ),
-	mLayout( new QVBoxLayout( this ) ),
 	mNameLabel( new QLabel( QString::fromStdString( inName ), this ) ),
 	mScoreLabel( new QLabel( QString::number( 0 ), this ) ),
 	mDragFollowersLabel( new DragMeepleLabel( Meeple( Meeple::kFollower, inColor ), this ) ),
@@ -80,23 +79,25 @@ View::UserInfoWidget::UserInfoWidget
 {
 	setObjectName( "UserInfoWidget" );
 	setContentsMargins( 5, 5, 5, 5 );
+	setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
 
-	mLayout->setContentsMargins( 0, 0, 0, 0 );
-	mLayout->setSpacing( 0 );
+	QVBoxLayout * mainLayout = new QVBoxLayout();
+	mainLayout->setContentsMargins( 0, 0, 0, 0 );
+	mainLayout->setSpacing( 0 );
 
 	QHBoxLayout * nameAndScoreLayout = new QHBoxLayout();
 	nameAndScoreLayout->setContentsMargins( 0, 0, 0, 0 );
 	nameAndScoreLayout->setSpacing( 0 );
-	nameAndScoreLayout->addWidget( mNameLabel );
-	nameAndScoreLayout->addStretch();
-	nameAndScoreLayout->addWidget( mScoreLabel );
-	mLayout->addLayout( nameAndScoreLayout );
+	nameAndScoreLayout->addWidget( mNameLabel, 1 );
+	nameAndScoreLayout->addWidget( mScoreLabel, 0 );
 
-	mLayout->addWidget( mDragFollowersLabel );
 	mDragLargeFollowersLabel->hide();
-	mLayout->addWidget( mDragLargeFollowersLabel );
 
-	setLayout( mLayout );
+	mainLayout->addLayout( nameAndScoreLayout );
+	mainLayout->addWidget( mDragFollowersLabel );
+	mainLayout->addWidget( mDragLargeFollowersLabel );
+
+	setLayout( mainLayout );
 
 	setStyleSheet( getStyleSheet( inColor ) );
 }
