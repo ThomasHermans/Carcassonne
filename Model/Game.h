@@ -7,6 +7,8 @@
 #include "Model/Player.h"
 #include "Model/Typedefs.h"
 
+#include "Utils/Typedefs.h"
+
 #include <boost/optional.hpp>
 #include <boost/signals2/signal.hpp>
 
@@ -50,6 +52,10 @@ namespace Model
 		 *	A piece has been removed from the board.
 		 */
 		boost::signals2::signal< void ( int inRow, int inCol, PlacedPiece const & inPiece, Player const & inPlayer ) > pieceRemoved;
+		/**
+		 *	There is a new list of possible locations for the (new) tile.
+		 */
+		boost::signals2::signal< void ( Utils::Locations inNewLocations ) > possibleLocationsChanged;
 		/**
 		 *	The game has ended. The number of tiles left in the bag is passed.
 		 */

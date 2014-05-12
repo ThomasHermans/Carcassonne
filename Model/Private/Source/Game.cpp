@@ -332,8 +332,8 @@ void
 Model::Game::pickNextTile()
 {
 	std::vector< Tile >::iterator it = mBag.end();
-	bool foundPossible = false;
-	while ( !foundPossible && it != mBag.begin() )
+	mNextTile = boost::none;
+	while ( !mNextTile && it != mBag.begin() )
 	{
 		--it;
 		Tile const possibleNextTile = *it;
@@ -342,11 +342,14 @@ Model::Game::pickNextTile()
 			mNextTile = possibleNextTile;
 			nextTile( mNextTile->getID() );
 			mBag.erase( it );
-			foundPossible = true;
 		}
 	}
 	tilesLeft( mBag.size() );
-	if ( !foundPossible )
+	if ( mNextTile )
+	{
+		possibleLocationsChanged( mBoard.getPossibleLocations( *mNextTile ) );
+	}
+	else
 	{
 		mNextTile = boost::none;
 		endOfGame( mBag.size() );
