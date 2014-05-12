@@ -26,6 +26,7 @@ namespace
 	double const kScaleFactor = 1.41421356237; // sqrt 2
 	double const kMaxScale = std::pow( kScaleFactor, 4 );
 	double const kMinScale = 1. / kMaxScale;
+	QColor const kBackgroundColor( 102, 51, 0 );
 }
 
 View::BoardView::BoardView( QGraphicsScene *scene, QWidget *parent ) :
@@ -41,6 +42,7 @@ View::BoardView::BoardView( QGraphicsScene *scene, QWidget *parent ) :
 
 {
 	setAcceptDrops( true );
+	setBackgroundBrush( kBackgroundColor );
 }
 
 void
