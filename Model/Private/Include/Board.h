@@ -7,11 +7,15 @@
 #include <boost/optional.hpp>
 #include <boost/signals2/signal.hpp>
 
+#include <set>
+#include <utility>
 #include <vector>
 
 namespace Model
 {
 	class PlacedPiece;
+	typedef std::pair< int, int > Location; // row, col
+	typedef std::set< Location > Locations;
 
 	/**
 	 *	A Board holds the information about which TileOnBoards
@@ -83,6 +87,11 @@ namespace Model
 		 *	Is it possible to place the provided tile somewhere?
 		 */
 		bool isPossibleTile( Tile const & inTile ) const;
+
+		/**
+		 *	Get all the possible locations for this Tile.
+		 */
+		Locations getPossibleLocations( Tile const & inTile ) const;
 
 		/**
 		 *	Check whether the specified road is occupied.

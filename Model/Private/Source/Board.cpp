@@ -161,6 +161,34 @@ Model::Board::isPossibleTile( Tile const & inTile ) const
 	return false;
 }
 
+Model::Locations
+Model::Board::getPossibleLocations( Tile const & inTile ) const
+{
+	int const topRow = getTopRow() - 1;
+	int const bottomRow = getBottomRow() + 1;
+	int const leftCol = getLeftCol() - 1;
+	int const rightCol = getRightCol() + 1;
+	Locations locations;
+	for ( int row = topRow; row <= bottomRow; ++row )
+	{
+		for ( int col = leftCol; col <= rightCol; ++col )
+		{
+			Rotation rotation = kCw0;
+			for ( std::size_t i = 0; i < 4; ++i )
+			{
+				TileOnBoard const tile( inTile, rotation );
+				if ( isValidTilePlacement( tile, row, col ) )
+				{
+					locations.insert( Location( row, col ) );
+					break;
+				}
+				rotation = rotateCW( rotation );
+			}
+		}
+	}
+	return locations;
+}
+
 bool
 Model::Board::isOccupiedRoad( PlacedRoad const & inRoad ) const
 {

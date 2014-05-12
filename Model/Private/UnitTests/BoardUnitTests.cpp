@@ -345,3 +345,29 @@ TESTFIX( "Board: getCompleteField", BoardFixture )
 	CHECK( board.getCompleteField( PlacedField( 0, 0, Area::kTopLeft ) ).size() == 12 );
 	CHECK( board.getCompleteField( PlacedField( 0, 0, Area::kTopRight ) ).size() == 9 );
 }
+
+TESTFIX( "Board: getPossibleLocations", BoardFixture )
+{
+	Locations expectedLocations;
+	expectedLocations.insert( Location( -1, 0 ) );
+	expectedLocations.insert( Location( 0, -1 ) );
+	expectedLocations.insert( Location( 1, 0 ) );
+
+	Locations locations = board.getPossibleLocations( createTileU() );
+	CHECK( locations == expectedLocations );
+
+	board.placeValidTile( TileOnBoard( createTileO(), kCw0 ), -1, 0 );
+	expectedLocations.clear();
+	expectedLocations.insert( Location( -2, 0 ) );
+	expectedLocations.insert( Location( -1, -1 ) );
+	expectedLocations.insert( Location( 0, 1 ) );
+
+	locations = board.getPossibleLocations( createTileC() );
+	CHECK( locations == expectedLocations );
+
+	expectedLocations.clear();
+	expectedLocations.insert( Location( 0, -1 ) );
+
+	locations = board.getPossibleLocations( createTileB() );
+	CHECK( locations == expectedLocations );
+}
