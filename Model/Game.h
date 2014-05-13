@@ -5,7 +5,6 @@
 #include "PlacedProject.h"
 
 #include "Model/Player.h"
-#include "Model/Typedefs.h"
 
 #include "Utils/Typedefs.h"
 
@@ -68,7 +67,7 @@ namespace Model
 		Game
 		(
 			std::vector< Player > const & inPlayers,
-			std::set< Expansion::Type > const & inExpansions
+			std::set< Utils::Expansion::Type > const & inExpansions
 		);
 
 		/**

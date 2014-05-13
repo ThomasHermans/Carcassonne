@@ -3,15 +3,13 @@
 #include "CreateTilesAndPieces.h"
 #include "Tile.h"
 
-#include "Model/Typedefs.h"
-
 #include <cassert>
 
 Model::Player::Player
 (
 	std::string const & inName,
 	Color::Color inColor,
-	std::set< Expansion::Type > const & inExpansions
+	std::set< Utils::Expansion::Type > const & inExpansions
 )
 :
 	mName( inName ),

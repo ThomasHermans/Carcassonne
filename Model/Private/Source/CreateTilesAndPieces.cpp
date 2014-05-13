@@ -2114,7 +2114,7 @@ Model::createTheExpansionTiles()
 }
 
 std::vector< Model::Tile >
-Model::createTiles( std::set< Expansion::Type > const & inExpansions )
+Model::createTiles( std::set< Utils::Expansion::Type > const & inExpansions )
 {
 	std::vector< Tile > tiles;
 	// Base game
@@ -2123,7 +2123,7 @@ Model::createTiles( std::set< Expansion::Type > const & inExpansions )
 	Tile const startTile = tiles.back();
 	tiles.pop_back();
 	// Expansions
-	if ( inExpansions.count( Expansion::kTheExpansion ) == 1 )
+	if ( inExpansions.count( Utils::Expansion::kTheExpansion ) == 1 )
 	{
 		std::vector< Tile > const expansionTiles = createTheExpansionTiles();
 		tiles.insert( tiles.end(), expansionTiles.begin(), expansionTiles.end() );
@@ -2155,13 +2155,13 @@ Model::createTiles( std::string const & inTiles )
 }
 
 std::map< Model::Piece::PieceType, std::size_t >
-Model::createPieces( std::set< Expansion::Type > const & inExpansions )
+Model::createPieces( std::set< Utils::Expansion::Type > const & inExpansions )
 {
 	std::map< Piece::PieceType, std::size_t > pieces;
 	// Base game
 	pieces[ Piece::kFollower ] = 6;
 	// Expansions
-	if ( inExpansions.count( Expansion::kTheExpansion ) == 1 )
+	if ( inExpansions.count( Utils::Expansion::kTheExpansion ) == 1 )
 	{
 		pieces[ Piece::kLargeFollower ] = 1;
 	}

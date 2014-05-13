@@ -2,6 +2,7 @@
 
 #include "StartScreenRow.h"
 
+#include <QCheckBox>
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -9,7 +10,6 @@
 #include <boost/foreach.hpp>
 
 #include <cassert>
-#include <set>
 
 namespace
 {
@@ -69,9 +69,9 @@ View::StartScreen::addPlayer( std::string const & inName, Color inColor )
 }
 
 void
-View::StartScreen::selectExpansions( std::set< Expansion::Type > const & inExpansions )
+View::StartScreen::selectExpansions( std::set< Utils::Expansion::Type > const & inExpansions )
 {
-	mTheExpansionBox->setChecked( inExpansions.count( Expansion::kTheExpansion ) > 0 );
+	mTheExpansionBox->setChecked( inExpansions.count( Utils::Expansion::kTheExpansion ) > 0 );
 }
 
 View::Color
@@ -158,17 +158,17 @@ View::StartScreen::playClicked()
 	startGame( getSelectedExpansions(), getPlayers() );
 }
 
-std::set< View::Expansion::Type >
+std::set< Utils::Expansion::Type >
 View::StartScreen::getSelectedExpansions() const
 {
-	std::set< Expansion::Type > expansions;
+	std::set< Utils::Expansion::Type > expansions;
 	if ( mBaseGameBox->isChecked() )
 	{
-		expansions.insert( Expansion::kBaseGame );
+		expansions.insert( Utils::Expansion::kBaseGame );
 	}
 	if ( mTheExpansionBox->isChecked() )
 	{
-		expansions.insert( Expansion::kTheExpansion );
+		expansions.insert( Utils::Expansion::kTheExpansion );
 	}
 	return expansions;
 }

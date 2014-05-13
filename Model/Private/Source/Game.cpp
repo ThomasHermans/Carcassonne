@@ -114,7 +114,7 @@ namespace
 Model::Game::Game
 (
 	std::vector< Player > const & inPlayers,
-	std::set< Expansion::Type > const & inExpansions
+	std::set< Utils::Expansion::Type > const & inExpansions
 )
 :
 	mBoard(),

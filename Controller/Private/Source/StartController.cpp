@@ -6,7 +6,6 @@
 #include "Model/Player.h"
 
 #include "View/StartScreen.h"
-#include "View/Typedefs.h"
 
 #include <boost/foreach.hpp>
 
@@ -15,9 +14,9 @@
 
 namespace
 {
-	std::string const kNrOfPlayers = "NrOfPlayers";
-	std::string const kPlayerName = "PlayerName";
-	std::string const kPlayerColor = "PlayerColor";
+	std::string const kNrOfPlayers( "NrOfPlayers" );
+	std::string const kPlayerName( "PlayerName" );
+	std::string const kPlayerColor( "PlayerColor" );
 	std::string const kBaseGame( "Settings::BaseGame" );
 	std::string const kTheExpansion( "Settings::TheExpansion" );
 
@@ -83,14 +82,14 @@ Controller::StartController::StartController()
 		mStartScreen->addPlayer( playerName, playerColor );
 	}
 	// Get the expansions that were played with last time.
-	std::set< View::Expansion::Type > expansions;
+	std::set< Utils::Expansion::Type > expansions;
 	if ( Settings::getValue< bool >( kBaseGame, true ) )
 	{
-		expansions.insert( View::Expansion::kBaseGame );
+		expansions.insert( Utils::Expansion::kBaseGame );
 	}
 	if ( Settings::getValue< bool >( kTheExpansion, false ) )
 	{
-		expansions.insert( View::Expansion::kTheExpansion );
+		expansions.insert( Utils::Expansion::kTheExpansion );
 	}
 	mStartScreen->selectExpansions( expansions );
 	// Connect to the view's signal.
@@ -108,7 +107,7 @@ Controller::StartController::~StartController()
 void
 Controller::StartController::onTryToStartGame
 (
-	std::set< View::Expansion::Type > const & inExpansions,
+	std::set< Utils::Expansion::Type > const & inExpansions,
 	std::vector< View::PlayerInfo > const & inPlayers
 )
 {
@@ -122,8 +121,8 @@ Controller::StartController::onTryToStartGame
 		++i;
 	}
 	// Store the chosen expansions.
-	Settings::storeValue< bool >( kBaseGame, inExpansions.count( View::Expansion::kBaseGame ) > 0 );
-	Settings::storeValue< bool >( kTheExpansion, inExpansions.count( View::Expansion::kTheExpansion ) > 0 );
+	Settings::storeValue< bool >( kBaseGame, inExpansions.count( Utils::Expansion::kBaseGame ) > 0 );
+	Settings::storeValue< bool >( kTheExpansion, inExpansions.count( Utils::Expansion::kTheExpansion ) > 0 );
 	// Hide the start screen and start the game.
 	mStartScreen->hide();
 	startGame( inExpansions, inPlayers );

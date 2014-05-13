@@ -24,7 +24,7 @@ Controller::SupremeController::~SupremeController()
 void
 Controller::SupremeController::startGame
 (
-	std::set< View::Expansion::Type > const & inExpansions,
+	std::set< Utils::Expansion::Type > const & inExpansions,
 	std::vector< View::PlayerInfo > const & inPlayers
 )
 {

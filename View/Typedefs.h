@@ -15,15 +15,6 @@ namespace Gui
 
 namespace View
 {
-	namespace Expansion
-	{
-		enum Type
-		{
-			kBaseGame,
-			kTheExpansion
-		};
-	}
-	
 	enum Rotation
 	{
 		kCw0,

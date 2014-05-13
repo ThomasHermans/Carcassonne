@@ -1,7 +1,7 @@
 #ifndef SUPREMECONTROLLER_H
 #define SUPREMECONTROLLER_H
 
-#include "View/Typedefs.h"
+#include "Utils/Typedefs.h"
 
 #include <boost/scoped_ptr.hpp>
 
@@ -32,7 +32,7 @@ namespace  Controller
 		void
 		startGame
 		(
-			std::set< View::Expansion::Type > const & inExpansions,
+			std::set< Utils::Expansion::Type > const & inExpansions,
 			std::vector< View::PlayerInfo > const & inPlayers
 		);
 

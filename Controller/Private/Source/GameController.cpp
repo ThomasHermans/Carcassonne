@@ -20,47 +20,21 @@ namespace
 	std::vector< Model::Player >
 	createTestPlayers()
 	{
-		std::set< Model::Expansion::Type > testExpansions;
-		testExpansions.insert( Model::Expansion::kBaseGame );
+		std::set< Utils::Expansion::Type > testExpansions;
+		testExpansions.insert( Utils::Expansion::kBaseGame );
 		std::vector< Model::Player > players;
 		players.push_back( Model::Player( "Yumi", Model::Color::kYellow, testExpansions ) );
 		players.push_back( Model::Player( "Thomas", Model::Color::kGreen, testExpansions ) );
 		return players;
 	}
 
-	Model::Expansion::Type
-	modelFromView( View::Expansion::Type inExpansion )
-	{
-		switch ( inExpansion )
-		{
-			case View::Expansion::kBaseGame:
-				return Model::Expansion::kBaseGame;
-			case View::Expansion::kTheExpansion:
-				return Model::Expansion::kTheExpansion;
-		}
-		assert( !"Invalide View::Expansion::Type!" );
-		return Model::Expansion::kBaseGame;
-	}
-
-	std::set< Model::Expansion::Type >
-	modelFromView( std::set< View::Expansion::Type > const & inExpansions )
-	{
-		std::set< Model::Expansion::Type > expansions;
-		BOOST_FOREACH( View::Expansion::Type expansion, inExpansions )
-		{
-			expansions.insert( modelFromView( expansion ) );
-		}
-		return expansions;
-	}
-
 	std::vector< Model::Player >
 	modelFromView
 	(
-		std::set< View::Expansion::Type > const & inExpansions,
+		std::set< Utils::Expansion::Type > const & inExpansions,
 		std::vector< View::PlayerInfo > const & inPlayers
 	)
 	{
-		std::set< Model::Expansion::Type > const expansions = modelFromView( inExpansions );
 		std::vector< Model::Player > players;
 		BOOST_FOREACH( View::PlayerInfo const & playerInfo, inPlayers )
 		{
@@ -70,7 +44,7 @@ namespace
 				(
 					playerInfo.name,
 					Controller::modelFromView( playerInfo.color ),
-					expansions
+					inExpansions
 				)
 			);
 		}
@@ -92,14 +66,14 @@ Controller::GameController::GameController( std::string const & inTiles, QObject
 
 Controller::GameController::GameController
 (
-	std::set< View::Expansion::Type > const & inExpansions,
+	std::set< Utils::Expansion::Type > const & inExpansions,
 	std::vector< View::PlayerInfo > const & inPlayers,
 	QObject * inParent
 )
 :
 	QObject( inParent ),
 	mPlayers( ::modelFromView( inExpansions, inPlayers ) ),
-	mGame( mPlayers, ::modelFromView( inExpansions ) ),
+	mGame( mPlayers, inExpansions ),
 	mWindow( new View::GameWindow() )
 {
 	addPlayersToWindow();

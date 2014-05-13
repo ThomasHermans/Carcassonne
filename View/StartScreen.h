@@ -3,10 +3,9 @@
 
 #include "View/Typedefs.h"
 
-#include <QCheckBox>
+#include "Utils/Typedefs.h"
+
 #include <QDialog>
-#include <QPushButton>
-#include <QVBoxLayout>
 
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/signals2/signal.hpp>
@@ -14,6 +13,12 @@
 #include <set>
 #include <string>
 #include <vector>
+
+QT_BEGIN_NAMESPACE
+	class QCheckBox;
+	class QPushButton;
+	class QVBoxLayout;
+QT_END_NAMESPACE
 
 namespace View
 {
@@ -36,7 +41,7 @@ namespace View
 	{
 		Q_OBJECT
 	public:
-		boost::signals2::signal< void ( std::set< Expansion::Type >, std::vector< PlayerInfo > ) > startGame;
+		boost::signals2::signal< void ( std::set< Utils::Expansion::Type >, std::vector< PlayerInfo > ) > startGame;
 	public:
 		/**
 		 *	Construct an empty StartScreen.
@@ -52,11 +57,11 @@ namespace View
 		/**
 		 *	Select the given expansions to be played with.
 		 */
-		void selectExpansions( std::set< Expansion::Type > const & inExpansions );
+		void selectExpansions( std::set< Utils::Expansion::Type > const & inExpansions );
 
 	private:
 		Color findUnusedColor() const;
-		std::set< Expansion::Type > getSelectedExpansions() const;
+		std::set< Utils::Expansion::Type > getSelectedExpansions() const;
 		std::vector< PlayerInfo > getPlayers() const;
 
 	private slots:

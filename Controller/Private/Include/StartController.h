@@ -1,7 +1,7 @@
 #ifndef STARTCONTROLLER_H
 #define STARTCONTROLLER_H
 
-#include "View/Typedefs.h"
+#include "Utils/Typedefs.h"
 
 #include <boost/scoped_ptr.hpp>
 #include <boost/signals2/signal.hpp>
@@ -30,14 +30,14 @@ namespace Controller
 		~StartController();
 
 		boost::signals2::signal
-		< void ( std::set< View::Expansion::Type > const & inExpansions,
+		< void ( std::set< Utils::Expansion::Type > const & inExpansions,
 			std::vector< View::PlayerInfo > const & inPlayers ) > startGame;
 
 	private:
 		void
 		onTryToStartGame
 		(
-			std::set< View::Expansion::Type > const & inExpansions,
+			std::set< Utils::Expansion::Type > const & inExpansions,
 			std::vector< View::PlayerInfo > const & inPlayers
 		);
 

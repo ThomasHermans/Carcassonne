@@ -3,7 +3,8 @@
 
 #include "Model/Color.h"
 #include "Model/Piece.h"
-#include "Model/Typedefs.h"
+
+#include "Utils/Typedefs.h"
 
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
@@ -27,7 +28,7 @@ namespace Model
 		(
 			std::string const & inName,
 			Color::Color inColor,
-			std::set< Expansion::Type > const & inExpansions
+			std::set< Utils::Expansion::Type > const & inExpansions
 		);
 
 		/**

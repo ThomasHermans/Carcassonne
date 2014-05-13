@@ -5,7 +5,8 @@
 #include "Tile.h"
 
 #include "Model/Color.h"
-#include "Model/Typedefs.h"
+
+#include "Utils/Typedefs.h"
 
 #include <set>
 #include <string>
@@ -77,7 +78,7 @@ namespace Model
 	 *	The start tile will be on the back of the list.
 	 */
 	std::vector< Tile >
-	createTiles( std::set< Expansion::Type > const & inExpansions );
+	createTiles( std::set< Utils::Expansion::Type > const & inExpansions );
 
 	/**
 	 *	Create a list of tiles according to the specified string.
@@ -90,7 +91,7 @@ namespace Model
 	 *	set of expansions.
 	 */
 	std::map< Piece::PieceType, std::size_t >
-	createPieces( std::set< Expansion::Type > const & inExpansions );
+	createPieces( std::set< Utils::Expansion::Type > const & inExpansions );
 }
 
 #endif // SETUPBASEGAME_H

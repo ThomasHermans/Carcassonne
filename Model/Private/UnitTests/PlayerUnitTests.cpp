@@ -1,17 +1,18 @@
 #include <test_o_matic.hpp>
 
 #include "Model/Player.h"
-#include "Model/Typedefs.h"
+
+#include "Utils/Typedefs.h"
 
 using namespace Model;
 
 namespace
 {
-	std::set< Expansion::Type >
+	std::set< Utils::Expansion::Type >
 	getExpansions()
 	{
-		std::set< Expansion::Type > expansions;
-		expansions.insert( Expansion::kBaseGame );
+		std::set< Utils::Expansion::Type > expansions;
+		expansions.insert( Utils::Expansion::kBaseGame );
 		return expansions;
 	}
 }

@@ -36,7 +36,7 @@ namespace Controller
 		explicit GameController( std::string const & inTiles, QObject * inParent = 0 );
 		explicit GameController
 		(
-			std::set< View::Expansion::Type > const & inExpansions,
+			std::set< Utils::Expansion::Type > const & inExpansions,
 			std::vector< View::PlayerInfo > const & inPlayer,
 			QObject * inParent = 0
 		);
