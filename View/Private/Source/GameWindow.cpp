@@ -3,6 +3,7 @@
 #include "AllScoresWidget.h"
 #include "DragMeepleLabel.h"
 #include "DragTileLabel.h"
+#include "LocationUtils.h"
 #include "MeepleUtils.h"
 #include "QtGlue.h"
 #include "UserInfoWidget.h"
@@ -11,18 +12,42 @@
 
 #include <QBrush>
 #include <QGraphicsEllipseItem>
+#include <QGraphicsPathItem>
 #include <QGraphicsPolygonItem>
 #include <QHBoxLayout>
+#include <QPainterPath>
 #include <QPen>
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
 #include <boost/bind.hpp>
+#include <boost/foreach.hpp>
 
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+
+namespace
+{
+	int const kOffset = 3;
+	int const kRadius = 7;
+	QColor const kPossibleLocationsColor( 140, 70, 0 );
+
+	QPainterPath
+	createPossibleLocationsPath( Utils::Locations const & inLocations )
+	{
+		QPainterPath path;
+		BOOST_FOREACH( Utils::Location const & location, inLocations )
+		{
+			int const x = View::getX( location );
+			int const y = View::getY( location );
+			QRectF const rect( x + kOffset, y + kOffset, Gui::kTileWidth - 2 * kOffset, Gui::kTileHeight - 2 * kOffset );
+			path.addRoundedRect( rect, kRadius, kRadius );
+		}
+		return path;
+	}
+}
 
 struct View::GuiPlacedPiece
 {
@@ -51,6 +76,7 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mBoardView(),
 	mTiles(),
 	mMeeples(),
+	mPossibleLocations(),
 	mTilesLeft(),
 	mPickedTileLabel(),
 	mUserInfo(),
@@ -69,6 +95,7 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mBoardView = new BoardView( mBoardScene, this );
 	mBoardView->setFrameStyle( QFrame::NoFrame );
 	mBoardView->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+	mBoardView->setRenderHint( QPainter::Antialiasing );
 
 	connect( mBoardView, SIGNAL( enterPressed() ), this, SLOT( onEndCurrentTurn() ) );
 	connect( mBoardView, SIGNAL( spacePressed() ), this, SLOT( onEndCurrentTurn() ) );
@@ -271,9 +298,17 @@ View::GameWindow::returnPiece( int inX, int inY, View::Meeple const & inMeeple )
 }
 
 void
-View::GameWindow::setPossibleLocations( Utils::Locations const & /*inLocations*/ )
+View::GameWindow::setPossibleLocations( Utils::Locations const & inLocations )
 {
-	// TODO: Show them on the board.
+	if ( mPossibleLocations )
+	{
+		mBoardScene->removeItem( mPossibleLocations.get() );
+	}
+	QPainterPath const path = createPossibleLocationsPath( inLocations );
+	mPossibleLocations.reset( new QGraphicsPathItem( path ) );
+	mPossibleLocations->setPen( Qt::NoPen );
+	mPossibleLocations->setBrush( kPossibleLocationsColor );
+	mBoardScene->addItem( mPossibleLocations.get() );
 }
 
 void

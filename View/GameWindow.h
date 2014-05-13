@@ -8,6 +8,8 @@
 
 #include "Utils/Typedefs.h"
 
+#include <boost/scoped_ptr.hpp>
+
 #include <QMainWindow>
 
 #include <QLabel>
@@ -23,6 +25,7 @@
 #include <map>
 
 QT_BEGIN_NAMESPACE
+	class QGraphicsPathItem;
 	class QStackedWidget;
 QT_END_NAMESPACE
 
@@ -159,6 +162,7 @@ namespace View
 		BoardView *mBoardView;
 		std::vector< TileItem* > mTiles;
 		std::vector< GuiPlacedPiece > mMeeples;
+		boost::scoped_ptr< QGraphicsPathItem > mPossibleLocations;
 		QLabel *mTilesLeft;
 		DragTileLabel *mPickedTileLabel;
 		QStackedWidget * mUserInfo;
