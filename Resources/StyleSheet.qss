@@ -28,3 +28,40 @@ View--StartScreenRow QPushButton:hover:pressed
 {
 	background-color: #ff0000;
 }
+
+View--StartScreenRow QLineEdit
+{
+	border: 1px solid #0000ff;
+	border-radius: 5px;
+	padding: 2px;
+	background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop: 0 #EEEEFF, stop:1 #CCCCFF );
+	color: #000000;
+	selection-background-color: #000055;
+	selection-color: #FFFFFF;
+}
+
+View--StartScreenRow QComboBox
+{
+	border: 1px solid #0000ff;
+	border-radius: 5px;
+	padding: 2px 5px;
+	background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop: 0 #EEEEFF, stop:1 #CCCCFF );
+	color: #000000;
+}
+
+View--StartScreenRow QComboBox::drop-down
+{
+	subcontrol-origin: padding;
+	subcontrol-position: top right;
+	width: 15px;
+	border: 1px;
+}
+
+View--StartScreenRow QComboBox QAbstractItemView
+{
+	border: 1px solid #0000ff;
+	background-color: #ccccff;
+	color: #000000;
+	selection-background-color: #000055;
+	selection-color: #ffffff;
+}
