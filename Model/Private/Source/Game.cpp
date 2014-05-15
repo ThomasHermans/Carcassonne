@@ -151,7 +151,7 @@ Model::Game::placeStartTileOnBoard()
 		bool const placed = mBoard.placeStartTile( startTile );
 		if ( placed )
 		{
-			tilePlaced( 0, 0, startTile.getID(), startTile.getRotation() );
+			tilePlaced( Utils::Location( 0, 0 ), startTile.getID(), startTile.getRotation() );
 			pickNextTile();
 		}
 	}
@@ -196,7 +196,7 @@ Model::Game::tryToPlaceTile
 				}
 			}
 			mCurrentPlacedTile = PlacedTile( placedTile, inRow, inCol );
-			tilePlaced( inRow, inCol, placedTile.getID(), placedTile.getRotation() );
+			tilePlaced( Utils::Location( inRow, inCol ), placedTile.getID(), placedTile.getRotation() );
 		}
 	}
 }
@@ -229,7 +229,8 @@ Model::Game::rotateTile( int inRow, int inCol )
 			}
 			tileRemoved( mCurrentPlacedTile->row, mCurrentPlacedTile->col );
 			mCurrentPlacedTile = PlacedTile( rotatedTile, inRow, inCol );
-			tilePlaced( mCurrentPlacedTile->row, mCurrentPlacedTile->col, mCurrentPlacedTile->tile.getID(), mCurrentPlacedTile->tile.getRotation() );
+			Utils::Location const location( mCurrentPlacedTile->row, mCurrentPlacedTile->col );
+			tilePlaced( location, mCurrentPlacedTile->tile.getID(), mCurrentPlacedTile->tile.getRotation() );
 		}
 	}
 }

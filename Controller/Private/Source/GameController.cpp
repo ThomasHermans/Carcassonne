@@ -84,15 +84,12 @@ Controller::GameController::GameController
 void
 Controller::GameController::onTilePlaced
 (
-	int inRow,
-	int inCol,
+	Utils::Location const & inLocation,
 	std::string const & inId,
 	Model::Rotation inRotation
 )
 {
-	int const x = xFromCol( inCol );
-	int const y = yFromRow( inRow );
-	mWindow->setTile( x, y, inId, viewFromModel( inRotation ) );
+	mWindow->setTile( inLocation, inId, viewFromModel( inRotation ) );
 	mWindow->fadeNextTile();
 }
 
@@ -226,7 +223,7 @@ Controller::GameController::addPlayersToWindow()
 void
 Controller::GameController::makeConnections()
 {
-	mGame.tilePlaced.connect( boost::bind( &Controller::GameController::onTilePlaced, this, _1, _2, _3, _4 ) );
+	mGame.tilePlaced.connect( boost::bind( &Controller::GameController::onTilePlaced, this, _1, _2, _3 ) );
 	mGame.tileRemoved.connect( boost::bind( &Controller::GameController::onTileRemoved, this, _1, _2 ) );
 	mGame.nextTile.connect( boost::bind( &Controller::GameController::onNextTile, this, _1 ) );
 	mGame.tilesLeft.connect( boost::bind( &Controller::GameController::onTilesLeft, this, _1 ) );

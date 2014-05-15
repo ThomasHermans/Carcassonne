@@ -30,7 +30,7 @@ namespace Model
 		/**
 		 *	A tile was placed on the specified location.
 		 */
-		boost::signals2::signal< void ( int inRow, int inCol, std::string const & inTileID, Rotation inRotation ) > tilePlaced;
+		boost::signals2::signal< void ( Utils::Location const & inLocation, std::string const & inTileID, Rotation inRotation ) > tilePlaced;
 		/**
 		 *	A tile was removed from the specified location.
 		 */

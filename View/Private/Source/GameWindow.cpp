@@ -167,13 +167,18 @@ View::GameWindow::addPlayer
 }
 
 void
-View::GameWindow::setTile( int inX, int inY, std::string const & inId, Rotation inRotation )
+View::GameWindow::setTile
+(
+	Utils::Location const & inLocation,
+	std::string const & inId,
+	Rotation inRotation
+)
 {
 	TileItem *item = new TileItem( inId, inRotation );
-	item->moveBy( inX, inY );
+	item->moveBy( getX( inLocation ), getY( inLocation ) );
 	mTiles.push_back( item );
 	mBoardScene->addItem( item );
-	mBoardView->placeTile( inX, inY, inId, inRotation );
+	mBoardView->placeTile( getX( inLocation ), getY( inLocation ), inId, inRotation );
 	updateSceneRect();
 }
 

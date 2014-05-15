@@ -73,7 +73,12 @@ namespace View
 		 *	coordinates.
 		 */
 		void
-		setTile( int inX, int inY, std::string const & inId, Rotation inRotation );
+		setTile
+		(
+			Utils::Location const & inLocation,
+			std::string const & inId,
+			Rotation inRotation
+		);
 
 		/**
 		 *	Clear a tile from the board at the specified location.
