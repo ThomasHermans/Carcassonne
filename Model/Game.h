@@ -34,7 +34,7 @@ namespace Model
 		/**
 		 *	A tile was removed from the specified location.
 		 */
-		boost::signals2::signal< void ( int inRow, int inCol ) > tileRemoved;
+		boost::signals2::signal< void ( Utils::Location const & inLocation ) > tileRemoved;
 		/**
 		 *	There is a new next tile.
 		 */

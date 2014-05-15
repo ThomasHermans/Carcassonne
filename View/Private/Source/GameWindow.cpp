@@ -183,16 +183,17 @@ View::GameWindow::setTile
 }
 
 void
-View::GameWindow::clearTile(int x, int y)
+View::GameWindow::clearTile( Utils::Location const & inLocation )
 {
+	QPointF const position( getX( inLocation ), getY( inLocation ) );
 	std::vector< TileItem * >::iterator it = mTiles.end();
-	while (it != mTiles.begin())
+	while ( it != mTiles.begin() )
 	{
 		--it;
-		if ((*it)->scenePos() == QPointF(x, y))
+		if ( (*it)->scenePos() == position )
 		{
 			mBoardScene->removeItem( *it );
-			mTiles.erase(it);
+			mTiles.erase( it );
 			break;
 		}
 	}

@@ -84,7 +84,7 @@ namespace View
 		 *	Clear a tile from the board at the specified location.
 		 */
 		void
-		clearTile( int x, int y );
+		clearTile( Utils::Location const & inLocation );
 
 		/**
 		 *	Rotate the tile at the specified location.

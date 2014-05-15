@@ -188,7 +188,7 @@ Model::Game::tryToPlaceTile
 		{
 			if ( earlierTile )
 			{
-				tileRemoved( earlierTile->row, earlierTile->col );
+				tileRemoved( Utils::Location( earlierTile->row, earlierTile->col ) );
 				if ( earlierTile->tile.hasPieces() )
 				{
 					mPiecesPlacedThisTurn = 0;
@@ -227,7 +227,7 @@ Model::Game::rotateTile( int inRow, int inCol )
 				mPiecesPlacedThisTurn = 0;
 				returnPieces( mCurrentPlacedTile->tile.removeAllPieces(), mCurrentPlacedTile->row, mCurrentPlacedTile->col );
 			}
-			tileRemoved( mCurrentPlacedTile->row, mCurrentPlacedTile->col );
+			tileRemoved( Utils::Location( mCurrentPlacedTile->row, mCurrentPlacedTile->col ) );
 			mCurrentPlacedTile = PlacedTile( rotatedTile, inRow, inCol );
 			Utils::Location const location( mCurrentPlacedTile->row, mCurrentPlacedTile->col );
 			tilePlaced( location, mCurrentPlacedTile->tile.getID(), mCurrentPlacedTile->tile.getRotation() );

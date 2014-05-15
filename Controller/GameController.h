@@ -44,7 +44,7 @@ namespace Controller
 	private slots:
 		// From model to view
 		void onTilePlaced( Utils::Location const & inLocation, std::string const & inId, Model::Rotation inRotation );
-		void onTileRemoved( int inRow, int inCol );
+		void onTileRemoved( Utils::Location const & inLocation );
 		void onNextTile( std::string const & inNextId );
 		void onTilesLeft( std::size_t inNr );
 

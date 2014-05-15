@@ -94,15 +94,9 @@ Controller::GameController::onTilePlaced
 }
 
 void
-Controller::GameController::onTileRemoved
-(
-	int inRow,
-	int inCol
-)
+Controller::GameController::onTileRemoved( Utils::Location const & inLocation )
 {
-	int const x = xFromCol( inCol );
-	int const y = yFromRow( inRow );
-	mWindow->clearTile( x, y );
+	mWindow->clearTile( inLocation );
 }
 
 void
@@ -224,7 +218,7 @@ void
 Controller::GameController::makeConnections()
 {
 	mGame.tilePlaced.connect( boost::bind( &Controller::GameController::onTilePlaced, this, _1, _2, _3 ) );
-	mGame.tileRemoved.connect( boost::bind( &Controller::GameController::onTileRemoved, this, _1, _2 ) );
+	mGame.tileRemoved.connect( boost::bind( &Controller::GameController::onTileRemoved, this, _1 ) );
 	mGame.nextTile.connect( boost::bind( &Controller::GameController::onNextTile, this, _1 ) );
 	mGame.tilesLeft.connect( boost::bind( &Controller::GameController::onTilesLeft, this, _1 ) );
 	mGame.piecePlaced.connect( boost::bind( &Controller::GameController::onPiecePlaced, this, _1, _2, _3 ) );
