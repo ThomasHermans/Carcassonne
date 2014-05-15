@@ -112,20 +112,20 @@ Controller::GameController::onTilesLeft( std::size_t inNr )
 }
 
 void
-Controller::GameController::onPiecePlaced( int inRow, int inCol, Model::PlacedPiece const & inPiece )
+Controller::GameController::onPiecePlaced( Utils::Location const & inLocation, Model::PlacedPiece const & inPiece )
 {
-	int x = xFromCol( inCol );
-	int y = yFromRow( inRow );
+	int x = xFromCol( inLocation.second );
+	int y = yFromRow( inLocation.first );
 	x += xFromArea( inPiece.getArea() ) - .5 * Gui::kTileWidth;
 	y += yFromArea( inPiece.getArea() ) - .5 * Gui::kTileHeight;
 	mWindow->placePiece( x, y, viewFromModel( inPiece.getPiece() ) );
 }
 
 void
-Controller::GameController::onPieceRemoved( int inRow, int inCol, Model::PlacedPiece const & inPiece )
+Controller::GameController::onPieceRemoved( Utils::Location const & inLocation, Model::PlacedPiece const & inPiece )
 {
-	int x = xFromCol( inCol );
-	int y = yFromRow( inRow );
+	int x = xFromCol( inLocation.second );
+	int y = yFromRow( inLocation.first );
 	x += xFromArea( inPiece.getArea() ) - .5 * Gui::kTileWidth;
 	y += yFromArea( inPiece.getArea() ) - .5 * Gui::kTileHeight;
 	mWindow->returnPiece( x, y, viewFromModel( inPiece.getPiece() ) );
@@ -221,8 +221,8 @@ Controller::GameController::makeConnections()
 	mGame.tileRemoved.connect( boost::bind( &Controller::GameController::onTileRemoved, this, _1 ) );
 	mGame.nextTile.connect( boost::bind( &Controller::GameController::onNextTile, this, _1 ) );
 	mGame.tilesLeft.connect( boost::bind( &Controller::GameController::onTilesLeft, this, _1 ) );
-	mGame.piecePlaced.connect( boost::bind( &Controller::GameController::onPiecePlaced, this, _1, _2, _3 ) );
-	mGame.pieceRemoved.connect( boost::bind( &Controller::GameController::onPieceRemoved, this, _1, _2, _3 ) );
+	mGame.piecePlaced.connect( boost::bind( &Controller::GameController::onPiecePlaced, this, _1, _2 ) );
+	mGame.pieceRemoved.connect( boost::bind( &Controller::GameController::onPieceRemoved, this, _1, _2 ) );
 	mGame.playerInfoChanged.connect( boost::bind( &Controller::GameController::onPlayerInfoChanged, this, _1 ) );
 	mGame.currentPlayerChanged.connect( boost::bind( &Controller::GameController::onCurrentPlayerChanged, this, _1 ) );
 	mGame.possibleLocationsChanged.connect( boost::bind( &Controller::GameController::onPossibleLocationsChanged, this, _1 ) );

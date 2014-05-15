@@ -261,7 +261,8 @@ Model::Game::tryToPlacePiece
 					if ( mCurrentPlacedTile->tile.placePiece( placedPiece ) )
 					{
 						++mPiecesPlacedThisTurn;
-						piecePlaced( mCurrentPlacedTile->row, mCurrentPlacedTile->col, placedPiece, player );
+						Utils::Location const location( mCurrentPlacedTile->row, mCurrentPlacedTile->col );
+						piecePlaced( location, placedPiece, player );
 					}
 					else
 					{
@@ -376,7 +377,7 @@ Model::Game::returnPieces( std::vector< PlacedPiece > const & inPieces, int inRo
 	{
 		Player & player = getPlayer( piece.getPiece().getColor() );
 		player.returnPiece( piece.getPiece() );
-		pieceRemoved( inRow, inCol, piece, player );
+		pieceRemoved( Utils::Location( inRow, inCol ), piece, player );
 	}
 }
 

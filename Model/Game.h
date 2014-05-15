@@ -46,11 +46,11 @@ namespace Model
 		/**
 		 *	A piece has been placed on the board.
 		 */
-		boost::signals2::signal< void ( int inRow, int inCol, PlacedPiece const & inPiece, Player const & inPlayer ) > piecePlaced;
+		boost::signals2::signal< void ( Utils::Location const & inLocation, PlacedPiece const & inPiece, Player const & inPlayer ) > piecePlaced;
 		/**
 		 *	A piece has been removed from the board.
 		 */
-		boost::signals2::signal< void ( int inRow, int inCol, PlacedPiece const & inPiece, Player const & inPlayer ) > pieceRemoved;
+		boost::signals2::signal< void ( Utils::Location const & inLocation, PlacedPiece const & inPiece, Player const & inPlayer ) > pieceRemoved;
 		/**
 		 *	There is a new list of possible locations for the (new) tile.
 		 */
