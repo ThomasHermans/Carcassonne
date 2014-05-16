@@ -2,6 +2,7 @@
 
 #include <QHBoxLayout>
 #include <QPainter>
+#include <QSize>
 #include <QString>
 #include <QStyle>
 #include <QStyleOption>
@@ -20,7 +21,7 @@ View::StartScreenRow::StartScreenRow( QWidget * inParent )
 	QWidget( inParent ),
 	mNameLineEdit( new QLineEdit( this ) ),
 	mColorComboBox( new QComboBox( this ) ),
-	mDeleteButton( new QPushButton( "X", this ) )
+	mDeleteButton( new QPushButton( this ) )
 {
 	mColorComboBox->addItem( "Red" );
 	mColorComboBox->addItem( "Green" );
@@ -29,6 +30,8 @@ View::StartScreenRow::StartScreenRow( QWidget * inParent )
 	mColorComboBox->addItem( "Black" );
 	mColorComboBox->addItem( "Gray" );
 	connect( mColorComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onCurrentIndexChanged( int ) ) );
+	mDeleteButton->setIcon( QPixmap( ":/Bin.png" ) );
+	mDeleteButton->setIconSize( QSize( 12, 12 ) );
 	connect( mDeleteButton, SIGNAL( clicked() ), this, SIGNAL( removed() ) );
 
 	QHBoxLayout * rowLayout = new QHBoxLayout();

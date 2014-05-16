@@ -1,7 +1,7 @@
 View--StartScreenRow
 {
-	background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #0000ff, stop:1 #000033);
-	border: 2px solid #0000ff;
+	background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #cccccc, stop:1 #aaaaaa);
+	border: 2px solid #aaaaaa;
 	border-radius: 10px;
 	padding: 6px;
 }
@@ -11,9 +11,9 @@ View--StartScreenRow QPushButton
 	min-width: 25px;
 	max-width: 25px;
 	min-height: 18px;
-	background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #0000ff, stop:1 #000033);
-	border: 1px solid #0000ff;
-	border-radius: 2px;
+	background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #bbbbbb, stop:1 #eeeeee);
+	border: 1px solid #aaaaaa;
+	border-radius: 5px;
 	color: #ff0000;
 }
 
@@ -31,21 +31,21 @@ View--StartScreenRow QPushButton:hover:pressed
 
 View--StartScreenRow QLineEdit
 {
-	border: 1px solid #0000ff;
+	border: 1px solid #aaaaaa;
 	border-radius: 5px;
 	padding: 2px;
-	background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop: 0 #EEEEFF, stop:1 #CCCCFF );
+	background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop: 0 #bbbbbb, stop:1 #eeeeee );
 	color: #000000;
-	selection-background-color: #000055;
+	selection-background-color: #666666;
 	selection-color: #FFFFFF;
 }
 
 View--StartScreenRow QComboBox
 {
-	border: 1px solid #0000ff;
+	border: 1px solid #aaaaaa;
 	border-radius: 5px;
 	padding: 2px 5px;
-	background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop: 0 #EEEEFF, stop:1 #CCCCFF );
+	background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop: 0 #bbbbbb, stop:1 #eeeeee );
 	color: #000000;
 }
 
@@ -59,9 +59,9 @@ View--StartScreenRow QComboBox::drop-down
 
 View--StartScreenRow QComboBox QAbstractItemView
 {
-	border: 1px solid #0000ff;
-	background-color: #ccccff;
+	border: 1px solid #aaaaaa;
+	background-color: #eeeeee;
 	color: #000000;
-	selection-background-color: #000055;
+	selection-background-color: #666666;
 	selection-color: #ffffff;
 }

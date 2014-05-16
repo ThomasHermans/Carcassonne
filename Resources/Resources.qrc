@@ -50,4 +50,7 @@
 		<file>Follower_own.png</file>
 		<file>LargeFollower_own.png</file>
 	</qresource>
+	<qresource prefix="/">
+		<file>Bin.png</file>
+	</qresource>
 </RCC>
