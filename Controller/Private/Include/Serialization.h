@@ -5,6 +5,7 @@
 #include "Model/Color.h"
 #include "Model/Piece.h"
 #include "Model/PlacedPiece.h"
+#include "Model/Player.h"
 
 #include <QDataStream>
 
@@ -23,6 +24,12 @@ namespace Controller
 	( QDataStream & inStream, Model::Color::Color & outColor );
 
 	QDataStream & operator <<
+	( QDataStream & inStream, Model::Piece::PieceType inPieceType );
+
+	QDataStream & operator >>
+	( QDataStream & inStream, Model::Piece::PieceType & outPieceType );
+
+	QDataStream & operator <<
 	( QDataStream & inStream, Model::Piece const & inPiece );
 
 	QDataStream & operator >>
@@ -33,6 +40,12 @@ namespace Controller
 
 	QDataStream & operator >>
 	( QDataStream & inStream, Model::PlacedPiece & outPiece );
+
+	QDataStream & operator <<
+	( QDataStream & inStream, Model::Player const & inPlayer );
+
+	QDataStream & operator >>
+	( QDataStream & inStream, Model::Player & outPlayer );
 }
 
 #endif

@@ -20,6 +20,22 @@ Model::Player::Player
 {
 }
 
+Model::Player::Player
+(
+	std::string const & inName,
+	Color::Color inColor,
+	std::size_t inScore,
+	std::map< Piece::PieceType, std::size_t > const & inPieces
+)
+:
+	mName( inName ),
+	mColor( inColor ),
+	mScore( inScore ),
+	mPieces( inPieces ),
+	mInfoChanged( new boost::signals2::signal< void () >() )
+{
+}
+
 std::string const &
 Model::Player::getName() const
 {
@@ -95,4 +111,10 @@ boost::signals2::signal< void () > &
 Model::Player::GetInfoChangedSignal()
 {
 	return *mInfoChanged;
+}
+
+std::map< Model::Piece::PieceType, std::size_t > const &
+Model::Player::getPieces() const
+{
+	return mPieces;
 }

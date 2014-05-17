@@ -32,6 +32,18 @@ namespace Model
 		);
 
 		/**
+		 *	Construct a new player with the given name, color, score
+		 *	and free pieces.
+		 */
+		Player
+		(
+			std::string const & inName,
+			Color::Color inColor,
+			std::size_t inScore,
+			std::map< Piece::PieceType, std::size_t > const & inPieces
+		);
+
+		/**
 		 *	Get the name of this player.
 		 */
 		std::string const & getName() const;
@@ -79,6 +91,12 @@ namespace Model
 		 */
 		boost::signals2::signal< void () > &
 		GetInfoChangedSignal();
+
+		/**
+		 *	Get all the free pieces this player has.
+		 */
+		std::map< Piece::PieceType, std::size_t > const &
+		getPieces() const;
 
 	private:
 		std::string mName;

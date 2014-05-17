@@ -1,5 +1,51 @@
 #include "Serialization.h"
 
+#include <QMap>
+#include <QString>
+
+#include <map>
+
+namespace
+{
+	QString
+	fromStd( std::string const & inString )
+	{
+		return QString::fromUtf8( inString.c_str() );
+	}
+
+	std::string
+	toStd( QString const & inString )
+	{
+		return std::string( inString.toUtf8().constData() );
+	}
+
+	QMap< quint32, quint32 >
+	fromPiecesMap( std::map< Model::Piece::PieceType, std::size_t > const & inPieces )
+	{
+		QMap< quint32, quint32 > result;
+		for ( std::map< Model::Piece::PieceType, std::size_t >::const_iterator it = inPieces.begin();
+			it != inPieces.end();
+			++it )
+		{
+			result.insert( quint32( it->first ), quint32( it->second ) );
+		}
+		return result;
+	}
+
+	std::map< Model::Piece::PieceType, std::size_t >
+	toPiecesMap( QMap< quint32, quint32 > const & inMap )
+	{
+		std::map< Model::Piece::PieceType, std::size_t > result;
+		for ( QMap< quint32, quint32 >::const_iterator it = inMap.begin();
+			it != inMap.end();
+			++it )
+		{
+			result[ Model::Piece::PieceType( it.key() ) ] = std::size_t( it.value() );
+		}
+		return result;
+	}
+}
+
 QDataStream &
 Controller::operator <<
 ( QDataStream & inStream, Model::Area::Area inArea )
@@ -38,9 +84,27 @@ Controller::operator >>
 
 QDataStream &
 Controller::operator <<
+( QDataStream & inStream, Model::Piece::PieceType inPieceType )
+{
+	inStream << quint32( inPieceType );
+	return inStream;
+}
+
+QDataStream &
+Controller::operator >>
+( QDataStream & inStream, Model::Piece::PieceType & outPieceType )
+{
+	quint32 pieceType;
+	inStream >> pieceType;
+	outPieceType = Model::Piece::PieceType( pieceType );
+	return inStream;
+}
+
+QDataStream &
+Controller::operator <<
 ( QDataStream & inStream, Model::Piece const & inPiece )
 {
-	inStream << quint32( inPiece.getType() ) << quint32( inPiece.getColor() );
+	inStream << inPiece.getType() << quint32( inPiece.getColor() );
 	return inStream;
 }
 
@@ -48,10 +112,10 @@ QDataStream &
 Controller::operator >>
 ( QDataStream & inStream, Model::Piece & outPiece )
 {
-	quint32 pieceType;
+	Model::Piece::PieceType pieceType;
 	Model::Color::Color color;
 	inStream >> pieceType >> color;
-	outPiece = Model::Piece( Model::Piece::PieceType( pieceType ), color );
+	outPiece = Model::Piece( pieceType, color );
 	return inStream;
 }
 
@@ -71,5 +135,29 @@ Controller::operator >>
 	Model::Area::Area area;
 	inStream >> piece >> area;
 	outPiece = Model::PlacedPiece( piece, area );
+	return inStream;
+}
+
+QDataStream &
+Controller::operator <<
+( QDataStream & inStream, Model::Player const & inPlayer )
+{
+	inStream << fromStd( inPlayer.getName() );
+	inStream << inPlayer.getColor();
+	inStream << quint32( inPlayer.getScore() );
+	inStream << fromPiecesMap( inPlayer.getPieces() );
+	return inStream;
+}
+
+QDataStream &
+Controller::operator >>
+( QDataStream & inStream, Model::Player & outPlayer )
+{
+	QString name;
+	Model::Color::Color color;
+	quint32 score;
+	QMap< quint32, quint32 > pieces;
+	inStream >> name >> color >> score >> pieces;
+	outPlayer = Model::Player( toStd( name ), color, std::size_t( score ), toPiecesMap( pieces ) );
 	return inStream;
 }
