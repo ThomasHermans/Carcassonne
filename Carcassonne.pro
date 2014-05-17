@@ -4,13 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 TARGET = Carcassonne
 TEMPLATE = app
 
 
 SOURCES += main.cpp \
+	Controller\Private\Source\ClientGame.cpp \
 	Controller\Private\Source\GameController.cpp \
 	Controller\Private\Source\ModelViewGlue.cpp \
 	Controller\Private\Source\StartController.cpp \
@@ -53,6 +54,7 @@ SOURCES += main.cpp \
 
 HEADERS += \
 	Controller\GameController.h \
+	Controller\Private\Include\ClientGame.h \
 	Controller\Private\Include\ModelViewGlue.h \
 	Controller\Private\Include\Settings.h \
 	View\DragData.h \
