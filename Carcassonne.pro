@@ -14,6 +14,7 @@ SOURCES += main.cpp \
 	Controller\Private\Source\ClientGame.cpp \
 	Controller\Private\Source\GameController.cpp \
 	Controller\Private\Source\ModelViewGlue.cpp \
+	Controller\Private\Source\Serialization.cpp \
 	Controller\Private\Source\StartController.cpp \
 	Controller\Private\Source\SupremeController.cpp \
 	test_o_matic.cpp \
