@@ -1,6 +1,6 @@
 #include "Board.h"
 
-#include "PlacedPiece.h"
+#include "Model/PlacedPiece.h"
 
 #include <boost/foreach.hpp>
 

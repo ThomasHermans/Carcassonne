@@ -3,7 +3,7 @@
 
 #include "Model/Color.h"
 #include "Model/Rotation.h"
-#include "PlacedPiece.h"
+#include "Model/PlacedPiece.h"
 #include "Tile.h"
 
 #include <utility>
