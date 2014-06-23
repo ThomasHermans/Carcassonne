@@ -4,7 +4,7 @@
 #include "Model/Color.h"
 #include "Model/Rotation.h"
 #include "Model/PlacedPiece.h"
-#include "Tile.h"
+#include "Model/Tile.h"
 
 #include <utility>
 #include <vector>

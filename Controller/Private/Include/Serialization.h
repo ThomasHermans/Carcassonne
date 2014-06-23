@@ -6,6 +6,7 @@
 #include "Model/Piece.h"
 #include "Model/PlacedPiece.h"
 #include "Model/Player.h"
+#include "Model/Tile.h"
 
 #include <QDataStream>
 
@@ -46,6 +47,12 @@ namespace Controller
 
 	QDataStream & operator >>
 	( QDataStream & inStream, Model::Player & outPlayer );
+
+	QDataStream & operator <<
+	( QDataStream & inStream, Model::Tile const & inTile );
+
+	QDataStream & operator >>
+	( QDataStream & inStream, Model::Tile & outTile );
 }
 
 #endif

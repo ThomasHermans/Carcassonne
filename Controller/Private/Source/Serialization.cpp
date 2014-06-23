@@ -1,5 +1,7 @@
 #include "Serialization.h"
 
+#include "Model/CreateTilesAndPieces.h"
+
 #include <QMap>
 #include <QString>
 
@@ -159,5 +161,23 @@ Controller::operator >>
 	QMap< quint32, quint32 > pieces;
 	inStream >> name >> color >> score >> pieces;
 	outPlayer = Model::Player( toStd( name ), color, std::size_t( score ), toPiecesMap( pieces ) );
+	return inStream;
+}
+
+QDataStream &
+Controller::operator <<
+( QDataStream & inStream, Model::Tile const & inTile )
+{
+	inStream << fromStd( inTile.getID() );
+	return inStream;
+}
+
+QDataStream &
+Controller::operator >>
+( QDataStream & inStream, Model::Tile & outTile )
+{
+	QString id;
+	inStream >> id;
+	outTile = Model::createTiles( toStd( id ) ).front();
 	return inStream;
 }

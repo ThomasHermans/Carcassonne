@@ -1,8 +1,8 @@
 #include <test_o_matic.hpp>
 
-#include "CreateTilesAndPieces.h"
+#include "Model/CreateTilesAndPieces.h"
 #include "Board.h"
-#include "Tile.h"
+#include "Model/Tile.h"
 #include "TileOnBoard.h"
 
 #include "Utils/Typedefs.h"

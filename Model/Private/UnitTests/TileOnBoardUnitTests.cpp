@@ -1,7 +1,7 @@
 #include <test_o_matic.hpp>
 
 #include "TileOnBoard.h"
-#include "CreateTilesAndPieces.h"
+#include "Model/CreateTilesAndPieces.h"
 
 using namespace Model;
 

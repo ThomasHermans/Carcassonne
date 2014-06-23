@@ -1,7 +1,7 @@
 #include "Model/Player.h"
 
-#include "CreateTilesAndPieces.h"
-#include "Tile.h"
+#include "Model/CreateTilesAndPieces.h"
+#include "Model/Tile.h"
 
 #include <cassert>
 

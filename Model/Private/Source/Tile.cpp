@@ -1,4 +1,4 @@
-#include "Tile.h"
+#include "Model/Tile.h"
 
 #include <boost/foreach.hpp>
 

@@ -2,7 +2,7 @@
 #define SETUPBASEGAME_H
 
 #include "Model/PlacedPiece.h"
-#include "Tile.h"
+#include "Model/Tile.h"
 
 #include "Model/Color.h"
 

@@ -1,4 +1,4 @@
-#include "CreateTilesAndPieces.h"
+#include "Model/CreateTilesAndPieces.h"
 
 #include <algorithm>
 #include <cassert>
