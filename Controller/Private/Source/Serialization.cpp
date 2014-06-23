@@ -181,3 +181,21 @@ Controller::operator >>
 	outTile = Model::createTiles( toStd( id ) ).front();
 	return inStream;
 }
+
+QDataStream &
+Controller::operator <<
+( QDataStream & inStream, Model::Rotation inRotation )
+{
+	inStream << quint32( inRotation );
+	return inStream;
+}
+
+QDataStream &
+Controller::operator >>
+( QDataStream & inStream, Model::Rotation & outRotation )
+{
+	quint32 rotation;
+	inStream >> rotation;
+	outRotation = Model::Rotation( rotation );
+	return inStream;
+}
