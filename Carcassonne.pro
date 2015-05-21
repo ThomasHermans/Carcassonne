@@ -49,7 +49,7 @@ SOURCES += main.cpp \
 	View\Private\Source\StartScreenRow.cpp \
 	View\Private\Source\TileItem.cpp \
 	View\Private\Source\TileUtils.cpp \
-	View\Private\Source\UserInfoWidget.cpp
+	View\Private\Source\UserInfoWidget.cpp \
 
 HEADERS += \
 	Controller\GameController.h \
@@ -68,13 +68,18 @@ HEADERS += \
 	View\Private\Include\StartScreenRow.h \
 	View\Private\Include\TileItem.h \
 	View\Private\Include\TileUtils.h \
-	View\Private\Include\UserInfoWidget.h
+	View\Private\Include\UserInfoWidget.h \
 
 INCLUDEPATH += \
+	$$PWD/../boost/ \
 	"C:\\Program Files\\boost\\boost_1_52_0" \
 	"Controller\\Private\\Include" \
+	"Controller/Private/Include" \
 	"Model\\Private\\Include" \
-	"View\\Private\\Include"
+	"Model/Private/Include" \
+	"View\\Private\\Include" \
+	"View/Private/Include" \
+
 
 RESOURCES += \
 	Resources\Resources.qrc

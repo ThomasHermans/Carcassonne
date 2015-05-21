@@ -3,8 +3,10 @@
 
 #include "Utils/Typedefs.h"
 
-#include <boost/scoped_ptr.hpp>
-#include <boost/signals2/signal.hpp>
+#ifndef Q_MOC_RUN
+	#include <boost/scoped_ptr.hpp>
+	#include <boost/signals2/signal.hpp>
+#endif
 
 #include <set>
 #include <string>

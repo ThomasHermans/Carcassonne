@@ -15,7 +15,7 @@ namespace View
 	{
 		Q_OBJECT
 	public:
-		StartScreenRow( QWidget * inParent = 0 );
+		explicit StartScreenRow( QWidget * inParent = 0 );
 		~StartScreenRow();
 
 		QString getName() const;

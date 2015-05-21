@@ -9,7 +9,9 @@
 
 #include "Utils/Typedefs.h"
 
+#ifndef Q_MOC_RUN
 #include <boost/scoped_ptr.hpp>
+#endif
 
 #include <QObject>
 

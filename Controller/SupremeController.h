@@ -3,7 +3,9 @@
 
 #include "Utils/Typedefs.h"
 
+#ifndef Q_MOC_RUN
 #include <boost/scoped_ptr.hpp>
+#endif
 
 #include <set>
 #include <string>
@@ -11,7 +13,7 @@
 
 namespace View
 {
-	class PlayerInfo;
+	struct PlayerInfo;
 }
 
 namespace  Controller

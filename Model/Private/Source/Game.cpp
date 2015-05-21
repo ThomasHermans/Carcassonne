@@ -5,6 +5,7 @@
 #include <boost/foreach.hpp>
 
 #include <cassert>
+#include <iostream>
 #include <map>
 #include <utility>
 

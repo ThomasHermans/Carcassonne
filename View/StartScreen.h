@@ -7,8 +7,10 @@
 
 #include <QDialog>
 
-#include <boost/ptr_container/ptr_vector.hpp>
-#include <boost/signals2/signal.hpp>
+#ifndef Q_MOC_RUN
+	#include <boost/shared_ptr.hpp>
+	#include <boost/signals2/signal.hpp>
+#endif
 
 #include <set>
 #include <string>
@@ -72,7 +74,7 @@ namespace View
 
 	private:
 		QVBoxLayout * mLayout;
-		boost::ptr_vector< StartScreenRow > mPlayerRows;
+		std::vector< boost::shared_ptr< StartScreenRow > > mPlayerRows;
 		QPushButton * mAddPlayerButton;
 		QCheckBox * mBaseGameBox;
 		QCheckBox * mTheExpansionBox;

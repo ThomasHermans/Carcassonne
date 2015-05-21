@@ -70,7 +70,9 @@ namespace Controller
 		storeValue( std::string const & inKey, T const & inValue )
 		{
 			using namespace Private;
-			getSettings().setValue( fromStd( inKey ), inValue );
+			QVariant variant;
+			variant.setValue< T >( inValue );
+			getSettings().setValue( fromStd( inKey ), variant );
 		}
 
 		template< class T >

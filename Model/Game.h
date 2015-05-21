@@ -8,8 +8,10 @@
 
 #include "Utils/Typedefs.h"
 
+#ifndef Q_MOC_RUN
 #include <boost/optional.hpp>
 #include <boost/signals2/signal.hpp>
+#endif
 
 #include <vector>
 #include <set>
