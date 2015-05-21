@@ -4,6 +4,9 @@
 
 #include <QMap>
 #include <QString>
+#include <QVector>
+
+#include <boost/foreach.hpp>
 
 #include <map>
 
@@ -45,6 +48,28 @@ namespace
 			result[ Model::Piece::PieceType( it.key() ) ] = std::size_t( it.value() );
 		}
 		return result;
+	}
+
+	QVector< Model::PlacedPiece >
+	fromPlacedPieces( std::vector< Model::PlacedPiece > const & inPieces )
+	{
+		QVector< Model::PlacedPiece > pieces;
+		BOOST_FOREACH( Model::PlacedPiece const & piece, inPieces )
+		{
+			pieces.push_back( piece );
+		}
+		return pieces;
+	}
+
+	std::vector< Model::PlacedPiece >
+	toPlacedPieces( QVector< Model::PlacedPiece > const & inPieces )
+	{
+		std::vector< Model::PlacedPiece > pieces;
+		BOOST_FOREACH( Model::PlacedPiece const & piece, inPieces )
+		{
+			pieces.push_back( piece );
+		}
+		return pieces;
 	}
 }
 
@@ -197,5 +222,29 @@ Controller::operator >>
 	quint32 rotation;
 	inStream >> rotation;
 	outRotation = Model::Rotation( rotation );
+	return inStream;
+}
+
+QDataStream &
+Controller::operator <<
+( QDataStream & inStream, Model::TileOnBoard const & inTile )
+{
+	inStream << inTile.getTile();
+	inStream << inTile.getRotation();
+	inStream << fromPlacedPieces( inTile.getPlacedPieces() );
+	return inStream;
+}
+
+QDataStream &
+Controller::operator >>
+( QDataStream & inStream, Model::TileOnBoard & outTile )
+{
+	Model::Tile tile;
+	Model::Rotation rotation;
+	QVector< Model::PlacedPiece > placedPieces;
+	inStream >> tile;
+	inStream >> rotation;
+	inStream >> placedPieces;
+	outTile = Model::TileOnBoard( tile, rotation, toPlacedPieces( placedPieces ) );
 	return inStream;
 }

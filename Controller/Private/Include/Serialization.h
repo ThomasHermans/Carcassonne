@@ -8,6 +8,7 @@
 #include "Model/Player.h"
 #include "Model/Rotation.h"
 #include "Model/Tile.h"
+#include "Model/TileOnBoard.h"
 
 #include <QDataStream>
 
@@ -60,6 +61,12 @@ namespace Controller
 
 	QDataStream & operator >>
 	( QDataStream & inStream, Model::Rotation & outRotation );
+
+	QDataStream & operator <<
+	( QDataStream & inStream, Model::TileOnBoard const & inTile );
+
+	QDataStream & operator >>
+	( QDataStream & inStream, Model::TileOnBoard & outTile );
 }
 
 #endif

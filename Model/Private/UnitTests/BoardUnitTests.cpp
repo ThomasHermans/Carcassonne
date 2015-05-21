@@ -3,7 +3,7 @@
 #include "Model/CreateTilesAndPieces.h"
 #include "Board.h"
 #include "Model/Tile.h"
-#include "TileOnBoard.h"
+#include "Model/TileOnBoard.h"
 
 #include "Utils/Typedefs.h"
 

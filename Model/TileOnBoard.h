@@ -17,6 +17,17 @@ namespace Model
 		TileOnBoard();
 		TileOnBoard( const Tile & inTile, Rotation inRotation );
 
+		/**
+		 *	Construct a TileOnBoard with some pieces already placed
+		 *	on it.
+		 */
+		TileOnBoard
+		(
+			Tile const & inTile,
+			Rotation inRotation,
+			std::vector< PlacedPiece > const & inPlacedPieces
+		);
+
 		Tile::Side getTop() const;
 		Tile::Side getRight() const;
 		Tile::Side getBottom() const;

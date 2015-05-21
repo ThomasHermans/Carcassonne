@@ -2,7 +2,7 @@
 #define CARCASSONNE_MODEL_NEWBOARD_20140313
 
 #include "PlacedProject.h"
-#include "TileOnBoard.h"
+#include "Model/TileOnBoard.h"
 
 #include "Utils/Typedefs.h"
 
