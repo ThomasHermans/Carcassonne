@@ -1,15 +1,22 @@
 #include "Controller/SupremeController.h"
 
-#include "Controller/GameController.h"
+#include "Controller/GUIPlayer.h"
+#include "Controller/ModeratorController.h"
+#include "Controller/Player.h"
+#include "Controller/RobotPlayer.h"
 
+#include "ModelViewGlue.h"
 #include "StartController.h"
+
+#include "View/GameWindow.h"
+#include "View/StartScreen.h"
 
 #include <iostream>
 
 Controller::SupremeController::SupremeController()
 :
 	mStartController( new StartController() ),
-	mGameController()
+	mModeratorController()
 {
 	mStartController->startGame.connect
 	(
@@ -28,5 +35,8 @@ Controller::SupremeController::startGame
 	std::vector< View::PlayerInfo > const & inPlayers
 )
 {
-	mGameController.reset( new GameController( inExpansions, inPlayers ) );
+	assert( !inPlayers.empty() );
+	
+	mModeratorController.reset( new ModeratorController( inPlayers, inExpansions ) );
+	mModeratorController->startGame();
 }

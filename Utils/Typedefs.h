@@ -1,8 +1,7 @@
 #ifndef CARCASSONNE_UTILS_TYPEDEFS
 #define CARCASSONNE_UTILS_TYPEDEFS
 
-#include <set>
-#include <utility>
+#include <cstdlib>
 
 namespace Utils
 {
@@ -15,8 +14,7 @@ namespace Utils
 		};
 	}
 
-	typedef std::pair< int, int > Location; // row, col
-	typedef std::set< Location > Locations;
+	typedef std::size_t PlayerID;
 }
 
 #endif

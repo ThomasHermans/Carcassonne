@@ -20,23 +20,23 @@ namespace View
 
 		QString getName() const;
 		Color getColor() const;
+		bool isAI() const;
 
 		void setName( std::string const & inName );
 		void setColor( Color inColor );
+		void setAI( bool inAI );
 
 	signals:
 		void removed();
 		void colorChanged( Color inColor );
 
 	private slots:
-		void onCurrentIndexChanged( int inIndex );
-
-	private:
-		void paintEvent( QPaintEvent * inEvent );
+		void onColorChanged( int inIndex );
 
 	private:
 		QLineEdit * mNameLineEdit;
 		QComboBox * mColorComboBox;
+		QComboBox * mAIComboBox;
 		QPushButton * mDeleteButton;
 	};
 }

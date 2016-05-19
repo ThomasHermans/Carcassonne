@@ -1,14 +1,17 @@
 #ifndef USERINFOWIDGET_THHR_20130824
 #define USERINFOWIDGET_THHR_20130824
 
+#include "View/Meeple.h"
 #include "View/Typedefs.h"
 
 #include <QWidget>
 
+#include <map>
 #include <string>
 
 QT_BEGIN_NAMESPACE
 	class QLabel;
+	class QVBoxLayout;
 QT_END_NAMESPACE
 
 namespace View
@@ -31,19 +34,14 @@ namespace View
 		);
 
 		void setScore( std::size_t inScore );
-		void setNumberOfFollowers( std::size_t inNumberOfFollowers );
-		void enableLargeFollowers();
-		void setNumberOfLargeFollowers( std::size_t inNumberOfLargeFollowers );
-
-	private:
-		void initializeLargeFollowers();
+		void setSupply( Meeple::MeepleType inType, std::size_t inAmount );
 
 	private:
 		Color mColor;
+		QVBoxLayout * mMainLayout;
 		QLabel * mNameLabel;
 		QLabel * mScoreLabel;
-		DragMeepleLabel * mDragFollowersLabel;
-		DragMeepleLabel * mDragLargeFollowersLabel;
+		std::map< Meeple::MeepleType, DragMeepleLabel * > mDragLabels;
 	};
 }
 

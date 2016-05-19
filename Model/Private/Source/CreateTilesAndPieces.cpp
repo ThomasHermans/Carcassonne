@@ -1,4 +1,6 @@
-#include "CreateTilesAndPieces.h"
+#include "Model/CreateTilesAndPieces.h"
+
+#include "Utils/Random.h"
 
 #include <algorithm>
 #include <cassert>
@@ -1674,12 +1676,15 @@ Model::createTileEK()
 
 	Tile const tileEK
 	(
-		Tile::kCenterCathedral,
+		Tile::kCenterProject,
 		"eK",
 		fields,
 		roads,
 		cities,
-		citiesPerField
+		citiesPerField,
+		std::vector< Area::Area >(),
+		std::vector< Area::Area >(),
+		{ Area::kCentral }
 	);
 
 	return tileEK;
@@ -2080,8 +2085,8 @@ Model::createBaseGameTiles()
 	}
 	tiles.push_back( createTileX() );
 
-	std::srand( std::time( 0 ) );
-	std::random_shuffle( tiles.begin(), tiles.end() );
+	Utils::RandomShuffle( tiles );
+
 	//add starting tile
 	tiles.push_back( createTileD() );
 
@@ -2129,8 +2134,7 @@ Model::createTiles( std::set< Utils::Expansion::Type > const & inExpansions )
 		tiles.insert( tiles.end(), expansionTiles.begin(), expansionTiles.end() );
 	}
 	// Shuffle the tiles
-	std::srand( std::time( 0 ) );
-	std::random_shuffle( tiles.begin(), tiles.end() );
+	Utils::RandomShuffle( tiles );
 	tiles.push_back( startTile );
 
 	return tiles;

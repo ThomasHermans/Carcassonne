@@ -3,7 +3,7 @@
 #include "ModelViewGlue.h"
 
 #include "Model/Color.h"
-#include "Model/Private/Include/PlacedProject.h"
+#include "Model/PlacedProject.h"
 
 #include "View/DragData.h"
 #include "View/StartScreen.h"
@@ -114,8 +114,8 @@ Controller::GameController::onTilesLeft( std::size_t inNr )
 void
 Controller::GameController::onPiecePlaced( Utils::Location const & inLocation, Model::PlacedPiece const & inPiece )
 {
-	int x = xFromCol( inLocation.second );
-	int y = yFromRow( inLocation.first );
+	int x = xFromCol( inLocation.col );
+	int y = yFromRow( inLocation.row );
 	x += xFromArea( inPiece.getArea() ) - .5 * Gui::kTileWidth;
 	y += yFromArea( inPiece.getArea() ) - .5 * Gui::kTileHeight;
 	mWindow->placePiece( x, y, viewFromModel( inPiece.getPiece() ) );
@@ -124,19 +124,19 @@ Controller::GameController::onPiecePlaced( Utils::Location const & inLocation, M
 void
 Controller::GameController::onPieceRemoved( Utils::Location const & inLocation, Model::PlacedPiece const & inPiece )
 {
-	int x = xFromCol( inLocation.second );
-	int y = yFromRow( inLocation.first );
+	int x = xFromCol( inLocation.col );
+	int y = yFromRow( inLocation.row );
 	x += xFromArea( inPiece.getArea() ) - .5 * Gui::kTileWidth;
 	y += yFromArea( inPiece.getArea() ) - .5 * Gui::kTileHeight;
-	mWindow->returnPiece( x, y, viewFromModel( inPiece.getPiece() ) );
+	mWindow->removePiece( x, y, viewFromModel( inPiece.getPiece() ) );
 }
 
 void
 Controller::GameController::onPlayerInfoChanged( Model::Player const & inNewInfo )
 {
 	std::string const name = inNewInfo.getName();
-	mWindow->setFollowersLeft( name, inNewInfo.getNumberOfFreePieces( Model::Piece::kFollower ) );
-	mWindow->setLargeFollowersLeft( name, inNewInfo.getNumberOfFreePieces( Model::Piece::kLargeFollower ) );
+	mWindow->setPlayerSupply( name, View::Meeple::kFollower, inNewInfo.getNumberOfFreePieces( Model::Piece::kFollower ) );
+	mWindow->setPlayerSupply( name, View::Meeple::kLargeFollower, inNewInfo.getNumberOfFreePieces( Model::Piece::kLargeFollower ) );
 	mWindow->setScore( name, inNewInfo.getScore() );
 }
 
@@ -204,13 +204,8 @@ Controller::GameController::addPlayersToWindow()
 	{
 		std::string const name = player.getName();
 		mWindow->addPlayer( name, viewFromModel( player.getColor() ) );
-		mWindow->setFollowersLeft( name, player.getNumberOfFreePieces( Model::Piece::kFollower ) );
-		std::size_t const nrOfLargeFollowers = player.getNumberOfFreePieces( Model::Piece::kLargeFollower );
-		if ( nrOfLargeFollowers > 0 )
-		{
-			mWindow->enableLargeFollowers( name );
-			mWindow->setLargeFollowersLeft( name, nrOfLargeFollowers );
-		}
+		mWindow->setPlayerSupply( name, View::Meeple::kFollower, player.getNumberOfFreePieces( Model::Piece::kFollower ) );
+		mWindow->setPlayerSupply( name, View::Meeple::kLargeFollower, player.getNumberOfFreePieces( Model::Piece::kLargeFollower ) );
 	}
 }
 

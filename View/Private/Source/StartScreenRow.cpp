@@ -9,6 +9,9 @@
 
 namespace
 {
+	int const kAIIndex = 0;
+	int const kPlayerIndex = 1;
+	
 	QString
 	fromStd( std::string const & inString )
 	{
@@ -21,6 +24,7 @@ View::StartScreenRow::StartScreenRow( QWidget * inParent )
 	QWidget( inParent ),
 	mNameLineEdit( new QLineEdit( this ) ),
 	mColorComboBox( new QComboBox( this ) ),
+	mAIComboBox( new QComboBox( this ) ),
 	mDeleteButton( new QPushButton( this ) )
 {
 	mColorComboBox->addItem( "Red" );
@@ -29,7 +33,11 @@ View::StartScreenRow::StartScreenRow( QWidget * inParent )
 	mColorComboBox->addItem( "Yellow" );
 	mColorComboBox->addItem( "Black" );
 	mColorComboBox->addItem( "Gray" );
-	connect( mColorComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onCurrentIndexChanged( int ) ) );
+	connect( mColorComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onColorChanged(int)) );
+
+	mAIComboBox->addItem( "Robot" );
+	mAIComboBox->addItem( "Player" );
+
 	mDeleteButton->setIcon( QPixmap( ":/Bin.png" ) );
 	mDeleteButton->setIconSize( QSize( 12, 12 ) );
 	connect( mDeleteButton, SIGNAL( clicked() ), this, SIGNAL( removed() ) );
@@ -39,6 +47,7 @@ View::StartScreenRow::StartScreenRow( QWidget * inParent )
 
 	rowLayout->addWidget( mNameLineEdit );
 	rowLayout->addWidget( mColorComboBox );
+	rowLayout->addWidget( mAIComboBox );
 	rowLayout->addWidget( mDeleteButton );
 
 	mNameLineEdit->setFocus();
@@ -60,6 +69,12 @@ View::StartScreenRow::getColor() const
 	return Color( mColorComboBox->currentIndex() );
 }
 
+bool
+View::StartScreenRow::isAI() const
+{
+	return mAIComboBox->currentIndex() == kAIIndex;
+}
+
 void
 View::StartScreenRow::setName( std::string const & inName )
 {
@@ -73,16 +88,13 @@ View::StartScreenRow::setColor( Color inColor )
 }
 
 void
-View::StartScreenRow::onCurrentIndexChanged( int inIndex )
+View::StartScreenRow::setAI( bool inAI )
 {
-	emit colorChanged( Color( inIndex ) );
+	mAIComboBox->setCurrentIndex( inAI ? kAIIndex : kPlayerIndex );
 }
 
 void
-View::StartScreenRow::paintEvent( QPaintEvent * inEvent )
+View::StartScreenRow::onColorChanged( int inIndex )
 {
-	QStyleOption opt;
-	opt.init(this);
-	QPainter p(this);
-	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+	emit colorChanged( Color( inIndex ) );
 }

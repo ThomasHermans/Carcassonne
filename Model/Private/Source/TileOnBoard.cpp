@@ -1,4 +1,4 @@
-#include "TileOnBoard.h"
+#include "Model/TileOnBoard.h"
 
 #include <algorithm>
 #include <cassert>
@@ -139,9 +139,21 @@ Model::TileOnBoard::getPlacedPieces() const
 }
 
 bool
-Model::TileOnBoard::hasInn( Area::Area inArea ) const
+Model::TileOnBoard::hasInn( Area::Area inRoadArea ) const
 {
-	return mTile.hasInn( unturn( inArea, mRotation ) );
+	return mTile.hasInn( unturn( inRoadArea, mRotation ) );
+}
+
+bool
+Model::TileOnBoard::hasCathedral( Area::Area inCityArea ) const
+{
+	return mTile.hasCathedral( unturn( inCityArea, mRotation ) );
+}
+
+bool
+Model::TileOnBoard::hasPennant( Area::Area inCityArea ) const
+{
+	return mTile.hasPennant( unturn( inCityArea, mRotation ) );
 }
 
 bool
@@ -330,6 +342,20 @@ Model::TileOnBoard::hasPiece( Area::Area inArea ) const
 		}
 	}
 	return false;
+}
+
+std::vector< Model::PlacedPiece >
+Model::TileOnBoard::getPieces( Area::Area inArea ) const
+{
+	std::vector< PlacedPiece > result;
+	for ( PlacedPiece piece : mPlacedPieces )
+	{
+		if ( piece.getArea() == inArea )
+		{
+			result.emplace_back( piece );
+		}
+	}
+	return result;
 }
 
 std::vector< Model::PlacedPiece >

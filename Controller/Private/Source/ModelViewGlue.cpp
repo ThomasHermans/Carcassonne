@@ -83,6 +83,24 @@ Controller::yFromArea( Model::Area::Area inArea )
 }
 
 int
+Controller::xFromLocation( Utils::Location const & inLocation, Model::Area::Area inArea )
+{
+	return xFromCol( inLocation.col ) + xFromArea( inArea ) - .5 * Gui::kTileWidth;
+}
+
+int
+Controller::yFromLocation( Utils::Location const & inLocation, Model::Area::Area inArea )
+{
+	return yFromRow( inLocation.row ) + yFromArea( inArea ) - .5 * Gui::kTileHeight;
+}
+
+Utils::Location
+Controller::locationFromXY( int inX, int inY )
+{
+	return Utils::Location( rowFromY( inY ), colFromX( inX ) );
+}
+
+int
 Controller::posXFromX( int inX )
 {
 	int res = ( inX % Gui::kTileWidth );
@@ -108,51 +126,53 @@ Model::Area::Area
 Controller::areaFromPos( int inX, int inY )
 {
 	using namespace Gui;
-	if ( inX < kFirstBorder )
+	int x = posXFromX( inX );
+	int y = posYFromY( inY );
+	if ( x < kFirstBorder )
 	{
-		if ( inY < kFirstBorder )
+		if ( y < kFirstBorder )
 		{
-			if ( inY < inX )
+			if ( y < x )
 				return Model::Area::kTopLeft;
 			else
 				return Model::Area::kLeftTop;
 		}
-		else if ( kSecondBorder < inY )
+		else if ( kSecondBorder < y )
 		{
-			if ( kTileHeight - inY < inX )
+			if ( kTileHeight - y < x )
 				return Model::Area::kBottomLeft;
 			else
 				return Model::Area::kLeftBottom;
 		}
-		else if ( kFirstBorder < inY && inY < kSecondBorder )
+		else if ( kFirstBorder < y && y < kSecondBorder )
 			return Model::Area::kLeft;
 	}
-	else if ( kSecondBorder < inX )
+	else if ( kSecondBorder < x )
 	{
-		if ( inY < kFirstBorder )
+		if ( y < kFirstBorder )
 		{
-			if ( inY < kTileWidth - inX )
+			if ( y < kTileWidth - x )
 				return Model::Area::kTopRight;
 			else
 				return Model::Area::kRightTop;
 		}
-		else if ( kSecondBorder < inY )
+		else if ( kSecondBorder < y )
 		{
-			if ( kTileHeight - inY < kTileWidth - inX )
+			if ( kTileHeight - y < kTileWidth - x )
 				return Model::Area::kBottomRight;
 			else
 				return Model::Area::kRightBottom;
 		}
-		else if ( kFirstBorder < inY && inY < kSecondBorder )
+		else if ( kFirstBorder < y && y < kSecondBorder )
 			return Model::Area::kRight;
 	}
-	else if ( kFirstBorder < inX && inX < kSecondBorder )
+	else if ( kFirstBorder < x && x < kSecondBorder )
 	{
-		if ( inY < kFirstBorder )
+		if ( y < kFirstBorder )
 			return Model::Area::kTop;
-		else if ( kSecondBorder < inY )
+		else if ( kSecondBorder < y )
 			return Model::Area::kBottom;
-		if ( kFirstBorder < inY && inY < kSecondBorder )
+		if ( kFirstBorder < y && y < kSecondBorder )
 			return Model::Area::kCentral;
 	}
 	assert( !"Invalid Area" );

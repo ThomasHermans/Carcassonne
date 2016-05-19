@@ -1,7 +1,7 @@
 #ifndef CARCASSONNE_VIEW_LOCATIONUTILS_THHR_20140513
 #define CARCASSONNE_VIEW_LOCATIONUTILS_THHR_20140513
 
-#include "Utils/Typedefs.h"
+#include "Utils/Location.h"
 
 namespace View
 {

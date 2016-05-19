@@ -1,9 +1,9 @@
 #include <test_o_matic.hpp>
 
-#include "CreateTilesAndPieces.h"
-#include "Board.h"
-#include "Tile.h"
-#include "TileOnBoard.h"
+#include "Model/CreateTilesAndPieces.h"
+#include "Model/Board.h"
+#include "Model/Tile.h"
+#include "Model/TileOnBoard.h"
 
 #include "Utils/Typedefs.h"
 
@@ -70,24 +70,24 @@ namespace
 	class SignalCounter
 	{
 	public:
-		SignalCounter( Model::Board & inBoard )
+		SignalCounter( Model::Board & /*inBoard*/ )
 		:
 			mFinishedCityCount( 0 ),
 			mFinishedRoadCount( 0 ),
 			mFinishedCloisterCount( 0 )
 		{
-			inBoard.finishedCity.connect
-			(
-				boost::bind( &SignalCounter::IncrementFinishedCity, this )
-			);
-			inBoard.finishedRoad.connect
-			(
-				boost::bind( &SignalCounter::IncrementFinishedRoad, this )
-			);
-			inBoard.finishedCloister.connect
-			(
-				boost::bind( &SignalCounter::IncrementFinishedCloister, this )
-			);
+			// inBoard.finishedCity.connect
+			// (
+			// 	boost::bind( &SignalCounter::IncrementFinishedCity, this )
+			// );
+			// inBoard.finishedRoad.connect
+			// (
+			// 	boost::bind( &SignalCounter::IncrementFinishedRoad, this )
+			// );
+			// inBoard.finishedCloister.connect
+			// (
+			// 	boost::bind( &SignalCounter::IncrementFinishedCloister, this )
+			// );
 		}
 		
 		void IncrementFinishedCity()

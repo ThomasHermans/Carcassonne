@@ -72,18 +72,17 @@ View::UserInfoWidget::UserInfoWidget
 :
 	QWidget( inParent ),
 	mColor( inColor ),
+	mMainLayout( new QVBoxLayout( this ) ),
 	mNameLabel( new QLabel( QString::fromStdString( inName ), this ) ),
 	mScoreLabel( new QLabel( QString::number( 0 ), this ) ),
-	mDragFollowersLabel( new DragMeepleLabel( Meeple( Meeple::kFollower, inColor ), this ) ),
-	mDragLargeFollowersLabel( new DragMeepleLabel( Meeple( Meeple::kLargeFollower, inColor ), this ) )
+	mDragLabels()
 {
 	setObjectName( "UserInfoWidget" );
 	setContentsMargins( 5, 5, 5, 5 );
 	setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
 
-	QVBoxLayout * mainLayout = new QVBoxLayout();
-	mainLayout->setContentsMargins( 0, 0, 0, 0 );
-	mainLayout->setSpacing( 0 );
+	mMainLayout->setContentsMargins( 0, 0, 0, 0 );
+	mMainLayout->setSpacing( 0 );
 
 	QHBoxLayout * nameAndScoreLayout = new QHBoxLayout();
 	nameAndScoreLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -91,13 +90,7 @@ View::UserInfoWidget::UserInfoWidget
 	nameAndScoreLayout->addWidget( mNameLabel, 1 );
 	nameAndScoreLayout->addWidget( mScoreLabel, 0 );
 
-	mDragLargeFollowersLabel->hide();
-
-	mainLayout->addLayout( nameAndScoreLayout );
-	mainLayout->addWidget( mDragFollowersLabel );
-	mainLayout->addWidget( mDragLargeFollowersLabel );
-
-	setLayout( mainLayout );
+	mMainLayout->addLayout( nameAndScoreLayout );
 
 	setStyleSheet( getStyleSheet( inColor ) );
 }
@@ -109,19 +102,16 @@ View::UserInfoWidget::setScore( std::size_t inScore )
 }
 
 void
-View::UserInfoWidget::setNumberOfFollowers( std::size_t inNumberOfFollowers )
+View::UserInfoWidget::setSupply( Meeple::MeepleType inType, std::size_t inAmount )
 {
-	mDragFollowersLabel->setNr( inNumberOfFollowers );
-}
-
-void
-View::UserInfoWidget::enableLargeFollowers()
-{
-	mDragLargeFollowersLabel->show();
-}
-
-void
-View::UserInfoWidget::setNumberOfLargeFollowers( std::size_t inNumberOfLargeFollowers )
-{
-	mDragLargeFollowersLabel->setNr( inNumberOfLargeFollowers );
+	if ( mDragLabels.find( inType ) == mDragLabels.end() && inAmount > 0 )
+	{
+		DragMeepleLabel * dragLabel = new DragMeepleLabel( Meeple( inType, mColor ), this );
+		mMainLayout->addWidget( dragLabel );
+		mDragLabels.emplace( inType, dragLabel );
+	}
+	if ( mDragLabels.find( inType ) != mDragLabels.end() )
+	{
+		mDragLabels.find( inType )->second->setAmount( inAmount );
+	}
 }

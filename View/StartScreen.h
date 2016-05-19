@@ -30,8 +30,9 @@ namespace View
 	{
 		std::string name;
 		Color color;
+		bool isAI;
 
-		PlayerInfo( std::string const & inName, Color inColor );
+		PlayerInfo( std::string const & inName, Color inColor, bool inIsAI );
 	};
 
 	/**
@@ -54,7 +55,13 @@ namespace View
 		/**
 		 *	Add a player with the given information to the start screen.
 		 */
-		bool addPlayer( std::string const & inName, Color inColor );
+		bool
+		addPlayer
+		(
+			std::string const & inName,
+			Color inColor,
+			bool inAI
+		);
 
 		/**
 		 *	Select the given expansions to be played with.

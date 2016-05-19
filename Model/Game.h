@@ -1,10 +1,9 @@
 #ifndef CARCASSONNE_MODEL_NEWGAME_20140329
 #define CARCASSONNE_MODEL_NEWGAME_20140329
 
-#include "Board.h"
-#include "PlacedProject.h"
-
-#include "Model/Player.h"
+#include "Model/Board.h"
+#include "Model/ModelPlayer.h"
+#include "Model/PlacedProject.h"
 
 #include "Utils/Typedefs.h"
 

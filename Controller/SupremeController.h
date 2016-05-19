@@ -5,10 +5,10 @@
 
 #ifndef Q_MOC_RUN
 #include <boost/scoped_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 #endif
 
 #include <set>
-#include <string>
 #include <vector>
 
 namespace View
@@ -18,7 +18,7 @@ namespace View
 
 namespace  Controller
 {
-	class GameController;
+	class ModeratorController;
 	class StartController;
 
 	class SupremeController
@@ -40,7 +40,7 @@ namespace  Controller
 
 	private:
 		boost::scoped_ptr< StartController > mStartController;
-		boost::scoped_ptr< GameController > mGameController;
+		boost::scoped_ptr< ModeratorController > mModeratorController;
 	};
 }
 

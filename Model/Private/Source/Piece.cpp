@@ -1,6 +1,6 @@
 #include "Model/Piece.h"
 
-#include "PlacedPiece.h"
+#include "Model/PlacedPiece.h"
 
 #include <cassert>
 

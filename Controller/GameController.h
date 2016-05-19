@@ -2,11 +2,12 @@
 #define GAMECONTROLLER_H
 
 #include "Model/Game.h"
-#include "Model/Player.h"
+#include "Model/ModelPlayer.h"
 
 #include "View/GameWindow.h"
 #include "View/Typedefs.h"
 
+#include "Utils/Location.h"
 #include "Utils/Typedefs.h"
 
 #ifndef Q_MOC_RUN

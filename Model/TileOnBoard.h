@@ -3,8 +3,8 @@
 
 #include "Model/Color.h"
 #include "Model/Rotation.h"
-#include "PlacedPiece.h"
-#include "Tile.h"
+#include "Model/PlacedPiece.h"
+#include "Model/Tile.h"
 
 #include <utility>
 #include <vector>
@@ -30,7 +30,9 @@ namespace Model
 		/**
 		 *	Does this TileOnBoard have an inn next to the specified Area?
 		 */
-		bool hasInn( Area::Area inArea ) const;
+		bool hasInn( Area::Area inRoadArea ) const;
+		bool hasCathedral( Area::Area inCityArea ) const;
+		bool hasPennant( Area::Area inCityArea ) const;
 
 		bool matchesAbove( TileOnBoard const & inTileOnBoard ) const;
 		bool matchesRightOf( TileOnBoard const & inTileOnBoard ) const;
@@ -55,6 +57,7 @@ namespace Model
 		bool placePiece( PlacedPiece const & inPlacedPiece);
 		bool hasPieces() const;
 		bool hasPiece( Area::Area inArea ) const;
+		std::vector< PlacedPiece > getPieces( Area::Area inArea ) const;
 		std::vector< PlacedPiece > removePieces( Area::Area inArea );
 		std::vector< PlacedPiece > removeAllPieces();
 

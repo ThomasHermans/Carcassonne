@@ -1,6 +1,6 @@
 #include <test_o_matic.hpp>
 
-#include "Model/Player.h"
+#include "Model/ModelPlayer.h"
 
 #include "Utils/Typedefs.h"
 

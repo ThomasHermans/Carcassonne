@@ -9,6 +9,8 @@
 #include "View/Meeple.h"
 #include "View/Typedefs.h"
 
+#include "Utils/Location.h"
+
 namespace Controller
 {
 	int
@@ -28,6 +30,15 @@ namespace Controller
 
 	int
 	yFromArea( Model::Area::Area inArea );
+
+	int
+	xFromLocation( Utils::Location const & inLocation, Model::Area::Area inArea );
+
+	int
+	yFromLocation( Utils::Location const & inLocation, Model::Area::Area inArea );
+
+	Utils::Location
+	locationFromXY( int inX, int inY );
 
 	int
 	posXFromX( int inX );

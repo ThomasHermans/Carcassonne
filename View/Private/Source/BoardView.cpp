@@ -6,6 +6,7 @@
 #include "View/DragData.h"
 
 #include <QApplication>
+#include <QDrag>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QGraphicsItem>
@@ -219,7 +220,7 @@ View::BoardView::dropEvent( QDropEvent * inEvent )
 bool
 View::BoardView::pressedOnNoTile() const
 {
-	if ( scene()->itemAt( mPressPosition ) )
+	if ( scene()->itemAt( mPressPosition, transform() ) )
 	{
 		return false;
 	}

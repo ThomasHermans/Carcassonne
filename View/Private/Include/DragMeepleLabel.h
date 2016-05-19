@@ -23,7 +23,7 @@ namespace View
 			QWidget * inParent
 		);
 
-		void setNr( std::size_t inNr );
+		void setAmount( std::size_t inAmount );
 
 	protected:
 		virtual void mousePressEvent( QMouseEvent * inEvent );
@@ -32,7 +32,7 @@ namespace View
 	private:
 		Meeple mMeeple;
 		QPixmap mPixmap;
-		QLabel * mNrLabel;
+		QLabel * mAmountLabel;
 		QPoint mDragStartPosition;
 	};
 }

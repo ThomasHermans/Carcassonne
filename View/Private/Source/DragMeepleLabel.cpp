@@ -24,7 +24,7 @@ View::DragMeepleLabel::DragMeepleLabel
 	QWidget( inParent ),
 	mMeeple( inMeeple ),
 	mPixmap( getMeeplePixmap( inMeeple ) ),
-	mNrLabel( new QLabel( QString::number( 0 ), this ) ),
+	mAmountLabel( new QLabel( QString::number( 0 ), this ) ),
 	mDragStartPosition()
 {
 	setContentsMargins( 0, 0, 0, 0 );
@@ -35,7 +35,7 @@ View::DragMeepleLabel::DragMeepleLabel
 	pixmapLabel->setPixmap( mPixmap );
 	layout->addWidget( pixmapLabel );
 	layout->addSpacing( 5 );
-	layout->addWidget( mNrLabel );
+	layout->addWidget( mAmountLabel );
 	layout->addStretch();
 
 	setLayout( layout );
@@ -44,9 +44,9 @@ View::DragMeepleLabel::DragMeepleLabel
 }
 
 void
-View::DragMeepleLabel::setNr( std::size_t inNr )
+View::DragMeepleLabel::setAmount( std::size_t inAmount )
 {
-	mNrLabel->setText( QString::number( inNr ) );
+	mAmountLabel->setText( QString::number( inAmount ) );
 }
 
 void

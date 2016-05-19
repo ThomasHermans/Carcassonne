@@ -2,6 +2,11 @@
 
 #include <cassert>
 
+namespace
+{
+	QColor const kQtGreen( 20, 200, 20 );
+}
+
 QColor
 View::toQColor( Color inColor )
 {
@@ -10,7 +15,7 @@ View::toQColor( Color inColor )
 	case kRed:
 		return Qt::red;
 	case kGreen:
-		return Qt::green;
+		return kQtGreen;
 	case kBlue:
 		return Qt::blue;
 	case kYellow:
@@ -31,7 +36,7 @@ View::fromQColor( QColor const & inColor )
 	{
 		return kRed;
 	}
-	else if ( inColor == Qt::green )
+	else if ( inColor == kQtGreen )
 	{
 		return kGreen;
 	}

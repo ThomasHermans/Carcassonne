@@ -16,10 +16,11 @@ namespace
 	std::size_t kMaxPlayers = 6;
 }
 
-View::PlayerInfo::PlayerInfo( std::string const & inName, Color inColor )
+View::PlayerInfo::PlayerInfo( std::string const & inName, Color inColor, bool inIsAI )
 :
 	name( inName ),
-	color( inColor )
+	color( inColor ),
+	isAI( inIsAI )
 {
 }
 
@@ -54,12 +55,13 @@ View::StartScreen::~StartScreen()
 }
 
 bool
-View::StartScreen::addPlayer( std::string const & inName, Color inColor )
+View::StartScreen::addPlayer( std::string const & inName, Color inColor, bool inAI )
 {
 	if ( addPlayer() )
 	{
 		mPlayerRows.back()->setName( inName );
 		mPlayerRows.back()->setColor( inColor );
+		mPlayerRows.back()->setAI( inAI );
 		return true;
 	}
 	else
@@ -102,8 +104,8 @@ View::StartScreen::addPlayer()
 		StartScreenRow * row = new StartScreenRow( this );
 		Color const color = findUnusedColor();
 		row->setColor( color );
-		connect( row, SIGNAL( removed() ), this, SLOT( removePlayer() ) );
-		connect( row, SIGNAL( colorChanged( Color ) ), this, SLOT( updateColors( Color ) ) );
+		connect( row, SIGNAL(removed()), this, SLOT(removePlayer()) );
+		connect( row, SIGNAL(colorChanged(Color)), this, SLOT(updateColors(Color)) );
 		mLayout->insertWidget( mPlayerRows.size(), row );
 		mPlayerRows.push_back( boost::shared_ptr< StartScreenRow >() );
 		mPlayerRows.back().reset( row );
@@ -180,11 +182,9 @@ std::vector< View::PlayerInfo >
 View::StartScreen::getPlayers() const
 {
 	std::vector< PlayerInfo > players;
-	for ( std::vector< boost::shared_ptr< StartScreenRow > >::const_iterator it = mPlayerRows.begin();
-		it != mPlayerRows.end();
-		++it )
+	for ( boost::shared_ptr< StartScreenRow > const & row : mPlayerRows )
 	{
-		players.push_back( PlayerInfo( (*it)->getName().toStdString(), (*it)->getColor() ) );
+		players.push_back( PlayerInfo( row->getName().toStdString(), row->getColor(), row->isAI() ) );
 	}
 	return players;
 }

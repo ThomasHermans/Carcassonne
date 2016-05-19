@@ -8,7 +8,10 @@
 #include "QtGlue.h"
 #include "UserInfoWidget.h"
 
+#include "View/DragData.h"
 #include "View/Meeple.h"
+
+#include "ModelViewGlue.h"
 
 #include <QBrush>
 #include <QGraphicsEllipseItem>
@@ -54,9 +57,9 @@ struct View::GuiPlacedPiece
 	QGraphicsPixmapItem* mItem;
 	int mX;
 	int mY;
-	View::Color mColor;
+	Color mColor;
 	
-	GuiPlacedPiece( QGraphicsPixmapItem* inItem, int inX, int inY, View::Color inColor )
+	GuiPlacedPiece( QGraphicsPixmapItem* inItem, int inX, int inY, Color inColor )
 	: mItem( inItem ), mX( inX ), mY( inY ), mColor( inColor ) {}
 };
 
@@ -79,6 +82,7 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mPossibleLocations(),
 	mTilesLeft(),
 	mPickedTileLabel(),
+	mMessageLabel(),
 	mUserInfo(),
 	mUserInfoMap(),
 	mAllScoresWidget()
@@ -100,13 +104,12 @@ View::GameWindow::GameWindow( QWidget *parent )
 	connect( mBoardView, SIGNAL( enterPressed() ), this, SLOT( onEndCurrentTurn() ) );
 	connect( mBoardView, SIGNAL( spacePressed() ), this, SLOT( onEndCurrentTurn() ) );
 	connect( mBoardView, SIGNAL( droppedPiece( Dragging::PieceData, int, int ) ),
-		this, SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ) );
-
-	mainLayout->addWidget( mBoardView, 1 );
-
+		this, SLOT( onDroppedPiece( Dragging::PieceData, int, int ) ) );
 	connect( mBoardView, SIGNAL( clicked( int, int ) ), this, SIGNAL( clicked( int, int ) ) );
 	connect( mBoardView, SIGNAL( droppedTile( int, int, std::string const &, View::Rotation ) ),
 		this, SLOT( onDroppedTile( int, int, std::string const &, View::Rotation ) ) );
+
+	mainLayout->addWidget( mBoardView, 1 );
 
 	QVBoxLayout * sidebarLayout = new QVBoxLayout();
 	sidebarLayout->setContentsMargins( 6, 6, 6, 6 );
@@ -118,6 +121,9 @@ View::GameWindow::GameWindow( QWidget *parent )
 
 	mPickedTileLabel = new DragTileLabel( centralWidget );
 	sidebarLayout->addWidget( mPickedTileLabel );
+
+	mMessageLabel = new QLabel( this );
+	sidebarLayout->addWidget( mMessageLabel );
 
 	mUserInfo = new QStackedWidget( centralWidget );
 	sidebarLayout->addWidget( mUserInfo, 0 );
@@ -152,18 +158,14 @@ View::GameWindow::~GameWindow()
 }
 
 void
-View::GameWindow::addPlayer
-(
-	std::string const & inName,
-	View::Color inColor
-)
+View::GameWindow::addPlayer( std::string const & inName, Color inColor )
 {
 	UserInfoWidget * newUserInfo = new UserInfoWidget( inName, inColor, mUserInfo );
 	mUserInfo->addWidget( newUserInfo );
 	mUserInfo->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
 	mUserInfoMap[inName] = newUserInfo;
 
-	mAllScoresWidget->addPlayer( inName );
+	mAllScoresWidget->addPlayer( inName, inColor );
 }
 
 void
@@ -242,33 +244,11 @@ View::GameWindow::setScore( std::string const & inName, std::size_t inScore )
 }
 
 void
-View::GameWindow::setFollowersLeft( std::string const & inName, std::size_t inNumberOfFollowers )
+View::GameWindow::setPlayerSupply( std::string const & inName, Meeple::MeepleType inMeepleType, std::size_t inAmount )
 {
 	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
-	if ( it != mUserInfoMap.end() )
-	{
-		it->second->setNumberOfFollowers( inNumberOfFollowers );
-	}
-}
-
-void
-View::GameWindow::enableLargeFollowers( std::string const & inName )
-{
-	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
-	if ( it != mUserInfoMap.end() )
-	{
-		it->second->enableLargeFollowers();
-	}	
-}
-
-void
-View::GameWindow::setLargeFollowersLeft( std::string const & inName, std::size_t inNumberOfLargeFollowers )
-{
-	std::map< std::string, UserInfoWidget * >::iterator it = mUserInfoMap.find( inName );
-	if ( it != mUserInfoMap.end() )
-	{
-		it->second->setNumberOfLargeFollowers( inNumberOfLargeFollowers );
-	}
+	assert( it != mUserInfoMap.end() );
+	it->second->setSupply( inMeepleType, inAmount );
 }
 
 void
@@ -278,7 +258,7 @@ View::GameWindow::setNextTile( std::string const & inId )
 }
 
 void
-View::GameWindow::placePiece( int inX, int inY, View::Meeple const & inMeeple )
+View::GameWindow::placePiece( int inX, int inY, Meeple const & inMeeple )
 {
 	QGraphicsPixmapItem * meeple = new QGraphicsPixmapItem( getMeeplePixmap( inMeeple ) );
 	meeple->moveBy( inX + Gui::kTileWidth / 2 - Gui::kMeepleWidth / 2, inY + Gui::kTileHeight / 2 - Gui::kMeepleHeight / 2 );
@@ -287,7 +267,7 @@ View::GameWindow::placePiece( int inX, int inY, View::Meeple const & inMeeple )
 }
 
 void
-View::GameWindow::returnPiece( int inX, int inY, View::Meeple const & inMeeple )
+View::GameWindow::removePiece( int inX, int inY, Meeple const & inMeeple )
 {
 	std::vector< GuiPlacedPiece >::iterator it = std::find_if
 	(
@@ -318,6 +298,12 @@ View::GameWindow::setPossibleLocations( Utils::Locations const & inLocations )
 }
 
 void
+View::GameWindow::showMessage( std::string const & inMessage )
+{
+	mMessageLabel->setText( QString::fromStdString( inMessage ) );
+}
+
+void
 View::GameWindow::fadeNextTile()
 {
 	mPickedTileLabel->fadeTile();
@@ -328,18 +314,30 @@ View::GameWindow::onEndCurrentTurn()
 {
 	mBoardView->clearCurrentTile();
 	emit endCurrentTurn();
+	noPiecePlaced();
 }
 
 void
 View::GameWindow::onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
 {
 	emit tileDropped( inX, inY, inTileId, inRotation );
+
+	Utils::Location const location( Controller::rowFromY( inY ), Controller::colFromX( inX ) );
+	tilePlaced( location, inTileId, inRotation );
+}
+
+void
+View::GameWindow::onDroppedPiece( Dragging::PieceData const & inData, int inX, int inY )
+{
+	piecePlaced( inX, inY, inData.getMeeple() );
 }
 
 void
 View::GameWindow::updateSceneRect()
 {
 	QRectF bounding = mBoardScene->itemsBoundingRect();
-	bounding.adjust( -Gui::kTileWidth, -Gui::kTileHeight, Gui::kTileWidth, Gui::kTileHeight );
+	int const widthAdjustment = 10 * Gui::kTileWidth;
+	int const heightAdjustment = 10 * Gui::kTileHeight;
+	bounding.adjust( -widthAdjustment, -heightAdjustment, widthAdjustment, heightAdjustment );
 	mBoardScene->setSceneRect( bounding );
 }

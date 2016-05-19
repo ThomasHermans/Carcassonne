@@ -1,7 +1,7 @@
 #include <test_o_matic.hpp>
 
-#include "Tile.h"
-#include "CreateTilesAndPieces.h"
+#include "Model/Tile.h"
+#include "Model/CreateTilesAndPieces.h"
 
 namespace
 {

@@ -3,7 +3,7 @@
 #include "ModelViewGlue.h"
 #include "Settings.h"
 
-#include "Model/Player.h"
+#include "Model/ModelPlayer.h"
 
 #include "View/StartScreen.h"
 
@@ -17,6 +17,7 @@ namespace
 	std::string const kNrOfPlayers( "NrOfPlayers" );
 	std::string const kPlayerName( "PlayerName" );
 	std::string const kPlayerColor( "PlayerColor" );
+	std::string const kPlayerAI( "PlayerAI" );
 	std::string const kBaseGame( "Settings::BaseGame" );
 	std::string const kTheExpansion( "Settings::TheExpansion" );
 
@@ -33,6 +34,14 @@ namespace
 	{
 		std::stringstream keyStream;
 		keyStream << kPlayerColor << inIndex;
+		return keyStream.str();
+	}
+
+	std::string
+	getPlayerAIKey( int inIndex )
+	{
+		std::stringstream keyStream;
+		keyStream << kPlayerAI << inIndex;
 		return keyStream.str();
 	}
 
@@ -79,7 +88,8 @@ Controller::StartController::StartController()
 	{
 		std::string const playerName = Settings::getValue< std::string >( getPlayerNameKey( i ), "" );
 		View::Color const playerColor = toColor( Settings::getValue< std::size_t >( getPlayerColorKey( i ), 0 ) );
-		mStartScreen->addPlayer( playerName, playerColor );
+		bool const playerAI = Settings::getValue< bool >( getPlayerAIKey( i ), true );
+		mStartScreen->addPlayer( playerName, playerColor, playerAI );
 	}
 	// Get the expansions that were played with last time.
 	std::set< Utils::Expansion::Type > expansions;
@@ -114,10 +124,11 @@ Controller::StartController::onTryToStartGame
 	// Store the players' information.
 	Settings::storeValue< std::size_t >( kNrOfPlayers, inPlayers.size() );
 	int i = 0;
-	BOOST_FOREACH( View::PlayerInfo const & player, inPlayers )
+	for ( View::PlayerInfo const & player : inPlayers )
 	{
 		Settings::storeValue< std::string >( getPlayerNameKey( i ), player.name );
 		Settings::storeValue< std::size_t >( getPlayerColorKey( i ), fromColor( player.color ) );
+		Settings::storeValue< bool >( getPlayerAIKey( i ), player.isAI );
 		++i;
 	}
 	// Store the chosen expansions.

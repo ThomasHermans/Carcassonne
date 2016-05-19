@@ -1,4 +1,4 @@
-#include "Tile.h"
+#include "Model/Tile.h"
 
 #include <boost/foreach.hpp>
 
@@ -168,7 +168,8 @@ Model::Tile::Tile()
 	mCities(),
 	mCitiesPerField(),
 	mShields(),
-	mInns()
+	mInns(),
+	mCathedrals()
 {
 	ContiguousField rightField;
 	rightField.push_back( Area::kTopRight );
@@ -200,7 +201,8 @@ Model::Tile::Tile
 	std::vector< ContiguousCity > const & inCities,
 	std::map< ContiguousField, std::vector< ContiguousCity > > const & inCitiesPerField,
 	std::vector< Area::Area > const & inShields,
-	std::vector< Area::Area > const & inInns
+	std::vector< Area::Area > const & inInns,
+	std::vector< Area::Area > const & inCathedrals
 )
 :
 	mID( inID ),
@@ -214,7 +216,8 @@ Model::Tile::Tile
 	mCities( inCities ),
 	mCitiesPerField( inCitiesPerField ),
 	mShields( inShields ),
-	mInns( inInns )
+	mInns( inInns ),
+	mCathedrals( inCathedrals )
 {
 	int top = 0;
 	int right = 0;
@@ -394,6 +397,33 @@ Model::Tile::hasInn( Area::Area inRoadArea ) const
 		}
 	}
 	return false;
+}
+
+bool
+Model::Tile::hasCathedral( Area::Area inCityArea ) const
+{
+	if ( !isCity( inCityArea ) )
+	{
+		return false;
+	}
+	ContiguousCity const completeCity = getContiguousCity( inCityArea );
+	for ( Area::Area area : completeCity )
+	{
+		if ( std::find( mCathedrals.begin(), mCathedrals.end(), area ) != mCathedrals.end() )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool
+Model::Tile::hasPennant( Area::Area inCityArea ) const
+{
+	bool const city = isCity( inCityArea );
+	bool const pennant = std::find( mShields.begin(), mShields.end(), inCityArea ) != mShields.end();
+	assert( city || !pennant );
+	return city && pennant;
 }
 
 Model::ContiguousField

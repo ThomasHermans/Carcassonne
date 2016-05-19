@@ -1,6 +1,8 @@
 #ifndef ALLSCORESWIDGET_H
 #define ALLSCORESWIDGET_H
 
+#include "View/Typedefs.h"
+
 #include <QWidget>
 
 #include <map>
@@ -19,7 +21,7 @@ namespace View
 		AllScoresWidget( QWidget * inParent = 0 );
 		~AllScoresWidget();
 
-		void addPlayer( std::string const & inName );
+		void addPlayer( std::string const & inName, View::Color inColor );
 		void setScore( std::string const & inName, unsigned inScore );
 
 	private:

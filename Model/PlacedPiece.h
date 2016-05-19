@@ -2,7 +2,7 @@
 #define PLACEDPIECE_H
 
 #include "Model/Piece.h"
-#include "Tile.h"
+#include "Model/Tile.h"
 
 #include <string>
 

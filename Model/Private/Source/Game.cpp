@@ -1,6 +1,6 @@
 #include "Model/Game.h"
 
-#include "CreateTilesAndPieces.h"
+#include "Model/CreateTilesAndPieces.h"
 
 #include <boost/foreach.hpp>
 
@@ -82,7 +82,7 @@ namespace
 		else
 		{
 			return inNrOfTiles * kBrigandPPTileFinished;
-		}		
+		}
 	}
 
 	std::size_t
@@ -316,9 +316,9 @@ Model::Game::initialize()
 		mBag.pop_back();
 	}
 	// Game signals
-	mBoard.finishedCity.connect( boost::bind( &Model::Game::onFinishedCity, this, _1 ) );
-	mBoard.finishedRoad.connect( boost::bind( &Model::Game::onFinishedRoad, this, _1 ) );
-	mBoard.finishedCloister.connect( boost::bind( &Model::Game::onFinishedCloister, this, _1, _2 ) );
+	// mBoard.finishedCity.connect( boost::bind( &Model::Game::onFinishedCity, this, _1 ) );
+	// mBoard.finishedRoad.connect( boost::bind( &Model::Game::onFinishedRoad, this, _1 ) );
+	// mBoard.finishedCloister.connect( boost::bind( &Model::Game::onFinishedCloister, this, _1, _2 ) );
 	// Player signals
 	BOOST_FOREACH( Player & player, mPlayers )
 	{
@@ -538,7 +538,7 @@ Model::Game::awardEndCityPoints()
 							// Add the tile to usedTiles
 							usedTiles.insert( std::make_pair( city.row, city.col ) );
 							// Check if a cathedral is present
-							hasCathedral = hasCathedral || mBoard.getTile( city.row, city.col )->getCenter() == Tile::kCenterCathedral;
+							hasCathedral = hasCathedral || mBoard.getTile( city.row, city.col )->hasCathedral( city.area );
 							// Add the shields on the tile
 							std::vector< Area::Area > const shields = mBoard.getTile( city.row, city.col )->getShields();
 							if ( std::find( shields.begin(), shields.end(), city.area ) != shields.end() )
@@ -677,7 +677,7 @@ Model::Game::onFinishedCity( std::vector< PlacedCity > const & inCity )
 		// Add to used tiles
 		usedTiles.insert( std::make_pair( city.row, city.col ) );
 		// Check if a cathedral is present
-		hasCathedral = hasCathedral || mBoard.getTile( city.row, city.col )->getCenter() == Tile::kCenterCathedral;
+		hasCathedral = hasCathedral || mBoard.getTile( city.row, city.col )->hasCathedral( city.area );
 		// Add shield
 		std::vector< Area::Area > const shields = mBoard.getTile( city.row, city.col )->getShields();
 		if ( std::find( shields.begin(), shields.end(), city.area ) != shields.end() )

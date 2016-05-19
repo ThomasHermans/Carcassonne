@@ -4,15 +4,19 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets
 
 TARGET = Carcassonne
 TEMPLATE = app
 
-
 SOURCES += main.cpp \
 	Controller\Private\Source\GameController.cpp \
+	Controller\Private\Source\GUIPlayer.cpp \
 	Controller\Private\Source\ModelViewGlue.cpp \
+	Controller\Private\Source\Moderator.cpp \
+	Controller\Private\Source\ModeratorController.cpp \
+	Controller\Private\Source\Player.cpp \
+	Controller\Private\Source\RobotPlayer.cpp \
 	Controller\Private\Source\StartController.cpp \
 	Controller\Private\Source\SupremeController.cpp \
 	test_o_matic.cpp \
@@ -22,10 +26,10 @@ SOURCES += main.cpp \
 	Model\Private\Source\CreateTilesAndPieces.cpp \
 	Model\Private\Source\Board.cpp \
 	Model\Private\Source\Game.cpp \
+	Model\Private\Source\ModelPlayer.cpp \
 	Model\Private\Source\Piece.cpp \
 	Model\Private\Source\PlacedPiece.cpp \
 	Model\Private\Source\PlacedProject.cpp \
-	Model\Private\Source\Player.cpp \
 	Model\Private\Source\Rotation.cpp \
 	Model\Private\Source\TileOnBoard.cpp \
 	Model\Private\Source\Tile.cpp \
@@ -35,6 +39,9 @@ SOURCES += main.cpp \
 	Model\Private\UnitTests\PlayerUnitTests.cpp \
 	Model\Private\UnitTests\TileUnitTests.cpp \
 	Model\Private\UnitTests\TileOnBoardUnitTests.cpp \
+	Utils\Private\Source\Location.cpp \
+	Utils\Private\Source\PrintUtils.cpp \
+	Utils\Private\Source\Random.cpp \
 	View\Private\Source\AllScoresWidget.cpp \
 	View\Private\Source\BoardView.cpp \
 	View\Private\Source\DragData.cpp \
@@ -53,6 +60,9 @@ SOURCES += main.cpp \
 
 HEADERS += \
 	Controller\GameController.h \
+	Controller\ModeratorController.h \
+	Controller\Moderator.h \
+	Controller\Player.h \
 	Controller\Private\Include\ModelViewGlue.h \
 	Controller\Private\Include\Settings.h \
 	View\DragData.h \
@@ -75,8 +85,6 @@ INCLUDEPATH += \
 	"C:\\Program Files\\boost\\boost_1_52_0" \
 	"Controller\\Private\\Include" \
 	"Controller/Private/Include" \
-	"Model\\Private\\Include" \
-	"Model/Private/Include" \
 	"View\\Private\\Include" \
 	"View/Private/Include" \
 

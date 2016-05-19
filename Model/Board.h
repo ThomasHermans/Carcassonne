@@ -1,9 +1,10 @@
 #ifndef CARCASSONNE_MODEL_NEWBOARD_20140313
 #define CARCASSONNE_MODEL_NEWBOARD_20140313
 
-#include "PlacedProject.h"
-#include "TileOnBoard.h"
+#include "Model/PlacedProject.h"
+#include "Model/TileOnBoard.h"
 
+#include "Utils/Location.h"
 #include "Utils/Typedefs.h"
 
 #ifndef Q_MOC_RUN
@@ -25,7 +26,13 @@ namespace Model
 	class Board
 	{
 	public:
+		boost::signals2::signal< void ( Utils::Location, TileOnBoard ) > & getTilePlacedSignal();
+		boost::signals2::signal< void ( Utils::Location, PlacedPiece ) > & getPiecePlacedSignal();
+		boost::signals2::signal< void ( Utils::Location, PlacedPiece ) > & getPieceRemovedSignal();
+		
+	public:
 		Board();
+		Board( Board const & inBoard );
 
 		/**
 		 *	Count the total amount of tiles on the board.
@@ -56,17 +63,31 @@ namespace Model
 		 *	Is there a tile at the specified position?
 		 */
 		bool isTile( int inRow, int inCol ) const;
+		bool isTile( Utils::Location const & inLocation ) const;
 
 		/**
 		 *	Get a copy of the tile at the specified position,
 		 *	or boost::none if the tile does not exist yet.
 		 */
 		boost::optional< TileOnBoard > getTile( int inRow, int inCol ) const;
+		boost::optional< TileOnBoard > getTile( Utils::Location const & inLocation ) const;
 
 		/**
 		 *	Get a reference to the tile at the specified position.
 		 */
 		boost::optional< TileOnBoard > & getTile( int inRow, int inCol );
+		boost::optional< TileOnBoard > & getTile( Utils::Location const & inLocation );
+
+		bool isCity( PlacedCity const & inCity ) const;
+		bool isCity( Utils::Location const & inLocation, Area::Area inArea ) const;
+
+		bool isRoad( PlacedRoad const & inRoad ) const;
+		bool isRoad( Utils::Location const & inLocation, Area::Area inArea ) const;
+
+		bool isField( PlacedField const & inField ) const;
+		bool isField( Utils::Location const & inLocation, Area::Area inArea ) const;
+
+		bool isCloister( Utils::Location const & inLocation, Area::Area inArea ) const;
 
 		/**
 		 *	Place a start tile on the board on position (0,0).
@@ -77,11 +98,18 @@ namespace Model
 		 *	Can the specified tile validly be placed at the specified location?
 		 */
 		bool isValidTilePlacement( TileOnBoard const & inTile, int inRow, int inCol ) const;
+		bool isValidTilePlacement( TileOnBoard const & inTile, Utils::Location const & inLocation ) const;
 
 		/**
 		 *	Place a valid tile on the board.
 		 */
 		bool placeValidTile( TileOnBoard const & inTile, int inRow, int inCol );
+		bool placeValidTile( TileOnBoard const & inTile, Utils::Location const & inLocation );
+
+		/**
+		 *	Place a valid piece on the board.
+		 */
+		bool placeValidPiece( PlacedPiece const & inPiece, Utils::Location const & inLocation );
 
 		/**
 		 *	Is it possible to place the provided tile somewhere?
@@ -94,12 +122,18 @@ namespace Model
 		Utils::Locations getPossibleLocations( Tile const & inTile ) const;
 
 		/**
+		 *	Can this piece validly be placed at this location?
+		 */
+		bool isValidPiecePlacement( Utils::Location const & inLocation, PlacedPiece const & inPiece ) const;
+
+		/**
 		 *	Check whether the specified road is occupied.
 		 *	Returns false when the specified tile does not exist,
 		 *	the specified area is not a road, or the road is not
 		 *	occupied.
 		 */
 		bool isOccupiedRoad( PlacedRoad const & inRoad ) const;
+		bool isOccupiedRoad( Utils::Location const & inLocation, Area::Area inArea ) const;
 
 		/**
 		 *	Check whether the specified city is occupied.
@@ -108,6 +142,7 @@ namespace Model
 		 *	occupied.
 		 */
 		bool isOccupiedCity( PlacedCity const & inCity ) const;
+		bool isOccupiedCity( Utils::Location const & inLocation, Area::Area inArea ) const;
 
 		/**
 		 *	Check whether the specified field is occupied.
@@ -116,6 +151,13 @@ namespace Model
 		 *	occupied.
 		 */
 		bool isOccupiedField( PlacedField const & inField ) const;
+		bool isOccupiedField( Utils::Location const & inLocation, Area::Area inArea ) const;
+
+		/**
+		 *	Get all the pieces from the specified area on that tile.
+		 *	The pieces remain on the board.
+		 */
+		std::vector< PlacedPiece > getPieces( PlacedProject inArea ) const;
 
 		/**
 		 *	Remove all the pieces from the specified area on that tile.
@@ -124,25 +166,20 @@ namespace Model
 		std::vector< PlacedPiece > removePieces( PlacedProject inArea );
 
 		/**
-		 *	Signal sent out when a city is now finished.
-		 */
-		boost::signals2::signal< void ( std::vector< PlacedCity > ) > finishedCity;
-
-		/**
-		 *	Signal sent out when a road is now finished.
-		 */
-		boost::signals2::signal< void ( std::vector< PlacedRoad > ) > finishedRoad;
-
-		/**
-		 *	Signal sent out when a cloister is now finished.
-		 *	The position (row, col) is sent out.
-		 */
-		boost::signals2::signal< void ( int, int ) > finishedCloister;
-
-		/**
 		 *	Is the specified city finished?
 		 */
 		bool isFinishedCity( PlacedCity const & inCity ) const;
+
+		/**
+		 *	Is this road finished?
+		 */
+		bool isFinishedRoad( PlacedRoad const & inRoad ) const;
+
+		/**
+		 *	Is this cloister finished?
+		 */
+		bool isFinishedCloister( Utils::Location const & inLocation ) const;
+		bool isFinishedCloister( int inRow, int inCol ) const;
 
 		/**
 		 *	Returns the identifier PlacedCity.
@@ -159,6 +196,7 @@ namespace Model
 		 *	Returns 9 for a fully surrounded tile.
 		 */
 		std::size_t getNrOfSurroundingTiles( int inRow, int inCol ) const;
+		std::size_t getNrOfSurroundingTiles( Utils::Location const & inLocation ) const;
 
 		/**
 		 *	Get the complete city that is connected with the specified
@@ -179,9 +217,19 @@ namespace Model
 		std::vector< PlacedField > getCompleteField( PlacedField const & inField ) const;
 
 		/**
+		 *	Does the specified city area have a pennant?
+		 */
+		bool hasPennant( PlacedCity const & inCity ) const;
+
+		/**
 		 *	Does the specified road area have an inn next to it?
 		 */
 		bool hasInn( PlacedRoad const & inRoad ) const;
+
+		/**
+		 *	Does the specified city area have a cathedral in it?
+		 */
+		bool hasCathedral( PlacedCity const & inCity ) const;
 
 	private:
 		int getIndex( int inRow, int inCol ) const;
@@ -197,15 +245,7 @@ namespace Model
 		bool hasNeighbor( int inRow, int inCol ) const;
 		bool sidesMatch( TileOnBoard const & inTile, int inRow, int inCol ) const;
 
-		void checkForFinishedCities( int inRow, int inCol );
-		void checkForFinishedRoads( int inRow, int inCol );
-		void checkForFinishedCloisters( int inRow, int inCol );
-		bool isFinishedCloister( int inRow, int inCol ) const;
 		bool isFullySurrounded( int inRow, int inCol ) const;
-
-		bool isCity( PlacedCity const & inCity ) const;
-		bool isRoad( PlacedRoad const & inRoad ) const;
-		bool isField( PlacedField const & inField ) const;
 
 	private:
 		typedef std::vector< boost::optional< TileOnBoard > > Tiles;
@@ -214,6 +254,10 @@ namespace Model
 		int mStartCol;
 		int mNrRows;
 		int mNrCols;
+
+		std::shared_ptr< boost::signals2::signal< void ( Utils::Location, TileOnBoard ) > > mTilePlacedSignal;
+		std::shared_ptr< boost::signals2::signal< void ( Utils::Location, PlacedPiece ) > > mPiecePlacedSignal;
+		std::shared_ptr< boost::signals2::signal< void ( Utils::Location, PlacedPiece ) > > mPieceRemovedSignal;
 	};
 }
 

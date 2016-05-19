@@ -1,6 +1,6 @@
 #include <test_o_matic.hpp>
 
-#include "PlacedProject.h"
+#include "Model/PlacedProject.h"
 
 using namespace Model;
 

@@ -6,9 +6,13 @@
 
 #include "View/Typedefs.h"
 
+#include "Meeple.h"
+
+#include "Utils/Location.h"
 #include "Utils/Typedefs.h"
 
 #include <boost/scoped_ptr.hpp>
+#include <boost/signals2/signal.hpp>
 
 #include <QMainWindow>
 
@@ -58,15 +62,10 @@ namespace View
 		~GameWindow();
 
 		/**
-		 *	Add a player to the game with the given name, color
-		 *	and number of basic followers to start with.
+		 *	Add a player to the game with the given name and color.
 		 */
 		void
-		addPlayer
-		(
-			std::string const & inName,
-			View::Color inColor
-		);
+		addPlayer( std::string const & inName, Color inColor );
 
 		/**
 		 *	Place a tile on the board at the specified location in scene
@@ -111,14 +110,7 @@ namespace View
 		/**
 		 *	Set the amount of followers the specified player has left.
 		 */
-		void setFollowersLeft( std::string const & inName, std::size_t inNumberOfFollowers );
-
-		void enableLargeFollowers( std::string const & inName );
-
-		/**
-		 *	Set the amount of large followers the specified player has left.
-		 */
-		void setLargeFollowersLeft( std::string const & inName, std::size_t inNumberOfLargeFollowers );
+		void setPlayerSupply( std::string const & inName, Meeple::MeepleType inMeepleType, std::size_t inAmount );
 		
 		/**
 		 *	Show the specified tile as the next to be played tile.
@@ -128,23 +120,28 @@ namespace View
 		/**
 		 *	Place a piece on the board.
 		 */
-		void placePiece( int inX, int inY, View::Meeple const & inPiece );
+		void placePiece( int inX, int inY, Meeple const & inPiece );
 
 		/**
 		 *	Remove a piece from the board.
 		 */
-		void returnPiece( int inX, int inY, View::Meeple const & inPiece );
+		void removePiece( int inX, int inY, Meeple const & inPiece );
 
 		/**
 		 *	Show the specified locations as possible locations for the current tile.
 		 */
 		void setPossibleLocations( Utils::Locations const & inLocations );
+
+		void showMessage( std::string const & inMessage );
+
+		boost::signals2::signal< void ( Utils::Location const &, std::string const & inId, Rotation inRotation ) > tilePlaced;
+		boost::signals2::signal< void ( int x, int y, Meeple const & ) > piecePlaced;
+		boost::signals2::signal< void () > noPiecePlaced;
 		
 	signals:
 		void clicked( int inX, int inY );
-		void tileDropped( int inX, int inY, std::string const & inId, View::Rotation inRotation );
+		void tileDropped( int inX, int inY, std::string const & inId, Rotation inRotation );
 		void endCurrentTurn();
-		void tryToPlacePiece( Dragging::PieceData const & inData, int inX, int inY );
 		
 	public slots:
 		/**
@@ -158,18 +155,20 @@ namespace View
 		void onEndCurrentTurn();
 
 		void onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
+		void onDroppedPiece( Dragging::PieceData const & inData, int inX, int inY );
 
 	private:
 		void updateSceneRect();
 
 	private:
-		QGraphicsScene *mBoardScene;
-		BoardView *mBoardView;
-		std::vector< TileItem* > mTiles;
+		QGraphicsScene * mBoardScene;
+		BoardView * mBoardView;
+		std::vector< TileItem * > mTiles;
 		std::vector< GuiPlacedPiece > mMeeples;
 		boost::scoped_ptr< QGraphicsPathItem > mPossibleLocations;
-		QLabel *mTilesLeft;
-		DragTileLabel *mPickedTileLabel;
+		QLabel * mTilesLeft;
+		DragTileLabel * mPickedTileLabel;
+		QLabel * mMessageLabel;
 		QStackedWidget * mUserInfo;
 		std::map< std::string, UserInfoWidget * > mUserInfoMap;
 		AllScoresWidget * mAllScoresWidget;

@@ -6,6 +6,7 @@
 #include "View/DragData.h"
 
 #include <QApplication>
+#include <QDrag>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPaintEvent>

@@ -5,11 +5,11 @@
 int
 View::getX( Utils::Location const & inLocation )
 {
-	return inLocation.second * Gui::kTileWidth;
+	return inLocation.col * Gui::kTileWidth;
 }
 
 int
 View::getY( Utils::Location const & inLocation )
 {
-	return inLocation.first * Gui::kTileHeight;
+	return inLocation.row * Gui::kTileHeight;
 }

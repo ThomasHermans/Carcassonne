@@ -6,6 +6,39 @@
 
 #include <cassert>
 
+namespace
+{
+	QString
+	getColor( View::Color inColor )
+	{
+		switch ( inColor )
+		{
+			case View::kRed:
+				return "red";
+			case View::kGreen:
+				return "green";
+			case View::kBlue:
+				return "blue";
+			case View::kYellow:
+				return "yellow";
+			case View::kBlack:
+				return "black";
+			case View::kGray:
+				return "gray";
+		}
+		assert( !"Invalid color" );
+		return "red";
+	}
+
+	QString
+	getStyleSheet( View::Color inColor )
+	{
+		QString styleSheet( "QLabel { color: __COLOR__; }");
+		styleSheet.replace( "__COLOR__", getColor( inColor ) );
+		return styleSheet;
+	}
+}
+
 View::AllScoresWidget::AllScoresWidget( QWidget * inParent )
 :
 	QWidget( inParent ),
@@ -22,10 +55,11 @@ View::AllScoresWidget::~AllScoresWidget()
 }
 
 void
-View::AllScoresWidget::addPlayer( std::string const & inName )
+View::AllScoresWidget::addPlayer( std::string const & inName, View::Color inColor )
 {
 	QHBoxLayout * row = new QHBoxLayout();
 	QLabel * name = new QLabel( QString::fromUtf8( inName.c_str() ), this );
+	name->setStyleSheet( getStyleSheet( inColor ) );
 	row->addWidget( name );
 	row->addStretch();
 	QLabel * score = new QLabel( QString::number( 0 ), this );

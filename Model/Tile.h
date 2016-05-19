@@ -23,8 +23,7 @@ namespace Model
 		{
 			kCenterProject,
 			kCenterNoProject,
-			kCenterCloister,
-			kCenterCathedral
+			kCenterCloister
 		};
 
 		Tile();
@@ -37,7 +36,8 @@ namespace Model
 			std::vector< ContiguousCity > const & inCities,
 			std::map< ContiguousField, std::vector< ContiguousCity > > const & inCitiesPerField,
 			std::vector< Area::Area > const & inShields = std::vector< Area::Area >(),
-			std::vector< Area::Area > const & inInns = std::vector< Area::Area >()
+			std::vector< Area::Area > const & inInns = std::vector< Area::Area >(),
+			std::vector< Area::Area > const & inCathedrals = std::vector< Area::Area >()
 		);
 
 		Side getTop() const;
@@ -59,6 +59,8 @@ namespace Model
 		 *	Returns false if not a road or no inn.
 		 */
 		bool hasInn( Area::Area inRoadArea ) const;
+		bool hasCathedral( Area::Area inCityArea ) const;
+		bool hasPennant( Area::Area inCityArea ) const;
 
 		ContiguousField getContiguousField( Area::Area inFieldArea ) const;
 		ContiguousRoad getContiguousRoad(Area::Area inArea) const;
@@ -82,6 +84,7 @@ namespace Model
 		std::map< ContiguousField, std::vector< ContiguousCity > > mCitiesPerField;
 		std::vector< Area::Area > mShields;
 		std::vector< Area::Area > mInns;
+		std::vector< Area::Area > mCathedrals;
 	};
 }
 
