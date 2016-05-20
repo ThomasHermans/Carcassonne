@@ -8,10 +8,16 @@ namespace Utils
 {
 	std::size_t Random( std::size_t inSize );
 
+	double Random( double inMaximum );
+
 	template< typename T >
 	void RandomShuffle( std::vector< T > & ioVector )
 	{
-		std::random_shuffle( ioVector.begin(), ioVector.end(), Random );
+		std::random_shuffle
+		(
+			ioVector.begin(), ioVector.end(),
+			[]( std::size_t inMaximum ){ return Random( inMaximum ); }
+		);
 	}
 }
 
