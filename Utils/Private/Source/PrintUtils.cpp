@@ -1,6 +1,7 @@
 #include "Utils/PrintUtils.h"
 
 #include "Model/Board.h"
+#include "Model/Tile.h"
 
 #include <sstream>
 
@@ -27,4 +28,15 @@ Utils::printBoard( Model::Board const & inBoard )
 		stream << std::endl;
 	}
 	return stream.str();
+}
+
+std::string
+Utils::printTiles( std::vector< Model::Tile > const & inTiles )
+{
+	std::string result;
+	for ( Model::Tile const & tile : inTiles )
+	{
+		result += tile.getID();
+	}
+	return result;
 }
