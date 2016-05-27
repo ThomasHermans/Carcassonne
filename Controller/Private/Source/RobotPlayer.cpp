@@ -9,6 +9,7 @@
 
 #include <array>
 #include <cassert>
+#include <cmath>
 #include <iostream>
 #include <map>
 #include <set>
@@ -19,16 +20,16 @@ namespace
 	int const kPlaceTileInterval = 1000;
 	int const kPlacePieceInterval = 1000;
 
-	std::size_t const kDefaultValue = 1;
+	double const kDefaultValue = 0.;
 
-	std::size_t const kValueStartCity = 10;
-	std::size_t const kValuePerCityTile = 50;
-	std::size_t const kValuePerSharedCityTile = 20;
-	std::size_t const kValueContinueOwnCity = 2500;
-	std::size_t const kValueContinueOtherCity = 0;
+	double const kValueStartCity = 10.;
+	double const kValuePerCityTile = 50.;
+	double const kValuePerSharedCityTile = 15.;
+	double const kValueContinueOwnCity = 25.;
+	double const kValueFinishOwnCity = 25.;
 
-	std::size_t const kValueStartCloister = 5;
-	std::size_t const kValuePerCloisterTile = 15;
+	double const kValueStartCloister = 5.;
+	double const kValuePerCloisterTile = 15.;
 
 	std::array< Model::Area::Area, 13 > const kAreas = 
 	{
@@ -53,7 +54,7 @@ namespace
 	{
 		Utils::Location location;
 		Model::Rotation rotation;
-		std::size_t value;
+		double value;
 		boost::optional< Model::PlacedPiece > piece;
 
 		PossiblePlacement( Utils::Location const & inLocation, Model::Rotation inRotation )
@@ -66,25 +67,62 @@ namespace
 		}
 	};
 
-	std::size_t
+	void
+	printPossibility( PossiblePlacement const & inPossibility )
+	{
+		std::cout << "  " << inPossibility.location << ", " << inPossibility.rotation << ", " << inPossibility.value;
+		if ( inPossibility.piece )
+		{
+			std::cout << ", " << inPossibility.piece->getArea();
+		}
+		std::cout << std::endl;
+	}
+
+	void
+	printPossibilities( std::vector< PossiblePlacement > const & inPossibilities )
+	{
+		std::cout << inPossibilities.size() << " possibilities." << std::endl;
+		for ( PossiblePlacement const & possibility : inPossibilities )
+		{
+			printPossibility( possibility );
+		}
+	}
+
+	void
+	makePossibilitiesPositive( std::vector< PossiblePlacement > & ioPossiblePlacements )
+	{
+		for ( auto & possibility : ioPossiblePlacements )
+		{
+			if ( possibility.value < 0. )
+			{
+				possibility.value = exp( possibility.value );
+			}
+			else
+			{
+				possibility.value += 1.;
+			}
+		}
+	}
+
+	double
 	getTotalValue( std::vector< PossiblePlacement > const & inPossibilities )
 	{
-		std::size_t totalValue = 0;
+		double totalValue = 0.;
 		for ( auto const & possibility : inPossibilities )
 		{
-			assert( possibility.value >= 0 );
+			assert( possibility.value >= 0. );
 			totalValue += possibility.value;
 		}
-		assert( totalValue > 0 );
+		assert( totalValue > 0. );
 		return totalValue;
 	}
 
 	PossiblePlacement
 	getRandomPossibility( std::vector< PossiblePlacement > const & inPossibilities )
 	{
-		std::size_t const totalValue = getTotalValue( inPossibilities );
-		std::size_t const chosenValue = Utils::Random( totalValue );
-		std::size_t cumulativeValue = 0;
+		double const totalValue = getTotalValue( inPossibilities );
+		double const chosenValue = Utils::Random( totalValue );
+		double cumulativeValue = 0;
 		for ( auto const & possibility : inPossibilities )
 		{
 			cumulativeValue += possibility.value;
@@ -99,7 +137,7 @@ namespace
 	PossiblePlacement
 	getBestPossibility( std::vector< PossiblePlacement > const & inPossibilities )
 	{
-		std::size_t bestValue = 0;
+		double bestValue = 0;
 		std::vector< PossiblePlacement > bestPossibilities;
 		for ( auto const & possibility : inPossibilities )
 		{
@@ -202,60 +240,111 @@ namespace
 		return amountOfCloisters;
 	}
 
-	std::size_t
+	void
+	addForContinuingCities
+	(
+		Model::Board const & inBoard,
+		Model::TileOnBoard const & inTile,
+		Utils::Location const & inLocation,
+		Model::Color::Color inColor,
+		double & ioValue
+	)
+	{
+		for ( auto const & city : inTile.getContiguousCities() )
+		{
+			Model::Area::Area const cityArea = city.front();
+			if ( inBoard.isOccupiedCity( inLocation, cityArea ) )
+			{
+				// If continuation of own city, add more
+				std::set< Model::Color::Color > const winners = getCityOccupants( inBoard, inLocation, cityArea );
+				if ( winners.find( inColor ) != winners.end() )
+				{
+					if ( winners.size() == 1 )
+					{
+						ioValue += getCitySize( inBoard, inLocation, cityArea ) * kValuePerCityTile + kValueContinueOwnCity;
+					}
+					else
+					{
+						ioValue += getCitySize( inBoard, inLocation, cityArea ) * kValuePerSharedCityTile;
+					}
+				}
+			}
+		}
+	}
+
+	void
+	addForFinishingCities
+	(
+		Model::Board const & inBoard,
+		Model::TileOnBoard const & inTile,
+		Utils::Location const & inLocation,
+		Model::Color::Color inColor,
+		double & ioValue
+	)
+	{
+		for ( auto const & city : inTile.getContiguousCities() )
+		{
+			Model::Area::Area const cityArea = city.front();
+			if ( inBoard.isFinishedCity( inLocation, cityArea ) )
+			{
+				if ( inBoard.isOccupiedCity( inLocation, cityArea ) )
+				{
+					// If continuation of own city, add more
+					std::set< Model::Color::Color > const winners = getCityOccupants( inBoard, inLocation, cityArea );
+					if ( winners.find( inColor ) != winners.end() )
+					{
+						if ( winners.size() == 1 )
+						{
+							ioValue += getCitySize( inBoard, inLocation, cityArea ) * kValuePerCityTile + kValueFinishOwnCity;
+						}
+						else
+						{
+							ioValue += getCitySize( inBoard, inLocation, cityArea ) * kValuePerSharedCityTile;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	double
 	getValueForTile
 	(
 		Model::Board inBoardCopy,
 		Model::Tile const & inTile,
 		PossiblePlacement const & inPlacement,
-		Model::Color::Color inColor
+		Controller::Player const & inPlayer
 	)
 	{
-		std::size_t value = kDefaultValue;
-		inBoardCopy.placeValidTile( Model::TileOnBoard( inTile, inPlacement.rotation ), inPlacement.location );
-		std::size_t const amountOfOwnCloistersNearby = getAmountOfOwnCloistersNearby( inBoardCopy, inPlacement.location, inColor );
-		for ( Model::Area::Area area : kAreas )
-		{
-			if ( inBoardCopy.isCity( inPlacement.location, area ) )
-			{
-				if ( inBoardCopy.isOccupiedCity( inPlacement.location, area ) )
-				{
-					// If continuation of own city, add more
-					std::set< Model::Color::Color > const winners = getCityOccupants( inBoardCopy, inPlacement.location, area );
-					if ( winners.find( inColor ) != winners.end() )
-					{
-						if ( winners.size() == 1 )
-						{
-							value += getCitySize( inBoardCopy, inPlacement.location, area ) * kValuePerCityTile;
-						}
-						else
-						{
-							value += getCitySize( inBoardCopy, inPlacement.location, area ) * kValuePerSharedCityTile;
-						}
-					}
-				}
-			}
-			value += amountOfOwnCloistersNearby * kValuePerCloisterTile;
-		}
-		// If finishing own city, add more
+		double value = kDefaultValue;
+		Model::TileOnBoard const proposedTile( inTile, inPlacement.rotation );
+		inBoardCopy.placeValidTile( proposedTile, inPlacement.location );
+		std::size_t const amountOfOwnCloistersNearby = getAmountOfOwnCloistersNearby( inBoardCopy, inPlacement.location, inPlayer.getColor() );
+		value += amountOfOwnCloistersNearby * kValuePerCloisterTile;
+		addForContinuingCities( inBoardCopy, proposedTile, inPlacement.location, inPlayer.getColor(), value );
+		addForFinishingCities( inBoardCopy, proposedTile, inPlacement.location, inPlayer.getColor(), value );
 		// If continuation of other color's city, subtract some
 		// If finishing of other color's city, subtract some
 		// If merging own city with other city, add depending on gain
 		return value;
 	}
 
-	std::vector< std::pair< std::size_t, boost::optional< Model::PlacedPiece > > >
+	std::vector< std::pair< double, boost::optional< Model::PlacedPiece > > >
 	getValuesPerPiecePlacement
 	(
 		Model::Board inBoardCopy,
 		Model::Tile const & inTile,
 		PossiblePlacement const & inPlacement,
-		Model::Color::Color inColor
+		Controller::Player const & inPlayer
 	)
 	{
+		if ( !inPlayer.hasPiece( Model::Piece::kFollower ) )
+		{
+			return {};
+		}
 		inBoardCopy.placeValidTile( Model::TileOnBoard( inTile, inPlacement.rotation ), inPlacement.location );
-		Model::Piece const piece( Model::Piece::kFollower, inColor );
-		std::vector< std::pair< std::size_t, boost::optional< Model::PlacedPiece > > > values;
+		Model::Piece const piece( Model::Piece::kFollower, inPlayer.getColor() );
+		std::vector< std::pair< double, boost::optional< Model::PlacedPiece > > > values;
 		for ( Model::Area::Area area : kAreas )
 		{
 			Model::PlacedPiece const placedPiece( piece, area );
@@ -263,16 +352,16 @@ namespace
 			{
 				if ( inBoardCopy.isCity( inPlacement.location, area ) )
 				{
-					std::size_t value = kDefaultValue;
+					double value = kDefaultValue;
 					std::size_t const citySize = getCitySize( inBoardCopy, inPlacement.location, area );
-					value = kValueStartCity + citySize * kValuePerCityTile;
+					value = kValueStartCity + kValuePerCityTile * citySize;
 					values.emplace_back( std::make_pair( value, placedPiece ) );
 				}
 				else if ( inBoardCopy.isCloister( inPlacement.location, area ) )
 				{
-					std::size_t value = kDefaultValue;
+					double value = kDefaultValue;
 					std::size_t const cloisterSize = inBoardCopy.getNrOfSurroundingTiles( inPlacement.location );
-					value = kValueStartCloister + cloisterSize * kValuePerCloisterTile;
+					value = kValueStartCloister + kValuePerCloisterTile * cloisterSize;
 					values.emplace_back( std::make_pair( value, placedPiece ) );
 				}
 			}
@@ -280,15 +369,14 @@ namespace
 		return values;
 	}
 
-	std::pair< std::size_t, boost::optional< Model::PlacedPiece > >
-	getBestValue( std::vector< std::pair< std::size_t, boost::optional< Model::PlacedPiece > > > const & inValues )
+	std::pair< double, boost::optional< Model::PlacedPiece > >
+	getBestPlacement( std::vector< std::pair< double, boost::optional< Model::PlacedPiece > > > const & inValues )
 	{
 		if ( inValues.empty() )
 		{
-			return std::make_pair( 0, boost::none );
+			return std::make_pair( 0., boost::none );
 		}
-		assert( !inValues.empty() );
-		std::pair< std::size_t, boost::optional< Model::PlacedPiece > > bestValue = inValues.front();
+		std::pair< double, boost::optional< Model::PlacedPiece > > bestValue = inValues.front();
 		for ( auto const & value : inValues )
 		{
 			if ( value.first > bestValue.first )
@@ -305,12 +393,12 @@ namespace
 		Model::Board const & inBoard,
 		Model::Tile const & inTile,
 		PossiblePlacement const & inPlacement,
-		Model::Color::Color inColor
+		Controller::Player const & inPlayer
 	)
 	{
-		std::size_t valueOfTilePlacement = getValueForTile( inBoard, inTile, inPlacement, inColor );
-		auto const valuesPerPiecePlacement = getValuesPerPiecePlacement( inBoard, inTile, inPlacement, inColor );
-		auto bestPlacement = getBestValue( valuesPerPiecePlacement );
+		double const valueOfTilePlacement = getValueForTile( inBoard, inTile, inPlacement, inPlayer );
+		auto const valuesPerPiecePlacement = getValuesPerPiecePlacement( inBoard, inTile, inPlacement, inPlayer );
+		auto bestPlacement = getBestPlacement( valuesPerPiecePlacement );
 		bestPlacement.first += valueOfTilePlacement;
 		return bestPlacement;
 	}
@@ -356,6 +444,8 @@ Controller::RobotPlayer::placeTile
 
 	// Decide where to place the tile.
 	decideTileAndPiecePlacement();
+
+	assert( mTilePlacement );
 
 	// Pretend to think.
 	mPlaceTileTimer->start();
@@ -403,15 +493,22 @@ Controller::RobotPlayer::decideTileAndPiecePlacement()
 			if ( mCurrentBoard->isValidTilePlacement( Model::TileOnBoard( *mTileToPlace, rotation ), location ) )
 			{
 				PossiblePlacement placement( location, rotation );
-				std::tie( placement.value, placement.piece ) = determineValue( *mCurrentBoard, *mTileToPlace, placement, getColor() );
+				std::tie( placement.value, placement.piece ) = determineValue( *mCurrentBoard, *mTileToPlace, placement, *this );
 				possibilities.emplace_back( placement );
 			}
 		}
 	}
 
+	printPossibilities( possibilities );
+
 	assert( !possibilities.empty() );
-	// PossiblePlacement const chosenPlacement = getBestPossibility( possibilities );
-	PossiblePlacement const chosenPlacement = getRandomPossibility( possibilities );
+	makePossibilitiesPositive( possibilities );
+	printPossibilities( possibilities );
+	PossiblePlacement const chosenPlacement = getBestPossibility( possibilities );
+	// PossiblePlacement const chosenPlacement = getRandomPossibility( possibilities );
+
+	std::cout << "Chosen placement:" << std::endl;
+	printPossibility( chosenPlacement );
 
 	mTilePlacement = TilePlacement( chosenPlacement.location, chosenPlacement.rotation );
 	mPiecePlacement = chosenPlacement.piece;
