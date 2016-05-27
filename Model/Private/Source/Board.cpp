@@ -491,17 +491,23 @@ Model::Board::removePieces( PlacedProject inArea )
 bool
 Model::Board::isFinishedCity( PlacedCity const & inCity ) const
 {
-	if ( !isCity( inCity ) )
+	return isFinishedCity( Utils::Location( inCity.row, inCity.col ), inCity.area );
+}
+
+bool
+Model::Board::isFinishedCity( Utils::Location const & inLocation, Model::Area::Area inArea ) const
+{
+	if ( !isCity( inLocation, inArea ) )
 	{
 		return false;
 	}
-	ContiguousCity const city = getTile( inCity.row, inCity.col )->getContiguousCity( inCity.area );
+	ContiguousCity const city = getTile( inLocation )->getContiguousCity( inArea );
 	// Check if this city is unfinished
 	// Create a queue and add all areas from this city to it
 	std::vector< PlacedCity > queue;
 	BOOST_FOREACH( Area::Area const area, city )
 	{
-		queue.push_back( PlacedCity( inCity.row, inCity.col, area ) );
+		queue.push_back( PlacedCity( inLocation.row, inLocation.col, area ) );
 	}
 	// Go over the queue, adding continuations as we encounter them
 	// When a continuation is missing, this city is not finished

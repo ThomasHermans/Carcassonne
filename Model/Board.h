@@ -169,6 +169,7 @@ namespace Model
 		 *	Is the specified city finished?
 		 */
 		bool isFinishedCity( PlacedCity const & inCity ) const;
+		bool isFinishedCity( Utils::Location const & inLocation, Area::Area inArea ) const;
 
 		/**
 		 *	Is this road finished?
