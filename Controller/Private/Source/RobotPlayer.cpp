@@ -28,6 +28,12 @@ namespace
 	double const kValueContinueOwnCity = 25.;
 	double const kValueFinishOwnCity = 25.;
 
+	double const kValueStartRoad = 6.;
+	double const kValuePerRoadTile = 30.;
+	double const kValuePerSharedRoadTile = 9.;
+	double const kValueContinueOwnRoad = 15.;
+	double const kValueFinishOwnRoad = 15.;
+
 	double const kValueStartCloister = 5.;
 	double const kValuePerCloisterTile = 15.;
 
@@ -201,11 +207,34 @@ namespace
 		return getWinningColors( allPieces );
 	}
 
+	std::set< Model::Color::Color >
+	getRoadOccupants( Model::Board const & inBoard, Utils::Location const & inLocation, Model::Area::Area inArea )
+	{
+		std::vector< Model::PlacedPiece > allPieces;
+		for ( auto const & roadPiece : inBoard.getCompleteRoad( Model::PlacedRoad( inLocation.row, inLocation.col, inArea ) ) )
+		{
+			std::vector< Model::PlacedPiece > const pieces = inBoard.getPieces( roadPiece );
+			allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
+		}
+		return getWinningColors( allPieces );
+	}
+
 	std::size_t
 	getCitySize( Model::Board const & inBoard, Utils::Location const & inLocation, Model::Area::Area inArea )
 	{
 		std::set< Utils::Location > usedTiles;
 		for ( auto const & cityPiece : inBoard.getCompleteCity( Model::PlacedCity( inLocation.row, inLocation.col, inArea ) ) )
+		{
+			usedTiles.insert( Utils::Location( cityPiece.row, cityPiece.col ) );
+		}
+		return usedTiles.size();
+	}
+
+	std::size_t
+	getRoadSize( Model::Board const & inBoard, Utils::Location const & inLocation, Model::Area::Area inArea )
+	{
+		std::set< Utils::Location > usedTiles;
+		for ( auto const & cityPiece : inBoard.getCompleteRoad( Model::PlacedRoad( inLocation.row, inLocation.col, inArea ) ) )
 		{
 			usedTiles.insert( Utils::Location( cityPiece.row, cityPiece.col ) );
 		}
@@ -307,6 +336,73 @@ namespace
 		}
 	}
 
+	void
+	addForContinuingRoads
+	(
+		Model::Board const & inBoard,
+		Model::TileOnBoard const & inTile,
+		Utils::Location const & inLocation,
+		Model::Color::Color inColor,
+		double & ioValue
+	)
+	{
+		for ( auto const & road : inTile.getContiguousRoads() )
+		{
+			Model::Area::Area const roadArea = road.front();
+			if ( inBoard.isOccupiedRoad( inLocation, roadArea ) )
+			{
+				// If continuation of own road, add more
+				std::set< Model::Color::Color > const winners = getRoadOccupants( inBoard, inLocation, roadArea );
+				if ( winners.find( inColor ) != winners.end() )
+				{
+					if ( winners.size() == 1 )
+					{
+						ioValue += getRoadSize( inBoard, inLocation, roadArea ) * kValuePerRoadTile + kValueContinueOwnRoad;
+					}
+					else
+					{
+						ioValue += getRoadSize( inBoard, inLocation, roadArea ) * kValuePerSharedRoadTile;
+					}
+				}
+			}
+		}
+	}
+
+	void
+	addForFinishingRoads
+	(
+		Model::Board const & inBoard,
+		Model::TileOnBoard const & inTile,
+		Utils::Location const & inLocation,
+		Model::Color::Color inColor,
+		double & ioValue
+	)
+	{
+		for ( auto const & road : inTile.getContiguousRoads() )
+		{
+			Model::Area::Area const roadArea = road.front();
+			if ( inBoard.isFinishedRoad( inLocation, roadArea ) )
+			{
+				if ( inBoard.isOccupiedRoad( inLocation, roadArea ) )
+				{
+					// If continuation of own road, add more
+					std::set< Model::Color::Color > const winners = getRoadOccupants( inBoard, inLocation, roadArea );
+					if ( winners.find( inColor ) != winners.end() )
+					{
+						if ( winners.size() == 1 )
+						{
+							ioValue += getRoadSize( inBoard, inLocation, roadArea ) * kValuePerRoadTile + kValueFinishOwnRoad;
+						}
+						else
+						{
+							ioValue += getRoadSize( inBoard, inLocation, roadArea ) * kValuePerSharedRoadTile;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	double
 	getValueForTile
 	(
@@ -326,6 +422,8 @@ namespace
 		// If continuation of other color's city, subtract some
 		// If finishing of other color's city, subtract some
 		// If merging own city with other city, add depending on gain
+		addForContinuingRoads( inBoardCopy, proposedTile, inPlacement.location, inPlayer.getColor(), value );
+		addForFinishingRoads( inBoardCopy, proposedTile, inPlacement.location, inPlayer.getColor(), value );
 		return value;
 	}
 
@@ -352,16 +450,20 @@ namespace
 			{
 				if ( inBoardCopy.isCity( inPlacement.location, area ) )
 				{
-					double value = kDefaultValue;
 					std::size_t const citySize = getCitySize( inBoardCopy, inPlacement.location, area );
-					value = kValueStartCity + kValuePerCityTile * citySize;
+					double value = kValueStartCity + kValuePerCityTile * citySize;
 					values.emplace_back( std::make_pair( value, placedPiece ) );
 				}
 				else if ( inBoardCopy.isCloister( inPlacement.location, area ) )
 				{
-					double value = kDefaultValue;
 					std::size_t const cloisterSize = inBoardCopy.getNrOfSurroundingTiles( inPlacement.location );
-					value = kValueStartCloister + kValuePerCloisterTile * cloisterSize;
+					double value = kValueStartCloister + kValuePerCloisterTile * cloisterSize;
+					values.emplace_back( std::make_pair( value, placedPiece ) );
+				}
+				else if ( inBoardCopy.isRoad( inPlacement.location, area ) )
+				{
+					std::size_t const roadSize = getRoadSize( inBoardCopy, inPlacement.location, area );
+					double value = kValueStartRoad + kValuePerRoadTile * roadSize;
 					values.emplace_back( std::make_pair( value, placedPiece ) );
 				}
 			}
