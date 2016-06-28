@@ -540,17 +540,23 @@ Model::Board::isFinishedCity( Utils::Location const & inLocation, Model::Area::A
 bool
 Model::Board::isFinishedRoad( PlacedRoad const & inRoad ) const
 {
-	if ( !isRoad( inRoad ) )
+	return isFinishedRoad( Utils::Location( inRoad.row, inRoad.col ), inRoad.area );
+}
+
+bool
+Model::Board::isFinishedRoad( Utils::Location const & inLocation, Model::Area::Area inArea ) const
+{
+	if ( !isRoad( inLocation, inArea ) )
 	{
 		return false;
 	}
-	ContiguousRoad const road = getTile( inRoad.row, inRoad.col )->getContiguousRoad( inRoad.area );
+	ContiguousRoad const road = getTile( inLocation )->getContiguousRoad( inArea );
 	// Check if this road is unfinished
 	// Create a queue and add all areas from this road to it
 	std::vector< PlacedRoad > queue;
 	for ( Area::Area const area : road )
 	{
-		queue.push_back( PlacedRoad( inRoad.row, inRoad.col, area ) );
+		queue.push_back( PlacedRoad( inLocation.row, inLocation.col, area ) );
 	}
 	// Go over the queue, adding continuations as we encounter them
 	// When a continuation is missing, this road is not finished

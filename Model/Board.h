@@ -175,6 +175,7 @@ namespace Model
 		 *	Is this road finished?
 		 */
 		bool isFinishedRoad( PlacedRoad const & inRoad ) const;
+		bool isFinishedRoad( Utils::Location const & inLocation, Area::Area inArea ) const;
 
 		/**
 		 *	Is this cloister finished?
