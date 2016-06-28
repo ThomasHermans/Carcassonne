@@ -42,7 +42,6 @@ namespace View
 	 */
 	class StartScreen : public QDialog
 	{
-		Q_OBJECT
 	public:
 		boost::signals2::signal< void ( std::set< Utils::Expansion::Type >, std::vector< PlayerInfo > ) > startGame;
 	public:
@@ -70,14 +69,12 @@ namespace View
 
 	private:
 		Color findUnusedColor() const;
-		std::set< Utils::Expansion::Type > getSelectedExpansions() const;
 		std::vector< PlayerInfo > getPlayers() const;
-		void randomizePlayerOrder();
-
-	private slots:
+		std::set< Utils::Expansion::Type > getSelectedExpansions() const;
 		bool addPlayer();
-		void removePlayer();
-		void updateColors( Color inColor );
+		void removePlayer( std::size_t inIndex );
+		void updateColors( std::size_t inIndex, Color inColor );
+		void randomizePlayerOrder();
 		void playClicked();
 
 	private:

@@ -37,10 +37,10 @@ View::StartScreen::StartScreen()
 	mTheExpansionBox( new QCheckBox( "The Expansion", this ) ),
 	mPlayButton( new QPushButton( "Start game", this ) )
 {
-	connect( mAddPlayerButton, SIGNAL( clicked() ), this, SLOT( addPlayer() ) );
+	connect( mAddPlayerButton, &QPushButton::clicked, [ this ]{ addPlayer(); } );
 	mPlayButton->setAutoDefault( true );
 	mPlayButton->setDefault( true );
-	connect( mPlayButton, SIGNAL( clicked() ), this, SLOT( playClicked() ) );
+	connect( mPlayButton, &QPushButton::clicked, [ this ]{ playClicked(); } );
 
 	QPushButton * randomOrderButton = new QPushButton( "Randomize player order", this );
 	connect( randomOrderButton, &QPushButton::clicked, [ this ]{ randomizePlayerOrder(); } );
@@ -103,71 +103,15 @@ View::StartScreen::findUnusedColor() const
 	return *colors.begin();
 }
 
-bool
-View::StartScreen::addPlayer()
+std::vector< View::PlayerInfo >
+View::StartScreen::getPlayers() const
 {
-	if ( mPlayerRows.size() < kMaxPlayers )
+	std::vector< PlayerInfo > players;
+	for ( boost::shared_ptr< StartScreenRow > const & row : mPlayerRows )
 	{
-		StartScreenRow * row = new StartScreenRow( this );
-		Color const color = findUnusedColor();
-		row->setColor( color );
-		connect( row, SIGNAL(removed()), this, SLOT(removePlayer()) );
-		connect( row, SIGNAL(colorChanged(Color)), this, SLOT(updateColors(Color)) );
-		mLayout->insertWidget( mPlayerRows.size(), row );
-		mPlayerRows.push_back( boost::shared_ptr< StartScreenRow >() );
-		mPlayerRows.back().reset( row );
-		return true;
+		players.push_back( PlayerInfo( row->getName().toStdString(), row->getColor(), row->isAI() ) );
 	}
-	else
-	{
-		return false;
-	}
-}
-
-void
-View::StartScreen::removePlayer()
-{
-	StartScreenRow * senderRow = qobject_cast< StartScreenRow * >( QObject::sender() );
-	if ( senderRow )
-	{
-		for ( std::vector< boost::shared_ptr< StartScreenRow > >::iterator it = mPlayerRows.begin();
-			it != mPlayerRows.end();
-			++it )
-		{
-			if ( senderRow == it->get() )
-			{
-				mLayout->removeWidget( senderRow );
-				senderRow->deleteLater();
-				mPlayerRows.erase( it );
-				break;
-			}
-		}
-	}
-}
-
-void
-View::StartScreen::updateColors( Color inColor )
-{
-	StartScreenRow * senderRow = qobject_cast< StartScreenRow * >( QObject::sender() );
-	if ( senderRow )
-	{
-		for ( std::vector< boost::shared_ptr< StartScreenRow > >::iterator it = mPlayerRows.begin();
-			it != mPlayerRows.end();
-			++it )
-		{
-			if ( senderRow != it->get() && (*it)->getColor() == inColor )
-			{
-				Color const color = findUnusedColor();
-				(*it)->setColor( color );
-			}
-		}
-	}
-}
-
-void
-View::StartScreen::playClicked()
-{
-	startGame( getSelectedExpansions(), getPlayers() );
+	return players;
 }
 
 std::set< Utils::Expansion::Type >
@@ -185,15 +129,51 @@ View::StartScreen::getSelectedExpansions() const
 	return expansions;
 }
 
-std::vector< View::PlayerInfo >
-View::StartScreen::getPlayers() const
+bool
+View::StartScreen::addPlayer()
 {
-	std::vector< PlayerInfo > players;
-	for ( boost::shared_ptr< StartScreenRow > const & row : mPlayerRows )
+	if ( mPlayerRows.size() < kMaxPlayers )
 	{
-		players.push_back( PlayerInfo( row->getName().toStdString(), row->getColor(), row->isAI() ) );
+		StartScreenRow * row = new StartScreenRow( this );
+		Color const color = findUnusedColor();
+		row->setColor( color );
+		std::size_t newPlayerIndex = mPlayerRows.size();
+		connect( row, &StartScreenRow::removed, [ this, newPlayerIndex ]{ removePlayer( newPlayerIndex ); } );
+		connect( row, &StartScreenRow::colorChanged, [ this, newPlayerIndex ]( Color inColor ){ updateColors( newPlayerIndex, inColor ); } );
+		mLayout->insertWidget( mPlayerRows.size(), row );
+		mPlayerRows.push_back( boost::shared_ptr< StartScreenRow >() );
+		mPlayerRows.back().reset( row );
+		return true;
 	}
-	return players;
+	else
+	{
+		return false;
+	}
+}
+
+void
+View::StartScreen::removePlayer( std::size_t inIndex )
+{
+	auto it = mPlayerRows.begin();
+	std::advance( it, inIndex );
+	mLayout->removeWidget( it->get() );
+	it->get()->deleteLater();
+	mPlayerRows.erase( it );
+}
+
+void
+View::StartScreen::updateColors( std::size_t inIndex, Color inColor )
+{
+	auto sender = mPlayerRows.begin();
+	std::advance( sender, inIndex );
+
+	for ( auto otherRow : mPlayerRows )
+	{
+		if ( *sender != otherRow && otherRow->getColor() == inColor )
+		{
+			otherRow->setColor( findUnusedColor() );
+		}
+	}
 }
 
 void
@@ -207,4 +187,10 @@ View::StartScreen::randomizePlayerOrder()
 		mPlayerRows[ i ]->setColor( players[ i ].color );
 		mPlayerRows[ i ]->setAI( players[ i ].isAI );
 	}
+}
+
+void
+View::StartScreen::playClicked()
+{
+	startGame( getSelectedExpansions(), getPlayers() );
 }

@@ -67,7 +67,6 @@ HEADERS += \
 	Controller\Private\Include\Settings.h \
 	View\DragData.h \
 	View\GameWindow.h \
-	View\StartScreen.h \
 	View\Typedefs.h \
 	View\Private\Include\AllScoresWidget.h \
 	View\Private\Include\BoardView.h \
