@@ -8,6 +8,7 @@
 #include "Model/Tile.h"
 
 #include "Utils/Location.h"
+#include "Utils/PrintUtils.h"
 
 #include "View/GameWindow.h"
 #include "View/StartScreen.h"
@@ -156,6 +157,7 @@ Controller::Moderator::Moderator
 	mBag( Model::createTiles( inExpansions ) ),
 	mNextTile( boost::none )
 {
+	std::cout << "Bag: " << Utils::printTiles( mBag ) << std::endl;
 	std::map< Model::Piece::PieceType, std::size_t > meepleSupply = Model::createPieces( std::set< Utils::Expansion::Type >() );
 	for ( View::PlayerInfo const & playerInfo : inPlayers )
 	{
