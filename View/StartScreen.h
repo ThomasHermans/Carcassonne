@@ -72,6 +72,7 @@ namespace View
 		Color findUnusedColor() const;
 		std::set< Utils::Expansion::Type > getSelectedExpansions() const;
 		std::vector< PlayerInfo > getPlayers() const;
+		void randomizePlayerOrder();
 
 	private slots:
 		bool addPlayer();

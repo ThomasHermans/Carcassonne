@@ -1,5 +1,7 @@
 #include "View/StartScreen.h"
 
+#include "Utils/Random.h"
+
 #include "StartScreenRow.h"
 
 #include <QCheckBox>
@@ -10,6 +12,7 @@
 #include <boost/foreach.hpp>
 
 #include <cassert>
+#include <iostream>
 
 namespace
 {
@@ -39,9 +42,13 @@ View::StartScreen::StartScreen()
 	mPlayButton->setDefault( true );
 	connect( mPlayButton, SIGNAL( clicked() ), this, SLOT( playClicked() ) );
 
+	QPushButton * randomOrderButton = new QPushButton( "Randomize player order", this );
+	connect( randomOrderButton, &QPushButton::clicked, [ this ]{ randomizePlayerOrder(); } );
+
 	setLayout( mLayout );
 
 	mLayout->addWidget( mAddPlayerButton );
+	mLayout->addWidget( randomOrderButton );
 	mBaseGameBox->setChecked( true );
 	mBaseGameBox->setEnabled( false );
 	mLayout->addWidget( mBaseGameBox );
@@ -187,4 +194,17 @@ View::StartScreen::getPlayers() const
 		players.push_back( PlayerInfo( row->getName().toStdString(), row->getColor(), row->isAI() ) );
 	}
 	return players;
+}
+
+void
+View::StartScreen::randomizePlayerOrder()
+{
+	std::vector< PlayerInfo > players = getPlayers();
+	Utils::RandomShuffle( players );
+	for ( std::size_t i = 0; i < players.size(); ++i )
+	{
+		mPlayerRows[ i ]->setName( players[ i ].name );
+		mPlayerRows[ i ]->setColor( players[ i ].color );
+		mPlayerRows[ i ]->setAI( players[ i ].isAI );
+	}
 }
