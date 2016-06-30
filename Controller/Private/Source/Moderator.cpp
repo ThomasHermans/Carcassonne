@@ -35,10 +35,11 @@ namespace
 	std::size_t const kPointsUnfinishedCloisterPerTile = 1;
 	std::size_t const kPointsFarmPerCity = 3;
 
-	std::array< Model::Piece::PieceType, 1 > const kPieceTypes =
+	std::array< Model::Piece::PieceType, 2 > const kPieceTypes =
 	{
 		{
-			Model::Piece::kFollower
+			Model::Piece::kFollower,
+			Model::Piece::kLargeFollower
 		}
 	};
 
@@ -158,7 +159,7 @@ Controller::Moderator::Moderator
 	mNextTile( boost::none )
 {
 	std::cout << "Bag: " << Utils::printTiles( mBag ) << std::endl;
-	std::map< Model::Piece::PieceType, std::size_t > meepleSupply = Model::createPieces( std::set< Utils::Expansion::Type >() );
+	std::map< Model::Piece::PieceType, std::size_t > meepleSupply = Model::createPieces( inExpansions );
 	for ( View::PlayerInfo const & playerInfo : inPlayers )
 	{
 		std::shared_ptr< Player > player;
