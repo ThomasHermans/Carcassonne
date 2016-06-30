@@ -86,13 +86,7 @@ View::StartScreen::selectExpansions( std::set< Utils::Expansion::Type > const & 
 View::Color
 View::StartScreen::findUnusedColor() const
 {
-	std::set< Color > colors;
-	colors.insert( kRed );
-	colors.insert( kGreen );
-	colors.insert( kBlue );
-	colors.insert( kYellow );
-	colors.insert( kBlack );
-	colors.insert( kGray );
+	std::set< Color > colors = { kRed, kGreen, kBlue, kYellow, kBlack, kGray };
 	for ( std::vector< boost::shared_ptr< StartScreenRow > >::const_iterator it = mPlayerRows.begin();
 		it != mPlayerRows.end();
 		++it )
@@ -137,9 +131,8 @@ View::StartScreen::addPlayer()
 		StartScreenRow * row = new StartScreenRow( this );
 		Color const color = findUnusedColor();
 		row->setColor( color );
-		std::size_t newPlayerIndex = mPlayerRows.size();
-		connect( row, &StartScreenRow::removed, [ this, newPlayerIndex ]{ removePlayer( newPlayerIndex ); } );
-		connect( row, &StartScreenRow::colorChanged, [ this, newPlayerIndex ]( Color inColor ){ updateColors( newPlayerIndex, inColor ); } );
+		connect( row, &StartScreenRow::removed, [ this, row ]{ removePlayer( row ); } );
+		connect( row, &StartScreenRow::colorChanged, [ this, row ]{ updateColors( row ); } );
 		mLayout->insertWidget( mPlayerRows.size(), row );
 		mPlayerRows.push_back( boost::shared_ptr< StartScreenRow >() );
 		mPlayerRows.back().reset( row );
@@ -152,24 +145,30 @@ View::StartScreen::addPlayer()
 }
 
 void
-View::StartScreen::removePlayer( std::size_t inIndex )
+View::StartScreen::removePlayer( StartScreenRow * inSender )
 {
-	auto it = mPlayerRows.begin();
-	std::advance( it, inIndex );
-	mLayout->removeWidget( it->get() );
-	it->get()->deleteLater();
+	auto it = std::find_if
+	(
+		mPlayerRows.begin(), mPlayerRows.end(),
+		[ inSender ]( boost::shared_ptr< StartScreenRow > const & inRow ){ return inRow.get() == inSender; }
+	);
+	mLayout->removeWidget( inSender );
+	inSender->deleteLater();
 	mPlayerRows.erase( it );
 }
 
 void
-View::StartScreen::updateColors( std::size_t inIndex, Color inColor )
+View::StartScreen::updateColors( StartScreenRow * inSender )
 {
-	auto sender = mPlayerRows.begin();
-	std::advance( sender, inIndex );
+	auto it = std::find_if
+	(
+		mPlayerRows.begin(), mPlayerRows.end(),
+		[ inSender ]( boost::shared_ptr< StartScreenRow > const & inRow ){ return inRow.get() == inSender; }
+	);
 
 	for ( auto otherRow : mPlayerRows )
 	{
-		if ( *sender != otherRow && otherRow->getColor() == inColor )
+		if ( *it != otherRow && otherRow->getColor() == (*it)->getColor() )
 		{
 			otherRow->setColor( findUnusedColor() );
 		}

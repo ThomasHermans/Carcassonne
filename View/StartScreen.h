@@ -55,12 +55,7 @@ namespace View
 		 *	Add a player with the given information to the start screen.
 		 */
 		bool
-		addPlayer
-		(
-			std::string const & inName,
-			Color inColor,
-			bool inAI
-		);
+		addPlayer( std::string const & inName, Color inColor, bool inAI );
 
 		/**
 		 *	Select the given expansions to be played with.
@@ -72,8 +67,8 @@ namespace View
 		std::vector< PlayerInfo > getPlayers() const;
 		std::set< Utils::Expansion::Type > getSelectedExpansions() const;
 		bool addPlayer();
-		void removePlayer( std::size_t inIndex );
-		void updateColors( std::size_t inIndex, Color inColor );
+		void removePlayer( StartScreenRow * inSender );
+		void updateColors( StartScreenRow * inSender );
 		void randomizePlayerOrder();
 		void playClicked();
 
