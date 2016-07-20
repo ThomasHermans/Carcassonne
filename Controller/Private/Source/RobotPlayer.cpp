@@ -433,15 +433,16 @@ namespace
 		Model::Board inBoardCopy,
 		Model::Tile const & inTile,
 		PossiblePlacement const & inPlacement,
+		Model::Piece::PieceType inPieceType,
 		Controller::Player const & inPlayer
 	)
 	{
-		if ( !inPlayer.hasPiece( Model::Piece::kFollower ) )
+		if ( !inPlayer.hasPiece( inPieceType ) )
 		{
 			return {};
 		}
 		inBoardCopy.placeValidTile( Model::TileOnBoard( inTile, inPlacement.rotation ), inPlacement.location );
-		Model::Piece const piece( Model::Piece::kFollower, inPlayer.getColor() );
+		Model::Piece const piece( inPieceType, inPlayer.getColor() );
 		std::vector< std::pair< double, boost::optional< Model::PlacedPiece > > > values;
 		for ( Model::Area::Area area : kAreas )
 		{
@@ -467,6 +468,24 @@ namespace
 					values.emplace_back( std::make_pair( value, placedPiece ) );
 				}
 			}
+		}
+		return values;
+	}
+
+	std::vector< std::pair< double, boost::optional< Model::PlacedPiece > > >
+	getValuesPerPiecePlacement
+	(
+		Model::Board const & inBoard,
+		Model::Tile const & inTile,
+		PossiblePlacement const & inPlacement,
+		Controller::Player const & inPlayer
+	)
+	{
+		std::vector< std::pair< double, boost::optional< Model::PlacedPiece > > > values;
+		for ( Model::Piece::PieceType pieceType : { Model::Piece::kFollower, Model::Piece::kLargeFollower } )
+		{
+			auto const pieceValues = getValuesPerPiecePlacement( inBoard, inTile, inPlacement, pieceType, inPlayer );
+			values.insert( values.end(), pieceValues.begin(), pieceValues.end() );
 		}
 		return values;
 	}
