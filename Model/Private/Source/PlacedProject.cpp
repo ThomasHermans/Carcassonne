@@ -14,6 +14,17 @@ Model::PlacedProject::PlacedProject
 	area( inArea )
 {}
 
+Model::PlacedProject::PlacedProject
+(
+	Utils::Location const & inLocation,
+	Area::Area inArea
+)
+:
+	row( inLocation.row ),
+	col( inLocation.col ),
+	area( inArea )
+{}
+
 bool
 Model::operator == ( PlacedProject const & inLeft, PlacedProject const & inRight )
 {

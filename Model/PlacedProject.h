@@ -3,6 +3,8 @@
 
 #include "Model/Area.h"
 
+#include "Utils/Location.h"
+
 namespace Model
 {
 	struct PlacedProject
@@ -12,6 +14,7 @@ namespace Model
 		Area::Area area;
 
 		PlacedProject( int inRow, int inCol, Area::Area inArea );
+		PlacedProject( Utils::Location const & inLocation, Area::Area inArea );
 	};
 
 	bool
