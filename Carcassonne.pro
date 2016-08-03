@@ -30,6 +30,7 @@ SOURCES += main.cpp \
 	Model\Private\Source\Piece.cpp \
 	Model\Private\Source\PlacedPiece.cpp \
 	Model\Private\Source\PlacedProject.cpp \
+	Model\Private\Source\Points.cpp \
 	Model\Private\Source\Rotation.cpp \
 	Model\Private\Source\TileOnBoard.cpp \
 	Model\Private\Source\Tile.cpp \

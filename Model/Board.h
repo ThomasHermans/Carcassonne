@@ -160,6 +160,13 @@ namespace Model
 		std::vector< PlacedPiece > getPieces( PlacedProject inArea ) const;
 
 		/**
+		 *	Get all the pieces belonging to the specified color.
+		 *	The pieces remain on the board.
+		 */
+		std::vector< std::pair< Utils::Location, PlacedPiece > >
+		getPieces( Color::Color inColor ) const;
+
+		/**
 		 *	Remove all the pieces from the specified area on that tile.
 		 *	Returns all the removed pieces.
 		 */

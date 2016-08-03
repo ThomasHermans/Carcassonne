@@ -469,6 +469,13 @@ Model::Board::getPieces( PlacedProject inArea ) const
 	}
 }
 
+std::vector< std::pair< Utils::Location, Model::PlacedPiece > >
+Model::Board::getPieces( Color::Color inColor ) const
+{
+	assert( !"Not implemented yet" );
+	return {};
+}
+
 std::vector< Model::PlacedPiece >
 Model::Board::removePieces( PlacedProject inArea )
 {

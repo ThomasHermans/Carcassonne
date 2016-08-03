@@ -5,6 +5,7 @@
 #include "Controller/RobotPlayer.h"
 
 #include "Model/CreateTilesAndPieces.h"
+#include "Model/Points.h"
 #include "Model/Tile.h"
 
 #include "Utils/Location.h"
@@ -19,22 +20,6 @@
 
 namespace
 {
-	std::size_t const kPointsFinishedCloister = 9;
-	std::size_t const kPointsFinishedRoadPerTile = 1;
-	std::size_t const kPointsFinishedRoadWithInnPerTile = 2;
-	std::size_t const kPointsFinishedCityPerTile = 2;
-	std::size_t const kPointsFinishedCityWithCathedralPerTile = 3;
-	std::size_t const kPointsFinishedCityPerPennant = 2;
-	std::size_t const kPointsFinishedCityWithCathedralPerPennant = 3;
-	std::size_t const kPointsUnfinishedRoadPerTile = 1;
-	std::size_t const kPointsUnfinishedRoadWithInnPerTile = 0;
-	std::size_t const kPointsUnfinishedCityPerTile = 1;
-	std::size_t const kPointsUnfinishedCityWithCathedralPerTile = 0;
-	std::size_t const kPointsUnfinishedCityPerPennant = 1;
-	std::size_t const kPointsUnfinishedCityWithCathedralPerPennant = 0;
-	std::size_t const kPointsUnfinishedCloisterPerTile = 1;
-	std::size_t const kPointsFarmPerCity = 3;
-
 	std::array< Model::Piece::PieceType, 2 > const kPieceTypes =
 	{
 		{
@@ -76,70 +61,6 @@ namespace
 			}
 		}
 		return winningColors;
-	}
-
-	std::size_t
-	getPointsForFinishedRoad( std::size_t inNrOfTiles, bool inHasInn )
-	{
-		if ( inHasInn )
-		{
-			return inNrOfTiles * kPointsFinishedRoadWithInnPerTile;
-		}
-		else
-		{
-			return inNrOfTiles * kPointsFinishedRoadPerTile;
-		}
-	}
-
-	std::size_t
-	getPointsForFinishedCity( std::size_t inNrOfTiles, std::size_t inNrOfPennants, bool inHasCathedral )
-	{
-		if ( inHasCathedral )
-		{
-			return inNrOfTiles * kPointsFinishedCityWithCathedralPerTile + inNrOfPennants * kPointsFinishedCityWithCathedralPerPennant;
-		}
-		else
-		{
-			return inNrOfTiles * kPointsFinishedCityPerTile + inNrOfPennants * kPointsFinishedCityPerPennant;
-		}
-	}
-
-	std::size_t
-	getPointsForUnfinishedRoad( std::size_t inNrOfTiles, bool inHasInn )
-	{
-		if ( inHasInn )
-		{
-			return inNrOfTiles * kPointsUnfinishedRoadWithInnPerTile;
-		}
-		else
-		{
-			return inNrOfTiles * kPointsUnfinishedRoadPerTile;
-		}
-	}
-
-	std::size_t
-	getPointsForUnfinishedCity( std::size_t inNrOfTiles, std::size_t inNrOfPennants, bool inHasCathedral )
-	{
-		if ( inHasCathedral )
-		{
-			return inNrOfTiles * kPointsUnfinishedCityWithCathedralPerTile + inNrOfPennants * kPointsUnfinishedCityWithCathedralPerPennant;
-		}
-		else
-		{
-			return inNrOfTiles * kPointsUnfinishedCityPerTile + inNrOfPennants * kPointsUnfinishedCityPerPennant;
-		}
-	}
-
-	std::size_t
-	getPointsForUnfinishedCloister( std::size_t inNrOfNeighboringTiles )
-	{
-		return inNrOfNeighboringTiles * kPointsUnfinishedCloisterPerTile;
-	}
-
-	std::size_t
-	getPointsForFarm( std::size_t inNrOfFinishedCities )
-	{
-		return inNrOfFinishedCities * kPointsFarmPerCity;
 	}
 }
 
@@ -460,22 +381,20 @@ Controller::Moderator::finishRoads( Utils::Location const & inLocation )
 			// Go over all the tiles from this road, returning all pieces and remembering them to
 			// determine the winner.
 			std::vector< Model::PlacedPiece > allPieces;
-			std::set< Utils::Location > usedTiles;
-			bool hasInn = false;
 			for ( auto const & roadPiece : mBoard.getCompleteRoad( roadOnTile ) )
 			{
-				// Add this tile to the used tiles.
-				usedTiles.insert( Utils::Location( roadPiece.row, roadPiece.col ) );
-				hasInn = hasInn || mBoard.hasInn( roadPiece );
 				// Remove and return all pieces from this PlacedRoad.
 				std::vector< Model::PlacedPiece > const pieces = mBoard.removePieces( roadPiece );
 				returnPieces( pieces );
 				// Add pieces to all pieces.
 				allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
 			}
-			std::set< Model::Color::Color > const winningColors = getWinningColors( allPieces );
-			std::size_t const points = getPointsForFinishedRoad( usedTiles.size(), hasInn );
-			awardPoints( winningColors, points );
+			if ( !allPieces.empty() )
+			{
+				std::set< Model::Color::Color > const winningColors = getWinningColors( allPieces );
+				std::size_t const points = getPointsForRoad( mBoard, inLocation, roadOnTile.area );
+				awardPoints( winningColors, points );
+			}
 		}
 	}
 }
@@ -493,28 +412,20 @@ Controller::Moderator::finishCities( Utils::Location const & inLocation )
 			// Go over all the tiles from this city, returning all pieces and remembering them to
 			// determine the winner.
 			std::vector< Model::PlacedPiece > allPieces;
-			std::set< Utils::Location > usedTiles;
-			std::set< Model::PlacedCity > allPennants;
-			bool hasCathedral = false;
 			for ( auto const & cityPiece : mBoard.getCompleteCity( cityOnTile ) )
 			{
-				// Add this tile to the used tiles.
-				usedTiles.insert( Utils::Location( cityPiece.row, cityPiece.col ) );
-				hasCathedral = hasCathedral || mBoard.hasCathedral( cityPiece );
-				// If there is a pennant on this location, remember it.
-				if ( mBoard.hasPennant( cityPiece ) )
-				{
-					allPennants.insert( cityPiece );
-				}
 				// Remove and return all pieces from this PlacedCity.
 				std::vector< Model::PlacedPiece > const pieces = mBoard.removePieces( cityPiece );
 				returnPieces( pieces );
 				// Add pieces to all pieces.
 				allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
 			}
-			std::set< Model::Color::Color > const winningColors = getWinningColors( allPieces );
-			std::size_t const points = getPointsForFinishedCity( usedTiles.size(), allPennants.size(), hasCathedral );
-			awardPoints( winningColors, points );
+			if ( !allPieces.empty() )
+			{
+				std::set< Model::Color::Color > const winningColors = getWinningColors( allPieces );
+				std::size_t const points = getPointsForCity( mBoard, inLocation, cityOnTile.area );
+				awardPoints( winningColors, points );
+			}
 		}
 	}
 }
@@ -532,7 +443,7 @@ Controller::Moderator::finishCloisters( Utils::Location const & inLocation )
 				std::vector< Model::PlacedPiece > const pieces = mBoard.removePieces( cloister );
 				returnPieces( pieces );
 				std::set< Model::Color::Color > const winningColors = getWinningColors( pieces );
-				awardPoints( winningColors, kPointsFinishedCloister );
+				awardPoints( winningColors, getPointsForCloister( mBoard, inLocation, Model::Area::kCentral ) );
 			}
 		}
 	}
@@ -565,19 +476,15 @@ Controller::Moderator::awardEndRoadPoints()
 						std::vector< Model::PlacedRoad > const completeRoad = mBoard.getCompleteRoad( roadPart );
 						// Get all information from this road.
 						std::vector< Model::PlacedPiece > allPieces;
-						std::set< Utils::Location > usedTiles;
-						bool hasInn = false;
 						for ( Model::PlacedRoad const & road : completeRoad )
 						{
-							usedTiles.insert( Utils::Location( road.row, road.col ) );
-							hasInn = hasInn || mBoard.hasInn( road );
 							std::vector< Model::PlacedPiece > const pieces = mBoard.removePieces( road );
 							returnPieces( pieces );
 							allPieces.insert( allPieces.end(), pieces.begin(), pieces.end() );
 						}
 						// Calculate winner(s) and points of this road.
 						std::set< Model::Color::Color > const winningColors = getWinningColors( allPieces );
-						std::size_t const points = getPointsForUnfinishedRoad( usedTiles.size(), hasInn );
+						std::size_t const points = getPointsForRoad( mBoard, Utils::Location( row, col ), piece.getArea() );
 						awardPoints( winningColors, points );
 					}
 				}
@@ -604,19 +511,8 @@ Controller::Moderator::awardEndCityPoints()
 						std::vector< Model::PlacedCity > const completeCity = mBoard.getCompleteCity( cityPart );
 						// Get all information from this city.
 						std::vector< Model::PlacedPiece > allPieces;
-						std::set< Utils::Location > usedTiles;
-						std::set< Model::PlacedCity > allPennants;
-						bool hasCathedral = false;
 						for ( Model::PlacedCity const & city : completeCity )
 						{
-							// Add this tile to the used tiles.
-							usedTiles.insert( Utils::Location( city.row, city.col ) );
-							// If there is a pennant on this location, remember it.
-							if ( mBoard.hasPennant( city ) )
-							{
-								allPennants.insert( city );
-							}
-							hasCathedral = hasCathedral || mBoard.hasCathedral( city );
 							// Remove and return all pieces from this PlacedCity.
 							std::vector< Model::PlacedPiece > const pieces = mBoard.removePieces( city );
 							returnPieces( pieces );
@@ -625,7 +521,7 @@ Controller::Moderator::awardEndCityPoints()
 						}
 						// Calculate winner(s) and points of this city.
 						std::set< Model::Color::Color > const winningColors = getWinningColors( allPieces );
-						std::size_t const points = getPointsForUnfinishedCity( usedTiles.size(), allPennants.size(), hasCathedral );
+						std::size_t const points = getPointsForCity( mBoard, Utils::Location( row, col ), piece.getArea() );
 						awardPoints( winningColors, points );
 					}
 				}
@@ -655,7 +551,7 @@ Controller::Moderator::awardEndCloisterPoints()
 						returnPieces( pieces );
 						// Calculate winner(s) and points of the cloister
 						std::set< Model::Color::Color > const winningColors = getWinningColors( pieces );
-						std::size_t const points = getPointsForUnfinishedCloister( mBoard.getNrOfSurroundingTiles( row, col ) );
+						std::size_t const points = getPointsForCloister( mBoard, Utils::Location( row, col ), piece.getArea() );
 						// Award the points to the winners
 						awardPoints( winningColors, points );
 					}
@@ -681,22 +577,10 @@ Controller::Moderator::awardEndFarmPoints()
 					if ( tile.isField( piece.getArea() ) )
 					{
 						Model::PlacedField const fieldPart( row, col, piece.getArea() );
-						std::vector< Model::PlacedField > const completeField = mBoard.getCompleteField( fieldPart );
-						// Go over the complete field to get all the information
 						std::vector< Model::PlacedPiece > allPieces;
-						std::set< Model::PlacedCity > finishedCities;
+						std::vector< Model::PlacedField > const completeField = mBoard.getCompleteField( fieldPart );
 						for ( Model::PlacedField const & field : completeField )
 						{
-							std::vector< Model::ContiguousCity > const cities = mBoard.getTile( field.row, field.col )->getCitiesPerField( field.area );
-							// Add the identifier city part of every finished city to finishedCities
-							for ( Model::ContiguousCity const & city : cities )
-							{
-								Model::PlacedCity const cityPart( field.row, field.col, city.front() );
-								if ( mBoard.isFinishedCity( cityPart ) )
-								{
-									finishedCities.insert( mBoard.getIdentifierCity( cityPart ) );
-								}
-							}
 							// Remove and return all the pieces from this field
 							std::vector< Model::PlacedPiece > const pieces = mBoard.removePieces( field );
 							returnPieces( pieces );
@@ -704,7 +588,7 @@ Controller::Moderator::awardEndFarmPoints()
 						}
 						// Calculate winner(s) and points of the field
 						std::set< Model::Color::Color > const winningColors = getWinningColors( allPieces );
-						std::size_t const points = getPointsForFarm( finishedCities.size() );
+						std::size_t const points = getPointsForField( mBoard, Utils::Location( row, col ), piece.getArea() );
 						// Award the points to the winners
 						awardPoints( winningColors, points );
 					}

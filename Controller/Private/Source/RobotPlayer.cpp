@@ -1,6 +1,7 @@
 #include "Controller/RobotPlayer.h"
 
 #include "Model/Board.h"
+#include "Model/Points.h"
 #include "Model/Tile.h"
 #include "Model/TileOnBoard.h"
 
@@ -53,6 +54,13 @@ namespace
 			Model::Area::kLeft,
 			Model::Area::kLeftTop,
 			Model::Area::kCentral
+		}
+	};
+	std::array< Model::Piece::PieceType, 2 > const kPieces =
+	{
+		{
+			Model::Piece::kFollower,
+			Model::Piece::kLargeFollower
 		}
 	};
 
@@ -482,7 +490,7 @@ namespace
 	)
 	{
 		std::vector< std::pair< double, boost::optional< Model::PlacedPiece > > > values;
-		for ( Model::Piece::PieceType pieceType : { Model::Piece::kFollower, Model::Piece::kLargeFollower } )
+		for ( Model::Piece::PieceType pieceType : kPieces )
 		{
 			auto const pieceValues = getValuesPerPiecePlacement( inBoard, inTile, inPlacement, pieceType, inPlayer );
 			values.insert( values.end(), pieceValues.begin(), pieceValues.end() );
@@ -522,6 +530,135 @@ namespace
 		auto bestPlacement = getBestPlacement( valuesPerPiecePlacement );
 		bestPlacement.first += valueOfTilePlacement;
 		return bestPlacement;
+	}
+
+	double
+	getProbabilityOfFinishing
+	(
+		Model::Board const & /*inBoard*/,
+		Controller::Player const & /*inPlayer*/,
+		Utils::Location const & /*inLocation*/,
+		Model::Area::Area /*inArea*/
+	)
+	{
+		return 0.5;
+	}
+
+	bool
+	isWinningColor
+	(
+		Model::Board const & /*inBoard*/,
+		Controller::Player const & /*inPlayer*/,
+		Utils::Location const & /*inLocation*/,
+		Model::Area::Area /*inArea*/
+	)
+	{
+		return true;
+	}
+
+	double
+	getEstimationFinished
+	(
+		Model::Board const & inBoard,
+		Controller::Player const & inPlayer,
+		Utils::Location const & inLocation,
+		Model::Area::Area inArea
+	)
+	{
+		if ( isWinningColor( inBoard, inPlayer, inLocation, inArea ) )
+		{
+			return getPointsAssumingFinished( inBoard, inLocation, inArea );
+		}
+		return 0.;
+	}
+
+	double
+	getEstimationCurrent
+	(
+		Model::Board const & inBoard,
+		Controller::Player const & inPlayer,
+		Utils::Location const & inLocation,
+		Model::Area::Area inArea
+	)
+	{
+		if ( isWinningColor( inBoard, inPlayer, inLocation, inArea ) )
+		{
+			return getPoints( inBoard, inLocation, inArea );
+		}
+		return 0.;
+	}
+
+	double
+	getEstimation
+	(
+		Model::Board const & inBoard,
+		Controller::Player const & inPlayer
+	)
+	{
+		double estimation = inPlayer.getScore();
+		// for every project on the board
+		//  add probability(finished) * score estimation(finished)
+		//	add probability(!finished) * score estimation(!finished)
+		for ( auto const & locatedPiece : inBoard.getPieces( inPlayer.getColor() ) )
+		{
+			double const probabilityOfFinishing = getProbabilityOfFinishing
+			(
+				inBoard, inPlayer, locatedPiece.first, locatedPiece.second.getArea()
+			);
+			double const estimationWhenFinished = getEstimationFinished
+			(
+				inBoard, inPlayer, locatedPiece.first, locatedPiece.second.getArea()
+			);
+			double const estimationCurrent = getEstimationCurrent
+			(
+				inBoard, inPlayer, locatedPiece.first, locatedPiece.second.getArea()
+			);
+			estimation += probabilityOfFinishing * estimationWhenFinished;
+			estimation += ( 1. - probabilityOfFinishing ) * estimationCurrent;
+		}
+		// for every piece not on the board
+		//  add estimated value
+		return estimation;
+	}
+
+	std::pair< double, boost::optional< Model::PlacedPiece > >
+	determineValuePointBased
+	(
+		Model::Board inBoard,
+		Model::Tile const & inTile,
+		PossiblePlacement const & inPlacement,
+		Controller::Player const & inPlayer
+	)
+	{
+		Model::TileOnBoard const tilePlacement( inTile, inPlacement.rotation );
+		inBoard.placeValidTile( tilePlacement, inPlacement.location );
+		
+		// For every possible piece placement (+no piece placement), calculate
+		// point estimation.
+		std::vector< std::pair< double, boost::optional< Model::PlacedPiece > > > estimations;
+		estimations.emplace_back( getEstimation( inBoard, inPlayer ), boost::none );
+
+		for ( Model::Piece::PieceType pieceType : kPieces )
+		{
+			if ( !inPlayer.hasPiece( pieceType ) )
+			{
+				continue;
+			}
+			Model::Piece const piece( pieceType, inPlayer.getColor() );
+
+			for ( Model::Area::Area area : kAreas )
+			{
+				Model::Board boardCopy = inBoard;
+				Model::PlacedPiece const placedPiece( piece, area );
+				if ( boardCopy.isValidPiecePlacement( inPlacement.location, placedPiece ) )
+				{
+					boardCopy.placeValidPiece( placedPiece, inPlacement.location );
+					estimations.emplace_back( getEstimation( boardCopy, inPlayer ), placedPiece );
+				}
+			}
+		}
+		// Return most promising piece placement.
+		return getBestPlacement( estimations );
 	}
 }
 
