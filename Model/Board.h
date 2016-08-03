@@ -190,6 +190,7 @@ namespace Model
 		 */
 		PlacedCity getIdentifierCity( PlacedCity const & inCity ) const;
 
+		// Deprecated. To be removed when RobotPlayer does not use it anymore.
 		/**
 		 *	Returns the number of tiles around the specified tile, including
 		 *	the specified tile.
@@ -205,18 +206,21 @@ namespace Model
 		 *	city area.
 		 */
 		std::vector< PlacedCity > getCompleteCity( PlacedCity const & inCity ) const;
+		std::vector< PlacedCity > getCompleteCity( Utils::Location const & inLocation, Area::Area inArea ) const;
 
 		/**
 		 *	Get the complete road that is connected with the specified
 		 *	road area.
 		 */
 		std::vector< PlacedRoad > getCompleteRoad( PlacedRoad const & inRoad ) const;
+		std::vector< PlacedRoad > getCompleteRoad( Utils::Location const & inLocation, Area::Area inArea ) const;
 
 		/**
 		 *	Get the complete field that is connected with the specified
 		 *	field area.
 		 */
 		std::vector< PlacedField > getCompleteField( PlacedField const & inField ) const;
+		std::vector< PlacedField > getCompleteField( Utils::Location const & inLocation, Area::Area inArea ) const;
 
 		/**
 		 *	Does the specified city area have a pennant?

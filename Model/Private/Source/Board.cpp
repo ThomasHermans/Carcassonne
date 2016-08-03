@@ -645,15 +645,21 @@ Model::Board::getNrOfSurroundingTiles( Utils::Location const & inLocation ) cons
 std::vector< Model::PlacedCity >
 Model::Board::getCompleteCity( PlacedCity const & inCity ) const
 {
-	if ( !isCity( inCity ) )
+	return getCompleteCity( Utils::Location( inCity.row, inCity.col ), inCity.area );
+}
+
+std::vector< Model::PlacedCity >
+Model::Board::getCompleteCity( Utils::Location const & inLocation, Area::Area inArea ) const
+{
+	if ( !isCity( inLocation, inArea ) )
 	{
 		return std::vector< PlacedCity >();
 	}
 	std::vector< PlacedCity > completeCity;
-	ContiguousCity const city = getTile( inCity.row, inCity.col )->getContiguousCity( inCity.area );
+	ContiguousCity const city = getTile( inLocation.row, inLocation.col )->getContiguousCity( inArea );
 	BOOST_FOREACH( Area::Area area, city )
 	{
-		completeCity.push_back( PlacedCity( inCity.row, inCity.col, area ) );
+		completeCity.push_back( PlacedCity( inLocation.row, inLocation.col, area ) );
 	}
 	for ( std::size_t i = 0; i < completeCity.size(); ++i )
 	{
@@ -677,15 +683,21 @@ Model::Board::getCompleteCity( PlacedCity const & inCity ) const
 std::vector< Model::PlacedRoad >
 Model::Board::getCompleteRoad( PlacedRoad const & inRoad ) const
 {
-	if ( !isRoad( inRoad ) )
+	return getCompleteRoad( Utils::Location( inRoad.row, inRoad.col ), inRoad.area );
+}
+
+std::vector< Model::PlacedRoad >
+Model::Board::getCompleteRoad( Utils::Location const & inLocation, Area::Area inArea ) const
+{
+	if ( !isRoad( inLocation, inArea ) )
 	{
 		return std::vector< PlacedRoad >();
 	}
 	std::vector< PlacedRoad > completeRoad;
-	ContiguousRoad const road = getTile( inRoad.row, inRoad.col )->getContiguousRoad( inRoad.area );
+	ContiguousRoad const road = getTile( inLocation.row, inLocation.col )->getContiguousRoad( inArea );
 	BOOST_FOREACH( Area::Area area, road )
 	{
-		completeRoad.push_back( PlacedRoad( inRoad.row, inRoad.col, area ) );
+		completeRoad.push_back( PlacedRoad( inLocation.row, inLocation.col, area ) );
 	}
 	for ( std::size_t i = 0; i < completeRoad.size(); ++i )
 	{
@@ -709,15 +721,21 @@ Model::Board::getCompleteRoad( PlacedRoad const & inRoad ) const
 std::vector< Model::PlacedField >
 Model::Board::getCompleteField( PlacedField const & inField ) const
 {
-	if ( !isField( inField ) )
+	return getCompleteField( Utils::Location( inField.row, inField.col ), inField.area );
+}
+
+std::vector< Model::PlacedField >
+Model::Board::getCompleteField( Utils::Location const & inLocation, Area::Area inArea ) const
+{
+	if ( !isField( inLocation, inArea ) )
 	{
 		return std::vector< PlacedField >();
 	}
 	std::vector< PlacedField > completeField;
-	ContiguousField const field = getTile( inField.row, inField.col )->getContiguousField( inField.area );
+	ContiguousField const field = getTile( inLocation.row, inLocation.col )->getContiguousField( inArea );
 	BOOST_FOREACH( Area::Area area, field )
 	{
-		completeField.push_back( PlacedField( inField.row, inField.col, area ) );
+		completeField.push_back( PlacedField( inLocation.row, inLocation.col, area ) );
 	}
 	for ( std::size_t i = 0; i < completeField.size(); ++i )
 	{
