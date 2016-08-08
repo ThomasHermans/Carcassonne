@@ -443,7 +443,7 @@ Controller::Moderator::finishCloisters( Utils::Location const & inLocation )
 				std::vector< Model::PlacedPiece > const pieces = mBoard.removePieces( cloister );
 				returnPieces( pieces );
 				std::set< Model::Color::Color > const winningColors = getWinningColors( pieces );
-				awardPoints( winningColors, getPointsForCloister( mBoard, inLocation, Model::Area::kCentral ) );
+				awardPoints( winningColors, getPointsForCloister( mBoard, {row,col}, Model::Area::kCentral ) );
 			}
 		}
 	}
