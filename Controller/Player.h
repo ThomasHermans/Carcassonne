@@ -93,11 +93,21 @@ namespace Controller
 
 		virtual
 		void
-		placeTile( Model::Board const & inBoard, Model::Tile const & inTile ) = 0;
+		placeTile
+		(
+			Model::Board const & inBoard,
+			std::size_t inTilesLeft,
+			Model::Tile const & inTile
+		) = 0;
 
 		virtual
 		void
-		placePiece( Model::Board const & inBoard, Utils::Location const & inTile ) = 0;
+		placePiece
+		(
+			Model::Board const & inBoard,
+			std::size_t inTilesLeft,
+			Utils::Location const & inTile
+		) = 0;
 
 	private:
 		std::string const mName;

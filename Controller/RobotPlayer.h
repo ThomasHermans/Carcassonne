@@ -27,6 +27,7 @@ namespace Controller
 		placeTile
 		(
 			Model::Board const & inCurrentBoard,
+			std::size_t inTilesLeft,
 			Model::Tile const & inTileToPlace
 		) override;
 
@@ -34,6 +35,7 @@ namespace Controller
 		placePiece
 		(
 			Model::Board const & inCurrentBoard,
+			std::size_t inTilesLeft,
 			Utils::Location const & inLocation
 		) override;
 
@@ -47,6 +49,7 @@ namespace Controller
 		QTimer * mPlaceTileTimer;
 		QTimer * mPlacePieceTimer;
 		boost::optional< Model::Board > mCurrentBoard;
+		boost::optional< std::size_t > mTilesLeft;
 		boost::optional< Model::Tile > mTileToPlace;
 		boost::optional< TilePlacement > mTilePlacement;
 		boost::optional< Model::PlacedPiece > mPiecePlacement;

@@ -37,6 +37,7 @@ void
 Controller::GUIPlayer::placeTile
 (
 	Model::Board const & /*inBoard*/,
+	std::size_t /*inTilesLeft*/,
 	Model::Tile const & /*inTile*/
 )
 {
@@ -65,13 +66,14 @@ void
 Controller::GUIPlayer::placePiece
 (
 	Model::Board const & inBoard,
+	std::size_t inTilesLeft,
 	Utils::Location const & inTile
 )
 {
 	assert( mWindow );
 
 	typedef boost::signals2::signal< void ( int, int, View::Meeple const & ) > windowPiecePlacedSignalType;
-	windowPiecePlacedSignalType::slot_type piecePlacedSlot = [ this, &inBoard, inTile ]
+	windowPiecePlacedSignalType::slot_type piecePlacedSlot = [ this, &inBoard, inTilesLeft, inTile ]
 	(
 		int inX,
 		int inY,
@@ -88,7 +90,7 @@ Controller::GUIPlayer::placePiece
 		}
 		else
 		{
-			placePiece( inBoard, inTile );
+			placePiece( inBoard, inTilesLeft, inTile );
 		}
 	};
 	mPlacePieceConnections.emplace_back( mWindow->piecePlaced.connect( piecePlacedSlot ) );

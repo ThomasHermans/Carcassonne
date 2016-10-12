@@ -30,10 +30,20 @@ namespace Controller
 		void setWindow( std::shared_ptr< View::GameWindow > inWindow ) override;
 
 		void
-		placeTile( Model::Board const & inBoard, Model::Tile const & inTile ) override;
+		placeTile
+		(
+			Model::Board const & inBoard,
+			std::size_t inTilesLeft,
+			Model::Tile const & inTile
+		) override;
 
 		void
-		placePiece( Model::Board const & inBoard, Utils::Location const & inTile ) override;
+		placePiece
+		(
+			Model::Board const & inBoard,
+			std::size_t inTilesLeft,
+			Utils::Location const & inTile
+		) override;
 
 	private:
 		void

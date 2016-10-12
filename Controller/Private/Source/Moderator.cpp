@@ -233,7 +233,7 @@ Controller::Moderator::requestTilePlacement()
 	tileSignal::extended_slot_type extendedSlot = boost::bind( &Moderator::onTilePlaced, this, _1, _2 );
 	mCurrentPlayer->tilePlaced.connect_extended( extendedSlot );
 
-	mCurrentPlayer->placeTile( mBoard, *mNextTile );
+	mCurrentPlayer->placeTile( mBoard, mBag.size(), *mNextTile );
 }
 
 void
@@ -266,7 +266,7 @@ Controller::Moderator::requestPiecePlacement( Utils::Location const & inLocation
 	pieceSignal::extended_slot_type pieceSlot = boost::bind( &Moderator::onPiecePlaced, this, _1, inLocation, _2 );
 	mCurrentPlayer->piecePlaced.connect_extended( pieceSlot );
 
-	mCurrentPlayer->placePiece( mBoard, inLocation );
+	mCurrentPlayer->placePiece( mBoard, mBag.size(), inLocation );
 }
 
 void
