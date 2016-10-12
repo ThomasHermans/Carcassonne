@@ -539,3 +539,20 @@ Model::Tile::isField( Area::Area inArea ) const
 	}
 	return false;
 }
+
+std::vector< Model::ContiguousProject >
+Model::getAllProjects( Tile const & inTile )
+{
+	std::vector< Model::ContiguousProject > projects;
+	std::vector< ContiguousField > const & fields = inTile.getContiguousFields();
+	std::vector< ContiguousRoad > const & roads = inTile.getContiguousRoads();
+	std::vector< ContiguousCity > const & cities = inTile.getContiguousCities();
+	projects.insert( projects.end(), fields.begin(), fields.end() );
+	projects.insert( projects.end(), roads.begin(), roads.end() );
+	projects.insert( projects.end(), cities.begin(), cities.end() );
+	if ( inTile.getCenter() == Tile::kCenterCloister )
+	{
+		projects.push_back( { Area::kCentral } );
+	}
+	return projects;
+}

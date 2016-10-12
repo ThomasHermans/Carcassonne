@@ -69,6 +69,13 @@ namespace Model
 		Rotation mRotation;
 		std::vector< PlacedPiece > mPlacedPieces;
 	};
+
+	/**
+	 *	Get all the distinct projects available on this tile.
+	 *	This includes fields, roads, cities and cloisters.
+	 */
+	std::vector< ContiguousProject >
+	getAllProjects( TileOnBoard const & inTileOnBoard );
 }
 
 #endif // TILEONBOARD_H

@@ -409,3 +409,21 @@ Model::TileOnBoard::getInns() const
 	}
 	return result;
 }
+
+std::vector< Model::ContiguousProject >
+Model::getAllProjects( TileOnBoard const & inTileOnBoard )
+{
+	std::vector< ContiguousProject > const originalProjects = getAllProjects( inTileOnBoard.getTile() );
+	std::vector< ContiguousProject > turnedProjects;
+	Rotation const rotation = inTileOnBoard.getRotation();
+	for ( ContiguousProject originalProject : originalProjects )
+	{
+		ContiguousProject turnedProject;
+		for ( Area::Area originalArea : originalProject )
+		{
+			turnedProject.push_back( turn( originalArea, rotation ) );
+		}
+		turnedProjects.push_back( turnedProject );
+	}
+	return turnedProjects;
+}

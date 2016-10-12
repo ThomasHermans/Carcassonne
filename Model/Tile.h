@@ -86,6 +86,13 @@ namespace Model
 		std::vector< Area::Area > mInns;
 		std::vector< Area::Area > mCathedrals;
 	};
+
+	/**
+	 *	Get all the distinct projects available on this tile.
+	 *	This includes fields, roads, cities and cloisters.
+	 */
+	std::vector< ContiguousProject >
+	getAllProjects( Tile const & inTile );
 }
 
 #endif // TILE_H
