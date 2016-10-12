@@ -160,13 +160,6 @@ namespace Model
 		std::vector< PlacedPiece > getPieces( PlacedProject inArea ) const;
 
 		/**
-		 *	Get all the pieces belonging to the specified color.
-		 *	The pieces remain on the board.
-		 */
-		std::vector< std::pair< Utils::Location, PlacedPiece > >
-		getPieces( Color::Color inColor ) const;
-
-		/**
 		 *	Remove all the pieces from the specified area on that tile.
 		 *	Returns all the removed pieces.
 		 */
@@ -272,6 +265,24 @@ namespace Model
 		std::shared_ptr< boost::signals2::signal< void ( Utils::Location, PlacedPiece ) > > mPiecePlacedSignal;
 		std::shared_ptr< boost::signals2::signal< void ( Utils::Location, PlacedPiece ) > > mPieceRemovedSignal;
 	};
+
+	/**
+	 *	Get the complete project that contains { inLocation, inArea }.
+	 */
+	std::vector< PlacedProject >
+	getCompleteProject
+	(
+		Board const & inBoard,
+		Utils::Location const & inLocation,
+		Area::Area inArea
+	);
+
+	/**
+	 *	Get all the pieces belonging to the specified color.
+	 *	The pieces remain on the board.
+	 */
+	std::vector< std::pair< Utils::Location, PlacedPiece > >
+	getPieces( Board const & inBoard, Color::Color inColor );
 }
 
 #endif
