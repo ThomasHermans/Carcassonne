@@ -1,6 +1,7 @@
 #ifndef AREA_H
 #define AREA_H
 
+#include <array>
 #include <vector>
 
 namespace Model
@@ -27,6 +28,9 @@ namespace Model
 
 	Area::Area oppositeSide( Area::Area inArea );
 
+	std::array< Area::Area, 13 > getAllAreas();
+
+	typedef std::vector< Area::Area > ContiguousProject;
 	typedef std::vector< Area::Area > ContiguousField;
 	typedef std::vector< Area::Area > ContiguousRoad;
 	typedef std::vector< Area::Area > ContiguousCity;

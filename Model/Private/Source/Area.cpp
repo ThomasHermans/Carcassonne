@@ -37,3 +37,26 @@ Model::oppositeSide( Area::Area inArea )
 	assert( !"Invalid Area" );
 	return Area::kTop;
 }
+
+std::array< Model::Area::Area, 13 >
+Model::getAllAreas()
+{
+	return
+	{
+		{
+			Area::kTopLeft,
+			Area::kTop,
+			Area::kTopRight,
+			Area::kRightTop,
+			Area::kRight,
+			Area::kRightBottom,
+			Area::kBottomRight,
+			Area::kBottom,
+			Area::kBottomLeft,
+			Area::kLeftBottom,
+			Area::kLeft,
+			Area::kLeftTop,
+			Area::kCentral
+		}
+	};
+}
