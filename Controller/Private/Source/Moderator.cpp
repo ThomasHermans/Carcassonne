@@ -155,6 +155,25 @@ Controller::Moderator::getPlayerName( Utils::PlayerID inPlayerID ) const
 	}
 }
 
+Model::Color::Color
+Controller::Moderator::getPlayerColor( Utils::PlayerID inPlayerID ) const
+{
+	auto playerIt = std::find_if
+	(
+		mPlayers.begin(), mPlayers.end(),
+		[ inPlayerID ]( std::shared_ptr< Player > const & inPlayer ){ return inPlayer->getID() == inPlayerID; }
+	);
+	if ( playerIt != mPlayers.end() )
+	{
+		return (*playerIt)->getColor();
+	}
+	else
+	{
+		assert( !"Could not find specified player" );
+		return Model::Color::kRed;
+	}
+}
+
 void
 Controller::Moderator::playGame()
 {
@@ -628,7 +647,14 @@ Controller::Moderator::sendTilePlaced
 	Model::TileOnBoard const & inTile
 )
 {
-	emit tilePlaced( inLocation, inTile );
+	if ( mCurrentPlayer )
+	{
+		emit tilePlaced( inLocation, inTile, mCurrentPlayer->getID() );
+	}
+	else
+	{
+		emit tilePlaced( inLocation, inTile, boost::none );
+	}
 }
 
 void

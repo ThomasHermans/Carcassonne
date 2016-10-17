@@ -4,14 +4,14 @@
 #include "DragMeepleLabel.h"
 #include "DragTileLabel.h"
 #include "LocationUtils.h"
+#include "ModelViewGlue.h"
 #include "MeepleUtils.h"
 #include "QtGlue.h"
+#include "TileUtils.h"
 #include "UserInfoWidget.h"
 
 #include "View/DragData.h"
 #include "View/Meeple.h"
-
-#include "ModelViewGlue.h"
 
 #include <QBrush>
 #include <QGraphicsEllipseItem>
@@ -79,6 +79,7 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mBoardView(),
 	mTiles(),
 	mMeeples(),
+	mLastPlacedTiles(),
 	mPossibleLocations(),
 	mTilesLeft(),
 	mPickedTileLabel(),
@@ -173,7 +174,8 @@ View::GameWindow::setTile
 (
 	Utils::Location const & inLocation,
 	std::string const & inId,
-	Rotation inRotation
+	Rotation inRotation,
+	boost::optional< Color > const & inColor
 )
 {
 	TileItem *item = new TileItem( inId, inRotation );
@@ -182,6 +184,31 @@ View::GameWindow::setTile
 	mBoardScene->addItem( item );
 	mBoardView->placeTile( getX( inLocation ), getY( inLocation ), inId, inRotation );
 	updateSceneRect();
+
+	// Add the "last placed tile" marker around this tile.
+	if ( inColor )
+	{
+		Color const color = *inColor;
+		auto lastPlacedTile = std::find_if
+		(
+			mLastPlacedTiles.begin(), mLastPlacedTiles.end(),
+			[ color ]( std::pair< Color, QGraphicsPathItem * > const & inPlacedTile )
+			{ return inPlacedTile.first == color; }
+		);
+		if ( lastPlacedTile != mLastPlacedTiles.end() )
+		{
+			mBoardScene->removeItem( lastPlacedTile->second );
+			mLastPlacedTiles.erase( lastPlacedTile );
+		}
+		QGraphicsPathItem * placedTile = new QGraphicsPathItem( getLastPlacedTilePath() );
+		placedTile->setPen( Qt::NoPen );
+		QColor theQColor = toQColor( color );
+		theQColor.setAlphaF( .6f );
+		placedTile->setBrush( theQColor );
+		placedTile->moveBy( getX( inLocation ), getY( inLocation ) );
+		mBoardScene->addItem( placedTile );
+		mLastPlacedTiles.push_back( std::make_pair( color, placedTile ) );
+	}
 }
 
 void

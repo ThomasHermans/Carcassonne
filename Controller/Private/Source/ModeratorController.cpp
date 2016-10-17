@@ -22,9 +22,9 @@ Controller::ModeratorController::ModeratorController
 	connect
 	(
 		mModerator,
-		SIGNAL(tilePlaced(Utils::Location const &, Model::TileOnBoard const &)),
+		SIGNAL(tilePlaced(Utils::Location const &, Model::TileOnBoard const &, boost::optional< Utils::PlayerID > const &)),
 		this,
-		SLOT(onTilePlaced(Utils::Location const &, Model::TileOnBoard const &))
+		SLOT(onTilePlaced(Utils::Location const &, Model::TileOnBoard const &, boost::optional< Utils::PlayerID > const &))
 	);
 	connect
 	(
@@ -62,11 +62,17 @@ void
 Controller::ModeratorController::onTilePlaced
 (
 	Utils::Location const & inLocation,
-	Model::TileOnBoard const & inTile
+	Model::TileOnBoard const & inTile,
+	boost::optional< Utils::PlayerID > const & inPlayer
 )
 {
 	mGameWindow->fadeNextTile();
-	mGameWindow->setTile( inLocation, inTile.getID(), viewFromModel( inTile.getRotation() ) );
+	boost::optional< View::Color > color;
+	if ( inPlayer )
+	{
+		color = viewFromModel( mModerator->getPlayerColor( *inPlayer ) );
+	}
+	mGameWindow->setTile( inLocation, inTile.getID(), viewFromModel( inTile.getRotation() ), color );
 }
 
 void

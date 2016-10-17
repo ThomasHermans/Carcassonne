@@ -7,6 +7,8 @@
 
 #include <QObject>
 
+#include <boost/optional.hpp>
+
 #include <memory>
 #include <set>
 #include <vector>
@@ -51,7 +53,7 @@ namespace Controller
 		void startGame();
 
 	private slots:
-		void onTilePlaced( Utils::Location const & inLocation, Model::TileOnBoard const & inTile );
+		void onTilePlaced( Utils::Location const & inLocation, Model::TileOnBoard const & inTile, boost::optional< Utils::PlayerID > const & inPlayer );
 		void onTilesLeftChanged( unsigned inTilesLeft );
 		void onNextTileChanged( std::string const & inNextTile );
 

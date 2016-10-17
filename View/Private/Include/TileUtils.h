@@ -3,6 +3,7 @@
 
 #include "View/Typedefs.h"
 
+#include <QPainterPath>
 #include <QPixmap>
 
 #include <string>
@@ -11,6 +12,9 @@ namespace View
 {
 	QPixmap
 	getPixmapForTile( std::string const & inTileId, View::Rotation inRotation );
+
+	QPainterPath
+	getLastPlacedTilePath();
 }
 
 #endif

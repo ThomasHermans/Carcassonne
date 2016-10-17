@@ -89,7 +89,7 @@ Controller::GameController::onTilePlaced
 	Model::Rotation inRotation
 )
 {
-	mWindow->setTile( inLocation, inId, viewFromModel( inRotation ) );
+	mWindow->setTile( inLocation, inId, viewFromModel( inRotation ), View::kRed );
 	mWindow->fadeNextTile();
 }
 

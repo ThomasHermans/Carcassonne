@@ -11,6 +11,7 @@
 #include "Utils/Location.h"
 #include "Utils/Typedefs.h"
 
+#include <boost/optional.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/signals2/signal.hpp>
 
@@ -68,15 +69,20 @@ namespace View
 		addPlayer( std::string const & inName, Color inColor );
 
 		/**
-		 *	Place a tile on the board at the specified location in scene
-		 *	coordinates.
+		 *	Place a tile on the board at the specified location.
+		 *
+		 *	@param inLocation Where should the tile be placed (scene coordinates).
+		 *	@param inId Which tile should be placed?
+		 *	@param inRotation How should the tile be rotated?
+		 *	@param inColor Which player placed this tile?
 		 */
 		void
 		setTile
 		(
 			Utils::Location const & inLocation,
 			std::string const & inId,
-			Rotation inRotation
+			Rotation inRotation,
+			boost::optional< Color > const & inColor
 		);
 
 		/**
@@ -165,6 +171,7 @@ namespace View
 		BoardView * mBoardView;
 		std::vector< TileItem * > mTiles;
 		std::vector< GuiPlacedPiece > mMeeples;
+		std::vector< std::pair< Color, QGraphicsPathItem * > > mLastPlacedTiles;
 		boost::scoped_ptr< QGraphicsPathItem > mPossibleLocations;
 		QLabel * mTilesLeft;
 		DragTileLabel * mPickedTileLabel;

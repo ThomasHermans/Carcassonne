@@ -6,6 +6,7 @@
 #include <QTransform>
 
 #include <cassert>
+#include <cmath>
 #include <sstream>
 
 namespace
@@ -49,4 +50,16 @@ View::getPixmapForTile( std::string const & inTileId, View::Rotation inRotation 
 	QTransform rotation = QTransform();
 	rotation.rotate( getAngle( inRotation ) );
 	return pixmap.transformed( rotation );
+}
+
+QPainterPath
+View::getLastPlacedTilePath()
+{
+	QPainterPath path;
+	static double sInnerBorder = Gui::kTileHeight / 2;
+	static double sAddition = .1 * sInnerBorder;
+	static double sOuterBorder = sInnerBorder + sAddition;
+	path.addRect( 0, 0, 2 * sInnerBorder, 2 * sInnerBorder );
+	path.addRoundedRect( sInnerBorder - sOuterBorder, sInnerBorder - sOuterBorder, 2 * sOuterBorder, 2 * sOuterBorder, sAddition, sAddition );
+	return path;
 }

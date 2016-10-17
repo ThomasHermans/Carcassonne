@@ -60,8 +60,11 @@ namespace Controller
 		std::string
 		getPlayerName( Utils::PlayerID inPlayer ) const;
 
+		Model::Color::Color
+		getPlayerColor( Utils::PlayerID inPlayer ) const;
+
 	signals:
-		void tilePlaced( Utils::Location const & inLocation, Model::TileOnBoard const & inTile );
+		void tilePlaced( Utils::Location const & inLocation, Model::TileOnBoard const & inTile, boost::optional< Utils::PlayerID > const & inPlayer );
 		void piecePlaced( Utils::Location const & inLocation, Model::PlacedPiece const & inPiece );
 		void pieceRemoved( Utils::Location const & inLocation, Model::PlacedPiece const & inPiece );
 		void tilesLeftChanged( unsigned inTilesLeft );
