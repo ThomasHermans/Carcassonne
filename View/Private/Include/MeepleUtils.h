@@ -15,6 +15,9 @@ namespace View
 
 	QPixmap
 	getMeeplePixmap( Meeple const & inMeeple );
+
+	QPixmap
+	getRemovedMeeplePixmap( Meeple const & inMeeple );
 }
 
 #endif

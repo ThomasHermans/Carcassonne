@@ -165,6 +165,7 @@ namespace View
 
 	private:
 		void updateSceneRect();
+		void toggleRemovedMeeple();
 
 	private:
 		QGraphicsScene * mBoardScene;
@@ -179,6 +180,8 @@ namespace View
 		QStackedWidget * mUserInfo;
 		std::map< std::string, UserInfoWidget * > mUserInfoMap;
 		AllScoresWidget * mAllScoresWidget;
+
+		bool mShowRemovedMeeple;
 	};
 }
 

@@ -48,7 +48,9 @@
 	<qresource prefix="/">
 		<file>Follower.png</file>
 		<file>Follower_own.png</file>
+		<file>Follower_own_empty.png</file>
 		<file>LargeFollower_own.png</file>
+		<file>LargeFollower_own_empty.png</file>
 	</qresource>
 	<qresource prefix="/">
 		<file>Bin.png</file>

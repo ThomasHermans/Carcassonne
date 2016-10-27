@@ -13,33 +13,43 @@
 namespace
 {
 	QBitmap
-	getFollowerMask()
+	getFollowerMask( bool inFull )
 	{
-		QPixmap const original = QPixmap( ":/Follower_own.png" );
+		QPixmap const original = QPixmap( inFull ? ":/Follower_own.png" : ":/Follower_own_empty.png" );
 		QPixmap const scaled = original.scaled( Gui::kMeepleWidth, Gui::kMeepleHeight );
 		return scaled.createMaskFromColor( Qt::transparent );
 	}
 
 	QBitmap
-	getLargeFollowerMask()
+	getLargeFollowerMask( bool inFull )
 	{
-		QPixmap const original = QPixmap( ":/LargeFollower_own.png" );
+		QPixmap const original = QPixmap( inFull ? ":/LargeFollower_own.png" : ":/LargeFollower_own_empty.png" );
 		QPixmap const scaled = original.scaled( Gui::kMeepleWidth, Gui::kMeepleHeight );
 		return scaled.createMaskFromColor( Qt::transparent );
 	}
 
 	QBitmap
-	getMask( View::Meeple::MeepleType inType )
+	getMask( View::Meeple::MeepleType inType, bool inFull )
 	{
 		switch ( inType )
 		{
 			case View::Meeple::kFollower:
-				return getFollowerMask();
+				return getFollowerMask( inFull );
 			case View::Meeple::kLargeFollower:
-				return getLargeFollowerMask();
+				return getLargeFollowerMask( inFull );
 		}
 		assert( !"Invalide View::Meeple type" );
-		return getFollowerMask();
+		return getFollowerMask( inFull );
+	}
+
+	QPixmap
+	getMeeplePixmap( View::Meeple const & inMeeple, bool inFull )
+	{
+		QBitmap const mask = getMask( inMeeple.getType(), inFull );
+		QPixmap result( mask.size() );
+		result.fill( toQColor( inMeeple.getColor() ) );
+		result.setMask( mask );
+		return result;
 	}
 }
 
@@ -85,9 +95,11 @@ View::getMeeplePath( int inX, int inY, int inWidth, int inHeight )
 QPixmap
 View::getMeeplePixmap( Meeple const & inMeeple )
 {
-	QBitmap const mask = getMask( inMeeple.getType() );
-	QPixmap result( mask.size() );
-	result.fill( toQColor( inMeeple.getColor() ) );
-	result.setMask( mask );
-	return result;
+	return ::getMeeplePixmap( inMeeple, true );
+}
+
+QPixmap
+View::getRemovedMeeplePixmap( Meeple const & inMeeple )
+{
+	return ::getMeeplePixmap( inMeeple, false );
 }

@@ -54,13 +54,14 @@ namespace
 
 struct View::GuiPlacedPiece
 {
-	QGraphicsPixmapItem* mItem;
+	std::unique_ptr< QGraphicsPixmapItem > mItem;
 	int mX;
 	int mY;
 	Color mColor;
+	bool isRemoved;
 	
-	GuiPlacedPiece( QGraphicsPixmapItem* inItem, int inX, int inY, Color inColor )
-	: mItem( inItem ), mX( inX ), mY( inY ), mColor( inColor ) {}
+	GuiPlacedPiece( QGraphicsPixmapItem * inItem, int inX, int inY, Color inColor )
+	: mItem( inItem ), mX( inX ), mY( inY ), mColor( inColor ), isRemoved( false ) {}
 };
 
 namespace
@@ -86,7 +87,8 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mMessageLabel(),
 	mUserInfo(),
 	mUserInfoMap(),
-	mAllScoresWidget()
+	mAllScoresWidget(),
+	mShowRemovedMeeple( true )
 {
 	this->resize( 800, 500 );
 	QWidget * centralWidget = new QWidget( this );
@@ -145,13 +147,12 @@ View::GameWindow::GameWindow( QWidget *parent )
 	centralWidget->setLayout( mainLayout );
 	setCentralWidget( centralWidget );
 
-//    mMenuBar = new QMenuBar(this);
-//    mMenuBar->setGeometry(QRect(0, 0, 800, 21));
-//    setMenuBar(mMenuBar);
-//    mMainToolBar = new QToolBar(this);
-//    addToolBar(Qt::TopToolBarArea, mMainToolBar);
-//    mStatusBar = new QStatusBar(this);
-//    setStatusBar(mStatusBar);
+	QMenuBar * theMenuBar = menuBar();
+	QMenu * viewMenu = theMenuBar->addMenu( "View" );
+	QAction * showRemovedMeepleAction = viewMenu->addAction( "Show Removed Meeple" );
+	showRemovedMeepleAction->setCheckable( true );
+	showRemovedMeepleAction->setChecked( mShowRemovedMeeple );
+	connect( showRemovedMeepleAction, &QAction::triggered, [this](){ toggleRemovedMeeple(); } );
 }
 
 View::GameWindow::~GameWindow()
@@ -301,10 +302,14 @@ View::GameWindow::removePiece( int inX, int inY, Meeple const & inMeeple )
 		mMeeples.begin(), mMeeples.end(),
 		boost::bind( &HasMembers, _1, inX, inY, inMeeple.getColor() )
 	);
+	assert( it != mMeeples.end() );
 	if ( it != mMeeples.end() )
 	{
-		mBoardScene->removeItem( it->mItem );
-		mMeeples.erase( it );
+		it->mItem.reset( new QGraphicsPixmapItem( getRemovedMeeplePixmap( inMeeple ) ) );
+		it->mItem->moveBy( inX + Gui::kTileWidth / 2 - Gui::kMeepleWidth / 2, inY + Gui::kTileHeight / 2 - Gui::kMeepleHeight / 2 );
+		it->isRemoved = true;
+		it->mItem->setVisible( mShowRemovedMeeple );
+		mBoardScene->addItem( it->mItem.get() );
 	}
 	mBoardView->update();
 	update();
@@ -367,4 +372,17 @@ View::GameWindow::updateSceneRect()
 	int const heightAdjustment = 10 * Gui::kTileHeight;
 	bounding.adjust( -widthAdjustment, -heightAdjustment, widthAdjustment, heightAdjustment );
 	mBoardScene->setSceneRect( bounding );
+}
+
+void
+View::GameWindow::toggleRemovedMeeple()
+{
+	mShowRemovedMeeple = !mShowRemovedMeeple;
+	for ( GuiPlacedPiece const & placedPiece : mMeeples )
+	{
+		if ( placedPiece.isRemoved )
+		{
+			placedPiece.mItem->setVisible( mShowRemovedMeeple );
+		}
+	}
 }
