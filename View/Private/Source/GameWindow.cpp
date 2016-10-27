@@ -88,6 +88,7 @@ View::GameWindow::GameWindow( QWidget *parent )
 	mUserInfo(),
 	mUserInfoMap(),
 	mAllScoresWidget(),
+	mShowRecentTileBorders( true ),
 	mShowRemovedMeeple( true )
 {
 	this->resize( 800, 500 );
@@ -149,6 +150,10 @@ View::GameWindow::GameWindow( QWidget *parent )
 
 	QMenuBar * theMenuBar = menuBar();
 	QMenu * viewMenu = theMenuBar->addMenu( "View" );
+	QAction * showRecentTileBordersAction = viewMenu->addAction( "Show Recently Placed Tiles" );
+	showRecentTileBordersAction->setCheckable( true );
+	showRecentTileBordersAction->setChecked( mShowRecentTileBorders );
+	connect( showRecentTileBordersAction, &QAction::triggered, [this](){ toggleRecentTileBorders(); } );
 	QAction * showRemovedMeepleAction = viewMenu->addAction( "Show Removed Meeple" );
 	showRemovedMeepleAction->setCheckable( true );
 	showRemovedMeepleAction->setChecked( mShowRemovedMeeple );
@@ -207,6 +212,7 @@ View::GameWindow::setTile
 		theQColor.setAlphaF( .6f );
 		placedTile->setBrush( theQColor );
 		placedTile->moveBy( getX( inLocation ), getY( inLocation ) );
+		placedTile->setVisible( mShowRecentTileBorders );
 		mBoardScene->addItem( placedTile );
 		mLastPlacedTiles.push_back( std::make_pair( color, placedTile ) );
 	}
@@ -372,6 +378,16 @@ View::GameWindow::updateSceneRect()
 	int const heightAdjustment = 10 * Gui::kTileHeight;
 	bounding.adjust( -widthAdjustment, -heightAdjustment, widthAdjustment, heightAdjustment );
 	mBoardScene->setSceneRect( bounding );
+}
+
+void
+View::GameWindow::toggleRecentTileBorders()
+{
+	mShowRecentTileBorders = !mShowRecentTileBorders;
+	for ( auto const & lastPlacedTile : mLastPlacedTiles )
+	{
+		lastPlacedTile.second->setVisible( mShowRecentTileBorders );
+	}
 }
 
 void

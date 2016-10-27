@@ -165,6 +165,7 @@ namespace View
 
 	private:
 		void updateSceneRect();
+		void toggleRecentTileBorders();
 		void toggleRemovedMeeple();
 
 	private:
@@ -181,6 +182,7 @@ namespace View
 		std::map< std::string, UserInfoWidget * > mUserInfoMap;
 		AllScoresWidget * mAllScoresWidget;
 
+		bool mShowRecentTileBorders;
 		bool mShowRemovedMeeple;
 	};
 }
