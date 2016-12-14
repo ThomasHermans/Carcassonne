@@ -350,15 +350,12 @@ void
 View::GameWindow::onEndCurrentTurn()
 {
 	mBoardView->clearCurrentTile();
-	emit endCurrentTurn();
 	noPiecePlaced();
 }
 
 void
 View::GameWindow::onDroppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation )
 {
-	emit tileDropped( inX, inY, inTileId, inRotation );
-
 	Utils::Location const location( Controller::rowFromY( inY ), Controller::colFromX( inX ) );
 	tilePlaced( location, inTileId, inRotation );
 }

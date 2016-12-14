@@ -18,7 +18,6 @@ Controller::ModeratorController::ModeratorController
 	mGameWindow( new View::GameWindow() ),
 	mModerator( new Moderator( inPlayers, inExpansions, mGameWindow, this ) )
 {
-	connect( this, SIGNAL(gameStarted()), mModerator, SLOT(playGame()) );
 	connect
 	(
 		mModerator,
@@ -55,7 +54,7 @@ void
 Controller::ModeratorController::startGame()
 {
 	mGameWindow->show();
-	emit gameStarted();
+	mModerator->playGame();
 }
 
 void

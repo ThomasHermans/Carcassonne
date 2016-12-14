@@ -224,8 +224,8 @@ Controller::GameController::makeConnections()
 	mGame.endOfGame.connect( boost::bind( &Controller::GameController::onEndOfGame, this, _1 ) );
 
 	connect( mWindow.get(), SIGNAL( clicked( int, int ) ), this, SLOT( onClicked( int, int ) ) );
-	connect( mWindow.get(), SIGNAL( tileDropped( int, int, std::string const &, View::Rotation ) ),
-		this, SLOT( onTileDropped( int, int, std::string const &, View::Rotation ) ) );
+	// connect( mWindow.get(), SIGNAL( tileDropped( int, int, std::string const &, View::Rotation ) ),
+	// 	this, SLOT( onTileDropped( int, int, std::string const &, View::Rotation ) ) );
 	connect( mWindow.get(), SIGNAL( tryToPlacePiece( Dragging::PieceData, int, int ) ),
 		this, SLOT( onTryToPlacePiece( Dragging::PieceData, int, int ) ) );
 	connect( mWindow.get(), SIGNAL( endCurrentTurn() ), this, SLOT( onEndCurrentTurn() ) );

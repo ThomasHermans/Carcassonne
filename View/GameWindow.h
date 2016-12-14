@@ -144,16 +144,12 @@ namespace View
 		boost::signals2::signal< void ( int x, int y, Meeple const & ) > piecePlaced;
 		boost::signals2::signal< void () > noPiecePlaced;
 		
-	signals:
-		void tileDropped( int inX, int inY, std::string const & inId, Rotation inRotation );
-		void endCurrentTurn();
-		
-	public slots:
 		/**
 		 *	Fade the tile shown as next tile, since it has been placed on the board.
 		 */
 		void fadeNextTile();
 
+	public slots:
 		/**
 		 *	End the current turn.
 		 */

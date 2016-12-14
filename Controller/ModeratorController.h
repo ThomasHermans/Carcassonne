@@ -39,9 +39,6 @@ namespace Controller
 	{
 		Q_OBJECT
 
-	signals:
-		void gameStarted();
-
 	public:
 		ModeratorController
 		(
