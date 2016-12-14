@@ -109,7 +109,6 @@ View::GameWindow::GameWindow( QWidget *parent )
 	connect( mBoardView, SIGNAL( spacePressed() ), this, SLOT( onEndCurrentTurn() ) );
 	connect( mBoardView, SIGNAL( droppedPiece( Dragging::PieceData, int, int ) ),
 		this, SLOT( onDroppedPiece( Dragging::PieceData, int, int ) ) );
-	connect( mBoardView, SIGNAL( clicked( int, int ) ), this, SIGNAL( clicked( int, int ) ) );
 	connect( mBoardView, SIGNAL( droppedTile( int, int, std::string const &, View::Rotation ) ),
 		this, SLOT( onDroppedTile( int, int, std::string const &, View::Rotation ) ) );
 

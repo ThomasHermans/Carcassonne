@@ -33,7 +33,6 @@ namespace
 View::BoardView::BoardView( QGraphicsScene *scene, QWidget *parent ) :
 	QGraphicsView( scene, parent ),
 	mPressPosition(),
-	mDragging( false ),
 	mPanning( false ),
 	mPanX( 0 ),
 	mPanY( 0 ),
@@ -68,14 +67,12 @@ View::BoardView::mousePressEvent( QMouseEvent * inEvent )
 		mPressPosition = mapToScene( inEvent->pos() );
 		if ( pressedOnNoTile() )
 		{
-			mDragging = false;
 			mPanning = true;
 			mPanX = inEvent->x();
 			mPanY = inEvent->y();
 		}
 		else
 		{
-			mDragging = pressedOnCurrentlyPlacedTile();
 			mPanning = false;
 		}
 		inEvent->accept();
@@ -89,20 +86,6 @@ View::BoardView::mouseMoveEvent( QMouseEvent * inEvent )
 	if ( !( inEvent->buttons() & Qt::LeftButton ) )
 	{
 		return;
-	}
-	if ( mDragging )
-	{
-		if ( (inEvent->pos() - mPressPosition).manhattanLength() > QApplication::startDragDistance() )
-		{
-			// Drag the currently placed tile to another location
-			QDrag * drag = new QDrag( this );
-			Dragging::TileData * tileData = new Dragging::TileData( mCurrentTile, mRotation );
-			drag->setMimeData( tileData );
-			drag->setPixmap( getPixmapForTile( mCurrentTile, mRotation ) );
-			drag->setDragCursor( getEmptyPixmap(), Qt::MoveAction );
-			drag->setHotSpot( QPoint( Gui::kTileWidth / 2, Gui::kTileHeight / 2 ) );
-			drag->exec( Qt::MoveAction );
-		}
 	}
 	if ( mPanning )
 	{
@@ -120,14 +103,8 @@ View::BoardView::mouseMoveEvent( QMouseEvent * inEvent )
 void
 View::BoardView::mouseReleaseEvent( QMouseEvent * inEvent )
 {
-	mDragging = false;
 	mPanning = false;
 	setCursor( Qt::ArrowCursor );
-	if ( pressedOnCurrentlyPlacedTile() )
-	{
-		QPointF const scenePos = mapToScene( inEvent->pos() );
-		emit clicked( scenePos.x(), scenePos.y() );
-	}
 }
 
 void
@@ -228,28 +205,6 @@ View::BoardView::pressedOnNoTile() const
 	{
 		return true;
 	}
-}
-
-bool
-View::BoardView::pressedOnCurrentlyPlacedTile() const
-{
-	if ( !mCurrentTilePosition )
-	{
-		return false;
-	}
-	int const pressedX = mPressPosition.x();
-	int const pressedY = mPressPosition.y();
-	int const tileX = mCurrentTilePosition->x();
-	int const tileY = mCurrentTilePosition->y();
-	if ( pressedX < tileX || pressedX > tileX + Gui::kTileWidth )
-	{
-		return false;
-	}
-	if ( pressedY < tileY || pressedY > tileY + Gui::kTileHeight )
-	{
-		return false;
-	}
-	return true;
 }
 
 void

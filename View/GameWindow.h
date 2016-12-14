@@ -145,7 +145,6 @@ namespace View
 		boost::signals2::signal< void () > noPiecePlaced;
 		
 	signals:
-		void clicked( int inX, int inY );
 		void tileDropped( int inX, int inY, std::string const & inId, Rotation inRotation );
 		void endCurrentTurn();
 		
