@@ -92,6 +92,9 @@ namespace Controller
 		void setWindow( std::shared_ptr< View::GameWindow > inWindow );
 
 		virtual
+		void setNumberOfPlayers( std::size_t inNumberOfPlayers );
+
+		virtual
 		void
 		placeTile
 		(

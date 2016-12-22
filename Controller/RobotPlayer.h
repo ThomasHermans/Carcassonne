@@ -23,6 +23,8 @@ namespace Controller
 		);
 		~RobotPlayer() override;
 
+		void setNumberOfPlayers( std::size_t inNumberOfPlayers ) override;
+
 		void
 		placeTile
 		(
@@ -48,6 +50,7 @@ namespace Controller
 	private:
 		QTimer * mPlaceTileTimer;
 		QTimer * mPlacePieceTimer;
+		std::size_t mNumberOfPlayers;
 		boost::optional< Model::Board > mCurrentBoard;
 		boost::optional< std::size_t > mTilesLeft;
 		boost::optional< Model::Tile > mTileToPlace;

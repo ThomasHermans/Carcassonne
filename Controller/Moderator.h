@@ -51,6 +51,8 @@ namespace Controller
 			QObject * inParent
 		);
 
+		void playGame();
+
 		Model::Board const &
 		getBoard() const;
 
@@ -72,9 +74,6 @@ namespace Controller
 		void currentPlayerChanged( std::string const & inName );
 		void playerScoreChanged( Utils::PlayerID inPlayer, std::size_t inScore );
 		void playerSupplyChanged( Utils::PlayerID inPlayer, Model::Piece::PieceType inPiece, std::size_t inScore );
-
-	public slots:
-		void playGame();
 
 	private:
 		void pickNextTile();

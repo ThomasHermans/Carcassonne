@@ -93,6 +93,7 @@ Controller::Moderator::Moderator
 			player.reset( new GUIPlayer( playerInfo.name, modelFromView( playerInfo.color ), meepleSupply ) );
 		}
 		player->setWindow( inGameWindow );
+		player->setNumberOfPlayers( inPlayers.size() );
 		mPlayers.emplace_back( player );
 
 		inGameWindow->addPlayer( player->getName(), viewFromModel( player->getColor() ) );

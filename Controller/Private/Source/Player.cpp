@@ -113,3 +113,8 @@ void
 Controller::Player::setWindow( std::shared_ptr< View::GameWindow > /*inWindow*/ )
 {
 }
+
+void
+Controller::Player::setNumberOfPlayers( std::size_t /*inNumberOfPlayers*/ )
+{
+}
