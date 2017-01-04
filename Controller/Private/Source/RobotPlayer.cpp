@@ -473,8 +473,8 @@ Controller::RobotPlayer::RobotPlayer
 )
 :
 	Player( inName, inColor, inMeepleSupply ),
-	mPlaceTileTimer( new QTimer( this ) ),
-	mPlacePieceTimer( new QTimer( this ) ),
+	mPlaceTileTimer( new QTimer() ),
+	mPlacePieceTimer( new QTimer() ),
 	mNumberOfPlayers( 1 ),
 	mCurrentBoard(),
 	mTilesLeft(),
@@ -484,10 +484,10 @@ Controller::RobotPlayer::RobotPlayer
 {
 	mPlaceTileTimer->setSingleShot( true );
 	mPlaceTileTimer->setInterval( kPlaceTileInterval );
-	connect( mPlaceTileTimer, &QTimer::timeout, [ this ]{ sendTilePlaced(); } );
+	QTimer::connect( mPlaceTileTimer.get(), &QTimer::timeout, [ this ]{ sendTilePlaced(); } );
 	mPlacePieceTimer->setSingleShot( true );
 	mPlacePieceTimer->setInterval( kPlacePieceInterval );
-	connect( mPlacePieceTimer, &QTimer::timeout, [ this ]{ sendPiecePlaced(); } );
+	QTimer::connect( mPlacePieceTimer.get(), &QTimer::timeout, [ this ]{ sendPiecePlaced(); } );
 }
 
 Controller::RobotPlayer::~RobotPlayer()

@@ -45,7 +45,7 @@ namespace Controller
 
 	extern Utils::PlayerID const kInvalidID;
 
-	class Player : public QObject
+	class Player
 	{
 	public:
 		Player

@@ -10,6 +10,8 @@
 
 #include <QTimer>
 
+#include <memory>
+
 namespace Controller
 {
 	class RobotPlayer final : public Player
@@ -48,8 +50,8 @@ namespace Controller
 		void decideTileAndPiecePlacement();
 
 	private:
-		QTimer * mPlaceTileTimer;
-		QTimer * mPlacePieceTimer;
+		std::unique_ptr< QTimer > mPlaceTileTimer;
+		std::unique_ptr< QTimer > mPlacePieceTimer;
 		std::size_t mNumberOfPlayers;
 		boost::optional< Model::Board > mCurrentBoard;
 		boost::optional< std::size_t > mTilesLeft;

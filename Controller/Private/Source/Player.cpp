@@ -29,7 +29,6 @@ Controller::Player::Player
 	std::map< Model::Piece::PieceType, std::size_t > const & inMeepleSupply
 )
 :
-	QObject(),
 	mName( inName ),
 	mPlayerID( getNextID() ),
 	mColor( inColor ),
