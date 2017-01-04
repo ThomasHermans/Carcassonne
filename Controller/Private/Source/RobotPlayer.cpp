@@ -9,8 +9,12 @@
 #include "Utils/Location.h"
 #include "Utils/Random.h"
 
+#include <QApplication>
+#include <QTimer>
+
 #include <array>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <iostream>
 #include <map>
@@ -262,7 +266,7 @@ namespace
 	(
 		Model::Board const & inBoard,
 		Utils::Location const & inLocation,
-		Model::Area::Area inArea
+		Model::Area::Area /*inArea*/
 	)
 	{
 		std::size_t numberOfMissingNeighbors = 0;
@@ -473,20 +477,12 @@ Controller::RobotPlayer::RobotPlayer
 )
 :
 	Player( inName, inColor, inMeepleSupply ),
-	mPlaceTileTimer( new QTimer() ),
-	mPlacePieceTimer( new QTimer() ),
 	mNumberOfPlayers( 1 ),
 	mCurrentGameState(),
 	mTileToPlace(),
 	mTilePlacement(),
 	mPiecePlacement()
 {
-	mPlaceTileTimer->setSingleShot( true );
-	mPlaceTileTimer->setInterval( kPlaceTileInterval );
-	QTimer::connect( mPlaceTileTimer.get(), &QTimer::timeout, [ this ]{ sendTilePlaced(); } );
-	mPlacePieceTimer->setSingleShot( true );
-	mPlacePieceTimer->setInterval( kPlacePieceInterval );
-	QTimer::connect( mPlacePieceTimer.get(), &QTimer::timeout, [ this ]{ sendPiecePlaced(); } );
 }
 
 Controller::RobotPlayer::~RobotPlayer()
@@ -506,23 +502,21 @@ Controller::RobotPlayer::placeTile( GameState const & inGameState, Model::Tile c
 	mCurrentGameState = inGameState;
 	mTileToPlace = inTileToPlace;
 
-	// Pretend to think.
-	mPlaceTileTimer->start();
+	// Allow the application to process the current events before starting to think.
+	QApplication::processEvents();
+	doPlaceTile();
 }
 
 void
 Controller::RobotPlayer::placePiece( GameState const & /*inGameState*/, Utils::Location const & /*inPlacedTile*/ )
 {
 	// Pretend to think.
-	mPlacePieceTimer->start();
+	QTimer::singleShot( kPlacePieceInterval, [ this ]{ sendPiecePlaced(); } );
 }
 
 void
 Controller::RobotPlayer::sendTilePlaced()
 {
-	// Decide where to place the tile.
-	decideTileAndPiecePlacement();
-	
 	assert( mTilePlacement );
 	tilePlaced( *mTilePlacement );
 	mTilePlacement = boost::none;
@@ -533,6 +527,23 @@ Controller::RobotPlayer::sendPiecePlaced()
 {
 	piecePlaced( mPiecePlacement );
 	mPiecePlacement = boost::none;
+}
+
+void
+Controller::RobotPlayer::doPlaceTile()
+{
+	// Decide where to place the tile.
+	auto const startTime = std::chrono::system_clock::now();
+	decideTileAndPiecePlacement();
+	auto const endTime = std::chrono::system_clock::now();
+
+	// Pretend to think for the remainder of time.
+	typedef std::chrono::duration< std::size_t, std::ratio< 1000 > > milliseconds;
+	milliseconds const thinkDuration = std::chrono::duration_cast< milliseconds >( endTime - startTime );
+	std::size_t const millisecondsPassed = thinkDuration.count();
+	std::size_t millisecondsLeft = ( kPlaceTileInterval > millisecondsPassed ) ? kPlaceTileInterval - millisecondsPassed : 0;
+
+	QTimer::singleShot( millisecondsLeft, [ this ]{ sendTilePlaced(); } );
 }
 
 void

@@ -8,8 +8,6 @@
 
 #include <boost/optional.hpp>
 
-#include <QTimer>
-
 #include <memory>
 
 namespace Controller
@@ -37,11 +35,11 @@ namespace Controller
 		void sendTilePlaced();
 		void sendPiecePlaced();
 
+		void doPlaceTile();
+
 		void decideTileAndPiecePlacement();
 
 	private:
-		std::unique_ptr< QTimer > mPlaceTileTimer;
-		std::unique_ptr< QTimer > mPlacePieceTimer;
 		std::size_t mNumberOfPlayers;
 		boost::optional< GameState > mCurrentGameState;
 		boost::optional< Model::Tile > mTileToPlace;
