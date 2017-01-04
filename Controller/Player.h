@@ -1,6 +1,7 @@
 #ifndef CARCASSONNE_CONTROLLER_PLAYER_20160328
 #define CARCASSONNE_CONTROLLER_PLAYER_20160328
 
+#include "Model/Board.h"
 #include "Model/Color.h"
 #include "Model/Rotation.h"
 #include "Model/PlacedPiece.h"
@@ -19,7 +20,6 @@
 
 namespace Model
 {
-	class Board;
 	class Piece;
 	class Tile;
 }
@@ -43,6 +43,26 @@ namespace Controller
 		);
 	};
 
+	struct PlayerInfo
+	{
+		std::string name;
+		Utils::PlayerID id;
+		Model::Color::Color color;
+		std::size_t score;
+	};
+
+	struct GameState
+	{
+		Model::Board board;
+		std::set< Utils::Expansion::Type > expansionsInUse;
+		std::size_t tilesLeft;
+		std::vector< PlayerInfo > players;
+	};
+
+	class Player;
+
+	PlayerInfo createPlayerInfo( Player const & inPlayer );
+
 	extern Utils::PlayerID const kInvalidID;
 
 	class Player
@@ -55,6 +75,8 @@ namespace Controller
 			std::map< Model::Piece::PieceType, std::size_t > const & inMeepleSupply
 		);
 		virtual ~Player();
+		Player( Player const & ) = delete;
+		Player & operator=( Player const & ) = delete;
 
 		std::string const &
 		getName() const;
@@ -95,22 +117,10 @@ namespace Controller
 		void setNumberOfPlayers( std::size_t inNumberOfPlayers );
 
 		virtual
-		void
-		placeTile
-		(
-			Model::Board const & inBoard,
-			std::size_t inTilesLeft,
-			Model::Tile const & inTile
-		) = 0;
+		void placeTile( GameState const & inGameState, Model::Tile const & inTile ) = 0;
 
 		virtual
-		void
-		placePiece
-		(
-			Model::Board const & inBoard,
-			std::size_t inTilesLeft,
-			Utils::Location const & inTile
-		) = 0;
+		void placePiece( GameState const & inGameState, Utils::Location const & inPlacedTile ) = 0;
 
 	private:
 		std::string const mName;

@@ -62,6 +62,17 @@ namespace
 		}
 		return winningColors;
 	}
+
+	std::vector< Controller::PlayerInfo >
+	createPlayerInfos( std::vector< std::shared_ptr< Controller::Player > > const & inPlayers )
+	{
+		std::vector< Controller::PlayerInfo > playerInfos;
+		for ( auto const & player : inPlayers )
+		{
+			playerInfos.emplace_back( createPlayerInfo( *player ) );
+		}
+		return playerInfos;
+	}
 }
 
 Controller::Moderator::Moderator
@@ -73,6 +84,7 @@ Controller::Moderator::Moderator
 )
 :
 	QObject( inParent ),
+	mExpansionsInPlay( inExpansions ),
 	mPlayers(),
 	mCurrentPlayer(),
 	mBoard(),
@@ -253,7 +265,8 @@ Controller::Moderator::requestTilePlacement()
 	tileSignal::extended_slot_type extendedSlot = boost::bind( &Moderator::onTilePlaced, this, _1, _2 );
 	mCurrentPlayer->tilePlaced.connect_extended( extendedSlot );
 
-	mCurrentPlayer->placeTile( mBoard, mBag.size(), *mNextTile );
+	GameState currentGameState{ mBoard, mExpansionsInPlay, mBag.size(), createPlayerInfos( mPlayers ) };
+	mCurrentPlayer->placeTile( currentGameState, *mNextTile );
 }
 
 void
@@ -286,7 +299,8 @@ Controller::Moderator::requestPiecePlacement( Utils::Location const & inLocation
 	pieceSignal::extended_slot_type pieceSlot = boost::bind( &Moderator::onPiecePlaced, this, _1, inLocation, _2 );
 	mCurrentPlayer->piecePlaced.connect_extended( pieceSlot );
 
-	mCurrentPlayer->placePiece( mBoard, mBag.size(), inLocation );
+	GameState currentGameState{ mBoard, mExpansionsInPlay, mBag.size(), createPlayerInfos( mPlayers ) };
+	mCurrentPlayer->placePiece( currentGameState, inLocation );
 }
 
 void

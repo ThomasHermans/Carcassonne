@@ -28,20 +28,10 @@ namespace Controller
 		void setNumberOfPlayers( std::size_t inNumberOfPlayers ) override;
 
 		void
-		placeTile
-		(
-			Model::Board const & inCurrentBoard,
-			std::size_t inTilesLeft,
-			Model::Tile const & inTileToPlace
-		) override;
+		placeTile( GameState const & inGameState, Model::Tile const & inTileToPlace ) override;
 
 		void
-		placePiece
-		(
-			Model::Board const & inCurrentBoard,
-			std::size_t inTilesLeft,
-			Utils::Location const & inLocation
-		) override;
+		placePiece( GameState const & inGameState, Utils::Location const & inPlacedTile ) override;
 
 	private:
 		void sendTilePlaced();
@@ -53,8 +43,7 @@ namespace Controller
 		std::unique_ptr< QTimer > mPlaceTileTimer;
 		std::unique_ptr< QTimer > mPlacePieceTimer;
 		std::size_t mNumberOfPlayers;
-		boost::optional< Model::Board > mCurrentBoard;
-		boost::optional< std::size_t > mTilesLeft;
+		boost::optional< GameState > mCurrentGameState;
 		boost::optional< Model::Tile > mTileToPlace;
 		boost::optional< TilePlacement > mTilePlacement;
 		boost::optional< Model::PlacedPiece > mPiecePlacement;

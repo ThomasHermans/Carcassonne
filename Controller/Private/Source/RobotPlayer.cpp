@@ -476,8 +476,7 @@ Controller::RobotPlayer::RobotPlayer
 	mPlaceTileTimer( new QTimer() ),
 	mPlacePieceTimer( new QTimer() ),
 	mNumberOfPlayers( 1 ),
-	mCurrentBoard(),
-	mTilesLeft(),
+	mCurrentGameState(),
 	mTileToPlace(),
 	mTilePlacement(),
 	mPiecePlacement()
@@ -501,16 +500,10 @@ Controller::RobotPlayer::setNumberOfPlayers( std::size_t inNumberOfPlayers )
 }
 
 void
-Controller::RobotPlayer::placeTile
-(
-	Model::Board const & inCurrentBoard,
-	std::size_t inTilesLeft,
-	Model::Tile const & inTileToPlace
-)
+Controller::RobotPlayer::placeTile( GameState const & inGameState, Model::Tile const & inTileToPlace )
 {
 	// Save current board and picked tile to make the decision.
-	mCurrentBoard = inCurrentBoard;
-	mTilesLeft = inTilesLeft;
+	mCurrentGameState = inGameState;
 	mTileToPlace = inTileToPlace;
 
 	// Pretend to think.
@@ -550,24 +543,18 @@ Controller::RobotPlayer::sendPiecePlaced()
 void
 Controller::RobotPlayer::decideTileAndPiecePlacement()
 {
-	assert( mCurrentBoard );
-	assert( mTilesLeft );
 	assert( mTileToPlace );
 
-	Utils::Locations const possibleLocations = mCurrentBoard->getPossibleLocations( *mTileToPlace );
 	std::vector< PossiblePlacement > possibilities;
 	for ( auto const & location : possibleLocations )
 	{
 		Model::Rotation rotation = Model::kCw0;
 		for ( std::size_t i = 0; i < 4; ++i, rotation = rotateCW( rotation ) )
 		{
-			if ( mCurrentBoard->isValidTilePlacement( Model::TileOnBoard( *mTileToPlace, rotation ), location ) )
 			{
 				PossiblePlacement placement( location, rotation );
 				std::tie( placement.value, placement.piece ) = determineValuePointBased
 				(
-					*mCurrentBoard,
-					*mTilesLeft,
 					*mTileToPlace,
 					placement,
 					*this,

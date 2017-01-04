@@ -22,6 +22,12 @@ Controller::TilePlacement::TilePlacement
 	rotation( inRotation )
 {}
 
+Controller::PlayerInfo
+Controller::createPlayerInfo( Player const & inPlayer )
+{
+	return PlayerInfo{ inPlayer.getName(), inPlayer.getID(), inPlayer.getColor(), inPlayer.getScore() };
+}
+
 Controller::Player::Player
 (
 	std::string const & inName,

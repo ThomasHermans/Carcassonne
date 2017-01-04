@@ -160,6 +160,7 @@ namespace Controller
 		sendPlayerSupply( Utils::PlayerID inPlayerID );
 
 	private:
+		std::set< Utils::Expansion::Type > mExpansionsInPlay;
 		std::vector< std::shared_ptr< Player > > mPlayers;
 		std::shared_ptr< Player > mCurrentPlayer;
 		Model::Board mBoard;

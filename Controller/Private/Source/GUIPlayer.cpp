@@ -34,12 +34,7 @@ Controller::GUIPlayer::setWindow( std::shared_ptr< View::GameWindow > inWindow )
 }
 
 void
-Controller::GUIPlayer::placeTile
-(
-	Model::Board const & /*inBoard*/,
-	std::size_t /*inTilesLeft*/,
-	Model::Tile const & /*inTile*/
-)
+Controller::GUIPlayer::placeTile( GameState const & /*inGameState*/, Model::Tile const & /*inTile*/ )
 {
 	assert( mWindow );
 
@@ -63,17 +58,12 @@ Controller::GUIPlayer::placeTile
 }
 
 void
-Controller::GUIPlayer::placePiece
-(
-	Model::Board const & inBoard,
-	std::size_t inTilesLeft,
-	Utils::Location const & inTile
-)
+Controller::GUIPlayer::placePiece( GameState const & inGameState, Utils::Location const & inPlacedTile )
 {
 	assert( mWindow );
 
 	typedef boost::signals2::signal< void ( int, int, View::Meeple const & ) > windowPiecePlacedSignalType;
-	windowPiecePlacedSignalType::slot_type piecePlacedSlot = [ this, &inBoard, inTilesLeft, inTile ]
+	windowPiecePlacedSignalType::slot_type piecePlacedSlot = [ this, &inGameState, inPlacedTile ]
 	(
 		int inX,
 		int inY,
@@ -83,14 +73,14 @@ Controller::GUIPlayer::placePiece
 		disconnectAllPlacePieceConnections();
 		assert( mWindow );
 		mWindow->showMessage( std::string() );
-		if ( inTile == locationFromXY( inX, inY ) )
+		if ( inPlacedTile == locationFromXY( inX, inY ) )
 		{
 			Model::Area::Area const area = areaFromPos( inX, inY );
 			piecePlaced( Model::PlacedPiece( Model::Piece( modelFromView( inMeeple.getType() ), getColor() ), area ) );
 		}
 		else
 		{
-			placePiece( inBoard, inTilesLeft, inTile );
+			placePiece( inGameState, inPlacedTile );
 		}
 	};
 	mPlacePieceConnections.emplace_back( mWindow->piecePlaced.connect( piecePlacedSlot ) );
