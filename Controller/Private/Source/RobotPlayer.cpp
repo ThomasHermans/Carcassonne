@@ -511,12 +511,7 @@ Controller::RobotPlayer::placeTile( GameState const & inGameState, Model::Tile c
 }
 
 void
-Controller::RobotPlayer::placePiece
-(
-	Model::Board const & /*inCurrentBoard*/,
-	std::size_t /*inTilesLeft*/,
-	Utils::Location const & /*inLocation*/
-)
+Controller::RobotPlayer::placePiece( GameState const & /*inGameState*/, Utils::Location const & /*inPlacedTile*/ )
 {
 	// Pretend to think.
 	mPlacePieceTimer->start();
@@ -543,18 +538,23 @@ Controller::RobotPlayer::sendPiecePlaced()
 void
 Controller::RobotPlayer::decideTileAndPiecePlacement()
 {
+	assert( mCurrentGameState );
 	assert( mTileToPlace );
 
+	Utils::Locations const possibleLocations = mCurrentGameState->board.getPossibleLocations( *mTileToPlace );
 	std::vector< PossiblePlacement > possibilities;
 	for ( auto const & location : possibleLocations )
 	{
 		Model::Rotation rotation = Model::kCw0;
 		for ( std::size_t i = 0; i < 4; ++i, rotation = rotateCW( rotation ) )
 		{
+			if ( mCurrentGameState->board.isValidTilePlacement( Model::TileOnBoard( *mTileToPlace, rotation ), location ) )
 			{
 				PossiblePlacement placement( location, rotation );
 				std::tie( placement.value, placement.piece ) = determineValuePointBased
 				(
+					mCurrentGameState->board,
+					mCurrentGameState->tilesLeft,
 					*mTileToPlace,
 					placement,
 					*this,
