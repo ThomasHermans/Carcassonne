@@ -3,6 +3,7 @@
 #include "Model/Area.h"
 #include "Model/Board.h"
 #include "Model/BoardUtils.h"
+#include "Model/CreateTilesAndPieces.h"
 #include "Model/Points.h"
 #include "Model/Tile.h"
 #include "Model/TileOnBoard.h"
@@ -73,6 +74,26 @@ namespace
 		}
 	}
 
+	std::vector< Model::Tile >
+	calculateRemainingTiles( Controller::GameState const & inGameState )
+	{
+		std::vector< Model::Tile > tiles = Model::createTiles( inGameState.expansionsInUse );
+		for ( int row = inGameState.board.getTopRow(); row <= inGameState.board.getBottomRow(); ++row )
+		{
+			for ( int col = inGameState.board.getLeftCol(); col <= inGameState.board.getRightCol(); ++col )
+			{
+				if ( boost::optional< Model::TileOnBoard > tileOnBoard = inGameState.board.getTile( row, col ) )
+				{
+					std::string const tileID = tileOnBoard->getTile().getID();
+					auto it = std::find_if( tiles.cbegin(), tiles.cend(), [ tileID ]( Model::Tile const & inTile ){ return tileID == inTile.getID(); } );
+					assert( it != tiles.cend() );
+					tiles.erase( it );
+				}
+			}
+		}
+		return tiles;
+	}
+
 	void
 	makePossibilitiesPositive( std::vector< PossiblePlacement > & ioPossiblePlacements )
 	{
@@ -89,35 +110,35 @@ namespace
 		}
 	}
 
-	double
-	getTotalValue( std::vector< PossiblePlacement > const & inPossibilities )
-	{
-		double totalValue = 0.;
-		for ( auto const & possibility : inPossibilities )
-		{
-			assert( possibility.value >= 0. );
-			totalValue += possibility.value;
-		}
-		assert( totalValue > 0. );
-		return totalValue;
-	}
+	// double
+	// getTotalValue( std::vector< PossiblePlacement > const & inPossibilities )
+	// {
+	// 	double totalValue = 0.;
+	// 	for ( auto const & possibility : inPossibilities )
+	// 	{
+	// 		assert( possibility.value >= 0. );
+	// 		totalValue += possibility.value;
+	// 	}
+	// 	assert( totalValue > 0. );
+	// 	return totalValue;
+	// }
 
-	PossiblePlacement
-	getRandomPossibility( std::vector< PossiblePlacement > const & inPossibilities )
-	{
-		double const totalValue = getTotalValue( inPossibilities );
-		double const chosenValue = Utils::Random( totalValue );
-		double cumulativeValue = 0;
-		for ( auto const & possibility : inPossibilities )
-		{
-			cumulativeValue += possibility.value;
-			if ( chosenValue < cumulativeValue )
-			{
-				return possibility;
-			}
-		}
-		return PossiblePlacement( Utils::Location( 0, 0 ), Model::Rotation::kCw0 );
-	}
+	// PossiblePlacement
+	// getRandomPossibility( std::vector< PossiblePlacement > const & inPossibilities )
+	// {
+	// 	double const totalValue = getTotalValue( inPossibilities );
+	// 	double const chosenValue = Utils::Random( totalValue );
+	// 	double cumulativeValue = 0;
+	// 	for ( auto const & possibility : inPossibilities )
+	// 	{
+	// 		cumulativeValue += possibility.value;
+	// 		if ( chosenValue < cumulativeValue )
+	// 		{
+	// 			return possibility;
+	// 		}
+	// 	}
+	// 	return PossiblePlacement( Utils::Location( 0, 0 ), Model::Rotation::kCw0 );
+	// }
 
 	PossiblePlacement
 	getBestPossibility( std::vector< PossiblePlacement > const & inPossibilities )
@@ -192,96 +213,24 @@ namespace
 		return bestValue;
 	}
 
-	std::size_t
-	getNumberOfTilesToFillCity
+	bool
+	isImpossibleToFinish
 	(
 		Model::Board const & inBoard,
 		Utils::Location const & inLocation,
-		Model::Area::Area inArea
+		Model::Area::Area inArea,
+		std::vector< Model::Tile > const & inRemainingTiles
 	)
 	{
-		std::vector< Model::PlacedCity > uncheckedCityParts;
-		for ( Model::Area::Area const area : inBoard.getTile( inLocation )->getContiguousCity( inArea ) )
+		std::vector< Utils::Location > locationsToFill = getTilesToFillProject( inBoard, inLocation, inArea );
+		for ( auto const & location : locationsToFill )
 		{
-			uncheckedCityParts.emplace_back( inLocation.row, inLocation.col, area );
-		}
-		std::set< Utils::Location > missingTiles;
-		for ( std::size_t i = 0; i < uncheckedCityParts.size(); ++i )
-		{
-			Model::PlacedCity const neighbor = getNeighbor( uncheckedCityParts[i] );
-			if ( inBoard.isTile( neighbor.row, neighbor.col ) )
+			if ( !isFillable( inBoard, location, inRemainingTiles ) )
 			{
-				if ( std::find( uncheckedCityParts.begin(), uncheckedCityParts.end(), neighbor ) == uncheckedCityParts.end() )
-				{
-					for ( Model::Area::Area const area : inBoard.getTile( neighbor.row, neighbor.col )->getContiguousCity( neighbor.area ) )
-					{
-						uncheckedCityParts.emplace_back( neighbor.row, neighbor.col, area );
-					}
-				}
-			}
-			else
-			{
-				missingTiles.insert( Utils::Location( neighbor.row, neighbor.col ) );
+				return true;
 			}
 		}
-		return missingTiles.size();
-	}
-
-	std::size_t
-	getNumberOfTilesToFillRoad
-	(
-		Model::Board const & inBoard,
-		Utils::Location const & inLocation,
-		Model::Area::Area inArea
-	)
-	{
-		std::vector< Model::PlacedRoad > uncheckedRoadParts;
-		for ( Model::Area::Area const area : inBoard.getTile( inLocation )->getContiguousRoad( inArea ) )
-		{
-			uncheckedRoadParts.emplace_back( inLocation.row, inLocation.col, area );
-		}
-		std::set< Utils::Location > missingTiles;
-		for ( std::size_t i = 0; i < uncheckedRoadParts.size(); ++i )
-		{
-			Model::PlacedRoad const neighbor = getNeighbor( uncheckedRoadParts[i] );
-			if ( inBoard.isTile( neighbor.row, neighbor.col ) )
-			{
-				if ( std::find( uncheckedRoadParts.begin(), uncheckedRoadParts.end(), neighbor ) == uncheckedRoadParts.end() )
-				{
-					for ( Model::Area::Area const area : inBoard.getTile( neighbor.row, neighbor.col )->getContiguousRoad( neighbor.area ) )
-					{
-						uncheckedRoadParts.emplace_back( neighbor.row, neighbor.col, area );
-					}
-				}
-			}
-			else
-			{
-				missingTiles.insert( Utils::Location( neighbor.row, neighbor.col ) );
-			}
-		}
-		return missingTiles.size();
-	}
-
-	std::size_t
-	getNumberOfTilesToFillCloister
-	(
-		Model::Board const & inBoard,
-		Utils::Location const & inLocation,
-		Model::Area::Area /*inArea*/
-	)
-	{
-		std::size_t numberOfMissingNeighbors = 0;
-		for ( int row = inLocation.row - 1; row <= inLocation.row + 1; ++row )
-		{
-			for ( int col = inLocation.col - 1; col <= inLocation.col + 1; ++col )
-			{
-				if ( !inBoard.isTile( row, col ) )
-				{
-					++numberOfMissingNeighbors;
-				}
-			}
-		}
-		return numberOfMissingNeighbors;
+		return false;
 	}
 
 	std::size_t
@@ -292,22 +241,7 @@ namespace
 		Model::Area::Area inArea
 	)
 	{
-		if ( inBoard.isCity( inLocation, inArea ) )
-		{
-			return getNumberOfTilesToFillCity( inBoard, inLocation, inArea );
-		}
-		else if ( inBoard.isRoad( inLocation, inArea ) )
-		{
-			return getNumberOfTilesToFillRoad( inBoard, inLocation, inArea );
-		}
-		else if ( inBoard.isCloister( inLocation, inArea ) )
-		{
-			return getNumberOfTilesToFillCloister( inBoard, inLocation, inArea );
-		}
-		else
-		{
-			return 0;
-		}
+		return getTilesToFillProject( inBoard, inLocation, inArea ).size();
 	}
 
 	double
@@ -317,14 +251,18 @@ namespace
 		Controller::Player const & /*inPlayer*/,
 		Utils::Location const & inLocation,
 		Model::Area::Area inArea,
-		std::size_t inTilesLeft,
+		std::vector< Model::Tile > const & inRemainingTiles,
 		std::size_t inNumberOfPlayers
 	)
 	{
-		// Get the probability that we get the right tile for every remaining spot.
-		// For every spot:
-		//	# of tiles that will fill it
-		std::size_t const turnsLeft = inTilesLeft / inNumberOfPlayers;
+		// If there is a place to fill that can't be filled by any tile left in the bag, it's impossible
+		// to finish this project.
+		if ( isImpossibleToFinish( inBoard, inLocation, inArea, inRemainingTiles ) )
+		{
+			return 0.;
+		}
+		// Simple heuristic because the combinatorics are too hard for now.
+		std::size_t const turnsLeft = inRemainingTiles.size() / inNumberOfPlayers;
 		std::size_t const tilesToFill = getNumberOfTilesToFill( inBoard, inLocation, inArea );
 		double probabilityNotFinished = double( tilesToFill ) / turnsLeft;
 		probabilityNotFinished = std::min( 1., probabilityNotFinished );
@@ -393,7 +331,7 @@ namespace
 	getEstimation
 	(
 		Model::Board const & inBoard,
-		std::size_t inTilesLeft,
+		std::vector< Model::Tile > const & inRemainingTiles,
 		Controller::Player const & inPlayer,
 		std::size_t inNumberOfPlayers
 	)
@@ -406,7 +344,7 @@ namespace
 		{
 			double const probabilityOfFinishing = getProbabilityOfFinishing
 			(
-				inBoard, inPlayer, locatedPiece.first, locatedPiece.second.getArea(), inTilesLeft, inNumberOfPlayers
+				inBoard, inPlayer, locatedPiece.first, locatedPiece.second.getArea(), inRemainingTiles, inNumberOfPlayers
 			);
 			double const estimationWhenFinished = getEstimationFinished
 			(
@@ -422,7 +360,7 @@ namespace
 		// for every piece not on the board
 		//  add estimated value
 		std::size_t const supply = inPlayer.getSupply( Model::Piece::kFollower ) + inPlayer.getSupply( Model::Piece::kLargeFollower );
-		estimation += getEstimationForMeeple( supply, inTilesLeft );
+		estimation += getEstimationForMeeple( supply, inRemainingTiles.size() );
 		return estimation;
 	}
 
@@ -430,7 +368,7 @@ namespace
 	determineValuePointBased
 	(
 		Model::Board inBoard,
-		std::size_t inTilesLeft,
+		std::vector< Model::Tile > const & inRemainingTiles,
 		Model::Tile const & inTile,
 		PossiblePlacement const & inPlacement,
 		Controller::Player const & inPlayer,
@@ -443,7 +381,7 @@ namespace
 		// For every possible piece placement (+no piece placement), calculate
 		// point estimation.
 		std::vector< std::pair< double, boost::optional< Model::PlacedPiece > > > estimations;
-		estimations.emplace_back( getEstimation( inBoard, inTilesLeft, inPlayer, inNumberOfPlayers ), boost::none );
+		estimations.emplace_back( getEstimation( inBoard, inRemainingTiles, inPlayer, inNumberOfPlayers ), boost::none );
 
 		for ( Model::Piece::PieceType pieceType : kPieces )
 		{
@@ -461,7 +399,7 @@ namespace
 				if ( boardCopy.isValidPiecePlacement( inPlacement.location, placedPiece ) )
 				{
 					boardCopy.placeValidPiece( placedPiece, inPlacement.location );
-					estimations.emplace_back( getEstimation( boardCopy, inTilesLeft, inPlayer, inNumberOfPlayers ), placedPiece );
+					estimations.emplace_back( getEstimation( boardCopy, inRemainingTiles, inPlayer, inNumberOfPlayers ), placedPiece );
 				}
 			}
 		}
@@ -566,7 +504,7 @@ Controller::RobotPlayer::decideTileAndPiecePlacement()
 				std::tie( placement.value, placement.piece ) = determineValuePointBased
 				(
 					mCurrentGameState->board,
-					mCurrentGameState->tilesLeft,
+					calculateRemainingTiles( *mCurrentGameState ),
 					*mTileToPlace,
 					placement,
 					*this,

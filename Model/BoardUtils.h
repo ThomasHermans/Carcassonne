@@ -16,6 +16,7 @@ namespace Model
 {
 	class Board;
 	class PlacedPiece;
+	class Tile;
 	struct PlacedProject;
 
 	/**
@@ -27,6 +28,65 @@ namespace Model
 		Board const & inBoard,
 		Utils::Location const & inLocation,
 		Area::Area inArea
+	);
+
+	/**
+	 *	Get the tiles that need to be filled to complete the
+	 *	specified city.
+	 */
+	std::vector< Utils::Location >
+	getTilesToFillCity
+	(
+		Board const & inBoard,
+		Utils::Location const & inLocation,
+		Area::Area inArea
+	);
+
+	/**
+	 *	Get the tiles that need to be filled to complete the
+	 *	specified road.
+	 */
+	std::vector< Utils::Location >
+	getTilesToFillRoad
+	(
+		Board const & inBoard,
+		Utils::Location const & inLocation,
+		Area::Area inArea
+	);
+
+	/**
+	 *	Get the tiles that need to be filled to complete the
+	 *	specified cloister.
+	 */
+	std::vector< Utils::Location >
+	getTilesToFillCloister
+	(
+		Board const & inBoard,
+		Utils::Location const & inLocation
+	);
+
+	/**
+	 *	Get the tiles that need to be filled to complete the
+	 *	specified project.
+	 */
+	std::vector< Utils::Location >
+	getTilesToFillProject
+	(
+		Board const & inBoard,
+		Utils::Location const & inLocation,
+		Area::Area inArea
+	);
+
+	/**
+	 *	Does the provided list of tiles contain a tile that
+	 *	fits in the specified position?
+	 */
+	bool
+	isFillable
+	(
+		Board const & inBoard,
+		Utils::Location const & inLocationToFill,
+		std::vector< Tile > const & inTiles
 	);
 
 	/**
