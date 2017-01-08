@@ -157,6 +157,10 @@ View::GameWindow::GameWindow( QWidget *parent )
 	showRemovedMeepleAction->setCheckable( true );
 	showRemovedMeepleAction->setChecked( mShowRemovedMeeple );
 	connect( showRemovedMeepleAction, &QAction::triggered, [this](){ toggleRemovedMeeple(); } );
+	viewMenu->addSeparator();
+	viewMenu->addAction( "Zoom in", [ this ]{ mBoardView->zoomIn(); }, Qt::CTRL + Qt::Key_Plus );
+	viewMenu->addAction( "Zoom out", [ this ]{ mBoardView->zoomOut(); }, Qt::CTRL + Qt::Key_Minus );
+	viewMenu->addAction( "Zoom to 100%", [ this ]{ mBoardView->zoomTo100(); }, Qt::CTRL + Qt::Key_0 );
 }
 
 View::GameWindow::~GameWindow()

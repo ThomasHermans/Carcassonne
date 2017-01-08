@@ -36,6 +36,10 @@ namespace View
 		void placeTile( int inX, int inY, std::string const & inId, Rotation inRotation );
 		void clearCurrentTile();
 
+		void zoomIn();
+		void zoomOut();
+		void zoomTo100();
+		
 	signals:
 		void droppedPiece( Dragging::PieceData const & inData, int inX, int inY );
 		void droppedTile( int inX, int inY, std::string const & inTileId, View::Rotation inRotation );
@@ -54,9 +58,6 @@ namespace View
 
 	private:
 		bool pressedOnNoTile() const;
-		void zoomIn();
-		void zoomOut();
-		void zoomTo100();
 
 	private:
 		QPointF mPressPosition;
