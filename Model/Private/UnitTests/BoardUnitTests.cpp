@@ -66,64 +66,6 @@ namespace
 			board.placeStartTile( startTile );
 		}
 	};
-
-	class SignalCounter
-	{
-	public:
-		SignalCounter( Model::Board & /*inBoard*/ )
-		:
-			mFinishedCityCount( 0 ),
-			mFinishedRoadCount( 0 ),
-			mFinishedCloisterCount( 0 )
-		{
-			// inBoard.finishedCity.connect
-			// (
-			// 	boost::bind( &SignalCounter::IncrementFinishedCity, this )
-			// );
-			// inBoard.finishedRoad.connect
-			// (
-			// 	boost::bind( &SignalCounter::IncrementFinishedRoad, this )
-			// );
-			// inBoard.finishedCloister.connect
-			// (
-			// 	boost::bind( &SignalCounter::IncrementFinishedCloister, this )
-			// );
-		}
-		
-		void IncrementFinishedCity()
-		{
-			++mFinishedCityCount;
-		}
-		
-		void IncrementFinishedRoad()
-		{
-			++mFinishedRoadCount;
-		}
-		
-		void IncrementFinishedCloister()
-		{
-			++mFinishedCloisterCount;
-		}
-
-		std::size_t GetFinishedCityCount() const
-		{
-			return mFinishedCityCount;
-		}
-
-		std::size_t GetFinishedRoadCount() const
-		{
-			return mFinishedRoadCount;
-		}
-
-		std::size_t GetFinishedCloisterCount() const
-		{
-			return mFinishedCloisterCount;
-		}
-	private:
-		std::size_t mFinishedCityCount;
-		std::size_t mFinishedRoadCount;
-		std::size_t mFinishedCloisterCount;
-	};
 }
 
 TESTFIX( "Board: place extra tiles", BoardFixture )
@@ -206,64 +148,6 @@ TESTFIX( "Board: remove pieces from a specified tile & area", BoardFixture )
 	std::vector< PlacedPiece > const pieces = board.removePieces( PlacedProject( 1, 0, Area::kLeft ) );
 	CHECK( pieces.size() == 1 );
 	CHECK( !board.isOccupiedField( PlacedField( 1, 0, Area::kBottomLeft ) ) );
-}
-
-TESTFIX( "Board: signal finishedCity is sent when needed", BoardFixture )
-{
-	SignalCounter counter( board );
-	CHECK( counter.GetFinishedCityCount() == 0 );
-
-	TileOnBoard const tileE( createTileE(), kCw270 );
-	board.placeValidTile( tileE, 0, 1 );
-	CHECK( counter.GetFinishedCityCount() == 1 );
-
-	TileOnBoard const tileNTopLeft( createTileN(), kCw180 );
-	TileOnBoard const tileNTopRight( createTileN(), kCw270 );
-	TileOnBoard const tileNBottomRight( createTileN(), kCw0 );
-	TileOnBoard const tileNBottomLeft( createTileN(), kCw90 );
-	board.placeValidTile( tileNTopLeft, 0, 2 );
-	board.placeValidTile( tileNTopRight, 0, 3 );
-	board.placeValidTile( tileNBottomRight, 1, 3 );
-	CHECK( counter.GetFinishedCityCount() == 1 );
-	board.placeValidTile( tileNBottomLeft, 1, 2 );
-	CHECK( counter.GetFinishedCityCount() == 2 );
-}
-
-TESTFIX( "Board: signal finishedRoad is sent when needed", BoardFixture )
-{
-	SignalCounter counter( board );
-	CHECK( counter.GetFinishedRoadCount() == 0 );
-
-	TileOnBoard const tileA( createTileA(), kCw0 );
-	board.placeValidTile( tileA, -1, 0 );
-	TileOnBoard const tileV( createTileV(), kCw180 );
-	board.placeValidTile( tileV, 1, 0 );
-	TileOnBoard const tileS( createTileS(), kCw0 );
-	board.placeValidTile( tileS, 0, 1 );
-	CHECK( counter.GetFinishedRoadCount() == 0 );
-
-	TileOnBoard const otherV( createTileV(), kCw90 );
-	board.placeValidTile( otherV, 1, 1 );
-	CHECK( counter.GetFinishedRoadCount() == 1 );
-}
-
-TESTFIX( "Board: signal finishedCloister is sent when needed", BoardFixture )
-{
-	SignalCounter counter( board );
-	CHECK( counter.GetFinishedCloisterCount() == 0 );
-
-	board.placeValidTile( TileOnBoard( createTileA(), kCw0 ), -1, 0 );
-	board.placeValidTile( TileOnBoard( createTileN(), kCw0 ), 0, 1 );
-	TileOnBoard const tileGRight( createTileG(), kCw0 );
-	board.placeValidTile( tileGRight, -1, 1 );
-	board.placeValidTile( TileOnBoard( createTileI(), kCw0 ), -2, 1 );
-	board.placeValidTile( TileOnBoard( createTileE(), kCw0 ), -2, 0 );
-	board.placeValidTile( tileGRight, -2, -1 );
-	board.placeValidTile( tileGRight, -1, -1 );
-	CHECK( counter.GetFinishedCloisterCount() == 0 );
-	
-	board.placeValidTile( tileGRight, 0, -1 );
-	CHECK( counter.GetFinishedCloisterCount() == 1 );
 }
 
 TESTFIX( "Board: simple isFinishedCity", BoardFixture )
