@@ -2,6 +2,7 @@
 
 #include "Model/Area.h"
 #include "Model/Board.h"
+#include "Model/BoardUtils.h"
 #include "Model/Points.h"
 #include "Model/Tile.h"
 #include "Model/TileOnBoard.h"
