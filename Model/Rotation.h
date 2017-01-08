@@ -2,6 +2,7 @@
 #define MODEL_ROTATION_THHR_20131121
 
 #include <string>
+#include <array>
 
 namespace Model
 {
@@ -18,6 +19,8 @@ namespace Model
 	 *	rotated from the inRotation.
 	 */
 	Rotation rotateCW( Rotation inRotation );
+
+	std::array< Rotation, 4 > getAllRotations();
 
 	std::string rotationToString( Rotation inRotation );
 }

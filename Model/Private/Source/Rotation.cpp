@@ -8,6 +8,12 @@ Model::rotateCW( Rotation inRotation )
 	return Rotation( ( inRotation + kCw90 ) % ( kCw90 * 4 ) );
 }
 
+std::array< Model::Rotation, 4 >
+Model::getAllRotations()
+{
+	return { kCw0, kCw90, kCw180, kCw270 };
+}
+
 std::string
 Model::rotationToString( Rotation inRotation )
 {
