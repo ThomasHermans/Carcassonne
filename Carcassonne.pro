@@ -25,6 +25,7 @@ SOURCES += main.cpp \
 	Model\Private\Source\Color.cpp \
 	Model\Private\Source\CreateTilesAndPieces.cpp \
 	Model\Private\Source\Board.cpp \
+	Model\Private\Source\BoardUtils.cpp \
 	Model\Private\Source\Game.cpp \
 	Model\Private\Source\ModelPlayer.cpp \
 	Model\Private\Source\Piece.cpp \
