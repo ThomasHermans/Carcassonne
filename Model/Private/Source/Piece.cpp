@@ -52,3 +52,9 @@ Model::Piece::getWeight() const
 		return 0;
 	}
 }
+
+bool
+Model::operator == ( Piece const & inLeft, Piece const & inRight )
+{
+	return inLeft.getType() == inRight.getType() && inLeft.getColor() == inRight.getColor();
+}

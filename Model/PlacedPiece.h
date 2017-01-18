@@ -22,6 +22,8 @@ namespace Model
 		Piece mPiece;
 		Area::Area mArea;
 	};
+
+	bool operator == ( PlacedPiece const & inLeft, PlacedPiece const & inRight );
 }
 
 #endif // PLACEDPIECE_H

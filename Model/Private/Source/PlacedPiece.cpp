@@ -69,3 +69,9 @@ Model::PlacedPiece::getArea() const
 {
 	return mArea;
 }
+
+bool
+Model::operator == ( PlacedPiece const & inLeft, PlacedPiece const & inRight )
+{
+	return inLeft.getPiece() == inRight.getPiece() && inLeft.getArea() == inRight.getArea();
+}

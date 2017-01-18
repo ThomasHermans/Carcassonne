@@ -33,6 +33,8 @@ namespace Model
 		PieceType mType;
 		Color::Color mColor;
 	};
+
+	bool operator == ( Piece const & inLeft, Piece const & inRight );
 }
 
 #endif // PIECE_H
