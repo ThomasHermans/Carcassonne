@@ -15,10 +15,16 @@
 #include <QString>
 
 #include <iostream>
+#include <string>
 
 Q_DECLARE_METATYPE(std::string)
 Q_DECLARE_METATYPE(Model::TileOnBoard)
 Q_DECLARE_METATYPE(Utils::Location)
+
+namespace
+{
+	std::string const kUnitTestsArg( "-unittests" );
+}
 
 namespace Main
 {
@@ -30,9 +36,25 @@ namespace Main
 	};
 }
 
+namespace
+{
+	Main::Type
+	determineGameOption( int argc, char * argv[] )
+	{
+		for ( int i = 0; i < argc; ++i )
+		{
+			if ( std::string( argv[i] ) == kUnitTestsArg )
+			{
+				return Main::kUnitTests;
+			}
+		}
+		return Main::kPlay;
+	}
+}
+
 int main(int argc, char * argv[])
 {
-	Main::Type const gameOption = Main::kPlay;
+	Main::Type const gameOption = determineGameOption( argc, argv );
 
 	qRegisterMetaType< std::string >();
 	qRegisterMetaType< Model::TileOnBoard >();
